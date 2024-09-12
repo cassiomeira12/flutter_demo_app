@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
 
 import '../../design_system/design_system.dart';
+import '../contacts/contacts.dart';
+import '../emergency/emergency.dart';
+import '../settings/settings.dart';
 import 'home_controller.dart';
 
 class HomePage extends GetView<HomeController> {
@@ -8,65 +11,51 @@ class HomePage extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return ScaffoldWidget(
-      showBackButtonOnWeb: true,
-      controller: controller,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextWidget(
-                'Title',
-                style: AppTextStyle.title(context),
-              ),
-              TextWidget(
-                'Subtitle',
-                style: AppTextStyle.subtitle(context),
-              ),
-              TextWidget(
-                'Message',
-                style: AppTextStyle.message(context),
-              ),
-              TextWidget(
-                'Label',
-                style: AppTextStyle.label(context),
-              ),
-              TextWidget(
-                'Field',
-                style: AppTextStyle.field(context),
-              ),
-              TextWidget(
-                'Button',
-                style: AppTextStyle.button(context),
-              ),
-              TextWidget(
-                'Hyperlink',
-                style: AppTextStyle.hyperlink(context),
-              ),
-              TextWidget(
-                'Footnote',
-                style: AppTextStyle.footnote(context),
-              ),
-              CircularProgressIndicator(),
-              PrimaryButton(
-                text: 'Light',
-                icon: FlutterIcon(Icons.arrow_back_ios),
-                onPressed: () {
-                  controller.teste('light');
-                },
-              ),
-              PrimaryButton(
-                text: 'Dark',
-                icon: FlutterIcon(Icons.arrow_back_ios),
-                onPressed: () {
-                  controller.teste('dark');
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
+    return NavigatorRouterWidget(
+      pages: [
+        ...EmergencyModule.routes,
+        ...ContactsModule.routes,
+        ...SettingsModule.routes,
+      ],
+      selectedIndex: controller.selectedIndex,
+      changeTab: controller.changeTab,
+      bottomItems: _bottomItemsList,
     );
   }
+
+  List<BottomItem> get _bottomItemsList => [
+        BottomItem(
+          title: 'Emergencia',
+          selectedIcon: FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+          unselectedIcon: FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+        BottomItem(
+          title: 'Contatos',
+          selectedIcon: FlutterIcon(
+            Icons.contact_emergency,
+            size: IconSize.medium,
+          ),
+          unselectedIcon: FlutterIcon(
+            Icons.contact_emergency,
+            size: IconSize.medium,
+          ),
+        ),
+        BottomItem(
+          title: 'Ajustes',
+          selectedIcon: FlutterIcon(
+            Icons.settings,
+            size: IconSize.medium,
+          ),
+          unselectedIcon: FlutterIcon(
+            Icons.settings,
+            size: IconSize.medium,
+          ),
+        ),
+      ];
 }

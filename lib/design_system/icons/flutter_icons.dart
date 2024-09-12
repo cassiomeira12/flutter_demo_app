@@ -18,7 +18,7 @@ class FlutterIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Icon(
-      Icons.ac_unit,
+      icon,
       color: color ?? Theme.of(context).iconTheme.color,
       size: size.value,
     );

@@ -23,6 +23,19 @@ class AppBindings extends Bindings {
       LocalStorageUseCase(),
       permanent: true,
     );
+
+    Get.put<EnvironmentEntity>(
+      EnvironmentEntity(
+        appName: '',
+        appId: '',
+        clientKey: '',
+        restApiKey: '',
+        serverUrl: '',
+        graphqllUrl: '',
+      ),
+      permanent: true,
+    );
+
     Get.put<Http>(
       HttpClient(
         environment: Get.find(),

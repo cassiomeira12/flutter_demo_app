@@ -10,7 +10,7 @@ void main() {
   late App app;
 
   setUpAll(() {
-    app = App(initialRoute: AppRouter.splash.route);
+    app = App(initialRoute: AppRouter.splash.name);
   });
 
   tearDown(() {

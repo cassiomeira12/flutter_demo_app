@@ -9,22 +9,29 @@ class SplashController extends BaseController {
   @override
   Future<void> onReady() async {
     super.onReady();
-    String baseUrl = const String.fromEnvironment('base_url');
+    String appName = const String.fromEnvironment('app_name');
+    String appId = const String.fromEnvironment('app_id');
+    String clientKey = const String.fromEnvironment('client_key');
+    String restApiKey = const String.fromEnvironment('rest_api_key');
+    String serverUrl = const String.fromEnvironment('server_url');
+    String graphqllUrl = const String.fromEnvironment('graphql_url');
 
     Get.put<EnvironmentEntity>(
       EnvironmentEntity(
-        baseUrl: baseUrl,
+        appName: appName,
+        appId: appId,
+        clientKey: clientKey,
+        restApiKey: restApiKey,
+        serverUrl: serverUrl,
+        graphqllUrl: graphqllUrl,
       ),
       permanent: true,
     );
 
     AppBindings().dependencies();
 
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 1));
 
-    Get.offAllNamed(
-      AppRouter.home.route,
-      arguments: 1,
-    );
+    AppRouter.offAllNamed(AppRouter.login);
   }
 }

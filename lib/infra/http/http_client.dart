@@ -19,7 +19,7 @@ class HttpClient implements Http {
   }) : _environment = environment {
     _dio = Dio(
       BaseOptions(
-        baseUrl: _environment.baseUrl,
+        baseUrl: _environment.serverUrl,
         connectTimeout: connectTimeout ?? const Duration(seconds: 60),
         receiveTimeout: receiveTimeout ?? const Duration(seconds: 60),
       ),
