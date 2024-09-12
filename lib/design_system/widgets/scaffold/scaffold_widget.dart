@@ -5,6 +5,7 @@ import '../../../core/core.dart';
 import '../../design_system.dart';
 
 class ScaffoldWidget extends StatefulWidget {
+  final int? nestedId;
   final BaseController? controller;
   final bool canPop;
   final bool showBackButtonOnWeb;
@@ -15,6 +16,7 @@ class ScaffoldWidget extends StatefulWidget {
 
   ScaffoldWidget({
     super.key,
+    this.nestedId,
     this.controller,
     this.canPop = true,
     this.showBackButtonOnWeb = false,
@@ -23,8 +25,8 @@ class ScaffoldWidget extends StatefulWidget {
     this.body,
     this.bottomWidget,
   }) {
-    if (title != null) assert(titleWidget != null);
-    if (titleWidget != null) assert(title != null);
+    if (title != null) assert(titleWidget == null);
+    if (titleWidget != null) assert(title == null);
   }
 
   @override
@@ -37,29 +39,53 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, result) {
-        if (widget.canPop && !didPop && ModalRoute.of(context)!.canPop) {
-          widget.controller?.backPage();
+        if (widget.canPop && !didPop && Navigator.canPop(context)) {
+          if (widget.controller != null) {
+            widget.controller!.backPage();
+          } else {
+            Navigator.pop(context);
+          }
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: widget.title != null,
-          title: widget.title != null
-              ? TextWidget(widget.title!)
-              : widget.titleWidget,
-          leading: kIsWeb && widget.showBackButtonOnWeb
-              ? ModalRoute.of(context)!.canPop
-                  ? BackButton()
-                  : const SizedBox.shrink()
-              : const SizedBox.shrink(),
+      child: GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Scaffold(
+          appBar: widget.title != null
+              ? AppBar(
+                  centerTitle: widget.title != null,
+                  title: widget.title != null
+                      ? TextWidget(
+                          widget.title!,
+                          style: AppTextStyle.subtitle(context),
+                        )
+                      : widget.titleWidget,
+                  leading: kIsWeb
+                      ? widget.showBackButtonOnWeb
+                          ? Navigator.canPop(context)
+                              ? BackButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                )
+                              : const SizedBox.shrink()
+                          : const SizedBox.shrink()
+                      : Navigator.canPop(context)
+                          ? BackButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                )
+              : null,
+          body: widget.body,
+          bottomNavigationBar: widget.bottomWidget != null
+              ? SizedBox(
+                  height: kToolbarHeight,
+                  child: widget.bottomWidget,
+                )
+              : null,
         ),
-        body: widget.body,
-        bottomNavigationBar: widget.bottomWidget != null
-            ? SizedBox(
-                height: kToolbarHeight,
-                child: widget.bottomWidget,
-              )
-            : null,
       ),
     );
   }

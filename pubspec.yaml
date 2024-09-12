@@ -39,7 +39,27 @@ flutter:
     - assets/fonts/
     - assets/png/
     - assets/svg/
-
+  
+  fonts:
+    - family: Montserrat Black
+      fonts:
+        - asset: assets/fonts/Montserrat-Black.ttf
+    - family: Montserrat Bold
+      fonts:
+        - asset: assets/fonts/Montserrat-Bold.ttf
+    - family: Montserrat Light
+      fonts:
+        - asset: assets/fonts/Montserrat-Light.ttf
+    - family: Montserrat Medium
+      fonts:
+        - asset: assets/fonts/Montserrat-Medium.ttf
+    - family: Montserrat Regular
+      fonts:
+        - asset: assets/fonts/Montserrat-Regular.ttf
+    - family: Montserrat Thin
+      fonts:
+        - asset: assets/fonts/Montserrat-Thin.ttf
+      
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true

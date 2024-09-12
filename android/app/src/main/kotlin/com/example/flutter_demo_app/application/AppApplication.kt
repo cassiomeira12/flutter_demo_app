@@ -1,4 +1,4 @@
-package com.example.flutter_demo_app
+package com.example.flutter_demo_app.application
 
 import android.app.Application
 import android.content.Context

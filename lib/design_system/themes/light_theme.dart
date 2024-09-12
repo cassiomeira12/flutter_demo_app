@@ -7,6 +7,8 @@ class LightTheme {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: AppColors.primary,
+      primaryColorLight: AppColors.primary,
+      primaryColorDark: AppColors.primary,
       scaffoldBackgroundColor: AppColors.light,
       textTheme: TextTheme(
         titleLarge: TextStyle(color: AppColors.primary),
@@ -17,9 +19,10 @@ class LightTheme {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.primary,
       ),
-      // buttonTheme: ButtonThemeData(
-      //   textTheme: ButtonTextTheme.primary,
-      // ),
+      hintColor: AppColors.muted,
+      indicatorColor: AppColors.dark,
+      canvasColor: AppColors.white,
+      cardColor: AppColors.secondary,
     );
   }
 }

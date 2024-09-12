@@ -1,22 +1,22 @@
-import 'package:flutter_demo_app/presentation/app_router.dart';
 import 'package:get/get.dart';
 
 import '../../core/core.dart';
-import '../../design_system/design_system.dart';
 
 class HomeController extends BaseController {
-  RxnInt id = RxnInt();
+  RxInt selectedIndex = RxInt(0);
 
-  @override
-  void onReady() {
-    id.value = Get.arguments as int?;
-    if (id.value == null) {
-      Get.offAllNamed(AppRouter.splash.route);
+  void changeTab(int index) {
+    if (selectedIndex.value == index) return;
+    switch (index) {
+      case 0:
+        selectedIndex.value = index;
+        break;
+      case 1:
+        selectedIndex.value = index;
+        break;
+      case 2:
+        selectedIndex.value = index;
+        break;
     }
-    super.onReady();
-  }
-
-  void teste(String theme) {
-    Get.find<ThemeController>().changeTheme(theme);
   }
 }

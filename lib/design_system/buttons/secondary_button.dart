@@ -4,64 +4,61 @@ import 'package:flutter/material.dart';
 
 import '../colors/app_color.dart';
 import '../icons/app_icons.dart';
+import '../text/text_style.dart';
+import '../text/text_widget.dart';
+import 'button_size.dart';
 
 class SecondaryButton extends StatelessWidget {
-  final String text;
+  final String? text;
+  final AppIcon? icon;
   final VoidCallback? onPressed;
-  bool? fullWidth;
-  AppColor? borderColor;
-  AppColor? backgroundColor;
-  TextStyle? style;
-  AppColor? textColor;
-  AppIcons? icon;
-  AppColor? iconColor;
+  final AppColor? textColor;
+  final AppColor? borderColor;
+  final AppColor? backgroundColor;
+  final ButtonSize size;
 
   SecondaryButton({
     super.key,
-    required this.text,
+    this.text,
     this.onPressed,
-    this.fullWidth = true,
     this.borderColor,
     this.backgroundColor,
-    this.style,
     this.textColor,
     this.icon,
-    this.iconColor,
+    this.size = ButtonSize.large,
   });
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        side: BorderSide(
-          color: borderColor ?? AppColors.neutral,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-      ),
-      child: Row(
-        children: [
-          if (icon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: AppIcon(
-                icon!,
-                color: iconColor ?? AppColors.neutral,
-              ),
-            ),
-          Text(
-            text,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            // style: AppTextStyle.button(
-            //   context,
-            //   color: textColor,
-            // ),
+    return SizedBox(
+      width: size.width,
+      height: size.height,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: OutlinedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          side: BorderSide(
+            color: borderColor ?? Theme.of(context).hintColor,
           ),
-        ],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment:
+              icon == null ? MainAxisAlignment.center : MainAxisAlignment.start,
+          children: [
+            if (icon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 32),
+                child: icon,
+              ),
+            TextWidget(
+              text ?? '',
+              style: AppTextStyle.button(context),
+            ),
+          ],
+        ),
       ),
     );
   }

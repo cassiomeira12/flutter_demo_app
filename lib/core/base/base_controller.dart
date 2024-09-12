@@ -10,6 +10,7 @@ class BaseController extends GetxController with AnalyticsMixin {
     super.onReady();
     _pageRoute = Get.currentRoute;
     screenTagging();
+    //AppRouter.home
   }
 
   void backPage() {

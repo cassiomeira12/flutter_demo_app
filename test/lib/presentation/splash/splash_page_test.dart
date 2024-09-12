@@ -13,7 +13,7 @@ void main() {
   setUpAll(() {
     SharedPreferences.setMockInitialValues({});
 
-    app = App(initialRoute: AppRouter.splash.route);
+    app = App(initialRoute: AppRouter.splash.name);
   });
 
   setUp(() {

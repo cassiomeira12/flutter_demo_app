@@ -2,22 +2,31 @@
 
 import '../design_system.dart';
 
-class ResponsiveSizeHelper {
-  static const double referenceWith = 375;
-  static const double referenceHeight = 812;
+abstract class ResponsiveSizeHelper {
+  static const double _referenceWidth = 375;
+  static const double _referenceHeight = 812;
+
+  static const double _maxWidth = 500;
+  static const double _maxHeight = 812;
 
   static double width(double size) {
-    return (_width / referenceWith) * size;
+    if (_width > _maxWidth) {
+      return (_maxWidth / _referenceWidth) * size;
+    }
+    return (_width / _referenceWidth) * size;
   }
 
   static double height(double size) {
-    return (_height / referenceHeight) * size;
+    if (_height > _maxHeight) {
+      return (_maxHeight / _referenceHeight) * size;
+    }
+    return (_height / _referenceHeight) * size;
   }
 
-  static MediaQueryData get _mediaQuery =>
+  static MediaQueryData get mediaQuery =>
       MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
-  static double get _width => _mediaQuery.size.width;
+  static double get _width => mediaQuery.size.width;
 
-  static double get _height => _mediaQuery.size.height;
+  static double get _height => mediaQuery.size.height;
 }

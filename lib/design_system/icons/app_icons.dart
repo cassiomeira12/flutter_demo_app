@@ -32,7 +32,7 @@ class AppIcon extends StatelessWidget {
     if (icon.value.contains('.png')) {
       return Image.asset(
         icon.value,
-        color: color,
+        color: color ?? Theme.of(context).iconTheme.color,
         width: size.value,
         height: size.value,
       );

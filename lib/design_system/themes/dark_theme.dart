@@ -7,6 +7,8 @@ class DarkTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: AppColors.primary,
+      primaryColorLight: AppColors.primary,
+      primaryColorDark: AppColors.primary,
       scaffoldBackgroundColor: AppColors.dark,
       textTheme: TextTheme(
         titleLarge: TextStyle(color: AppColors.light),
@@ -17,14 +19,10 @@ class DarkTheme {
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.light,
       ),
-      // indicatorColor: AppColors.statusWarning,
-      // iconButtonTheme: IconButtonThemeData(
-      //   style: ButtonStyle(
-      //     backgroundColor: WidgetStateProperty.all<AppColor>(
-      //       AppColors.statusWarning,
-      //     ),
-      //   ),
-      // ),
+      hintColor: AppColors.muted,
+      indicatorColor: AppColors.dark,
+      canvasColor: AppColors.neutralGray,
+      cardColor: AppColors.secondary,
     );
   }
 }

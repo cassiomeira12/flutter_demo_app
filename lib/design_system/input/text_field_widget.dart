@@ -10,7 +10,7 @@ import '../text/text_style.dart';
 class TextFieldWidget extends StatefulWidget {
   final Key? customKey;
   final String? label;
-  final TextStyle? labelStyle;
+  final AppTextStyle? labelStyle;
   final bool? enabled;
   final bool? readOnly;
   final String? hintText;
@@ -24,13 +24,13 @@ class TextFieldWidget extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final ValueChanged<String>? onChanged;
-  final TextStyle textStyle;
-  final Color? textColor;
+  final AppTextStyle? textStyle;
+  final AppColor? textColor;
   final double? textSize;
-  final TextStyle hintTextStyle;
-  final Color? hintColor;
+  final AppTextStyle? hintTextStyle;
+  final AppColor? hintColor;
   final Widget? suffixIcon;
-  final Color? cursorColor;
+  final AppColor? cursorColor;
   final Widget? prefixIcon;
   final ValueChanged<String>? onSubmittedFunction;
   final FocusNode? focusNode;
@@ -64,10 +64,10 @@ class TextFieldWidget extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.onChanged,
-    this.textStyle = const TextStyle(), //.body3R(),
+    this.textStyle,
     this.textColor,
     this.textSize,
-    this.hintTextStyle = const TextStyle(), //.body3R(),
+    this.hintTextStyle,
     this.hintColor,
     this.suffixIcon,
     this.cursorColor,
@@ -176,12 +176,14 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
               widget.textCapitalization ?? TextCapitalization.sentences,
           inputFormatters: widget.inputFormatters,
           textAlign: widget.textAlign,
-          cursorColor: widget.cursorColor,
+          cursorColor: widget.cursorColor ?? Theme.of(context).indicatorColor,
+          cursorHeight: kToolbarHeight * .3,
           style: AppTextStyle.field(
             context,
-            color: widget.enabled ?? true
-                ? widget.textColor
-                : Theme.of(context).hintColor,
+            color: Theme.of(context).indicatorColor,
+            // color: widget.enabled ?? true
+            //     ? widget.textColor
+            //     : Theme.of(context).hintColor,
             overflow: TextOverflow.ellipsis,
           ),
           onFieldSubmitted: (String value) {
@@ -194,10 +196,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
             counterText: '',
             hintText: widget.hintText,
             filled: true,
-            fillColor: AppColors.neutralGray,
+            fillColor: Theme.of(context).canvasColor,
             hintStyle: AppTextStyle.field(
               context,
-              color: widget.hintColor ?? AppColors.neutralGray,
+              color: widget.hintColor ?? Theme.of(context).hintColor,
               overflow: TextOverflow.ellipsis,
             ),
             border: OutlineInputBorder(
@@ -234,7 +236,10 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                   borderSide: BorderSide(color: AppColors.statusWarning),
                 ),
             prefixIcon: widget.prefixIcon,
-            prefixIconConstraints: const BoxConstraints(),
+            prefixIconConstraints: const BoxConstraints(
+              minHeight: 32,
+              maxHeight: 32,
+            ),
             suffixIcon: widget.suffixIcon ??
                 (widget.obscureText
                     ? IconButton(
@@ -244,19 +249,18 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                           _showObscureText
                               ? Icons.visibility_off
                               : Icons.visibility,
-                          color: widget.textColor,
+                          color: Theme.of(context).indicatorColor,
                         ),
                         onPressed: () => setState(
                           () => _showObscureText = !_showObscureText,
                         ),
                       )
                     : null),
-            suffixIconConstraints: const BoxConstraints(),
+            suffixIconConstraints: const BoxConstraints(
+              minHeight: 32,
+              maxHeight: 32,
+            ),
           ),
-          // onTapOutside: (_) {
-          //   FocusManager.instance.primaryFocus?.unfocus();
-          //   widget.onTapOutside?.call();
-          // },
         ),
       ],
     );
