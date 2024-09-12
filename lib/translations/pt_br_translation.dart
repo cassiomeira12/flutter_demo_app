@@ -5,7 +5,7 @@ class PtBrTranslation extends Translations {
   Map<String, Map<String, String>> get keys {
     return {
       'pt_BR': {
-        'app_name': 'SOS Vida',
+        'app_name': 'Flutter Demo App',
       },
     };
   }

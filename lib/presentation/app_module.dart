@@ -1,11 +1,9 @@
 import 'package:get/get.dart';
 
 import 'app_router.dart';
-import 'contacts/contacts.dart';
-import 'emergency/emergency.dart';
 import 'home/home.dart';
 import 'login/login.dart';
-import 'settings/settings.dart';
+import 'middleware/auth_middleware.dart';
 import 'splash/spash.dart';
 
 abstract class AppModule {
@@ -24,9 +22,9 @@ abstract class AppModule {
       name: AppRouter.home.name,
       page: () => HomePage(),
       binding: HomeBindings(),
+      middlewares: [
+        AuthMiddleware(),
+      ],
     ),
-    ...EmergencyModule.routes,
-    ...ContactsModule.routes,
-    ...SettingsModule.routes,
   ];
 }
