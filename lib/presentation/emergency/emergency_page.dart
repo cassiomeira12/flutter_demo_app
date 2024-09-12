@@ -7,9 +7,6 @@ import 'emergency_controller.dart';
 class EmergencyPage extends GetResponsiveView<EmergencyController> {
   @override
   Widget build(BuildContext context) {
-    //ResponsiveScreenSettings
-    //print(ResponsiveSizeHelper.mediaQuery.size.width);
-    //print(ResponsiveSizeHelper.mediaQuery.size.height);
     return ScaffoldWidget(
       controller: controller,
       title: 'Emergencia',

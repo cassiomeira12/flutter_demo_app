@@ -6,6 +6,5 @@ class ContactsController extends BaseController {
   @override
   void onInit() {
     super.onInit();
-    print(Get.arguments);
   }
 }
