@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import '../app_router.dart';
-import '../contacts/contacts.dart';
 import 'emergency_bindings.dart';
 import 'emergency_page.dart';
 
@@ -12,9 +11,6 @@ abstract class EmergencyModule {
       page: () => EmergencyPage(),
       binding: EmergencyBindings(),
       preventDuplicates: false,
-      children: [
-        // ...ContactsModule.routes,
-      ],
     ),
   ];
 }
