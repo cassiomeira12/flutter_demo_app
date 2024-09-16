@@ -1,6 +1,5 @@
 import Foundation
 import Flutter
-import IDwallToolkit
 
 public class FlutterHelper {
     public static var shared = FlutterHelper()
