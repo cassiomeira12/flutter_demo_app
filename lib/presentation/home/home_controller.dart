@@ -1,5 +1,3 @@
-import 'package:get/get.dart';
-
 import '../../core/core.dart';
 
 class HomeController extends BaseController {
