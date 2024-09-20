@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
 import '../core/core.dart';
 import '../data/data.dart';
@@ -10,21 +9,22 @@ import '../infra/infra.dart';
 class AppBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put<MethodChannel>(
+    AppBinding.put<MethodChannel>(
       MethodChannel('flutter'),
       permanent: true,
     );
-    Get.put<MainListener>(
+
+    AppBinding.put<MainListener>(
       MainListener(methodChannel: Get.find(), listeners: []),
       permanent: true,
     );
 
-    Get.put<ILocalStorageUseCase>(
+    AppBinding.put<ILocalStorageUseCase>(
       LocalStorageUseCase(),
       permanent: true,
     );
 
-    Get.put<EnvironmentEntity>(
+    AppBinding.put<EnvironmentEntity>(
       EnvironmentEntity(
         appName: '',
         appId: '',
@@ -36,7 +36,7 @@ class AppBindings extends Bindings {
       permanent: true,
     );
 
-    Get.put<Http>(
+    AppBinding.put<Http>(
       HttpClient(
         environment: Get.find(),
         interceptors: [
@@ -45,7 +45,8 @@ class AppBindings extends Bindings {
       ),
       permanent: true,
     );
-    Get.put<ThemeController>(
+
+    AppBinding.put<ThemeController>(
       ThemeController(
         setThemData: (theme) {
           Get.changeTheme(theme);
@@ -59,5 +60,12 @@ class AppBindings extends Bindings {
       ),
       permanent: true,
     );
+
+    AppBinding.putAsync<SessionEntity>(() async {
+      final localStorage = Get.find<ILocalStorageUseCase>();
+      String? token = await localStorage.get<String?>('token');
+      print(token);
+      return SessionEntity(token: null);
+    });
   }
 }

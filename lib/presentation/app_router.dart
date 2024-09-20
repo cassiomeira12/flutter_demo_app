@@ -1,12 +1,15 @@
-import 'package:get/get.dart';
+import '../core/core.dart';
 
 enum AppRouter {
   splash('/'),
   login('/login'),
+  recoveryPassword('/recoveryPassword'),
+  signup('/signup'),
   home('/home'),
   emergency('/emergency'),
   contacts('/contacts'),
-  settings('/settings');
+  settings('/settings'),
+  about('/about');
 
   const AppRouter(this._name);
 
@@ -18,32 +21,43 @@ enum AppRouter {
     AppRouter route, {
     int? id,
   }) async {
-    return Get.toNamed(
+    return AppNavigatorRouter.toNamed(
       route.name,
       id: id,
-      // parameters: id != null ? {'id': '$id'} : null,
     );
   }
 
-  static Future<T?> offAndToNamed<T>(
+  static Future<T?> backAndToNamed<T>(
     AppRouter route, {
     int? id,
   }) async {
-    return Get.offAndToNamed(
+    return AppNavigatorRouter.backAndToNamed(
       route.name,
       id: id,
-      parameters: id != null ? {'id': '$id'} : null,
     );
   }
 
-  static Future<T?> offAllNamed<T>(
+  static Future<T?> backAllAndToNamed<T>(
     AppRouter route, {
     int? id,
   }) async {
-    return Get.offAllNamed<T>(
+    return AppNavigatorRouter.backAllAndToNamed(
       route.name,
       id: id,
-      parameters: id != null ? {'id': '$id'} : null,
     );
+  }
+
+  static void back<T>(
+    AppRouter route, {
+    int? id,
+  }) async {
+    return AppNavigatorRouter.back(id: id);
+  }
+
+  static Future<T?> backUntil<T>(
+    AppRouter route, {
+    int? id,
+  }) async {
+    return AppNavigatorRouter.backUntil();
   }
 }
