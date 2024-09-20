@@ -1,7 +1,7 @@
+import 'package:flutter_demo_app/core/core.dart';
 import 'package:flutter_demo_app/presentation/app.dart';
 import 'package:flutter_demo_app/presentation/app_router.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:integration_test/integration_test.dart';
 
 void main() {
@@ -14,7 +14,7 @@ void main() {
   });
 
   tearDown(() {
-    Get.deleteAll(force: true);
+    AppBinding.deleteAll(force: true);
   });
 
   testWidgets('teste splash page', (tester) async {
