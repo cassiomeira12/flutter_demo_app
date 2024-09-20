@@ -14,7 +14,7 @@ class DarkTheme {
         titleLarge: TextStyle(color: AppColors.light),
       ),
       iconTheme: IconThemeData(
-        color: AppColors.light,
+        color: AppColors.neutral,
       ),
       progressIndicatorTheme: ProgressIndicatorThemeData(
         color: AppColors.light,
