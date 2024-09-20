@@ -1,11 +1,10 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import 'splash_controller.dart';
 
 class SplashBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put<SplashController>(
+    AppBinding.put<SplashController>(
       SplashController(),
     );
   }

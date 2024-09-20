@@ -1,8 +1,5 @@
-import 'package:get/get.dart';
-
 import '../../core/core.dart';
 import '../../domain/domain.dart';
-import '../app_bindings.dart';
 import '../app_router.dart';
 
 class SplashController extends BaseController {
@@ -16,7 +13,7 @@ class SplashController extends BaseController {
     String serverUrl = const String.fromEnvironment('server_url');
     String graphqllUrl = const String.fromEnvironment('graphql_url');
 
-    Get.put<EnvironmentEntity>(
+    AppBinding.put<EnvironmentEntity>(
       EnvironmentEntity(
         appName: appName,
         appId: appId,
@@ -28,10 +25,10 @@ class SplashController extends BaseController {
       permanent: true,
     );
 
-    AppBindings().dependencies();
+    // AppBindings().dependencies();
 
     await Future.delayed(const Duration(seconds: 1));
 
-    AppRouter.offAllNamed(AppRouter.login);
+    AppRouter.backAllAndToNamed(AppRouter.home);
   }
 }
