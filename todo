@@ -3,3 +3,8 @@
 3 - tela seletor de idiomas
 4 - tela seletor de tamas
 5 - tela sobre (com link para termos de serviço, política de privacidade e website)
+6 - tela report de erros
+7 - app de chat baseado no wppconnect
+8 - tela de recuperar senha
+9 - reduir o aclopamento do GetX no projeto
+10 - adicionar progress bar widget
