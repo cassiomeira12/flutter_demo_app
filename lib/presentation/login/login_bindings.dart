@@ -1,12 +1,13 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import 'login_controller.dart';
 
 class LoginBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put<LoginController>(
-      LoginController(),
+    AppBinding.put<LoginController>(
+      LoginController(
+        localStorage: Get.find(),
+      ),
     );
   }
 }
