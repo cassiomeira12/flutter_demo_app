@@ -1,11 +1,10 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import 'home_controller.dart';
 
 class HomeBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put<HomeController>(
+    AppBinding.put<HomeController>(
       HomeController(),
       //fenix: true,
     );

@@ -1,44 +1,43 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import '../../design_system/design_system.dart';
 import 'settings_controller.dart';
 
-class SettingsPage extends GetView<SettingsController> {
+class SettingsPage extends AppView<SettingsController> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWidget(
       controller: controller,
-      title: 'Ajustes',
-      showBackButtonOnWeb: true,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            PrimaryButton(
-              text: 'Light',
-              size: ButtonSize.large,
-              onPressed: () {
-                controller.changeTheme('light');
-              },
-            ),
-            Spacer(),
-            PrimaryButton(
-              text: 'Dark',
-              size: ButtonSize.medium,
-              onPressed: () {
-                controller.changeTheme('dark');
-              },
-            ),
-            Spacer(),
-            PrimaryButton(
-              text: 'Logout',
-              size: ButtonSize.small,
-              onPressed: () {
-                controller.logout();
-              },
-            ),
-          ],
-        ),
+      title: 'settings'.tr,
+      body: Column(
+        children: [
+          Spacer(),
+          SecondaryButton(
+            text: 'Idioma do App',
+            onPressed: () {
+              controller.changeLanguage(context);
+            },
+          ),
+          Spacer(),
+          SecondaryButton(
+            text: 'Tema do App',
+            onPressed: () {
+              controller.changeTheme(context);
+            },
+          ),
+          Spacer(),
+          SecondaryButton(
+            text: 'Ajuda',
+            onPressed: controller.about,
+          ),
+          Spacer(),
+          SecondaryButton(
+            text: 'Logout',
+            onPressed: () {
+              controller.logout();
+            },
+          ),
+          Spacer(),
+        ],
       ),
     );
   }

@@ -1,9 +1,8 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import '../../design_system/design_system.dart';
 import 'login_controller.dart';
 
-class LoginPage extends GetView<LoginController> {
+class LoginPage extends AppView<LoginController> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWidget(
@@ -42,9 +41,7 @@ class LoginPage extends GetView<LoginController> {
                   Flexible(
                     child: LightButton(
                       text: 'Recuperar senha',
-                      onPressed: () {
-                        //
-                      },
+                      onPressed: controller.recoveryPassword,
                     ),
                   ),
                 ],

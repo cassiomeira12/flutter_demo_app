@@ -78,7 +78,12 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
                           : const SizedBox.shrink(),
                 )
               : null,
-          body: widget.body,
+          body: widget.body != null
+              ? Container(
+                  width: ResponsiveSizeHelper.mediaQuery.size.width,
+                  child: widget.body,
+                )
+              : null,
           bottomNavigationBar: widget.bottomWidget != null
               ? SizedBox(
                   height: kToolbarHeight,

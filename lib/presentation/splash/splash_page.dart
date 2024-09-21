@@ -1,11 +1,8 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import '../../design_system/design_system.dart';
 import 'splash_controller.dart';
 
-class SplashPage extends GetView<SplashController> {
-  const SplashPage({super.key});
-
+class SplashPage extends AppView<SplashController> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWidget(

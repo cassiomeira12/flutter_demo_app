@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
+import '../../../core/core.dart';
 import '../../colors/app_color.dart';
 import '../../helpers/responsive_size_helper.dart';
 import '../../text/text_style.dart';

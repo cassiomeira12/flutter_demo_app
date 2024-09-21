@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import '../core/core.dart';
 
 class PtBrTranslation extends Translations {
   @override
@@ -6,6 +6,7 @@ class PtBrTranslation extends Translations {
     return {
       'pt_BR': {
         'app_name': 'Flutter Demo App',
+        'settings': 'Ajustes',
       },
     };
   }

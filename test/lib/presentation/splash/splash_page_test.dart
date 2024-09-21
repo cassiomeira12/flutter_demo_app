@@ -1,8 +1,8 @@
+import 'package:flutter_demo_app/core/core.dart';
 import 'package:flutter_demo_app/presentation/app.dart';
 import 'package:flutter_demo_app/presentation/app_bindings.dart';
 import 'package:flutter_demo_app/presentation/app_router.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -21,7 +21,7 @@ void main() {
   });
 
   tearDown(() {
-    Get.deleteAll(force: true);
+    AppBinding.deleteAll(force: true);
   });
 
   testWidgets('test splash page', (tester) async {

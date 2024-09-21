@@ -1,12 +1,14 @@
-import 'package:get/get.dart';
-
+import '../../core/core.dart';
 import 'settings_controller.dart';
 
 class SettingsBindings extends Bindings {
   @override
   void dependencies() {
-    Get.put<SettingsController>(
-      SettingsController(),
+    AppBinding.put<SettingsController>(
+      SettingsController(
+        themeController: Get.find(),
+        localStorage: Get.find(),
+      ),
     );
   }
 }
