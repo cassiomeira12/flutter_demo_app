@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:get/get.dart';
 
+import '../core/core.dart';
 import '../design_system/design_system.dart';
 import '../translations/translation.dart';
 import 'app_bindings.dart';

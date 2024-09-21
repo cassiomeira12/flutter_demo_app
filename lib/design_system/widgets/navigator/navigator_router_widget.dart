@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
-import '../scaffold/scaffold_widget.dart';
-import 'bottom_navigator_widget.dart';
+import '../../../core/core.dart';
+import '../../design_system.dart';
 
 class NavigatorRouterWidget extends StatefulWidget {
   final List<GetPage> pages;

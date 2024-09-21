@@ -1,6 +1,4 @@
-import 'package:get/get.dart';
-
-import 'analytics_mixin.dart';
+import '../core.dart';
 
 class BaseController extends GetxController with AnalyticsMixin {
   late String _pageRoute;

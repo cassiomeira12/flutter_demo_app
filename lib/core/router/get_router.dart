@@ -1,5 +1,4 @@
-import 'package:get/get.dart';
-
+import '../core.dart';
 import 'app_base_router.dart';
 
 class GetRouter implements AppBaseRouter {

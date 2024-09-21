@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 
+import '../core/core.dart';
 import 'pt_br_translation.dart';
 
 class Translation extends Translations {

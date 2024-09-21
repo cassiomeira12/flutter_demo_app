@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import '../core.dart';
 
 class AppRouterPage<T> extends GetPage<T> {
   AppRouterPage({

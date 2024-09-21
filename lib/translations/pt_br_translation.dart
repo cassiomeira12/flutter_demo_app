@@ -1,4 +1,4 @@
-import 'package:get/get.dart';
+import '../core/core.dart';
 
 class PtBrTranslation extends Translations {
   @override
