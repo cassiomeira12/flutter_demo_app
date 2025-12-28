@@ -21,6 +21,10 @@ enum EndpointsEnum {
   unsubscribeTopic('/parse/functions/unsubscribeTopic'),
   subscribeUserTopic('/parse/functions/subscribeUserTopic'),
   unsubscribeUserTopic('/parse/functions/unsubscribeUserTopic'),
+  createCredential('/parse/classes/Credential'),
+  updateCredential('/parse/classes/Credential/{objectId}'),
+  listCredential('/parse/classes/Credential'),
+  deleteCredential('/parse/classes/Credential/{objectId}')
   ;
 
   final String endpoint;

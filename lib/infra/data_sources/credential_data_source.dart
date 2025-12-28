@@ -1,0 +1,74 @@
+import 'package:core/core.dart';
+import 'package:flutter_demo_app/data/data.dart';
+
+class CredentialDataSourceImpl extends BaseCrudDataSourceMixin
+    implements CredentialDataSource {
+  final HttpClient _http;
+
+  CredentialDataSourceImpl({
+    required HttpClient http,
+  }) : _http = http;
+
+  @override
+  Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {
+    final request = HttpRequest(
+      url: EndpointsEnum.createCredential.endpoint,
+      data: data,
+    );
+
+    return await mixinCreate(
+      http: _http,
+      request: request,
+      defaultJsonKeys: [],
+    );
+  }
+
+  @override
+  Future<void> delete(String objectId) async {
+    final request = HttpRequest(
+      url: EndpointsEnum.deleteCredential.endpoint.replaceFirst(
+        '{objectId}',
+        objectId,
+      ),
+    );
+
+    await mixinDelete(http: _http, request: request);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> list() async {
+    final request = HttpRequest(
+      url: EndpointsEnum.listCredential.endpoint,
+    );
+
+    return await mixinList(
+      http: _http,
+      request: request,
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> update(
+    String objectId, {
+    required Map<String, dynamic> data,
+  }) async {
+    final request = HttpRequest(
+      url: EndpointsEnum.updateCredential.endpoint.replaceFirst(
+        '{objectId}',
+        objectId,
+      ),
+      data: data,
+    );
+
+    return await mixinUpdate(
+      http: _http,
+      request: request,
+      defaultJsonKeys: [],
+    );
+  }
+
+  @override
+  Future<Map<String, dynamic>> read(String objectId) {
+    throw UnimplementedError();
+  }
+}
