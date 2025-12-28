@@ -91,8 +91,6 @@ dependencies:
     path: packages/security
   login:
     path: packages/login
-  admin:
-    path: packages/admin
   home:
     path: packages/home
   settings:
@@ -155,11 +153,27 @@ flutter:
       fonts:
         - asset: assets/fonts/Montserrat-Thin.ttf
 
+# dart run flutter_native_splash:create
+flutter_native_splash:
+  android: false
+  ios: false
+  web: false
+  fullscreen: false
+  android_gravity: center
+  ios_content_mode: center
+  web_image_mode: center
+  color: "#ffffff"
+  image: "assets/png/AppIcon.png"
+  android_12:
+    color: "#ffffff"
+    icon_background_color: "#ffffff"
+    icon_background_color_dark: "#161A1E"
+
 # dart run package_rename
 package_rename_config:
   macos:
-    copyright_notice: Copyright ©️ 2026 Flutter Demo App. All rights reserved.
+    copyright_notice: Copyright ©️ 2025 Flutter Demo App. All rights reserved.
   web:
     app_name: Flutter Demo App
     short_app_name: Flutter Demo App
-    description: A new Flutter project.
+    description: Uma ferramenta para ajudar no combate à violência contra a mulher
