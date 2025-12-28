@@ -2,7 +2,7 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 1.3.0-dev
+version: 1.4.0-dev
 
 environment:
   sdk: ^3.10.1
@@ -79,8 +79,6 @@ dependencies:
     path: packages/security
   login:
     path: packages/login
-  admin:
-    path: packages/admin
   home:
     path: packages/home
   settings:
@@ -155,13 +153,13 @@ flutter_native_splash:
   android_12:
     color: "#ffffff"
     icon_background_color: "#ffffff"
-    icon_background_color_dark: "#ffffff"
+    icon_background_color_dark: "#161A1E"
 
 # dart run package_rename
 package_rename_config:
   macos:
-    copyright_notice: Copyright ©️ 2026 Flutter Demo App. All rights reserved.
+    copyright_notice: Copyright ©️ 2025 Flutter Demo App. All rights reserved.
   web:
     app_name: Flutter Demo App
     short_app_name: Flutter Demo App
-    description: A new Flutter project.
+    description: Uma ferramenta para ajudar no combate à violência contra a mulher
