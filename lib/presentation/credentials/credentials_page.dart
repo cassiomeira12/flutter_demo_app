@@ -70,6 +70,7 @@ class CredentialsPage extends AppView<CredentialsController> {
             credential: item,
             onTap: () {
               controller.openCredential(item);
+              HapticFeedback.lightImpact();
             },
           );
         },

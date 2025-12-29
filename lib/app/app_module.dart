@@ -36,6 +36,7 @@ abstract class AppModule {
     ...SecurityModuleRoutes().pages,
     ...WebViewModuleRoutes().pages,
     ...CredentialsModule.pages,
+    ...CredentialModule.pages,
     ...CameraScannerModule.routes,
   ];
 
