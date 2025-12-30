@@ -1,0 +1,36 @@
+{
+  "recommendations": [
+    // Flutter
+    "Dart-Code.dart-code",
+    "Dart-Code.flutter",
+    // Flutter Tests
+    "andreasblech.better-tests",
+    "ryanluker.vscode-coverage-gutters",
+    "flutterando.flutter-coverage",
+    // Git
+    "mhutchie.git-graph",
+    "donjayamanne.githistory",
+    "arturock.gitstash",
+    "eamodio.gitlens",
+    // Gradle
+    "richardwillis.vscode-gradle-extension-pack",
+    "vscjava.vscode-gradle",
+    "naco-siren.gradle-language",
+    // Kotlin
+    "mathiasfrohlich.Kotlin",
+    // Pubspec
+    "everettjf.pubspec-dependency-search",
+    // Themes
+    "PKief.material-icon-theme",
+    "AntoineGtr.flutter-icons",
+    // Others
+    "alefragnani.Bookmarks",
+    "wraith13.bracket-lens",
+    "usernamehw.errorlens",
+    "circlecodesolution.ccs-flutter-color",
+    "davidwoo.flutter-auto-import",
+    "AykutSarac.jsoncrack-vscode",
+    "esbenp.prettier-vscode",
+    "Gruntfuggly.todo-tree"
+  ]
+}

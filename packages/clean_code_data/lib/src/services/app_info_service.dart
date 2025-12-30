@@ -1,0 +1,31 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
+
+class AppInfoServiceImpl implements AppInfoService {
+  @override
+  Future<AppInfoModel> getAppInfo() async {
+    try {
+      final appInfo = await AppInfoData.get();
+      final package = appInfo.package;
+
+      const String appName = String.fromEnvironment('app_name');
+      final String packageName = Platform.isWeb
+          ? 'Web $appName'
+          : package.packageName;
+
+      return AppInfoModel(
+        appName: package.appName,
+        packageName: packageName,
+        buildSignature: package.buildSignature,
+        installerStore: package.installerStore,
+        version: package.version.toString().split('+').first,
+        build: package.buildNumber,
+      );
+    } catch (error, stacktrace) {
+      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+      rethrow;
+    }
+  }
+}

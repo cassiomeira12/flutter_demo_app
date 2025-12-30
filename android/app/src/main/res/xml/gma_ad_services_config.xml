@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ad-services-config>
+    <!-- For more configuration options, see: -->
+    <!-- https://developers.google.com/admob/android/privacy/gma-sdk -->
+    <!-- Configure data transmission for targeted advertising -->
+    <privacy-sandbox>
+        <attribution>
+            <!-- Enable attribution for advertising measurement -->
+            <enabled>true</enabled>
+        </attribution>
+        <protected-audience>
+            <!-- Enable Protected Audience API for remarketing -->
+            <enabled>true</enabled>
+        </protected-audience>
+        <topics>
+            <!-- Enable Topics API for interest-based advertising -->
+            <enabled>true</enabled>
+        </topics>
+    </privacy-sandbox>
+</ad-services-config>

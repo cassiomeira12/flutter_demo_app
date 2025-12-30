@@ -1,0 +1,15 @@
+import 'package:core/core.dart';
+
+abstract class SessionHelper {
+  static Future<void> clear() async {
+    try {
+      final authStorageUseCase = AppBinding.find<UserAuthStorageUseCase>();
+
+      await authStorageUseCase.clearSessionToken();
+      await authStorageUseCase.clearUserData();
+
+      await AppBinding.replace<SessionEntity>(SessionEntity());
+      await AppBinding.delete<UserEntity>(force: true);
+    } catch (_) {}
+  }
+}

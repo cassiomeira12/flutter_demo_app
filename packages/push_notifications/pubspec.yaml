@@ -1,0 +1,27 @@
+name: push_notifications
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+
+  flutter_local_notifications: 19.5.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:

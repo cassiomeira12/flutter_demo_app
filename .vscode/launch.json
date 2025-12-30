@@ -1,0 +1,132 @@
+{
+  "version": "0.2.0",
+  "inputs": [
+    {
+      "id": "mode",
+      "type": "pickString",
+      "description": "Escolha o Modo de execução",
+      "default": "debug",
+      "options": ["debug", "profile", "release"]
+    },
+    {
+      "id": "env",
+      "type": "pickString",
+      "description": "Escolha o Environment a ser executado",
+      "default": ".env",
+      "options": [".env", ".env.dev"]
+    }
+  ],
+  "configurations": [
+    {
+      "name": "Flutter App",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        // "--verbose",
+        "--${input:mode}",
+        "--dart-define-from-file=${input:env}",
+        "--web-port=1203",
+        "--web-hostname=localhost",
+        "--web-experimental-hot-reload"
+      ]
+    },
+    {
+      "name": "Flutter Web Server",
+      "request": "launch",
+      "type": "dart",
+      "args": [
+        // "--verbose",
+        "--${input:mode}",
+        "-d",
+        "web-server",
+        "--web-port=1203",
+        "--web-hostname=localhost",
+        "--dart-define-from-file=${input:env}"
+      ]
+    },
+    {
+      "name": "install Pre-Built App",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--no-build",
+        "--${input:mode}",
+        "--dart-define-from-file=${input:env}",
+        "--web-port=1203",
+        "--web-hostname=localhost",
+        "--web-experimental-hot-reload"
+      ]
+    },
+    {
+      "name": "Flutter Attach to Device",
+      "type": "dart",
+      "request": "attach"
+    },
+    {
+      "name": "File Integration Test",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "toolArgs": ["--dart-define-from-file=${input:env}", "--coverage"]
+    },
+    {
+      "name": "Integration All Test",
+      "program": "integration_test",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--dart-define-from-file=${input:env}", "--coverage"]
+    },
+    {
+      "name": "Unit All Test",
+      "program": "test",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "debug",
+      "args": ["--dart-define-from-file=${input:env}", "--coverage"]
+    },
+    {
+      "name": "Android Logcat",
+      "command": "adb logcat | grep flutter",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Enabled Analytics Debug View",
+      "command": "adb shell setprop debug.firebase.analytics.app com.example.flutter_demo_app.dev",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Disabled Analytics Debug View",
+      "command": "adb shell setprop debug.firebase.analytics.app .none.",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Test Android Deeplink",
+      "command": "adb shell am start -a android.intent.action.VIEW -d https://uol-placar.onelink.me/2vh3/a799ppqp",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Test iOS Deeplink",
+      "command": "xcrun simctl openurl booted https://uol-placar.onelink.me/2vh3/a799ppqp",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+    {
+      "name": "Check Android Assetlinks",
+      "command": "curl -s https://uol-placar.onelink.me/.well-known/assetlinks.json | jq .",
+      "request": "launch",
+      "type": "node-terminal"
+    },
+
+    {
+      "name": "Check iOS Apple App Site Association",
+      "command": "curl -s https://uol-placar.onelink.me/.well-known/apple-app-site-association | jq .",
+      "request": "launch",
+      "type": "node-terminal"
+    }
+  ]
+}

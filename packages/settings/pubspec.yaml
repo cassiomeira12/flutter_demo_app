@@ -1,0 +1,32 @@
+name: settings
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+
+  user_account:
+    path: ../user_account
+  security:
+    path: ../security
+  faq:
+    path: ../faq
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:

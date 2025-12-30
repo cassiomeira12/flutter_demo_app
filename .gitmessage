@@ -1,0 +1,22 @@
+# Tipo e mensagem do commit:
+#   - feat: Uma nova funcionalidade
+#   - fix: Uma correção de bug
+#   - docs: Alterações apenas na documentação
+#   - style: Alterações que não afetam o significado do código (espaços em branco, formatação, ponto e vírgula ausente, etc)
+#   - refactor: Uma alteração de código que não corrige um bug nem adiciona uma funcionalidade
+#   - perf: Uma alteração de código que melhora o desempenho
+#   - test: Adicionando testes ausentes
+#   - chore: Alterações no processo de build ou em ferramentas e bibliotecas auxiliares, como geração de documentação
+# Exemplo: feat: Adiciona botão de login
+
+# Assunto:
+#   - Descrição concisa das alterações. Use o imperativo, tempo presente: "altera", não "alterado" ou "alteração"
+
+# Corpo:
+#   - Descrição adicional (opcional). Use "|" para novos parágrafos
+
+# Links e referências:
+#   - Links para documentação, issues, etc
+#   - Links para bugs no crashlytics, etc
+#   - Links para PRs relacionados
+#   - Links para issues relacionadas

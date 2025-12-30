@@ -1,0 +1,12 @@
+import 'package:core/core.dart';
+
+class DeeplinkModuleRoutes implements ModuleRoutes {
+  @override
+  List<AppRouterPage> get pages => [
+    // AppRouterPage(
+    //   name: AppRouter.about.name,
+    //   page: AboutPage.new,
+    //   binding: AboutBindings(),
+    // ),
+  ];
+}

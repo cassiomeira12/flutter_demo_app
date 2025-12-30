@@ -1,0 +1,77 @@
+{
+  // Git
+  "git.ignoreLimitWarning": true,
+  // Editor
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.rulers": [80],
+  "editor.tabSize": 2,
+  // Json
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": false,
+    "editor.suggest.insertMode": "replace",
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true,
+    "editor.quickSuggestions": {
+      "strings": true
+    }
+  },
+  // Dart
+  "dart.runPubGetOnPubspecChanges": "never",
+  "dart.flutterHotReloadOnSave": "never",
+  "dart.hotReloadProgress": "statusBar",
+  "dart.debugExternalPackageLibraries": true,
+  "dart.debugSdkLibraries": true,
+  "dart.showInspectorNotificationsForWidgetErrors": true,
+  "dart.warnWhenEditingFilesOutsideWorkspace": true,
+  "[dart]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+    "editor.rulers": [80],
+    "editor.selectionHighlight": false,
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.suggestSelection": "first",
+    "editor.tabCompletion": "onlySnippets",
+    "editor.wordBasedSuggestions": "off"
+  },
+  // Explorer
+  "explorer.confirmDragAndDrop": true,
+  "explorer.confirmDelete": true,
+  // Debug
+  "debug.allowBreakpointsEverywhere": true,
+  // Extensios
+  "extensions.ignoreRecommendations": false,
+  // cSpell
+  "cSpell.language": "en,pt_BR",
+  "cSpell.ignorePaths": [
+    "**/step/**",
+    "**/steps/**",
+    "**/*.feature",
+    "**/*_test.dart",
+    "**/*/*.md",
+    "**/*/*.json",
+    "*.yaml",
+    "*.lock",
+    "makefile",
+    "**/*.xml"
+  ],
+  "cSpell.words": [
+    "aptabase",
+    "cupertino",
+    "Deeplink",
+    "deeplinking",
+    "Encrypter",
+    "Flagsmith",
+    "inappwebview",
+    "mocktail",
+    "pinput",
+    "skeletonizer",
+    "TOTP",
+    "validatorless",
+    "crashlytics",
+    "deeplink"
+  ]
+}

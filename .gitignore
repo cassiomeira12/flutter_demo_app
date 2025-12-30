@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -15,6 +17,8 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
+.env.*
+.platform_selected
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
@@ -41,3 +45,19 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Releases
+/releases/
+macos/Flutter/DartDefine.xcconfig
+ios/Flutter/DartDefine.xcconfig
+
+# Android Google Services
+android/app/google-services.json
+android/app/Firebase/*/google-services*.json
+
+# Apple Google Services
+*/Runner/GoogleService-info*.plist
+*/Firebase/*/GoogleService-info*.plist
+
+# Web Firebase Configs
+web/firebase-config*.js

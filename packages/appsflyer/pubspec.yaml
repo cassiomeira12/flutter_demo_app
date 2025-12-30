@@ -1,0 +1,27 @@
+name: appsflyer
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+
+  appsflyer_sdk: 6.17.7+1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:

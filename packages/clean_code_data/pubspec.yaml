@@ -1,0 +1,30 @@
+name: clean_code_data
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+
+  clean_code_domain:
+    path: ../clean_code_domain
+
+  encrypt: 5.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:

@@ -1,0 +1,120 @@
+name: dependency
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+
+  # Localizations
+  intl: 0.20.2
+
+  # Dependecy Injection
+  get: 4.7.3
+
+  # Http
+  dio: 5.9.0
+  cached_network_image: 3.4.1
+
+  # Logger
+  logger: 2.6.2
+
+  # Local Storage
+  shared_preferences: 2.5.3
+  flutter_secure_storage: 9.2.4
+
+  # Storage
+  path: 1.9.1
+  path_provider: 2.1.5
+
+  # Database
+
+  # Fonts
+  google_fonts: 6.3.2
+
+  # Icons
+  cupertino_icons: 1.0.8
+  icons_plus: 5.0.0
+
+  # SVG
+  flutter_svg: 2.2.3
+
+  # Firebase
+  # firebase_core: 4.2.1
+
+  # Analytics
+  aptabase_flutter: 0.4.1
+  # firebase_analytics: 12.0.4
+
+  # Crashlytics
+  sentry_flutter: 9.8.0
+  sentry_dio: 9.8.0
+
+  # Deeplink
+  app_links: 6.4.1
+
+  # Feature Flag
+  flagsmith: 6.1.0
+
+  # Push Messaging Notifications
+  # firebase_messaging: 16.0.4
+  # flutter_local_notifications: 19.5.0
+
+  # Permissions
+  permission_handler: 12.0.1
+  location: 8.0.1
+
+  # Camera
+  camerawesome: 2.5.0
+  mobile_scanner: 7.1.3
+
+  # Security Encrypt
+  crypto: 3.0.7
+  # encrypt: 5.0.3
+  local_auth: 3.0.0
+
+  # Device Info
+  android_id: 0.5.1
+  flutter_app_info: 3.0.3
+
+  # Purchase
+  in_app_purchase: 3.2.3
+
+  # Utilities
+  share_plus: 12.0.1
+  dart_either: 2.0.0
+  validatorless: 1.2.5
+  flutter_native_splash: 2.4.7
+  url_launcher: 6.3.2
+  flutter_contacts: 1.1.9+2
+  internet_connection_checker_plus: 2.9.1
+  synchronized: 3.4.0
+  flutter_dynamic_launcher_icon: 0.0.2
+
+  # Widget
+  otp: 3.2.0
+  pinput: 6.0.1
+  skeletonizer: 2.1.1
+  local_captcha: 1.0.5
+  introduction_screen: 4.0.0
+  flutter_inappwebview: 6.1.5
+  intl_phone_field: 3.2.0
+  flutter_masked_text3: 0.9.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

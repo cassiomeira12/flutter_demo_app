@@ -1,0 +1,12 @@
+const String SESSION_TOKEN = 'token';
+const String USER_DATA = 'user_data';
+const String REMEMBER_ME = 'remember_me';
+const String USERNAME = 'username';
+const String PASSWORD = 'password';
+const String CURRENT_LOCALE = 'current_locale';
+const String INTRO_DONE = 'intro_done';
+const String CURRENT_APP_VERSION = 'current_app_version_';
+const String BLOCKED_APP = 'blocked_app';
+const String USE_BIOMETRICS = 'use_biometrics';
+const String NOTIFICATIONS_ENABLED = 'notifications_enabled';
+const String USE_BLUR_PROTECT = 'blur_protect_enabled';

@@ -1,0 +1,29 @@
+name: push_messaging
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.10.1
+  flutter: ">=3.38.3"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+
+  push_notifications:
+    path: ../push_notifications
+
+  firebase_messaging: 16.0.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
