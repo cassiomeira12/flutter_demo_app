@@ -7,6 +7,8 @@ import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
 import 'package:firebase_initialize/firebase_initialize.dart';
+import 'package:flutter_demo_app/data/data.dart';
+import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -51,6 +53,20 @@ class AppBindings extends Bindings {
     UserAccountModuleBindings().injectDependencies();
     SecurityModuleBindings().injectDependencies();
     WebViewModuleBindings().injectDependencies();
-    AppPurchaseModuleBindings().injectDependencies();
+
+    AppBinding.lazyPut<LocationService>(() => LocationServiceImpl());
+    AppBinding.lazyPut<GetCurrentLocationUseCase>(
+      () => GetCurrentLocationUseCaseImpl(
+        locationService: AppBinding.find(),
+        checkPermissionUseCase: AppBinding.find(),
+      ),
+    );
+
+    AppBinding.lazyPut<TrackLocationUseCase>(
+      () => TrackLocationUseCaseImpl(
+        locationService: AppBinding.find(),
+        checkPermissionUseCase: AppBinding.find(),
+      ),
+    );
   }
 }

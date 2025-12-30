@@ -21,6 +21,14 @@ enum EndpointsEnum {
   unsubscribeTopic('/parse/functions/unsubscribeTopic'),
   subscribeUserTopic('/parse/functions/subscribeUserTopic'),
   unsubscribeUserTopic('/parse/functions/unsubscribeUserTopic'),
+  sendWhatsAppCode('/parse/functions/send-whatsapp-code'),
+  listUserOccurrencies('/parse/functions/list-occurrencies'),
+  changeSOSConfig('/parse/functions/changeSOSConfig'),
+  isWhatsAppAvailable('/parse/functions/available'),
+  sendSOS('/parse/functions/sos'),
+  createSafetyContact('/parse/functions/add-safety-contact'),
+  listSafetyContact('/parse/functions/list-safety-contact'),
+  deleteSafetyContact('/parse/functions/delete-safety-contact')
   ;
 
   final String endpoint;

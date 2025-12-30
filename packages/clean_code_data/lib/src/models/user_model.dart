@@ -14,6 +14,9 @@ class UserModel extends UserEntity {
     required super.locale,
     required super.sessionToken,
     required super.pushTopics,
+    required super.phoneNumber,
+    required super.phoneVerified,
+    required super.sosConfig,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -45,6 +48,9 @@ class UserModel extends UserEntity {
         locale: map['locale'],
         sessionToken: map['sessionToken'] ?? map['token'],
         pushTopics: List.from(map['pushTopics'] ?? []),
+        phoneNumber: map['phoneNumber'] as String,
+        phoneVerified: map['phoneVerified'] as bool?,
+        sosConfig: SosConfigModel.fromMap(map['sosConfig']),
       );
     } catch (error, stacktrace) {
       throw BaseException(

@@ -14,6 +14,9 @@ class UserEntity extends ParserToJson {
   final List<String> pushTopics;
 
   String get firstName => name.split(' ').first;
+  final String phoneNumber;
+  final bool? phoneVerified;
+  final SosConfigEntity sosConfig;
 
   UserEntity({
     required this.id,
@@ -27,12 +30,18 @@ class UserEntity extends ParserToJson {
     required this.locale,
     required this.sessionToken,
     required this.pushTopics,
+    required this.phoneNumber,
+    required this.phoneVerified,
+    required this.sosConfig,
   });
 
   UserEntity copyWith({
     String? name,
     String? locale,
     List<String>? pushTopics,
+    String? phoneNumber,
+    bool? phoneVerified,
+    SosConfigEntity? sosConfig,
   }) {
     return UserEntity(
       id: id,
@@ -46,10 +55,32 @@ class UserEntity extends ParserToJson {
       locale: locale ?? this.locale,
       sessionToken: sessionToken,
       pushTopics: pushTopics ?? this.pushTopics,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      phoneVerified: phoneVerified ?? this.phoneVerified,
+      sosConfig: sosConfig ?? this.sosConfig,
     );
   }
 
-  @override
+  String get phoneNumberWithoutCountry {
+    if (phoneNumber.isNotEmpty) {
+      return '(${phoneNumber.split('(').last.trim()}';
+    }
+    return phoneNumber;
+  }
+
+  SosChoiceEnum get sosConfigChoice {
+    if (sosConfig.onlyPolice && sosConfig.onlySafetyContacts) {
+      return SosChoiceEnum.ALL;
+    }
+    if (sosConfig.onlyPolice) {
+      return SosChoiceEnum.POLICY_ONLY;
+    }
+    if (sosConfig.onlySafetyContacts) {
+      return SosChoiceEnum.SAFETY_CONTACTS_ONLY;
+    }
+    return SosChoiceEnum.SAFETY_CONTACTS_ONLY;
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'objectId': id,
@@ -63,6 +94,9 @@ class UserEntity extends ParserToJson {
       'locale': locale,
       'sessionToken': sessionToken,
       'pushTopics': pushTopics,
+      'phoneNumber': phoneNumber,
+      'phoneVerified': phoneVerified,
+      'sosConfig': sosConfig.toMap(),
     };
   }
 }

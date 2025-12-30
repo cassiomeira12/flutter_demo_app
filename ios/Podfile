@@ -50,7 +50,7 @@ post_install do |installer|
         ## dart: PermissionGroup.reminders
         # 'PERMISSION_REMINDERS=1',
         ## dart: PermissionGroup.contacts
-        # 'PERMISSION_CONTACTS=1',
+        'PERMISSION_CONTACTS=1',
         ## dart: PermissionGroup.camera
         # 'PERMISSION_CAMERA=1',
         ## dart: PermissionGroup.microphone
@@ -60,8 +60,8 @@ post_install do |installer|
         ## dart: PermissionGroup.photos
         # 'PERMISSION_PHOTOS=1',
         ## dart: [PermissionGroup.location, PermissionGroup.locationAlways, PermissionGroup.locationWhenInUse]
-        # 'PERMISSION_LOCATION=1',
-        # 'PERMISSION_LOCATION_WHENINUSE=0',
+        'PERMISSION_LOCATION=1',
+        'PERMISSION_LOCATION_WHENINUSE=1',
         ## dart: PermissionGroup.notification
         'PERMISSION_NOTIFICATIONS=1',
         ## dart: PermissionGroup.mediaLibrary

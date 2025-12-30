@@ -32,7 +32,13 @@ enum AppRouter {
   deleteAccountFinish('/delete_account/finish_account'),
   deleteAccountConfirmation('/delete_account/confirmation'),
   deleteAccountFinished('/delete_account/delete_account_finished'),
-  purchase('/purchase')
+  purchase('/purchase'),
+  phoneNumber('/signup/phone_number'),
+  emergency('/emergency'),
+  emergencyHistory('/emergency/history'),
+  contacts('/contacts'),
+  newContact('/contacts/new'),
+  sosConfig('/settings/sos_config')
   ;
 
   const AppRouter(this._name);

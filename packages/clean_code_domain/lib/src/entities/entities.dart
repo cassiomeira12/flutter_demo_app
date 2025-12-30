@@ -10,5 +10,6 @@ export 'security_environment_entity.dart';
 export 'server_environment_entity.dart';
 export 'session_entity.dart';
 export 'share_result_entity.dart';
+export 'sos_config_entity.dart';
 export 'user_entity.dart';
 export 'web_app_environment_entity.dart';

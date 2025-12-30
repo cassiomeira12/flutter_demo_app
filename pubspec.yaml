@@ -155,6 +155,22 @@ flutter:
       fonts:
         - asset: assets/fonts/Montserrat-Thin.ttf
 
+# dart run flutter_native_splash:create
+flutter_native_splash:
+  android: false
+  ios: false
+  web: false
+  fullscreen: false
+  android_gravity: center
+  ios_content_mode: center
+  web_image_mode: center
+  color: "#97231A"
+  image: "assets/png/AppIcon.png"
+  android_12:
+    color: "#97231A"
+    icon_background_color: "#97231A"
+    icon_background_color_dark: "#97231A"
+
 # dart run package_rename
 package_rename_config:
   macos:
