@@ -21,6 +21,9 @@ enum EndpointsEnum {
   unsubscribeTopic('/parse/functions/unsubscribeTopic'),
   subscribeUserTopic('/parse/functions/subscribeUserTopic'),
   unsubscribeUserTopic('/parse/functions/unsubscribeUserTopic'),
+  listCurrentPoints('/timesheet-beefor/api/apontamento/{year}/{month}'),
+  registerPoint('/timesheet-beefor/api/apontamento/registar'),
+  totalCurrentMonth('/timesheet-beefor/api/totais/{month}/{year}')
   ;
 
   final String endpoint;

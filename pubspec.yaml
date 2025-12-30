@@ -2,7 +2,7 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 2.0.0-dev
+version: 1.6.0-dev
 
 environment:
   sdk: ^3.12.0
@@ -155,11 +155,23 @@ flutter:
       fonts:
         - asset: assets/fonts/Montserrat-Thin.ttf
 
+# dart run flutter_native_splash:create
+flutter_native_splash:
+  android: true
+  ios: true
+  web: true
+  color: "#45B39C"
+  image: assets/png/logo.png
+  android_12:
+    color: "#45B39C"
+    icon_background_color: "#45B39C"
+    icon_background_color_dark: "#161A1E"
+
 # dart run package_rename
 package_rename_config:
   macos:
-    copyright_notice: Copyright ©️ 2026 Flutter Demo App. All rights reserved.
+    copyright_notice: Copyright ©️ 2025 Work Point. All rights reserved.
   web:
-    app_name: Flutter Demo App
-    short_app_name: Flutter Demo App
+    app_name: Work Point
+    short_app_name: Work Point
     description: A new Flutter project.

@@ -6,6 +6,8 @@ import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
+import 'package:flutter_demo_app/data/data.dart';
+import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -23,12 +25,31 @@ class AppBindings extends Bindings {
   Future<void> dependencies() async {
     await CoreModuleBindings().injectDependencies();
 
-    // await FirebaseInitializeModuleBindings().injectDependencies();
+    AppBinding.replace<LoginDataSource>(
+      WorkPointLoginDataSource(http: AppBinding.find()),
+    );
+    AppBinding.replace<RefreshTokenDataSource>(
+      WorkPointRefreshTokenDataSource(loginDataSource: AppBinding.find()),
+    );
+    AppBinding.replace<LogoutDataSource>(WorkPointLogoutDataSource());
+    AppBinding.replace<UpdateUserDataUseCase>(WorkPointUpdateUserDataUseCase());
+    AppBinding.replace<ListUserInstallationsUseCase>(
+      WorkPointListUserInstallationUseCase(),
+    );
+    AppBinding.replace<UploadInstallationAppUseCase>(
+      WorkPointUploadInstallationUseCase(),
+    );
+    AppBinding.replace<UserService>(WorkPointUserService());
 
-    if (!kDebugMode) {
-      await CrashlyticsModuleBindings().injectDependencies();
-      await AnalyticsModuleBindings().injectDependencies();
-      await FeatureFlagModuleBindings().injectDependencies();
+    final List<Interceptor> httpInterceptors = [
+      WorkPointAuthTokenInterceptor(),
+    ];
+    final httpClient = AppBinding.find<HttpClient>();
+    httpClient.addAllInterceptors(httpInterceptors);
+
+    if (kReleaseMode) {
+      // FirebaseInitializeModuleBindings().injectDependencies();
+      AnalyticsModuleBindings().injectDependencies();
     }
 
     // await AppsFlyerModuleBindings().injectDependencies();

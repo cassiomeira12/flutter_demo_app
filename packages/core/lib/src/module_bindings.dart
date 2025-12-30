@@ -81,21 +81,24 @@ class CoreModuleBindings implements ModuleBinding {
           EndpointsEnum.listNotification,
           EndpointsEnum.listUsers,
           EndpointsEnum.graphql,
+          EndpointsEnum.listCurrentPoints,
+          EndpointsEnum.totalCurrentMonth,
         ],
       ),
-      ParseServerHeadersInterceptor(
-        serverEnv: AppBinding.find(),
-      ),
-      ParseServerAuthTokenInterceptor(),
-      UnauthenticatedInterceptor(
-        appSecurityManager: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-      ),
-      ServerOtpInterceptor(
-        encryptServerPublicKeyUseCase: AppBinding.find(),
-        getOtpCodeUseCase: AppBinding.find(),
-        securityEnv: AppBinding.find(),
-      ),
+      // ParseServerHeadersInterceptor(
+      //   environment: AppBinding.find(),
+      //   getInstallationAppUseCase: AppBinding.find(),
+      // ),
+      // ParseServerAuthTokenInterceptor(),
+      // UnauthenticatedInterceptor(
+      //   authStorageUseCase: AppBinding.find(),
+      //   messagingService: AppBinding.find(),
+      //   appSecurityManager: AppBinding.find(),
+      // ),
+      // ServerOtpInterceptor(
+      //   encryptServerPublicKeyUseCase: AppBinding.find(),
+      //   getOtpCodeUseCase: AppBinding.find(),
+      // ),
     ];
 
     final httpClient = AppBinding.find<HttpClient>();
