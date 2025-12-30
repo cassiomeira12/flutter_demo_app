@@ -1,11 +1,15 @@
 import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
 import 'package:app_purchase/app_purchase.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
+import 'package:flutter_demo_app/data/data.dart';
+import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -36,7 +40,37 @@ class AppBindings extends Bindings {
 
     /// Replace inside custom App Bindings
     // -----------------------------------
-    // Bindings to putReplace or lazyReplace
+    AppBinding.putReplace<LoginDataSource>(
+      WorkPointLoginDataSource(
+        http: AppBinding.find(),
+      ),
+    );
+    AppBinding.putReplace<RefreshTokenDataSource>(
+      WorkPointRefreshTokenDataSource(
+        loginDataSource: AppBinding.find(),
+      ),
+    );
+    AppBinding.putReplace<LogoutDataSource>(
+      WorkPointLogoutDataSource(),
+    );
+    AppBinding.putReplace<UpdateUserDataUseCase>(
+      WorkPointUpdateUserDataUseCase(),
+    );
+    AppBinding.lazyReplace<ListUserInstallationsUseCase>(
+      () => WorkPointListUserInstallationUseCase(),
+    );
+    AppBinding.lazyReplace<UploadInstallationAppUseCase>(
+      () => WorkPointUploadInstallationUseCase(
+        appInstallationService: AppBinding.find(),
+      ),
+    );
+    AppBinding.putReplace<UserService>(WorkPointUserService());
+
+    final List<Interceptor> httpInterceptors = [
+      WorkPointAuthTokenInterceptor(),
+    ];
+    final httpClient = AppBinding.find<HttpClient>();
+    httpClient.addAllInterceptors(httpInterceptors);
     // -----------------------------------
 
     // await AppsFlyerModuleBindings().injectDependencies();
