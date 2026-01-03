@@ -3,6 +3,7 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/app/app.dart';
+import 'package:flutter_demo_app/app/themes/custom_app_themes.dart';
 import 'package:flutter_demo_app/translations/translation.dart';
 
 void main() {
@@ -13,7 +14,11 @@ void main() {
     PlatformDispatcher.instance.onError = CrashlyticsService.catchException;
 
     AppTranslation.initLocales();
-    ThemeManager.instance.defineColor();
+    final Color primaryEnvColor = ThemeManager.primaryEnvColor;
+    ThemeManager.instance.defineColor(
+      lightColorScheme: WebViewLightColorScheme(color: primaryEnvColor),
+      darkColorScheme: WebViewDarkColorScheme(color: primaryEnvColor),
+    );
     BaseController.SPLASH_ALREADY_EXECUTED = false;
 
     // debugPaintSizeEnabled = true;

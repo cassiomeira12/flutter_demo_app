@@ -50,9 +50,64 @@ abstract class AppModule {
     HomePage.initialIndex = 0;
     HomePage.navigatorItems = [
       NavigatorItem(
-        routeName: AppRouter.unknown.name,
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/esporte/futebol/times/flamengo/',
+        },
         bottomItem: NavigatorBottom(
-          title: 'home',
+          title: 'Times'.tr,
+          selectedIcon: const FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+      ),
+      NavigatorItem(
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/esporte/futebol/central-de-jogos/',
+        },
+        bottomItem: NavigatorBottom(
+          title: 'Jogos'.tr,
+          selectedIcon: const FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+      ),
+      NavigatorItem(
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/esporte/futebol/campeonatos/',
+        },
+        bottomItem: NavigatorBottom(
+          title: 'Campeonatos'.tr,
+          selectedIcon: const FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+      ),
+      NavigatorItem(
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/flash/esporte/',
+        },
+        bottomItem: NavigatorBottom(
+          title: 'Flash'.tr,
+          selectedIcon: const FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+      ),
+      NavigatorItem(
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/',
+        },
+        bottomItem: NavigatorBottom(
+          title: 'UOL'.tr,
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
