@@ -24,14 +24,15 @@ class FeaturesCardWidget extends AppView<WebController> {
             alignment: WrapAlignment.center,
             spacing: ResponsiveSizeHelper.width(20),
             runSpacing: ResponsiveSizeHelper.height(20),
-            children: List.generate(4, (index) {
-              return Card(
-                child: SizedBox(
-                  width: ResponsiveSizeHelper.width(200),
-                  height: ResponsiveSizeHelper.width(350),
+            children: [AppAssets.feature1, AppAssets.feature2].map((image) {
+              return Container(
+                width: ResponsiveSizeHelper.width(200),
+                height: ResponsiveSizeHelper.width(350),
+                decoration: BoxDecoration(
+                  image: DecorationImage(image: AssetImage(image)),
                 ),
               );
-            }),
+            }).toList(),
           ),
         ],
       ),

@@ -93,6 +93,7 @@ class CredentialPage extends AppView<CredentialController> {
                                       ResponsiveSizeHelper.spacingDefaultWidth,
                                 ),
                                 child: IconButtonWidget(
+                                  key: const Key('copy_username'),
                                   splashRadius: 15,
                                   icon: FlutterIcon(
                                     Icons.copy,
@@ -103,6 +104,9 @@ class CredentialPage extends AppView<CredentialController> {
                                         .userNameTextController
                                         .text
                                         .trim();
+                                    controller.clickTagging(
+                                      component: 'copy_username',
+                                    );
                                     controller.copyText(text).then((_) {
                                       if (!context.mounted) return;
                                       ScaffoldMessenger.of(
@@ -159,6 +163,7 @@ class CredentialPage extends AppView<CredentialController> {
                                       ResponsiveSizeHelper.spacingDefaultWidth,
                                 ),
                                 child: IconButtonWidget(
+                                  key: const Key('copy_password'),
                                   splashRadius: 15,
                                   icon: FlutterIcon(
                                     Icons.copy,
@@ -169,6 +174,9 @@ class CredentialPage extends AppView<CredentialController> {
                                         .passwordTextController
                                         .text
                                         .trim();
+                                    controller.clickTagging(
+                                      component: 'copy_password',
+                                    );
                                     controller.copyText(text).then((_) {
                                       if (!context.mounted) return;
                                       ScaffoldMessenger.of(
@@ -239,6 +247,9 @@ class CredentialPage extends AppView<CredentialController> {
                                             .spacingDefaultWidth,
                                       ),
                                       child: IconButtonWidget(
+                                        key: const Key(
+                                          'read_secret_otp_qrcode',
+                                        ),
                                         splashRadius: 15,
                                         icon: FlutterIcon(
                                           Icons.qr_code,
@@ -287,6 +298,7 @@ class CredentialPage extends AppView<CredentialController> {
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButtonWidget(
+                                      key: const Key('open_url_link'),
                                       splashRadius: 15,
                                       icon: FlutterIcon(
                                         Icons.open_in_new,
@@ -295,6 +307,7 @@ class CredentialPage extends AppView<CredentialController> {
                                       onPressed: controller.openUrl,
                                     ),
                                     IconButtonWidget(
+                                      key: const Key('copy_url_link'),
                                       splashRadius: 15,
                                       icon: FlutterIcon(
                                         Icons.copy,
@@ -305,6 +318,9 @@ class CredentialPage extends AppView<CredentialController> {
                                             .urlTextController
                                             .text
                                             .trim();
+                                        controller.clickTagging(
+                                          component: 'url_link_copied',
+                                        );
                                         controller.copyText(text).then((_) {
                                           if (!context.mounted) return;
                                           ScaffoldMessenger.of(
@@ -366,7 +382,7 @@ class CredentialPage extends AppView<CredentialController> {
                       ),
                     const SpacerWidget(height: 3),
                     FutureButton(
-                      key: const Key('save_button_key'),
+                      key: const Key('save_credential_button_key'),
                       text: 'save'.tr,
                       expandWidth: true,
                       onPressed: () async {

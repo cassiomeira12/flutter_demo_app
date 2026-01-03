@@ -22,6 +22,7 @@ class WebController extends BaseController {
   final user = ValueNotifier<UserEntity?>(null);
 
   GlobalKey mainKey = GlobalKey();
+  GlobalKey appKey = GlobalKey();
   GlobalKey featuresKey = GlobalKey();
   GlobalKey downloadKey = GlobalKey();
   GlobalKey aboutKey = GlobalKey();
@@ -209,6 +210,13 @@ class WebController extends BaseController {
     RenderBox? renderBox;
 
     renderBox = mainKey.currentContext?.findRenderObject() as RenderBox?;
+    itemHeight += renderBox?.size.height ?? 0;
+
+    if (key == appKey) {
+      return itemHeight;
+    }
+
+    renderBox = appKey.currentContext?.findRenderObject() as RenderBox?;
     itemHeight += renderBox?.size.height ?? 0;
 
     if (key == featuresKey) {
