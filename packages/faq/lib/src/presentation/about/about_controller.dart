@@ -2,13 +2,26 @@ import 'package:core/core.dart';
 
 class AboutController extends BaseController {
   final OpenWebUrlUseCase _openWebUrlUseCase;
+  final AppReviewUseCase _appReviewUseCase;
 
-  AboutController({required OpenWebUrlUseCase openWebUrlUseCase})
-    : _openWebUrlUseCase = openWebUrlUseCase;
+  AboutController({
+    required OpenWebUrlUseCase openWebUrlUseCase,
+    required AppReviewUseCase appReviewUseCase,
+  }) : _openWebUrlUseCase = openWebUrlUseCase,
+       _appReviewUseCase = appReviewUseCase;
 
   bool get showOpenWebSiteButton {
     const String webAppUrl = String.fromEnvironment('web_app_url');
     return webAppUrl.isNotEmpty;
+  }
+
+  Future<void> appReview() async {
+    final bool isAvailable = await _appReviewUseCase.isAvailable();
+    if (isAvailable) {
+      await _appReviewUseCase.requestReview();
+    } else {
+      throw BaseException(message: 'your_device_has_no_support_to_review');
+    }
   }
 
   void appWhatsNew() {

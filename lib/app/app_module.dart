@@ -11,11 +11,13 @@ import 'package:security/security.dart';
 import 'package:settings/settings.dart';
 import 'package:splash/splash.dart';
 import 'package:user_account/user_account.dart';
+import 'package:web_app/web_app.dart';
 import 'package:webview/webview.dart';
 
 abstract class AppModule {
   static List<AppRouterPage> routes = [
     ...SplashModuleRoutes().pages,
+    ...WebAppModuleRoutes().pages,
     // ...FirebaseInitializeModuleRoutes().pages,
     // ...AppsFlyerModuleRoutes().pages,
     ...AnalyticsModuleRoutes().pages,
@@ -49,6 +51,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.settings.name,
         bottomItem: NavigatorBottom(
+          customKey: 'settings_menu_item_key',
           title: 'settings'.tr,
           selectedIcon: const FlutterIcon(
             Icons.settings,

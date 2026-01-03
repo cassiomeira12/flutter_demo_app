@@ -23,7 +23,7 @@ class BlockingController extends LifecycleController {
        _featureFlagService = featureFlagService,
        _appSecurityManager = appSecurityManager;
 
-  final RxBool pushSubcribed = RxBool(false);
+  final RxBool pushSubscribed = RxBool(false);
 
   @override
   void onReady() {
@@ -116,7 +116,7 @@ class BlockingController extends LifecycleController {
           '${packageName}_${RemoteFlagsEnum.blockingApp.name}';
       await _pushMessagingService.subscribeTopic(blockedAppTopic);
       await _localStorageUseCase.set<bool>(BLOCKED_APP, true);
-      pushSubcribed.value = true;
+      pushSubscribed.value = true;
     }
   }
 }

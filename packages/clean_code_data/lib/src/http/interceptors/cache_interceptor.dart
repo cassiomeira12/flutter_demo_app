@@ -28,10 +28,10 @@ class CacheInterceptor extends Interceptor {
     if (foundEndpoint != null) {
       final String hashEndpoint = await _hashRequest(response.requestOptions);
 
-      const String encrypterKey = String.fromEnvironment('encrypter_key');
+      const String encryptKey = String.fromEnvironment('encrypter_key');
 
       final String dataEncrypted = _securityEncryptUseCase.encrypt(
-        password: encrypterKey,
+        password: encryptKey,
         data: jsonEncode(response.data),
       );
 
@@ -69,10 +69,10 @@ class CacheInterceptor extends Interceptor {
         );
 
         if (bodyEncrypted != null && bodyEncrypted.isNotEmpty) {
-          const String encrypterKey = String.fromEnvironment('encrypter_key');
+          const String encryptKey = String.fromEnvironment('encrypter_key');
 
           final String body = _securityEncryptUseCase.decrypt(
-            password: encrypterKey,
+            password: encryptKey,
             data: bodyEncrypted,
           );
 

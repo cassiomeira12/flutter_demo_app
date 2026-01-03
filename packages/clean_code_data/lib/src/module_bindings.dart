@@ -267,5 +267,7 @@ class DataModuleBindings implements ModuleBinding {
     AppBinding.lazyPut<ShareUseCase>(() => ShareUseCaseImpl());
 
     AppBinding.lazyPut<DynamicIconUseCase>(() => DynamicIconUseCaseImpl());
+
+    AppBinding.lazyPut<AppReviewUseCase>(() => AppReviewUseCaseImpl());
   }
 }

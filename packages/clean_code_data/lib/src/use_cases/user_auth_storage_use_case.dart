@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
@@ -84,14 +83,15 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
     final String? tokenEncrypted = await _userAuthStorageService
         .getSessionToken();
     if (tokenEncrypted != null) {
-      final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
       try {
+        final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
         final String token = _securityEncrypterUseCase.decrypt(
           password: passwordKey!,
           data: tokenEncrypted,
         );
         return token;
-      } catch (_) {
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
         return null;
       }
     }
@@ -126,7 +126,8 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
         );
         final Map<String, dynamic> data = jsonDecode(json);
         return data;
-      } catch (_) {
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
         throw InvalidTokenException();
       }
     }

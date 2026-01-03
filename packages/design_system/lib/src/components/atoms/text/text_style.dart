@@ -50,6 +50,21 @@ class AppTextStyle extends TextStyle {
          fontFeatures: [const FontFeature.tabularFigures()],
        );
 
+  AppTextStyle.error(
+    BuildContext context, {
+    FontFamily fontFamily = FontFamily.regular,
+    TextSize fontSize = TextSize.font_12,
+    super.overflow,
+    bool bold = false,
+    super.decoration,
+  }) : super(
+         fontFamily: fontFamily.family,
+         fontSize: fontSize.value,
+         color: Theme.of(context).colorScheme.error,
+         fontWeight: bold ? FontWeight.bold : FontWeight.w900,
+         fontFeatures: [const FontFeature.tabularFigures()],
+       );
+
   AppTextStyle.label(
     BuildContext context, {
     FontFamily fontFamily = FontFamily.regular,

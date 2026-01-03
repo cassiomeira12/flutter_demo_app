@@ -21,7 +21,7 @@ class UserAccountModuleRoutes implements ModuleRoutes {
       binding: DeleteAccountFinishBindings(),
     ),
     AppRouterPage(
-      popGesture: false,
+      canPop: false,
       name: AppRouter.deleteAccountFinished.name,
       page: DeleteAccountFinishedPage.new,
       binding: DeleteAccountFinishedBindings(),

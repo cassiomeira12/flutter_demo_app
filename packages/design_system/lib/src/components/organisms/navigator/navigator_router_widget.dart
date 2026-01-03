@@ -137,7 +137,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
         return page.children
             .map((child) {
               return GetPageRoute(
-                popGesture: Platform.isWeb || Platform.isIOS,
+                popGesture: (child.popGesture ?? true)
+                    ? Platform.isWeb || Platform.isIOS
+                    : false,
                 settings: settings,
                 page: child.page,
                 routeName: child.name,
@@ -165,7 +167,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
 
         return subRoute ??
             GetPageRoute(
-              popGesture: Platform.isWeb || Platform.isIOS,
+              popGesture: (page.popGesture ?? true)
+                  ? Platform.isWeb || Platform.isIOS
+                  : false,
               settings: settings,
               routeName: AppRouter.unknown.name,
               page: UnknownPage.new,
@@ -188,7 +192,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
   }) {
     if (settings.name == Navigator.defaultRouteName) {
       return GetPageRoute(
-        popGesture: Platform.isWeb || Platform.isIOS,
+        popGesture: (defaultPage.popGesture ?? true)
+            ? Platform.isWeb || Platform.isIOS
+            : false,
         settings: RouteSettings(
           name: defaultPage.name,
           arguments: defaultPage.arguments,
@@ -226,7 +232,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
 
     if (foundSubRoute || foundChildSubRoute || routeName == child?.name) {
       return GetPageRoute(
-        popGesture: Platform.isWeb || Platform.isIOS,
+        popGesture: (child?.popGesture ?? true)
+            ? Platform.isWeb || Platform.isIOS
+            : false,
         settings: settings,
         page: child?.page,
         routeName: child?.name,

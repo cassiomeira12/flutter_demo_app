@@ -1,0 +1,15 @@
+[
+  {
+    "target": {
+      "package_name": "com.example.flutter_demo_app",
+      "sha256_cert_fingerprints": [
+        "ANDROID_SHA_256_CERT_FINGERPRINTS_GOOGLE_PLAY",
+        "ANDROID_SHA_256_CERT_FINGERPRINTS_STG_DEVELOPMENT"
+      ],
+      "namespace": "android_app"
+    },
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ]
+  }
+]

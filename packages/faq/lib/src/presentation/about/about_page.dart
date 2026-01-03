@@ -21,11 +21,29 @@ class AboutPage extends AppView<AboutController> {
                 spacing: ResponsiveSizeHelper.spacingDefaultHeight,
                 children: [
                   SecondaryButton(
-                    // key: const Key('about_app_whats_new_key'),
+                    key: const Key('about_app_review_key'),
                     text: 'Avalie o aplicativo'.tr,
                     expandWidth: true,
                     icon: FlutterIcon(Icons.feedback_outlined),
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        await controller.appReview();
+                      } on BaseException catch (error) {
+                        if (!context.mounted) return;
+                        DialogWidget.show(
+                          context,
+                          title: 'default_error'.tr,
+                          message: error.toString().tr,
+                        );
+                      } catch (error) {
+                        if (!context.mounted) return;
+                        DialogWidget.show(
+                          context,
+                          title: 'default_error'.tr,
+                          message: error.toString().tr,
+                        );
+                      }
+                    },
                   ),
                   SecondaryButton(
                     key: const Key('about_app_whats_new_key'),
@@ -53,6 +71,7 @@ class AboutPage extends AppView<AboutController> {
                       key: const Key('about_open_website_key'),
                       text: 'open_website'.tr,
                       expandWidth: true,
+                      icon: FlutterIcon(Icons.web_sharp),
                       onPressed: controller.openWebSite,
                     ),
                 ],

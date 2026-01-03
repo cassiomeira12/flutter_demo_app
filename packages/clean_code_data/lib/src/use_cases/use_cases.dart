@@ -1,3 +1,4 @@
+export 'app_review_use_case.dart';
 export 'base_crud_use_case.dart';
 export 'cache_storage_use_case.dart';
 export 'change_native_locale_use_case.dart';

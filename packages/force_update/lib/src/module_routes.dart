@@ -7,7 +7,7 @@ class ForceUpdateModuleRoutes implements ModuleRoutes {
   @override
   List<AppRouterPage> get pages => [
     AppRouterPage(
-      popGesture: false,
+      canPop: false,
       name: AppRouter.blocking.name,
       page: BlockingPage.new,
       binding: BlockingBindings(),

@@ -7,7 +7,10 @@ class AboutBindings extends Bindings {
   @override
   void dependencies() {
     AppBinding.put<AboutController>(
-      AboutController(openWebUrlUseCase: AppBinding.find()),
+      AboutController(
+        openWebUrlUseCase: AppBinding.find(),
+        appReviewUseCase: AppBinding.find(),
+      ),
     );
   }
 }

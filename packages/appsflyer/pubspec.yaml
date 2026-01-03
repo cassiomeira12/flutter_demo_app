@@ -18,7 +18,7 @@ dependencies:
   dependency:
     path: ../dependency
 
-  appsflyer_sdk: 6.17.7+1
+  appsflyer_sdk: 6.17.8
 
 dev_dependencies:
   flutter_test:

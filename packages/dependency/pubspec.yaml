@@ -29,10 +29,11 @@ dependencies:
 
   # Logger
   logger: 2.6.2
+  talker: 5.1.9
 
   # Local Storage
-  shared_preferences: 2.5.3
-  flutter_secure_storage: 9.2.4
+  shared_preferences: 2.5.4
+  flutter_secure_storage: 10.0.0
 
   # Storage
   path: 1.9.1
@@ -41,7 +42,7 @@ dependencies:
   # Database
 
   # Fonts
-  google_fonts: 6.3.2
+  google_fonts: 6.3.3
 
   # Icons
   cupertino_icons: 1.0.8
@@ -58,8 +59,8 @@ dependencies:
   # firebase_analytics: 12.0.4
 
   # Crashlytics
-  sentry_flutter: 9.8.0
-  sentry_dio: 9.8.0
+  sentry_flutter: 9.9.1
+  sentry_dio: 9.9.1
 
   # Deeplink
   app_links: 6.4.1
@@ -77,7 +78,7 @@ dependencies:
 
   # Camera
   camerawesome: 2.5.0
-  mobile_scanner: 7.1.3
+  mobile_scanner: 7.1.4
 
   # Security Encrypt
   crypto: 3.0.7
@@ -98,14 +99,15 @@ dependencies:
   flutter_native_splash: 2.4.7
   url_launcher: 6.3.2
   flutter_contacts: 1.1.9+2
-  internet_connection_checker_plus: 2.9.1
+  internet_connection_checker_plus: 2.9.1+2
   synchronized: 3.4.0
   flutter_dynamic_launcher_icon: 0.0.2
+  in_app_review: 2.0.11
 
   # Widget
   otp: 3.2.0
   pinput: 6.0.1
-  skeletonizer: 2.1.1
+  skeletonizer: 2.1.2
   local_captcha: 1.0.5
   introduction_screen: 4.0.0
   flutter_inappwebview: 6.1.5

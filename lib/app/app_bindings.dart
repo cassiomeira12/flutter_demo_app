@@ -13,6 +13,7 @@ import 'package:security/security.dart';
 import 'package:settings/settings.dart';
 import 'package:splash/splash.dart';
 import 'package:user_account/user_account.dart';
+import 'package:web_app/web_app.dart';
 import 'package:webview/webview.dart';
 
 class AppBindings extends Bindings {
@@ -39,6 +40,7 @@ class AppBindings extends Bindings {
     }
 
     SplashModuleBindings().injectDependencies();
+    WebAppModuleBindings().injectDependencies();
     OnboardingModuleBindings().injectDependencies();
     NotificationsModuleBindings().injectDependencies();
     ForceUpdateModuleBindings().injectDependencies();

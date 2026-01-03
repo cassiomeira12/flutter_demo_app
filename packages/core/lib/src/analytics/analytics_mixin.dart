@@ -52,16 +52,19 @@ mixin AnalyticsMixin {
     CrashlyticsServiceManager.instance.setUserId(userId);
     if (property != null) {
       final Map<String, dynamic> properties = {
-        'userId': property['id'] ?? '',
-        'name': property['nome'] ?? '',
+        'userId': userId,
+        'name': property['name'] ?? property['nome'] ?? '',
+        'username': property['username'] ?? '',
         'email': property['email'] ?? '',
       };
       AnalyticsServiceManager.instance.setUserProperty(
         name: 'user_property',
         property: properties,
       );
+      final String? userNameIdentifier =
+          properties['name'] ?? property['nome'] ?? property['username'];
       CrashlyticsServiceManager.instance.setUserProperty(
-        name: properties['name'],
+        name: userNameIdentifier ?? '',
         property: properties,
       );
     }

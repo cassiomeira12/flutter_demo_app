@@ -7,7 +7,7 @@ class SecurityModuleRoutes implements ModuleRoutes {
   @override
   List<AppRouterPage> get pages => [
     AppRouterPage(
-      popGesture: false,
+      canPop: false,
       name: AppRouter.securityBlocked.name,
       page: SecurityBlockedPage.new,
       binding: SecurityBindings(),

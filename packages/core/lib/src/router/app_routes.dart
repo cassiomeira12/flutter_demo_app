@@ -16,6 +16,11 @@ abstract class AppRoutes {
     return routes.values.toList().firstWhereOrNull((page) => page.navigator);
   }
 
+  static AppRouterPage get currentRouterPage {
+    final currentRoute = AppNavigator.currentRoute;
+    return findByRoute(currentRoute)!;
+  }
+
   static AppRouterPage? findByRoute(String route, {int? nestedId}) {
     final int? currentNestedId =
         nestedId ?? BaseController.navigatorIndex.value;

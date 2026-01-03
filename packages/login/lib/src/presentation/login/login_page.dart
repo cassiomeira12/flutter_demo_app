@@ -57,30 +57,30 @@ class LoginPage extends AppView<LoginController> {
                     Obx(() {
                       return CheckboxTitleWidget(
                         key: const Key('remember_checkbox_key'),
-                        text: 'remember_my_credentials'.tr,
+                        text: 'remember_my_email'.tr,
                         initialValue: controller.rememberMeInitial.value,
                         onChanged: controller.saveRememberEmail,
                       );
                     }),
                     const SpacerWidget(),
-                    // Container(
-                    //   constraints: const BoxConstraints(
-                    //     maxWidth: ResponsiveSizeHelper.maxWidth,
-                    //   ),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.end,
-                    //     children: [
-                    //       Flexible(
-                    //         child: LightButton(
-                    //           key: const Key('recovery_password_button_key'),
-                    //           text: 'recovery_password_button'.tr,
-                    //           onPressed: controller.recoveryPassword,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SpacerWidget(),
+                    Container(
+                      constraints: const BoxConstraints(
+                        maxWidth: ResponsiveSizeHelper.maxWidth,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Flexible(
+                            child: LightButton(
+                              key: const Key('recovery_password_button_key'),
+                              text: 'recovery_password_button'.tr,
+                              onPressed: controller.recoveryPassword,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SpacerWidget(),
                     FutureButton(
                       key: const Key('login_button_key'),
                       text: 'login_button'.tr,
@@ -116,13 +116,13 @@ class LoginPage extends AppView<LoginController> {
                         }
                       },
                     ),
-                    // const SpacerWidget(height: 2),
-                    // SecondaryButton(
-                    //   key: const Key('signup_button_key'),
-                    //   text: 'create_new_account'.tr,
-                    //   expandWidth: true,
-                    //   onPressed: controller.signUp,
-                    // ),
+                    const SpacerWidget(height: 2),
+                    SecondaryButton(
+                      key: const Key('signup_button_key'),
+                      text: 'create_new_account'.tr,
+                      expandWidth: true,
+                      onPressed: controller.signUp,
+                    ),
                     const SpacerWidget(),
                   ],
                 ),

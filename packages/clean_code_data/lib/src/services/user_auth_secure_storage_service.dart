@@ -1,4 +1,3 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class UserAuthSecureStorageImpl implements UserAuthStorageService {
@@ -22,8 +21,18 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
 
   @override
   Future<Map<String, String?>> getCredentials() async {
-    final String? username = await _secureStorageUseCase.get<String>(USERNAME);
-    final String? password = await _secureStorageUseCase.get<String>(PASSWORD);
+    String? username;
+    String? password;
+    try {
+      username = await _secureStorageUseCase.get<String>(USERNAME);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+    }
+    try {
+      password = await _secureStorageUseCase.get<String>(PASSWORD);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+    }
     return {'username': username, 'password': password};
   }
 
@@ -45,7 +54,12 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
 
   @override
   Future<String?> getSessionToken() async {
-    return await _secureStorageUseCase.get<String>(SESSION_TOKEN);
+    try {
+      return await _secureStorageUseCase.get<String>(SESSION_TOKEN);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      return null;
+    }
   }
 
   @override
@@ -60,6 +74,11 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
 
   @override
   Future<String?> getUserData() async {
-    return await _secureStorageUseCase.get<String>(USER_DATA);
+    try {
+      return await _secureStorageUseCase.get<String>(USER_DATA);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      return null;
+    }
   }
 }

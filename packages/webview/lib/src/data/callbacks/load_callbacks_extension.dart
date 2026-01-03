@@ -9,6 +9,7 @@ mixin LoadCallbacksExtension {
     required void Function(String log) onLog,
   }) {
     onLog('onWebViewCreated $url');
+    loading(true);
     webViewController.nextStep();
     webViewController.startLoadingTimer();
   }
@@ -16,7 +17,6 @@ mixin LoadCallbacksExtension {
   void onLoadStart(
     WebUri? webUri, {
     required WebViewWidgetController webViewController,
-    required void Function(bool isLoading) loading,
     required void Function(String log) onLog,
   }) {
     webViewController.clearLoadingManager();
@@ -53,8 +53,6 @@ mixin LoadCallbacksExtension {
     required void Function(String log) onLog,
     required void Function() processGone,
   }) {
-    // if (!webViewController.currentStep.isOnPageVisibleStep) return;
-
     onLog('onPageCommitVisible ${webViewController.lastProgress}%');
 
     if (webUri == null || webUri.toString().contains('about:blank')) {
@@ -75,7 +73,6 @@ mixin LoadCallbacksExtension {
     required void Function() processGone,
   }) {
     if (!webViewController.currentStep.isGreaterThanProgressStep) return;
-    // if (!webViewController.currentStep.isFinished) return;
     onLog('onLoadStop $webUri');
 
     if (webUri == null || webUri.toString().contains('about:blank')) {

@@ -2,7 +2,7 @@ import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
 class BottomSheetWidget<T> {
-  static Future<T> show<T>({
+  static Future<T?> show<T>({
     required BuildContext context,
     required Widget child,
     EdgeInsetsGeometry? contentPadding,
@@ -11,6 +11,7 @@ class BottomSheetWidget<T> {
     bool isDismissible = true,
     bool showCloseButton = true,
   }) async {
+    if (!context.mounted) return null;
     return await showModalBottomSheet(
       context: context,
       isDismissible: isDismissible,
@@ -22,10 +23,6 @@ class BottomSheetWidget<T> {
           topLeft: Radius.circular(ResponsiveSizeHelper.width(10)),
           topRight: Radius.circular(ResponsiveSizeHelper.width(10)),
         ),
-      ),
-      sheetAnimationStyle: AnimationStyle(
-        duration: const Duration(milliseconds: 500),
-        reverseDuration: const Duration(milliseconds: 500),
       ),
       builder: (BuildContext context) {
         return SafeArea(

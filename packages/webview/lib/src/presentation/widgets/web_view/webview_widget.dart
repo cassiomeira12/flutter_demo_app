@@ -211,7 +211,6 @@ class _WebViewWidgetState extends State<WebViewWidget>
               return onLoadStart(
                 url,
                 webViewController: _webViewController,
-                loading: widget.loading,
                 onLog: widget.onLog,
               );
             },

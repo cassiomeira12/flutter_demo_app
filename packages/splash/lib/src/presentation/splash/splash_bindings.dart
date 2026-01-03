@@ -15,6 +15,7 @@ class SplashBindings extends Bindings {
         getAppInfoUseCase: AppBinding.find(),
         getDeviceInfoUseCase: AppBinding.find(),
         checkPermissionUseCase: AppBinding.find(),
+        requestPermissionUseCase: AppBinding.find(),
         featureFlagService: AppBinding.find(),
         pushMessagingService: AppBinding.find(),
         pushNotificationsService: AppBinding.find(),

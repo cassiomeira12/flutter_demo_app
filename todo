@@ -1,1 +1,9 @@
-[OK] - base enviroment
+Master 1.0.1
+[OK] - feat: create make recreate branch function
+[OK] - feat: update make merge function
+[OK] - feat: update make build function
+[OK] - bug: double back page on nested pages
+[OK] - bug: text area with characters limit
+
+Master 1.0.0
+[OK] - base settings for flutter demo app

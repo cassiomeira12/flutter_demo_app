@@ -10,7 +10,8 @@ class BlockingPage extends AppView<BlockingController> {
   Widget build(BuildContext context) {
     return ScaffoldWidget(
       canPop: false,
-      title: 'blocking'.tr,
+      hideAppBar: true,
+      title: '',
       controller: controller,
       body: Padding(
         padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
@@ -18,20 +19,17 @@ class BlockingPage extends AppView<BlockingController> {
           children: [
             const SpacerWidget(),
             TextWidget(
-              '🐞 Estamos em manutenção',
+              'blocking_app_title'.tr,
               style: AppTextStyle.subtitle(context),
             ),
             const SpacerWidget(),
-            const TextWidget(
-              'O aplicativo está indisponível no momento, em breve você poderá utilizar o App novamente.',
-              textAlign: TextAlign.center,
-            ),
+            TextWidget('blocking_app_message'.tr, textAlign: TextAlign.center),
             const SpacerWidget(height: 2),
             Obx(() {
               return Visibility(
-                visible: controller.pushSubcribed.value,
-                child: const TextWidget(
-                  'Ao finalizar, você será notificado quando o aplicativo estiver disponível novamente.',
+                visible: controller.pushSubscribed.value,
+                child: TextWidget(
+                  'blocking_push_notification'.tr,
                   textAlign: TextAlign.center,
                 ),
               );

@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "${APPLE_STORE_APP_ID}.com.example.FlutterDemoApp",
+        "paths": [
+          "/*"
+        ]
+      }
+    ]
+  }
+}

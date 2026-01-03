@@ -18,10 +18,11 @@ class ErrorPage extends StatelessWidget {
     return ScaffoldWidget(
       hideAppBar: true,
       controller: null,
+      runPopGesture: false,
       body: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveSizeHelper.width(10),
+            horizontal: ResponsiveSizeHelper.width(20),
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -50,26 +51,24 @@ class ErrorPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SpacerWidget(height: 2),
-              // if (kDebugMode) TextWidget(errorDetails.exception.toString()),
+              if (kDebugMode)
+                TextWidget(
+                  errorMessage.toString(),
+                  style: AppTextStyle.error(context),
+                  textAlign: TextAlign.center,
+                ),
               const SpacerWidget(),
               if (onTryAgain != null)
                 PrimaryButton(
                   text: 'Tentar novamente',
                   backgroundColor: Theme.of(context).colorScheme.error,
                   onPressed: onTryAgain,
+                  size: ButtonSize.medium,
                 ),
             ],
           ),
         ),
       ),
-      // bottomWidget: Center(
-      //   child: PrimaryButton(
-      //     text: 'Voltar',
-      //     onPressed: () {
-      //       AppNavigator.back();
-      //     },
-      //   ),
-      // ),
     );
   }
 }

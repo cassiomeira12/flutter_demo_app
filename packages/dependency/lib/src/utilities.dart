@@ -7,3 +7,4 @@ export 'package:flutter_contacts/flutter_contacts.dart';
 export 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 export 'package:synchronized/synchronized.dart';
 export 'package:flutter_dynamic_launcher_icon/flutter_dynamic_launcher_icon.dart';
+export 'package:in_app_review/in_app_review.dart';

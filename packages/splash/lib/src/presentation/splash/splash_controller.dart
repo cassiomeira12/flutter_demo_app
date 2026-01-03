@@ -8,6 +8,7 @@ class SplashController extends BaseController {
   final GetDeviceInfoUseCase _getDeviceInfoUseCase;
   final GetAppInfoUseCase _getAppInfoUseCase;
   final CheckPermissionUseCase _checkPermissionUseCase;
+  final RequestPermissionUseCase _requestPermissionUseCase;
   final FeatureFlagService _featureFlagService;
   final PushMessagingService _pushMessagingService;
   final PushNotificationsService _pushNotificationsService;
@@ -24,6 +25,7 @@ class SplashController extends BaseController {
     required GetDeviceInfoUseCase getDeviceInfoUseCase,
     required GetAppInfoUseCase getAppInfoUseCase,
     required CheckPermissionUseCase checkPermissionUseCase,
+    required RequestPermissionUseCase requestPermissionUseCase,
     required FeatureFlagService featureFlagService,
     required PushMessagingService pushMessagingService,
     required PushNotificationsService pushNotificationsService,
@@ -38,6 +40,7 @@ class SplashController extends BaseController {
        _getDeviceInfoUseCase = getDeviceInfoUseCase,
        _getAppInfoUseCase = getAppInfoUseCase,
        _checkPermissionUseCase = checkPermissionUseCase,
+       _requestPermissionUseCase = requestPermissionUseCase,
        _featureFlagService = featureFlagService,
        _pushMessagingService = pushMessagingService,
        _pushNotificationsService = pushNotificationsService,
@@ -67,10 +70,12 @@ class SplashController extends BaseController {
 
     super.onReady();
 
-    final bool introDone = await _checkIntroDone();
-    if (introDone == false) {
-      AppNavigator.backAllAndToNamed(AppRouter.intro);
-      return;
+    if (!Platform.isWeb) {
+      final bool introDone = await _checkIntroDone();
+      if (introDone == false) {
+        AppNavigator.backAllAndToNamed(AppRouter.intro);
+        return;
+      }
     }
 
     _removeNativeSplashScreen();
@@ -83,7 +88,7 @@ class SplashController extends BaseController {
     });
 
     if (Platform.isWeb || Platform.isMobile) {
-      await _initPushNotification();
+      _initPushNotification();
     } else {
       Log.warning(
         'Push Notification not work on [${Platform.currentPlatform.name}]',
@@ -91,12 +96,14 @@ class SplashController extends BaseController {
       );
     }
 
+    final bool isAuthenticated = await _isUserAuthenticated();
+
     if (Platform.isWeb) {
       AppNavigator.backAllAndToNamed(AppRouter.web);
       return;
     }
 
-    await _openNextPage();
+    await _openNextPage(isAuthenticated: isAuthenticated);
 
     await _initRemoteConfig();
 
@@ -136,6 +143,12 @@ class SplashController extends BaseController {
       permission = PermissionStatus.denied;
     }
 
+    if (Platform.isWeb) {
+      permission = await _requestPermissionUseCase.call(
+        Permission.notification,
+      );
+    }
+
     Log.info('Push Notification Permissions: [$permission]');
 
     if (permission.isGranted) {
@@ -148,13 +161,6 @@ class SplashController extends BaseController {
 
       await _pushMessagingService.openNotificationOnStartApp();
       await _pushNotificationsService.openNotificationOnStartApp();
-
-      // TODO remover depois
-      // ['plc_geral', 'plc_t1', 'plc_not_t1', 'plc_t9', 'plc_not_t9'].forEach((
-      //   topic,
-      // ) {
-      //   _pushMessagingService.subscribeTopic(topic);
-      // });
     }
   }
 
@@ -183,11 +189,7 @@ class SplashController extends BaseController {
     }
   }
 
-  Future<void> _openNextPage() async {
-    final bool isAuthenticated = await _isUserAuthenticated();
-
-    // _removeNativeSplashScreen();
-
+  Future<void> _openNextPage({required bool isAuthenticated}) async {
     if (isAuthenticated) {
       await _appSecurityManager.checkIfNeedBlockApp();
       AppNavigator.backAllAndToNamed(AppRouter.home);

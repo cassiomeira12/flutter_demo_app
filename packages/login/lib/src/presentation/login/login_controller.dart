@@ -73,7 +73,7 @@ class LoginController extends BaseController
       await _pushMessagingService.subscribeTopic(user.id);
 
       if (rememberMeInitial.value) {
-        await _saveLoginEmail(username: username, password: password);
+        await _saveLoginEmail(username: username);
       } else {
         await _removeLoginEmailSaved();
       }

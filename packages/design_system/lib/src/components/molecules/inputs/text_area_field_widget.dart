@@ -47,7 +47,6 @@ class _TextAreaFieldWidgetState extends State<TextAreaFieldWidget> {
       controller: widget.controller,
       readOnly: widget.readOnly,
       enabled: widget.enabled,
-      maxLength: widget.maxLength,
       maxLines: widget.maxLines,
       validator: widget.validator,
       onChanged: widget.onChanged,

@@ -54,51 +54,37 @@ class ScaffoldWidget extends StatefulWidget {
 }
 
 class _ScaffoldWidgetState extends State<ScaffoldWidget> {
-  bool _alreadyRemoveRouteStack = false;
-
   void _onPopInvokedWithResult(bool didPop, result, BuildContext context) {
     if (!widget.runPopGesture) return;
 
-    if (didPop) {
-      if (widget.controller != null && !_alreadyRemoveRouteStack) {
-        // HapticFeedback.lightImpact();
-        // return widget.controller!.backPage();
-      }
+    final routerPage = AppRoutes.currentRouterPage;
+    if (!routerPage.canPop) {
       return;
     }
 
-    final currentNavigationIndex = BaseController.navigatorIndex.value;
+    if (didPop) {
+      return;
+    }
 
-    if (Platform.isWeb) {
-      if (widget.controller == null) return;
+    if (widget.controller == null) {
+      final currentNavigationIndex = BaseController.navigatorIndex.value;
       final navigatorState = Get.nestedKey(currentNavigationIndex);
       if (navigatorState?.currentState?.canPop() ?? false) {
-        return navigatorState!.currentState?.pop();
+        return navigatorState?.currentState?.pop();
       }
-      widget.controller?.backPage();
+    }
+
+    final rootNavigatorCanPop = Navigator.canPop(context);
+    if (rootNavigatorCanPop) {
+      if (widget.controller != null) {
+        HapticFeedback.lightImpact();
+        return widget.controller!.backPage();
+      }
       return;
     }
 
-    if (Platform.isAndroid) {
-      if (widget.controller == null) {
-        final navigatorState = Get.nestedKey(currentNavigationIndex);
-        if (navigatorState?.currentState?.canPop() ?? false) {
-          HapticFeedback.lightImpact();
-          _alreadyRemoveRouteStack = false;
-          return navigatorState!.currentState?.pop();
-        }
-      }
-      if (Navigator.canPop(context) && widget.canPop) {
-        if (widget.controller != null) {
-          HapticFeedback.lightImpact();
-          _alreadyRemoveRouteStack = true;
-          widget.controller!.backPage();
-        }
-      } else {
-        HapticFeedback.lightImpact();
-        SystemNavigator.pop(animated: true);
-      }
-    }
+    HapticFeedback.lightImpact();
+    SystemNavigator.pop(animated: true);
   }
 
   @override

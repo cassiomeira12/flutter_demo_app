@@ -44,6 +44,8 @@ class PtBrTranslation extends Translations {
         'download_app': 'Baixar o App',
         // Login
         'login': 'Login',
+        'password_validation': 'Valide sua senha',
+        'confirm': 'Confirmar',
         //
         'username_label': 'E-mail',
         'username_input_hint': 'Digite seu e-mail aqui',
@@ -226,20 +228,16 @@ class PtBrTranslation extends Translations {
         'updated_app_title': 'O que há de novo',
         'updated_app_message': 'O que há de novo no App {version} 👋🏼',
         'updated_finish_button': 'Ir para a Home',
+        'blocking_app_title': '🐞 Estamos em manutenção',
+        'blocking_app_message':
+            'O aplicativo está indisponível no momento, em breve você poderá utilizar o App novamente.',
+        'blocking_push_notification':
+            'Você será notificado quando o aplicativo estiver disponível novamente.',
         // Search Delegate
         'search': 'Pesquisar',
         // Web Visit History
         'web_visit_history': 'Histórico de visitas',
         'empty_web_visit_history_list': 'Histórico de visitas vazio',
-        // Work Points
-        'remember_my_credentials': 'Salvar minhas credenciais',
-        'change_month': 'Alterar mês',
-        'holiday': 'Feriado',
-        'weekend': 'Final de semana',
-        'total_hours': 'Total de horas',
-        'total_budget': 'Faturamento',
-        'make_check_point': 'Bater ponto',
-        'make_check_point_now': 'Deseja bater ponto agora?',
       },
     };
   }

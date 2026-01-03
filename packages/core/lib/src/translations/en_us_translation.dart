@@ -40,6 +40,8 @@ class EnUsTranslation extends Translations {
         'download_app': 'Download App',
         // Login
         'login': 'Login',
+        'password_validation': 'Validate your password.',
+        'confirm': 'Confirm',
         //
         'username_label': 'E-mail',
         'username_input_hint': 'Type your e-mail here',
@@ -76,7 +78,6 @@ class EnUsTranslation extends Translations {
         'user_sessions': 'User sessions',
         // Home
         'home': 'Home',
-
         'settings': 'Settings',
         // Settings
         'version': 'Version',
@@ -190,8 +191,6 @@ class EnUsTranslation extends Translations {
         //
         'logout_app_message':
             'Are you sure you want to log out of your account?',
-        // Contact
-
         // Change Password
         'current_password': 'Current password',
         'new_password': 'New password',
@@ -224,20 +223,16 @@ class EnUsTranslation extends Translations {
         'updated_app_title': '''What's new''',
         'updated_app_message': '''What's new in the App {version} 👋🏼''',
         'updated_finish_button': 'Go to Home',
+        'blocking_app_title': '🐞 We are currently undergoing maintenance.',
+        'blocking_app_message':
+            'The app is currently unavailable; you will be able to use it again soon.',
+        'blocking_push_notification':
+            'You will be notified when the app is available again.',
         // Search Delegate
         'search': 'Search',
         // Web Visit History
         'web_visit_history': 'Web visit history',
         'empty_web_visit_history_list': 'Empty web visit history',
-        // Work Points
-        'remember_my_credentials': 'Remember my credentials',
-        'change_month': 'Change month',
-        'holiday': 'Holiday',
-        'weekend': 'Weekend',
-        'total_hours': 'Total hours',
-        'total_budget': 'Budget',
-        'make_check_point': 'Make check point',
-        'make_check_point_now': 'Do you want to check point now?',
       },
     };
   }
