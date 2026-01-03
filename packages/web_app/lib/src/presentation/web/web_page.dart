@@ -80,6 +80,7 @@ class WebPage extends AppView<WebController> {
                 child: Column(
                   children: [
                     MainCardWidget(key: controller.mainKey),
+                    AppCardWidget(key: controller.appKey),
                     FeaturesCardWidget(key: controller.featuresKey),
                     DownloadCardWidget(key: controller.downloadKey),
                     AboutCardWidget(key: controller.aboutKey),

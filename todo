@@ -1,3 +1,13 @@
-Fortress version 1.4.1
+Master 1.0.1
+[OK] - feat: create make recreate branch function
+[OK] - feat: update make merge function
+[OK] - feat: update make build function
+[OK] - bug: double back page on nested pages
+[OK] - bug: text area with characters limit
+
+Fortress 1.4.1
 [OK] - add HapticFeedback on credential click
 [OK] - request login password before delete account
+
+Master 1.0.0
+[OK] - base settings for flutter demo app
