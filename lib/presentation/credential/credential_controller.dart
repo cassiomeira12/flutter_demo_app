@@ -91,6 +91,8 @@ class CredentialController extends BaseController with UrlValidator {
     required String url,
     required String notes,
   }) async {
+    clickTagging(component: 'save_credential_button_key');
+
     final tempCredential = CredentialEntity(
       objectId: _credentialsStore.credential.value?.objectId ?? '',
       name: credentialName,
@@ -230,10 +232,12 @@ class CredentialController extends BaseController with UrlValidator {
 
   void openUrl() {
     final String url = urlTextController.text.trim();
+    clickTagging(component: 'open_url_link');
     _openWebUrlUseCase.call(url);
   }
 
   Future<void> readSecretOTPQrCode() async {
+    clickTagging(component: 'read_secret_otp_qrcode');
     final String? result = await AppNavigator.toNamed(AppRouter.cameraScanner);
     if (result?.contains('otpauth://totp') ?? false) {
       final String url = Uri.decodeComponent(result!);

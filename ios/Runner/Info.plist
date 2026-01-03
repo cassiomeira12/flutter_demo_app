@@ -48,8 +48,12 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>O aplicativo utiliza a camera para leitura de QR Code.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Utilize sua biometria para desbloquear o aplicativo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>O aplicativo precisa acessar sua galeria de fotos para leitura de QR Code em fotos.</string>
 	<key>NSUserTrackingUsageDescription</key>
 	<string>O rastreamento é necessário para uma melhor experiência do usuário.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

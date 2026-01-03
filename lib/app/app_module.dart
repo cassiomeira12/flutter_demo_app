@@ -45,9 +45,10 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.credentials.name,
         bottomItem: NavigatorBottom(
-          title: 'home'.tr,
+          customKey: 'credentials_menu_item_key',
+          title: 'credentials'.tr,
           selectedIcon: const FlutterIcon(
-            Icons.home,
+            Icons.key,
             size: IconSize.medium,
           ),
         ),

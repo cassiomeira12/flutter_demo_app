@@ -54,6 +54,7 @@ class CoreModuleBindings implements ModuleBinding {
           EndpointsEnum.listNotification,
           EndpointsEnum.listUsers,
           EndpointsEnum.graphql,
+          EndpointsEnum.listCredential,
         ],
       ),
       ParseServerHeadersInterceptor(

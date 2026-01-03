@@ -1,8 +1,12 @@
+# Fortress v1.4.3 [03-01-2026]
+
+- feat: master updates
+
 # Fortress v1.4.2 [30-12-2024]
 
 - master fixes
 
-# Fortress v1.4.1 [29-12-2024]
+# Fortress v1.4.1 [29-12-2025]
 
 - add HapticFeedback on credential click
 - request login password before delete account
