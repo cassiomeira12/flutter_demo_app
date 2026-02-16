@@ -5,6 +5,7 @@ import 'package:crashlytics/crashlytics.dart';
 import 'package:dependency/dependency.dart';
 import 'package:firebase_initialize/firebase_initialize.dart';
 import 'package:flutter_demo_app/presentation/initial_bindings_page.dart';
+import 'package:flutter_demo_app/presentation/presentation.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -44,13 +45,14 @@ abstract class AppModule {
     ...UserAccountModuleRoutes().pages,
     ...SecurityModuleRoutes().pages,
     ...WebViewModuleRoutes().pages,
+    ...CheckPointModule.routes,
   ];
 
   static void setupHomePages() {
     HomePage.initialIndex = 0;
     HomePage.navigatorItems = [
       NavigatorItem(
-        routeName: AppRouter.unknown.name,
+        routeName: AppRouter.checkPoint.name,
         bottomItem: NavigatorBottom(
           title: 'home',
           selectedIcon: const FlutterIcon(

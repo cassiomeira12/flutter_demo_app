@@ -227,19 +227,17 @@ class DataModuleBindings implements ModuleBinding {
       ),
     );
 
-    AppBinding.put<UploadInstallationAppUseCase>(
-      UploadInstallationAppUseCaseImpl(
+    AppBinding.lazyPut<UploadInstallationAppUseCase>(
+      () => UploadInstallationAppUseCaseImpl(
         appInstallationService: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
       ),
-      permanent: true,
     );
 
-    AppBinding.put<ListUserInstallationsUseCase>(
-      ListUserInstallationsUseCaseImpl(
+    AppBinding.lazyPut<ListUserInstallationsUseCase>(
+      () => ListUserInstallationsUseCaseImpl(
         appInstallationService: AppBinding.find(),
       ),
-      permanent: true,
     );
 
     AppBinding.lazyPut<AppPermissionsService>(

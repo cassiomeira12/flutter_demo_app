@@ -1,12 +1,11 @@
-# Firebase v1.0.3 [31-03-2026]
+# Work Point v1.0.3 [16-02-2026]
 
-- refactor: update initialize firebase serviceWorker
-- refactor: update firebase-messaging-sw.js
+- feat: update push messaging package
+- feat: update push notifications package
+- fix: feature flag package
 
-# Firebase v1.0.2 [18-02-2026]
+# Work Point v1.0.1 [07-01-2026]
 
-- feat: master updates
+- fix: restore default parse server files
 
-# Firebase v1.0.1 [03-01-2026]
-
-- feat: master updates
+# Work Point v1.0.0 [07-01-2026]

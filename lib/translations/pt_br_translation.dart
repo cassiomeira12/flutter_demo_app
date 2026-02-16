@@ -6,6 +6,15 @@ class AppPtBrTranslation extends PtBrTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'remember_my_credentials': 'Salvar minhas credenciais',
+        'change_month': 'Alterar mês',
+        'holiday': 'Feriado',
+        'weekend': 'Final de semana',
+        'total_hours': 'Total de horas',
+        'total_budget': 'Faturamento',
+        'make_check_point': 'Bater ponto',
+        'make_check_point_now': 'Deseja bater ponto agora?',
+        'empty_check_point_list': 'Você ainda não registrou nenhum ponto',
       },
     };
   }

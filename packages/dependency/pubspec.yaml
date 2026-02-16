@@ -116,6 +116,7 @@ dependencies:
   flutter_inappwebview: 6.1.5
   intl_phone_field: 3.2.0
   flutter_masked_text3: 0.9.4
+  flutter_custom_month_picker: 0.1.3
 
   # Dev Dependencies
   faker: 2.2.0

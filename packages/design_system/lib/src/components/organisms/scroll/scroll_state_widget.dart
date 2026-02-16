@@ -35,7 +35,7 @@ class ScrollStateWidget<T> extends StatelessWidget {
           try {
             final T emptyItem = fromMapBuilder!.call({});
             final map = toMapBuilder!.call(emptyItem).map((key, value) {
-              return MapEntry(key, value is String ? '$key $key $key' : value);
+              return MapEntry(key, value is String ? '---' : value);
             });
             final T item = fromMapBuilder!.call(map);
             return Skeletonizer(

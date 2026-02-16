@@ -24,7 +24,7 @@ class IntroPage extends AppView<IntroController> {
                   PushNotificationPageView(
                     onPermission: controller.setPermission,
                   ),
-                LocationPageView(onPermission: controller.setPermission),
+                // LocationPageView(onPermission: controller.setPermission),
               ].map<Widget>((item) {
                 controller.pagesLength += 1;
                 return item;
