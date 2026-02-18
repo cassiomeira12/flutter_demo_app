@@ -29,10 +29,10 @@ class CredentialModel extends CredentialEntity {
         createdAt: map['createdAt'] ?? '',
         updatedAt: map['updatedAt'] ?? map['createdAt'] ?? '',
       );
-    } catch (error, stacktrace) {
+    } catch (error, stackTrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stackTrace,
         complement: 'Json Data: $map',
       );
     }

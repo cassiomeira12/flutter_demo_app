@@ -1,10 +1,9 @@
 [
   {
     "target": {
-      "package_name": "com.example.flutter_demo_app",
+      "package_name": "br.uol.noticias",
       "sha256_cert_fingerprints": [
-        "ANDROID_SHA_256_CERT_FINGERPRINTS_GOOGLE_PLAY",
-        "ANDROID_SHA_256_CERT_FINGERPRINTS_STG_DEVELOPMENT"
+        "99:10:7C:47:80:3B:3C:FC:C6:A2:16:B6:FE:DE:9C:DD:64:C4:6A:25:F4:2A:A4:3F:4C:95:32:F3:D8:27:36:8D"
       ],
       "namespace": "android_app"
     },
