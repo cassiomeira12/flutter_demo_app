@@ -1,3 +1,7 @@
+# Work Point v1.0.4 [18-02-2026]
+
+- fix: master updates
+
 # Work Point v1.0.3 [16-02-2026]
 
 - feat: update push messaging package
