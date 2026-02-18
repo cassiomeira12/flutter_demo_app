@@ -24,7 +24,7 @@ class AppBindings extends Bindings {
       CrashlyticsModuleBindings().injectDependencies();
     }
 
-    CoreModuleBindings().injectDependencies();
+    await CoreModuleBindings().injectDependencies();
 
     // await FirebaseInitializeModuleBindings().injectDependencies();
     if (!kDebugMode) {

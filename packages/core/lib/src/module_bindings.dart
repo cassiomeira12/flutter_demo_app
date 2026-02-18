@@ -20,9 +20,9 @@ class CoreModuleBindings implements ModuleBinding {
       () => ChangeLocaleNativeMethod(methodChannel: AppBinding.find()),
     );
 
-    InfraModuleBindings().injectDependencies();
-    DataModuleBindings().injectDependencies();
-    DomainModuleBindings().injectDependencies();
+    await InfraModuleBindings().injectDependencies();
+    await DataModuleBindings().injectDependencies();
+    await DomainModuleBindings().injectDependencies();
 
     AppBinding.put<AnalyticsLifecycleController>(
       AnalyticsLifecycleController(),

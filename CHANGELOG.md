@@ -1,3 +1,7 @@
+# Master 1.2.2 [18-02-2026]
+
+- fix: remover pubspec.lock, Podfile.lock
+
 # Master 1.2.1 [18-02-2026]
 
 - fix: remover logger lib
