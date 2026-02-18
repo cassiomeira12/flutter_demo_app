@@ -1,5 +1,6 @@
 export 'package:flutter/material.dart'
     hide ColorScheme, FloatingActionButton, IconButton, Scaffold;
+export 'package:flutter_custom_month_picker/flutter_custom_month_picker.dart';
 export 'package:flutter_inappwebview/flutter_inappwebview.dart'
     hide AndroidOptions, AttributedString, LocalStorage;
 export 'package:flutter_masked_text3/flutter_masked_text3.dart';

@@ -25,6 +25,14 @@ class AppBindings extends Bindings {
   Future<void> dependencies() async {
     await CoreModuleBindings().injectDependencies();
 
+    // await FirebaseInitializeModuleBindings().injectDependencies();
+    if (!kDebugMode) {
+      AnalyticsModuleBindings().injectDependencies();
+    }
+    // await AppsFlyerModuleBindings().injectDependencies();
+    // await PushNotificationsModuleBindings().injectDependencies();
+    // await PushMessagingModuleBindings().injectDependencies();
+
     AppBinding.replace<LoginDataSource>(
       WorkPointLoginDataSource(http: AppBinding.find()),
     );
@@ -37,7 +45,9 @@ class AppBindings extends Bindings {
       WorkPointListUserInstallationUseCase(),
     );
     AppBinding.replace<UploadInstallationAppUseCase>(
-      WorkPointUploadInstallationUseCase(),
+      WorkPointUploadInstallationUseCase(
+        service: AppBinding.find(),
+      ),
     );
     AppBinding.replace<UserService>(WorkPointUserService());
 
@@ -47,15 +57,8 @@ class AppBindings extends Bindings {
     final httpClient = AppBinding.find<HttpClient>();
     httpClient.addAllInterceptors(httpInterceptors);
 
-    if (kReleaseMode) {
-      // FirebaseInitializeModuleBindings().injectDependencies();
-      AnalyticsModuleBindings().injectDependencies();
-    }
-
-    // await AppsFlyerModuleBindings().injectDependencies();
-    // await PushNotificationsModuleBindings().injectDependencies();
-    // await PushMessagingModuleBindings().injectDependencies();
-    await DeeplinkModuleBindings().injectDependencies();
+    DeeplinkModuleBindings().injectDependencies();
+    FeatureFlagModuleBindings().injectDependencies();
 
     SplashModuleBindings().injectDependencies();
     WebAppModuleBindings().injectDependencies();

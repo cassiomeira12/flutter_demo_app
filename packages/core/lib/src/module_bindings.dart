@@ -87,13 +87,11 @@ class CoreModuleBindings implements ModuleBinding {
       ),
       // ParseServerHeadersInterceptor(
       //   environment: AppBinding.find(),
-      //   getInstallationAppUseCase: AppBinding.find(),
       // ),
       // ParseServerAuthTokenInterceptor(),
       // UnauthenticatedInterceptor(
-      //   authStorageUseCase: AppBinding.find(),
-      //   messagingService: AppBinding.find(),
       //   appSecurityManager: AppBinding.find(),
+      //   localStorageUseCase: AppBinding.find(),
       // ),
       // ServerOtpInterceptor(
       //   encryptServerPublicKeyUseCase: AppBinding.find(),

@@ -14,6 +14,7 @@ class AppEnUsTranslation extends EnUsTranslation {
         'total_budget': 'Budget',
         'make_check_point': 'Make check point',
         'make_check_point_now': 'Do you want to check point now?',
+        'empty_check_point_list': "You haven't registered any points yet.",
       },
     };
   }

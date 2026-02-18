@@ -26,17 +26,22 @@ class CheckPointPage extends AppView<CheckPointController> {
       appBarPopUpMenuItems: [
         PopupMenuItem(
           child: TextWidget('change_month'.tr),
-          onTap: () async {
-            showDatePicker(
-              context: context,
-              initialDate: controller.selectedDate.value,
-              firstDate: DateTime(DateTime.now().year),
-              lastDate: DateTime.now(),
-            ).then((DateTime? selected) {
-              if (selected != null) {
+          onTap: () {
+            final today = DateTime.now();
+            showMonthPicker(
+              context,
+              initialSelectedMonth: today.month,
+              initialSelectedYear: today.year,
+              firstYear: 2000,
+              lastYear: today.year,
+              selectButtonText: 'ok'.tr,
+              cancelButtonText: 'cancel'.tr,
+              highlightColor: NeutralColors.neutral800,
+              onSelected: (int month, int year) {
+                final selected = DateTime(year, month);
                 controller.changeSelectedDate(selected);
-              }
-            });
+              },
+            );
           },
         ),
         PopupMenuItem(
