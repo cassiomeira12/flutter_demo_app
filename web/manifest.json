@@ -3,17 +3,12 @@
   "short_name": "Fortress",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#942017",
-  "theme_color": "#942017",
+  "background_color": "#FF5722",
+  "theme_color": "#FF5722",
   "description": "Password Manager",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [
-    {
-      "src": "/favicon.ico",
-      "type": "image/x-icon",
-      "sizes": "16x16 32x32"
-    },
     {
       "src": "icons/Icon-192.png",
       "sizes": "192x192",

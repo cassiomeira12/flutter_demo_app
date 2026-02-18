@@ -2,7 +2,7 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 1.4.3-dev
+version: 1.4.4-dev
 
 environment:
   sdk: ^3.12.0
@@ -91,6 +91,8 @@ dependencies:
     path: packages/security
   login:
     path: packages/login
+  admin:
+    path: packages/admin
   home:
     path: packages/home
   settings:
@@ -162,18 +164,18 @@ flutter_native_splash:
   android_gravity: center
   ios_content_mode: center
   web_image_mode: center
-  color: "#ffffff"
+  color: "#FF5722"
   image: "assets/png/AppIcon.png"
   android_12:
-    color: "#ffffff"
-    icon_background_color: "#ffffff"
-    icon_background_color_dark: "#161A1E"
+    color: "#FF5722"
+    icon_background_color: "#FF5722"
+    icon_background_color_dark: "#FF5722"
 
 # dart run package_rename
 package_rename_config:
   macos:
-    copyright_notice: Copyright ©️ 2025 Flutter Demo App. All rights reserved.
+    copyright_notice: Copyright ©️ 2026 Fortress. All rights reserved.
   web:
-    app_name: Flutter Demo App
-    short_app_name: Flutter Demo App
-    description: Uma ferramenta para ajudar no combate à violência contra a mulher
+    app_name: Fortress
+    short_app_name: Fortress
+    description: Password Manager

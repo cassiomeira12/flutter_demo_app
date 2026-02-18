@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
       {
-        "appID": "${APPLE_STORE_APP_ID}.com.example.FlutterDemoApp",
+        "appID": "TXKHGY54ZK.br.com.uol.noticias.iphone",
         "paths": [
           "/*"
         ]
