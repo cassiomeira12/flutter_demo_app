@@ -1,20 +1,15 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
-class UnauthenticatedInterceptor extends Interceptor {
-  final UserAuthStorageUseCase _authStorageUseCase;
-  final PushMessagingService _pushMessagingService;
+class UnauthenticatedInterceptor extends Interceptor with AnalyticsMixin {
   final AppSecurityManager _appSecurityManager;
+  final LocalStorageUseCase _localStorageUseCase;
 
   UnauthenticatedInterceptor({
-    required UserAuthStorageUseCase authStorageUseCase,
-    required PushMessagingService messagingService,
     required AppSecurityManager appSecurityManager,
-  }) : _authStorageUseCase = authStorageUseCase,
-       _pushMessagingService = messagingService,
-       _appSecurityManager = appSecurityManager;
+    required LocalStorageUseCase localStorageUseCase,
+  }) : _appSecurityManager = appSecurityManager,
+       _localStorageUseCase = localStorageUseCase;
 
   static bool ALREADY_LOGOUT = false;
 
@@ -25,44 +20,30 @@ class UnauthenticatedInterceptor extends Interceptor {
   ) async {
     if (err.type == DioExceptionType.badResponse) {
       try {
-        // final Map<String, dynamic> body = err.response?.data ?? {};
+        final Map<String, dynamic> body = err.response?.data ?? {};
 
-        // final errorMessages = [
-        //   'Invalid session token',
-        //   'Session token is expired.',
-        // ];
+        final errorMessages = [
+          'Invalid session token',
+          'Session token is expired.',
+        ];
 
-        // bool invalidTokenCode = body['code'] == 209;
-        // bool invalidTokenError = errorMessages.contains('${body['error']}');
+        final bool invalidTokenCode = body['code'] == 209;
+        final bool invalidTokenError = errorMessages.contains(
+          '${body['error']}',
+        );
 
-        final bool serverError = err.response?.statusCode == 500;
-
-        if (!ALREADY_LOGOUT && serverError) {
+        if (!ALREADY_LOGOUT && invalidTokenCode && invalidTokenError) {
           ALREADY_LOGOUT = true;
 
-          try {
-            final userData = await _authStorageUseCase.getUserData();
-            if (userData != null) {
-              final user = UserModel.fromMap(userData);
-              await _pushMessagingService.unsubscribeTopic(user.id);
-            }
-          } catch (error, stacktrace) {
-            Log.error(
-              'UnauthenticatedInterceptor',
-              error: error,
-              stackTrace: stacktrace,
-            );
-          }
+          sessionExpiredTagging();
 
           await SessionHelper.clear();
           await _appSecurityManager.clearSettings();
           await _appSecurityManager.init();
 
-          AppNavigator.backAllAndToNamed(AppRouter.splash);
+          await _localStorageUseCase.set<bool>(SESSION_WAS_EXPIRED, true);
 
-          // Future.delayed(
-          //   const Duration(seconds: 1),
-          // ).whenComplete(SnackBarWidget.showUnauthenticatedSession);
+          AppNavigator.backAllAndToNamed(AppRouter.splash);
         }
       } catch (error, stacktrace) {
         Log.error(

@@ -1,4 +1,3 @@
-import 'package:clean_code_data/clean_code_data.dart';
 import 'package:core/core.dart';
 
 abstract class ExceptionHelper {
@@ -13,13 +12,21 @@ abstract class ExceptionHelper {
         statusCode = error.statusCode;
       }
     }
+
+    Log.warning(
+      'statusCode: $statusCode \n'
+      'message: ${error.message} \n'
+      'statusMessage: ${error.statusMessage} \n'
+      'data: ${error.data}',
+    );
+
     switch (statusCode) {
       case -1:
         throw NoInternetException();
       case 101:
         throw AuthUserException();
       case 142:
-        throw BaseException(message: '');
+        throw BaseException(message: 'default_error');
       case 202:
         throw BaseException(message: 'account_already_exists_error');
       case 204:
@@ -28,8 +35,21 @@ abstract class ExceptionHelper {
         throw InvalidTokenException();
       case 400:
         throw BaseException(message: error.data);
+      case 401:
+        throw InvalidTokenException();
       case 403:
-        throw BaseException();
+        throw ForbiddenException();
+      case 404:
+        throw NotFoundException();
+      case 451:
+        throw LegalReasonsException();
+      case 500:
+        throw ServerInternalException();
+      case 502:
+      case 503:
+        throw ServerUnavailableException();
+      case 504:
+        throw ServerTimeoutException();
       default:
         Log.error(
           'Unexpected Http Exception',
@@ -37,9 +57,9 @@ abstract class ExceptionHelper {
           stackTrace: stackTrace,
         );
         throw BaseException(
-          message: '${error.data}',
+          message: 'default_error',
           error: error,
-          stacktrace: stackTrace,
+          stackTrace: stackTrace,
         );
     }
   }

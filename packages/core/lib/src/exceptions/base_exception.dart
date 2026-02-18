@@ -1,13 +1,13 @@
 class BaseException implements Exception {
   final String? _message;
   final Object? _error;
-  final StackTrace? stacktrace;
+  final StackTrace? stackTrace;
   final dynamic complement;
 
   BaseException({
     String? message,
     Object? error,
-    this.stacktrace,
+    this.stackTrace,
     this.complement,
   }) : _message = message?.toString() ?? error.toString(),
        _error = '$error ${complement != null ? '\n\n $complement' : ''}';

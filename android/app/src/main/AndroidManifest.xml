@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
     
@@ -25,7 +26,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize"
-            android:showWhenLocked="false"
+            android:showWhenLocked="true"
             android:turnScreenOn="true">
             <meta-data
                 android:name="io.flutter.embedding.android.NormalTheme"

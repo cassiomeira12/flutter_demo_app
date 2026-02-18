@@ -23,7 +23,7 @@ merge:
 	echo ""; \
 	echo "Git Merge [$${branch_selected}] -> [${CURRENT_GIT_BRANCH}]"; \
 	echo ""; \
-	git merge --squash $${branch_selected}; \
+	git merge --squash $${branch_selected} --strategy-option theirs; \
 
 .PHONY: recreate_branch
 recreate_branch:

@@ -1,10 +1,10 @@
-export 'package:share_plus/share_plus.dart';
 export 'package:dart_either/dart_either.dart';
-export 'package:validatorless/validatorless.dart';
-export 'package:flutter_native_splash/flutter_native_splash.dart';
-export 'package:url_launcher/url_launcher.dart';
 export 'package:flutter_contacts/flutter_contacts.dart';
-export 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
-export 'package:synchronized/synchronized.dart';
 export 'package:flutter_dynamic_launcher_icon/flutter_dynamic_launcher_icon.dart';
+export 'package:flutter_native_splash/flutter_native_splash.dart';
 export 'package:in_app_review/in_app_review.dart';
+export 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+export 'package:share_plus/share_plus.dart';
+export 'package:synchronized/synchronized.dart';
+export 'package:url_launcher/url_launcher.dart';
+export 'package:validatorless/validatorless.dart';

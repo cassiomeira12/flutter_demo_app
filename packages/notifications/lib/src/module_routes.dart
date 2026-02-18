@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:notifications/src/presentation/notifications/notifications.dart';
 
 class NotificationsModuleRoutes implements ModuleRoutes {
   @override

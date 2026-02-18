@@ -5,9 +5,8 @@ class PushMessagingSettingsController extends BaseController {
   final TestPushNotificationUseCase _testPushNotificationUseCase;
   final CheckPermissionUseCase _checkPermissionUseCase;
   final RequestPermissionUseCase _requestPermissionUseCase;
-  final AppInfoEntity _appInfoEntity;
   final LocalStorageUseCase _localStorageUseCase;
-  final UploadInstallationAppUseCase _uploadInstallationUeCase;
+  final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
   final PushMessagingService _messagingService;
   final PushNotificationsService _pushNotificationsService;
 
@@ -15,17 +14,15 @@ class PushMessagingSettingsController extends BaseController {
     required TestPushNotificationUseCase testPushNotificationUseCase,
     required CheckPermissionUseCase checkPermissionUseCase,
     required RequestPermissionUseCase requestPermissionUseCase,
-    required AppInfoEntity appInfoEntity,
     required LocalStorageUseCase localStorageUseCase,
-    required UploadInstallationAppUseCase uploadInstallationUseCase,
+    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required PushMessagingService messagingService,
     required PushNotificationsService pushNotificationsService,
   }) : _testPushNotificationUseCase = testPushNotificationUseCase,
        _checkPermissionUseCase = checkPermissionUseCase,
        _requestPermissionUseCase = requestPermissionUseCase,
-       _appInfoEntity = appInfoEntity,
        _localStorageUseCase = localStorageUseCase,
-       _uploadInstallationUeCase = uploadInstallationUseCase,
+       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
        _messagingService = messagingService,
        _pushNotificationsService = pushNotificationsService;
 
@@ -72,10 +69,10 @@ class PushMessagingSettingsController extends BaseController {
       permission = PermissionStatus.denied;
     }
 
-    if (permission.isPermanentlyDenied) {
+    if (permission.isDenied || permission.isPermanentlyDenied) {
       permission = await _requestPermissionUseCase.call(
         Permission.notification,
-        openSettings: true,
+        openSettings: permission.isPermanentlyDenied,
       );
       tagging(
         'notifications_request_permission_enabled',
@@ -91,10 +88,9 @@ class PushMessagingSettingsController extends BaseController {
     try {
       await _localStorageUseCase.set<bool>(NOTIFICATIONS_ENABLED, enabled);
 
-      await _uploadInstallationUeCase.call();
-
       if (enabled) {
         await _enablePushNotificationServices();
+        _updateUserInstallation();
       } else {
         await _disablePushNotificationServices();
       }
@@ -109,12 +105,24 @@ class PushMessagingSettingsController extends BaseController {
     }
   }
 
+  Future<void> _updateUserInstallation() async {
+    try {
+      await _uploadInstallationAppUseCase.call();
+    } catch (error, stackTrace) {
+      Log.error(
+        'Push Messaging Settings error uploadInstallation',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
   Future<void> _enablePushNotificationServices() {
     return _initPushNotification();
   }
 
-  Future<void> _disablePushNotificationServices() {
-    return _unsubscribeDefaultFirebaseMessageTopics();
+  Future<void> _disablePushNotificationServices() async {
+    await _messagingService.deleteToken();
   }
 
   Future<void> _initPushNotification() async {
@@ -126,52 +134,28 @@ class PushMessagingSettingsController extends BaseController {
       permission = PermissionStatus.denied;
     }
 
+    if (Platform.isWeb) {
+      permission = await _pushNotificationsService.requestPermission();
+    }
+
+    Log.info('Push Notification Permissions: [$permission]');
+
     if (permission.isGranted) {
-      await _messagingService.init();
-      await _pushNotificationsService.init();
-
-      final String? token = await _messagingService.getToken();
-      Log.debug('Firebase Messaging Token: $token');
-
-      await _subscribeDefaultFirebaseMessageTopics();
-
-      await _messagingService.openNotificationOnStartApp();
-      await _pushNotificationsService.openNotificationOnStartApp();
-    }
-  }
-
-  Future<void> _subscribeDefaultFirebaseMessageTopics() async {
-    final List<String> defaultTopics = [];
-
-    final String packageName = _appInfoEntity.packageName;
-    final String versionName = _appInfoEntity.version;
-
-    defaultTopics.add(packageName);
-    defaultTopics.add('${packageName}_$versionName');
-
-    for (final topic in defaultTopics) {
-      final bool? subscribedTopic = await _localStorageUseCase.get<bool>(topic);
-      if (subscribedTopic == null) {
-        await _messagingService.subscribeTopic(topic);
-        await _localStorageUseCase.set<bool>(topic, true);
+      try {
+        await _messagingService.init();
+        final String? token = await _messagingService.getToken();
+        Log.success(
+          'Firebase Push Messaging TOKEN [$token]',
+          throwsCrashlytics: false,
+        );
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
       }
-    }
-  }
 
-  Future<void> _unsubscribeDefaultFirebaseMessageTopics() async {
-    final List<String> defaultTopics = [];
-
-    final String packageName = _appInfoEntity.packageName;
-    final String versionName = _appInfoEntity.version;
-
-    defaultTopics.add(packageName);
-    defaultTopics.add('${packageName}_$versionName');
-
-    for (final topic in defaultTopics) {
-      final bool? subscribedTopic = await _localStorageUseCase.get<bool>(topic);
-      if (subscribedTopic != null) {
-        await _messagingService.unsubscribeTopic(topic);
-        await _localStorageUseCase.delete(topic);
+      try {
+        await _pushNotificationsService.init();
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
       }
     }
   }

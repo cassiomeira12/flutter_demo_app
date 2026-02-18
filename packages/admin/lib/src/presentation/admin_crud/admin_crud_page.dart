@@ -1,8 +1,7 @@
+import 'package:admin/src/presentation/admin_crud/admin_crud.dart';
+import 'package:admin/src/presentation/admin_crud/admin_crud_list_page.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'admin_crud.dart';
-import 'admin_crud_list_page.dart';
 
 class AdminCrudPage extends AppView<AdminCrudController> {
   const AdminCrudPage({super.key});

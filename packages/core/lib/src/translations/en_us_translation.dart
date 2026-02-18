@@ -23,6 +23,15 @@ class EnUsTranslation extends Translations {
         // Defaults
         'default_error': 'An error, try again',
         'internet_error_connection': 'Check your network connection',
+        'invalid_session_token': 'Your session has expired.',
+        'login_again': 'Please log in again.',
+        'forbidden_access': 'You do not have permission to view this content.',
+        'blocked_legal_reasons':
+            'The content cannot be displayed due to legal issues.',
+        'content_not_found': 'The content was not found.',
+        'server_internal_error': 'An error occurred on the server.',
+        'server_timeout_response': 'The service is not responding.',
+        'server_unavailable_service': 'The service is currently unavailable.',
         'continue': 'Continue',
         'try_again': 'Try Again',
         // Web App
@@ -214,9 +223,8 @@ class EnUsTranslation extends Translations {
         'updated': 'Updated at',
         'update_app': 'App Update',
         'new_version_app': 'New version of the app 🎉',
-        'update_news_title': '✨ New features',
-        'update_improvements_title': '💎 Improvements',
-        'update_fixes_title': '🐞 Bug fixes',
+        'new_version_app_message':
+            'A new version of the app is ready for download, bringing bug fixes and general improvements.',
         'update_now_button': 'Update now',
         'update_later_button': 'Later',
         // Updated App

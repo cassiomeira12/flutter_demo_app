@@ -1,9 +1,6 @@
-// ignore_for_file: depend_on_referenced_packages
-
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../domain/domain.dart';
+import 'package:security/src/domain/domain.dart';
 
 class LocalAuthServiceImpl implements LocalAuthService {
   final LocalAuthentication auth = LocalAuthentication();
@@ -11,6 +8,7 @@ class LocalAuthServiceImpl implements LocalAuthService {
   @override
   Future<bool> authenticate() async {
     try {
+      await auth.stopAuthentication();
       return await auth.authenticate(
         localizedReason: ' ',
         authMessages: [

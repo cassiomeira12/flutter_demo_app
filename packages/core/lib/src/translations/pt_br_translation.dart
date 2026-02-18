@@ -27,6 +27,16 @@ class PtBrTranslation extends Translations {
         // Defaults
         'default_error': 'Ocorreu um erro, tente novamente',
         'internet_error_connection': 'Verifique sua conexão com a internet',
+        'invalid_session_token': 'Sua sessão expirou.',
+        'login_again': 'Faça login novamente.',
+        'forbidden_access': 'Você não tem permissão para ver este conteúdo.',
+        'blocked_legal_reasons':
+            'O conteúdo não pode ser exibido por questões judiciais.',
+        'content_not_found': 'O conteúdo não foi encontrado.',
+        'server_internal_error': 'Ocorreu um erro no servidor.',
+        'server_timeout_response': 'O serviço não está respondendo.',
+        'server_unavailable_service':
+            'O serviço não está disponível neste momento.',
         'continue': 'Continuar',
         'try_again': 'Tentar novamente',
         // Web App
@@ -219,9 +229,8 @@ class PtBrTranslation extends Translations {
         'updated': 'Atualizado',
         'update_app': 'Atualização do App',
         'new_version_app': 'Nova versão do aplicativo 🎉',
-        'update_news_title': '✨ Novos recursos',
-        'update_improvements_title': '💎 Melhorias',
-        'update_fixes_title': '🐞 Correção de erros',
+        'new_version_app_message':
+            'Uma nova versão do aplicativo está pronta para download, trazendo correções de bugs e melhorias gerais.',
         'update_now_button': 'Atualize agora',
         'update_later_button': 'Mais tarde',
         // Updated App

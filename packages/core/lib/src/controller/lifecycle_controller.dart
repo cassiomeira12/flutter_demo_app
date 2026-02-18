@@ -54,19 +54,16 @@ class LifecycleController extends BaseController
           _appBackground = false;
           onAppForeground();
         }
-        break;
       case AppLifecycleState.inactive:
         if (_appResumed) {
           _appPaused = true;
           onAppPaused();
         }
-        break;
       case AppLifecycleState.hidden:
         if (appInForeground) {
           _appBackground = true;
           onAppBackground();
         }
-        break;
       case AppLifecycleState.paused:
         break;
       case AppLifecycleState.detached:

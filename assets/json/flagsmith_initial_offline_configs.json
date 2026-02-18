@@ -10,13 +10,6 @@
     {
       "enabled": true,
       "feature": {
-        "name": "update_app_data"
-      },
-      "feature_state_value": "{\n  \"new_version\": \"\",\n  \"news\": [],\n  \"improvements\": [],\n  \"fixes\": []\n}"
-    },
-    {
-      "enabled": true,
-      "feature": {
         "name": "update_app_required"
       },
       "feature_state_value": "false"

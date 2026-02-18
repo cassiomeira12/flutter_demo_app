@@ -1,12 +1,11 @@
 import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
+import 'package:core/src/security/app_security_manager_impl.dart';
 import 'package:dependency/dependency.dart';
-
-import 'security/app_security_manager_impl.dart';
 
 class CoreModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AppBinding.put<MethodChannel>(
       const MethodChannel('flutter'),
       permanent: true,
@@ -30,8 +29,28 @@ class CoreModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
+    AppBinding.put<FeatureFlagLifecycleController>(
+      FeatureFlagLifecycleController(),
+      permanent: true,
+    );
+
     AppBinding.put<AppSecurityManager>(
       AppAppSecurityManager(localStorageUseCase: AppBinding.find()),
+      permanent: true,
+    );
+
+    AppBinding.put<ThemeController>(
+      AppThemeController(
+        localStorageUseCase: AppBinding.find(),
+        setThemData: (theme) {
+          Get.changeTheme(theme);
+          Get.forceAppUpdate();
+        },
+        setThemMode: (mode) {
+          Get.changeThemeMode(mode);
+          Get.forceAppUpdate();
+        },
+      ),
       permanent: true,
     );
 
@@ -49,13 +68,11 @@ class CoreModuleBindings implements ModuleBinding {
       ),
       ParseServerHeadersInterceptor(
         environment: AppBinding.find(),
-        getInstallationAppUseCase: AppBinding.find(),
       ),
       ParseServerAuthTokenInterceptor(),
       UnauthenticatedInterceptor(
-        authStorageUseCase: AppBinding.find(),
-        messagingService: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
+        localStorageUseCase: AppBinding.find(),
       ),
       ServerOtpInterceptor(
         encryptServerPublicKeyUseCase: AppBinding.find(),
@@ -65,20 +82,5 @@ class CoreModuleBindings implements ModuleBinding {
 
     final httpClient = AppBinding.find<HttpClient>();
     httpClient.addAllInterceptors(httpInterceptors);
-
-    AppBinding.put<ThemeController>(
-      AppThemeController(
-        localStorageUseCase: AppBinding.find(),
-        setThemData: (theme) {
-          Get.changeTheme(theme);
-          Get.forceAppUpdate();
-        },
-        setThemMode: (mode) {
-          Get.changeThemeMode(mode);
-          Get.forceAppUpdate();
-        },
-      ),
-      permanent: true,
-    );
   }
 }

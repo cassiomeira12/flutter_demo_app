@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'blocking.dart';
+import 'package:force_update/src/presentation/blocking/blocking.dart';
 
 class BlockingBindings extends Bindings {
   @override
@@ -12,8 +11,6 @@ class BlockingBindings extends Bindings {
         appInfoEntity: AppBinding.find(),
         checkPermissionUseCase: AppBinding.find(),
         pushMessagingService: AppBinding.find(),
-        featureFlagService: AppBinding.find(),
-        appSecurityManager: AppBinding.find(),
       ),
     );
   }

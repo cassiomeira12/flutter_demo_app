@@ -4,6 +4,7 @@ import 'package:design_system/design_system.dart';
 abstract class DialogWidget {
   static Widget _baseDialog(
     BuildContext context, {
+    bool showCloseButton = true,
     required List<Widget> children,
   }) {
     return Center(
@@ -25,25 +26,64 @@ abstract class DialogWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButtonWidget(
-                      key: const Key('dialog_close_icon_key'),
-                      icon: FlutterIcon(
-                        Icons.close,
-                        color: AppColors.statusWarning,
+                if (showCloseButton)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButtonWidget(
+                        key: const Key('dialog_close_icon_key'),
+                        icon: FlutterIcon(
+                          Icons.close,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                        onPressed: () => Navigator.pop(context),
                       ),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 ...children,
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  static Future<void> showError(
+    BuildContext context, {
+    required String message,
+  }) async {
+    if (!context.mounted) return;
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return _baseDialog(
+          context,
+          showCloseButton: false,
+          children: [
+            const SpacerWidget(height: 3),
+            FlutterIcon(
+              Icons.error,
+              color: Theme.of(context).colorScheme.error,
+              size: IconSize.large,
+            ),
+            const SpacerWidget(height: 2),
+            TextWidget(
+              message,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.message(context, fontSize: TextSize.font_14),
+            ),
+            const SpacerWidget(height: 2),
+            PrimaryButton(
+              key: const Key('dialog_ok_button_key'),
+              text: 'ok'.tr,
+              size: ButtonSize.medium,
+              onPressed: () => Navigator.pop(context),
+            ),
+            const SpacerWidget(),
+          ],
+        );
+      },
     );
   }
 

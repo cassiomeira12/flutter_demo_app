@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'analytics_service_faker.dart';
+import 'package:core/src/analytics/analytics_service_faker.dart';
 
 class AnalyticsServiceManager implements AnalyticsService {
   AnalyticsServiceManager._();

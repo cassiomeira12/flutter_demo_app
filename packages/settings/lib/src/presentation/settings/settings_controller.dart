@@ -7,7 +7,6 @@ class SettingsController extends BaseController {
   final LocalStorageUseCase _localStorageUseCase;
   final UserAuthStorageUseCase _userAuthStorageUseCase;
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
-  final PushMessagingService _pushMessagingService;
   final AppInfoEntity _appInfoEntity;
   final AppSecurityManager _appSecurityManager;
 
@@ -17,7 +16,6 @@ class SettingsController extends BaseController {
     required LocalStorageUseCase localStorageUseCase,
     required UserAuthStorageUseCase userAuthStorageUseCase,
     required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required PushMessagingService pushMessagingService,
     required AppInfoEntity appInfoEntity,
     required AppSecurityManager appSecurityManager,
   }) : _themeController = themeController,
@@ -25,7 +23,6 @@ class SettingsController extends BaseController {
        _localStorageUseCase = localStorageUseCase,
        _userAuthStorageUseCase = userAuthStorageUseCase,
        _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _pushMessagingService = pushMessagingService,
        _appInfoEntity = appInfoEntity,
        _appSecurityManager = appSecurityManager;
 
@@ -60,7 +57,6 @@ class SettingsController extends BaseController {
     try {
       clickTagging(component: 'settings_logout_key');
       logoutTagging();
-      await _pushMessagingService.unsubscribeTopic(user.id);
       await _logoutUseCase.call();
     } catch (_) {
     } finally {

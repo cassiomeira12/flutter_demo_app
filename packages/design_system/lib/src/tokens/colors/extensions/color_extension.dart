@@ -11,7 +11,7 @@ extension HexColorExtension on String {
 
     // Agora deve ter 8 caracteres (AARRGGBB)
     if (hex.length != 8) {
-      throw FormatException("Hex color inválido: $this");
+      throw FormatException('Hex color inválido: $this');
     }
 
     return Color(int.parse(hex, radix: 16));

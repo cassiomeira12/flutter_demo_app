@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:user_account/src/presentation/presentation.dart';
 
 class UserAccountModuleSubRoutes implements ModuleRoutes {
   @override

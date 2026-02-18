@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'presentation/presentation.dart';
+import 'package:force_update/src/presentation/presentation.dart';
 
 class ForceUpdateModuleRoutes implements ModuleRoutes {
   @override
@@ -15,13 +14,13 @@ class ForceUpdateModuleRoutes implements ModuleRoutes {
     ),
     AppRouterPage(
       name: AppRouter.update.name,
-      page: () => const UpdatePage(),
+      page: UpdatePage.new,
       binding: UpdateBindings(),
     ),
     AppRouterPage(
-      name: AppRouter.updated.name,
-      page: () => const UpdatedPage(),
-      binding: UpdateBindings(),
+      name: AppRouter.forceUpdate.name,
+      page: ForceUpdatePage.new,
+      binding: ForceUpdateBindings(),
     ),
   ];
 }

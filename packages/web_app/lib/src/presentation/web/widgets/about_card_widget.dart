@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../web.dart';
+import 'package:web_app/src/presentation/web/web.dart';
 
 class AboutCardWidget extends AppView<WebController> {
   const AboutCardWidget({super.key});

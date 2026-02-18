@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'web_controller.dart';
-import 'widgets/widgets.dart';
+import 'package:web_app/src/presentation/web/web.dart';
+import 'package:web_app/src/presentation/web/widgets/widgets.dart';
 
 class WebPage extends AppView<WebController> {
   const WebPage({super.key});

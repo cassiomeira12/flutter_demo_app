@@ -1,5 +1,10 @@
 export 'auth_user_exception.dart';
 export 'base_exception.dart';
-export 'exception_helper.dart';
+export 'forbidden_exception.dart';
 export 'invalid_token_exception.dart';
+export 'legal_reasons_exception.dart';
 export 'no_internet_exception.dart';
+export 'not_found_exception.dart';
+export 'server_internal_exception.dart';
+export 'server_timeout_exception.dart';
+export 'server_unavailable_exception.dart';

@@ -1,7 +1,9 @@
+import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:dependency/dependency.dart';
+import 'package:flutter_demo_app/presentation/initial_bindings_page.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -16,6 +18,11 @@ import 'package:webview/webview.dart';
 
 abstract class AppModule {
   static List<AppRouterPage> routes = [
+    AppRouterPage(
+      name: AppRouter.initial.name,
+      page: InitialBindingsPage.new,
+      transition: Transition.noTransition,
+    ),
     ...SplashModuleRoutes().pages,
     ...WebAppModuleRoutes().pages,
     // ...FirebaseInitializeModuleRoutes().pages,
@@ -28,6 +35,7 @@ abstract class AppModule {
     ...OnboardingModuleRoutes().pages,
     ...ForceUpdateModuleRoutes().pages,
     ...LoginModuleRoutes().pages,
+    ...AdminModuleRoutes().pages,
     ...HomeModuleRoutes().pages,
     ...SettingsModuleRoutes().pages,
     ...UserAccountModuleRoutes().pages,
@@ -41,7 +49,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.unknown.name,
         bottomItem: NavigatorBottom(
-          title: 'home'.tr,
+          title: 'home',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -52,7 +60,7 @@ abstract class AppModule {
         routeName: AppRouter.settings.name,
         bottomItem: NavigatorBottom(
           customKey: 'settings_menu_item_key',
-          title: 'settings'.tr,
+          title: 'settings',
           selectedIcon: const FlutterIcon(
             Icons.settings,
             size: IconSize.medium,

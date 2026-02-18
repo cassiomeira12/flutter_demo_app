@@ -1,3 +1,5 @@
+import 'package:core/core.dart';
+
 abstract class CrashlyticsService {
   Future<void> init();
 
@@ -19,4 +21,6 @@ abstract class CrashlyticsService {
     required Object error,
     StackTrace? stackTrace,
   });
+
+  TrackOperation trackOperation({String? name, String? operation});
 }

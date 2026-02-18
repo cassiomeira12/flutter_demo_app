@@ -40,7 +40,7 @@ class DynamicIconUseCaseImpl implements DynamicIconUseCase {
       }
 
       Log.info('Change Launcher icon to $icon');
-      await FlutterDynamicLauncherIcon.changeIcon(icon, silent: false);
+      await FlutterDynamicLauncherIcon.changeIcon(icon);
       Log.success('Launcher Icon was changed');
     } catch (error, stackTrace) {
       Log.error('Change icon', error: error, stackTrace: stackTrace);

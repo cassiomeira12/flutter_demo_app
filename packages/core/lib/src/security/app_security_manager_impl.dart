@@ -12,6 +12,9 @@ class AppAppSecurityManager extends LifecycleController
   bool _securityBlocked = false;
   bool _securityBlurProtection = false;
 
+  Timer? _blockAppTimer;
+  final Duration awaitBeforeBlockApp = const Duration(seconds: 5);
+
   @override
   bool get biometricsEnabled => _biometricsEnabled;
 
@@ -68,6 +71,7 @@ class AppAppSecurityManager extends LifecycleController
     if (_securityBlurProtection) {
       AppSecurityManager.enableBlur.value = false;
     }
+    if (_blockAppTimer?.isActive ?? false) _blockAppTimer?.cancel();
   }
 
   @override
@@ -79,6 +83,6 @@ class AppAppSecurityManager extends LifecycleController
 
   @override
   void onAppBackground() {
-    checkIfNeedBlockApp();
+    _blockAppTimer = Timer(awaitBeforeBlockApp, checkIfNeedBlockApp);
   }
 }

@@ -1,10 +1,9 @@
+import 'package:admin/src/presentation/presentation.dart';
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
 
 class AdminModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AppBinding.put<UsersStore>(UsersStore(), permanent: true);
   }
 }

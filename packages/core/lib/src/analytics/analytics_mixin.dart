@@ -50,6 +50,7 @@ mixin AnalyticsMixin {
   void setUserIdentifier(String userId, {Map<String, dynamic>? property}) {
     AnalyticsServiceManager.instance.setUserId(userId);
     CrashlyticsServiceManager.instance.setUserId(userId);
+    FeatureFlagServiceManager.instance.setUserIdentifier(userId);
     if (property != null) {
       final Map<String, dynamic> properties = {
         'userId': userId,
@@ -67,6 +68,10 @@ mixin AnalyticsMixin {
         name: userNameIdentifier ?? '',
         property: properties,
       );
+      FeatureFlagServiceManager.instance.setUserIdentifier(
+        userId,
+        property: properties,
+      );
     }
   }
 
@@ -80,6 +85,10 @@ mixin AnalyticsMixin {
 
   void logoutTagging() {
     tagging('logout');
+  }
+
+  void sessionExpiredTagging() {
+    tagging('session_expired');
   }
 
   void screenTagging({String? route}) {

@@ -8,6 +8,8 @@ class DeviceTraits {
   final String version;
   final String build;
   final bool isWeb;
+  final bool debugMode;
+  final String deviceId;
 
   DeviceTraits({
     required this.brand,
@@ -19,9 +21,11 @@ class DeviceTraits {
     required this.version,
     required this.build,
     required this.isWeb,
+    required this.debugMode,
+    required this.deviceId,
   });
 
-  Map<String, dynamic> toMap() {
+  Map<String, String?> toMap() {
     return {
       'brand': brand,
       'model': model,
@@ -32,6 +36,8 @@ class DeviceTraits {
       'version': version,
       'build': build,
       'isWeb': isWeb.toString(),
+      'debugMode': debugMode.toString(),
+      'deviceId': deviceId,
     };
   }
 }

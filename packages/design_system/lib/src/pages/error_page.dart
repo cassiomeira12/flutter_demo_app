@@ -26,7 +26,6 @@ class ErrorPage extends StatelessWidget {
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               FlutterIcon(

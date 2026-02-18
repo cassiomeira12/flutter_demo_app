@@ -6,6 +6,10 @@ abstract class AppAssets {
   static const String appStore = 'assets/png/app_store.png';
   static const String playStore = 'assets/png/play_store.png';
 
+  // Force Update
+  static const String maintenance = 'assets/png/maintenance.png';
+  static const String updateAvailable = 'assets/png/update_available.png';
+
   // SVG
   static const String bell = 'assets/svg/bell.svg';
 

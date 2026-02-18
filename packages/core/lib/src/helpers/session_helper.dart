@@ -10,6 +10,8 @@ abstract class SessionHelper {
 
       await AppBinding.replace<SessionEntity>(SessionEntity());
       await AppBinding.delete<UserEntity>(force: true);
-    } catch (_) {}
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+    }
   }
 }

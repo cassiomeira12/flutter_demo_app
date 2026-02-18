@@ -1,5 +1,3 @@
-import 'package:clean_code_data/clean_code_data.dart';
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -95,6 +93,9 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     Map<String, dynamic> deviceInfoData, {
     required String? browserName,
   }) async {
+    final String browserWebId =
+        'Browser ${browserName?.capitalizeFirst} ${deviceInfoData['appVersion']}';
+    final String deviceId = md5.convert(utf8.encode(browserWebId)).toString();
     return DeviceInfoModel(
       platform: 'web',
       brand: 'Browser ${browserName?.capitalizeFirst}',
@@ -102,8 +103,7 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
       model: deviceInfoData['appVersion'] as String,
       osVersion: deviceInfoData['vendor'] as String,
       localeName: (deviceInfoData['language'] as String?)?.replaceAll('-', '_'),
-      deviceId:
-          'Browser ${browserName?.capitalizeFirst} ${deviceInfoData['appVersion']}',
+      deviceId: deviceId,
     );
   }
 }

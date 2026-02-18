@@ -1,8 +1,7 @@
 import 'package:admin/src/domain/domain.dart';
+import 'package:admin/src/presentation/users/users.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'users.dart';
 
 class UsersController extends BaseController {
   final GetAllUsersUseCase _getAllUsersUseCase;

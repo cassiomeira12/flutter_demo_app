@@ -1,4 +1,4 @@
-import 'http.dart';
+import 'package:core/core.dart';
 
 abstract class HttpClient {
   void addInterceptor(dynamic interceptor);

@@ -26,13 +26,6 @@ class AdminController extends BaseController {
 
   RxnInt selectedIndex = BaseController.navigatorIndex;
 
-  // @override
-  // void onReady() {
-  //   super.onReady();
-  //   // FlutterNativeSplash.remove();
-  //   refreshUnCountNotifications();
-  // }
-
   @override
   void backPage({
     dynamic result,
@@ -68,7 +61,6 @@ class AdminController extends BaseController {
     try {
       clickTagging(component: 'logout_drawer_item_key');
       logoutTagging();
-      await _pushMessagingService.unsubscribeTopic(user.id);
       await _logoutUseCase.call();
     } catch (_) {
     } finally {

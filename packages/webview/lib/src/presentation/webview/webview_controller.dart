@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../domain/domain.dart';
-import '../widgets/web_view/webview_widget_controller.dart';
+import 'package:webview/src/domain/domain.dart';
+import 'package:webview/src/presentation/widgets/web_view/webview_widget_controller.dart';
 
 class WebViewController extends LifecycleController {
   final String _globalKeyHash;
@@ -132,7 +131,7 @@ class WebViewController extends LifecycleController {
     final String loggedTimer = '[$time] $_globalKeyHash $log';
     _logs.add(loggedTimer);
     CrashlyticsServiceManager.instance.log(loggedTimer);
-    print('webview_widget $loggedTimer');
+    debugPrint('webview_widget $loggedTimer');
   }
 
   void updateScrollPosition(int x, int y) {

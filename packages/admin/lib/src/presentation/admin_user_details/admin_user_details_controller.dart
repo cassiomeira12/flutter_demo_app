@@ -1,6 +1,5 @@
+import 'package:admin/src/presentation/users/users.dart';
 import 'package:core/core.dart';
-
-import '../presentation.dart';
 
 class AdminUserDetailsController extends BaseController {
   final UsersStore _usersStore;

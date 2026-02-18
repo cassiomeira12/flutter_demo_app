@@ -23,7 +23,6 @@ class UpdateUserLocaleUseCaseImpl implements UpdateUserLocaleUseCase {
       final userUpdated = user.copyWith(locale: definedLocale.toString());
       await _updateUserDataUseCase.call(userUpdated);
       await _authStorageUseCase.saveUserData(userUpdated.toMap());
-      await AppBinding.replace<UserEntity>(userUpdated);
       await _updateLocaleUseCase.call(definedLocale);
       return;
     }
@@ -42,8 +41,11 @@ class UpdateUserLocaleUseCaseImpl implements UpdateUserLocaleUseCase {
     }
 
     final userUpdated = user.copyWith(locale: deviceLocale.toString());
-    await _updateUserDataUseCase.call(userUpdated);
+    try {
+      await _updateUserDataUseCase.call(userUpdated);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+    }
     await _authStorageUseCase.saveUserData(userUpdated.toMap());
-    await AppBinding.replace<UserEntity>(userUpdated);
   }
 }

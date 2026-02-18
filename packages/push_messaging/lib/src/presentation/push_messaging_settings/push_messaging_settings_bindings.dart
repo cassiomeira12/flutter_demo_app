@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'push_messaging_settings.dart';
+import 'package:push_messaging/src/presentation/push_messaging_settings/push_messaging_settings.dart';
 
 class PushMessagingSettingsBindings extends Bindings {
   @override
@@ -15,9 +14,8 @@ class PushMessagingSettingsBindings extends Bindings {
         testPushNotificationUseCase: AppBinding.find(),
         checkPermissionUseCase: AppBinding.find(),
         requestPermissionUseCase: AppBinding.find(),
-        appInfoEntity: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
-        uploadInstallationUseCase: AppBinding.find(),
+        uploadInstallationAppUseCase: AppBinding.find(),
         messagingService: AppBinding.find(),
         pushNotificationsService: AppBinding.find(),
       ),

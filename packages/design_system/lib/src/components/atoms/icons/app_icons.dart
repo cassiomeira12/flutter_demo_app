@@ -39,5 +39,8 @@ class AppIcons {
   const AppIcons(this.value);
 
   static AppIcons logo = const AppIcons(AppAssets.logo);
+  static AppIcons maintenance = const AppIcons(AppAssets.maintenance);
+  static AppIcons updateAvailable = const AppIcons(AppAssets.updateAvailable);
+
   static AppIcons bell = const AppIcons(AppAssets.bell);
 }

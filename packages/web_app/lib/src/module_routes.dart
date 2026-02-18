@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:web_app/src/presentation/web/web.dart';
 
 class WebAppModuleRoutes implements ModuleRoutes {
   @override

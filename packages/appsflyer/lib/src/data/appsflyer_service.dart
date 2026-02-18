@@ -120,24 +120,20 @@ class AppsflyerServiceImpl implements AppsFlyerService {
   @override
   void deeplink() {
     _appsflyerSdk?.onAppOpenAttribution((res) {
-      print("res: " + res.toString());
+      debugPrint('res: $res');
     });
 
     _appsflyerSdk?.onDeepLinking((DeepLinkResult dp) {
       switch (dp.status) {
         case Status.FOUND:
-          print(dp.deepLink?.toString());
-          print("deep link value: ${dp.deepLink?.deepLinkValue}");
-          break;
+          debugPrint(dp.deepLink?.toString());
+          debugPrint('deep link value: ${dp.deepLink?.deepLinkValue}');
         case Status.NOT_FOUND:
-          print("deep link not found");
-          break;
+          debugPrint('deep link not found');
         case Status.ERROR:
-          print("deep link error: ${dp.error}");
-          break;
+          debugPrint('deep link error: ${dp.error}');
         case Status.PARSE_ERROR:
-          print("deep link status parsing error");
-          break;
+          debugPrint('deep link status parsing error');
       }
     });
   }

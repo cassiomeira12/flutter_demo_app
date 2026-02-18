@@ -24,11 +24,6 @@ class AboutController extends BaseController {
     }
   }
 
-  void appWhatsNew() {
-    clickTagging(component: 'about_app_whats_new_key');
-    AppNavigator.toNamed(AppRouter.updated);
-  }
-
   void privacyPolicy() {
     clickTagging(component: 'about_privacy_policy_key');
     const serverUrl = String.fromEnvironment('server_url');

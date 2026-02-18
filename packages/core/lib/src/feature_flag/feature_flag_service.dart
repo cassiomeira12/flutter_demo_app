@@ -1,7 +1,7 @@
 import 'package:core/core.dart';
 
 abstract class FeatureFlagService {
-  Future<void> init({Map<String, dynamic>? initConfigs});
+  Future<void> init();
 
   void setUserIdentifier(String? userId, {Map<String, dynamic>? property});
 

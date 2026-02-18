@@ -1,5 +1,6 @@
 enum AppRouter {
-  splash('/'),
+  initial('/'),
+  splash('/splash'),
   web('/web'),
   unknown('/unknown'),
   webview('/webview'),
@@ -13,7 +14,7 @@ enum AppRouter {
   usersDetails('/users/details'),
   adminCrud('/admin_crud'),
   update('/update'),
-  updated('/updated'),
+  forceUpdate('/force_update'),
   blocking('/blocking'),
   pushNotifications('/push_notifications'),
   notifications('/notifications'),
@@ -29,7 +30,8 @@ enum AppRouter {
   deleteAccountFinish('/delete_account/finish_account'),
   deleteAccountConfirmation('/delete_account/confirmation'),
   deleteAccountFinished('/delete_account/delete_account_finished'),
-  purchase('/purchase');
+  purchase('/purchase')
+  ;
 
   const AppRouter(this._name);
 

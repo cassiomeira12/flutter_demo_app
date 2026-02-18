@@ -55,21 +55,41 @@ class ScrollStateWidget<T> extends StatelessWidget {
       }
       if (errorMessage.value.isNotEmpty) {
         return Center(
-          child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveSizeHelper.width(10),
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: ResponsiveSizeHelper.width(20),
             ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextWidget(
-                  errorMessage.value,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.subtitle(context),
-                ),
-                const SpacerWidget(),
-                LightButton(text: 'try_again'.tr, onPressed: onRefresh),
-              ],
+            decoration: BoxDecoration(
+              color: Theme.of(context).highlightColor,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                vertical: ResponsiveSizeHelper.height(30),
+                horizontal: ResponsiveSizeHelper.width(20),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  FlutterIcon(
+                    Icons.error,
+                    color: Theme.of(context).colorScheme.error,
+                    size: IconSize.bigger,
+                  ),
+                  const SpacerWidget(),
+                  TextWidget(
+                    errorMessage.value.tr,
+                    textAlign: TextAlign.center,
+                    style: AppTextStyle.subtitle(context),
+                  ),
+                  const SpacerWidget(height: 2),
+                  SecondaryButton(
+                    text: 'try_again'.tr,
+                    onPressed: onRefresh,
+                    size: ButtonSize.medium,
+                  ),
+                ],
+              ),
             ),
           ),
         );
@@ -78,7 +98,7 @@ class ScrollStateWidget<T> extends StatelessWidget {
         return Center(
           child: Padding(
             padding: EdgeInsets.symmetric(
-              horizontal: ResponsiveSizeHelper.width(10),
+              horizontal: ResponsiveSizeHelper.width(20),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,

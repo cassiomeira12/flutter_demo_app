@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:design_system/design_system.dart';
 
 class CaptchaWidget extends StatefulWidget {
   final Function() onSuccess;

@@ -16,6 +16,44 @@ abstract class ResponsiveSizeHelper {
   static const double minWidth = 320;
   static const double minHeight = 568;
 
+  static Future<void> initializeFlutterView() async {
+    if (!kDebugMode && Platform.isAndroid) {
+      final completer = Completer<void>();
+      final oldOnMetricsChanged = PlatformDispatcher.instance.onMetricsChanged!;
+      PlatformDispatcher.instance.onMetricsChanged = () {
+        if (!completer.isCompleted) {
+          final view = WidgetsBinding.instance.platformDispatcher.views.single;
+          final mediaQuery = MediaQueryData.fromView(view);
+          Log.info(
+            'Device Physical Size \n'
+            'width: ${view.physicalSize.width.toInt()} px \n'
+            'height: ${view.physicalSize.height.toInt()} px \n'
+            'devicePixelRatio: ${mediaQuery.devicePixelRatio} \n'
+            '\n'
+            'Device Size \n'
+            'width: ${mediaQuery.size.width.toInt()} px \n'
+            'height: ${mediaQuery.size.height.toInt()} px',
+          );
+          if (mediaQuery.size.width > 0 && mediaQuery.size.height > 0) {
+            completer.complete(null);
+          }
+        }
+        oldOnMetricsChanged();
+      };
+      return completer.future;
+    }
+  }
+
+  static final FlutterView _view =
+      WidgetsBinding.instance.platformDispatcher.views.single;
+  static final MediaQueryData mediaQuery = MediaQueryData.fromView(_view);
+
+  static final double _width = mediaQuery.size.width;
+  static final double _height = mediaQuery.size.height;
+
+  static double get spacingDefaultWidth => width(12);
+  static double get spacingDefaultHeight => height(12);
+
   static double width(double size) {
     if (_width > maxWidth) {
       return (maxWidth / _viewPortReferenceWidth) * size;
@@ -36,17 +74,6 @@ abstract class ResponsiveSizeHelper {
     return (_height / _viewPortReferenceHeight) * size;
   }
 
-  static MediaQueryData get mediaQuery => MediaQueryData.fromView(
-    WidgetsBinding.instance.platformDispatcher.views.single,
-  );
-
-  static Size get _physicalSize =>
-      WidgetsBinding.instance.platformDispatcher.views.single.physicalSize;
-
-  static double get _width => mediaQuery.size.width;
-
-  static double get _height => mediaQuery.size.height;
-
   static double get appBarHeight {
     double height = kToolbarHeight + mediaQuery.padding.top;
     if (Platform.isAndroid) {
@@ -56,25 +83,11 @@ abstract class ResponsiveSizeHelper {
   }
 
   static double get navigationBarHeight {
-    double height = kBottomNavigationBarHeight + mediaQuery.padding.bottom;
+    final double height =
+        kBottomNavigationBarHeight + mediaQuery.padding.bottom;
     // if (Platform.isAndroid) {
     //   height += mediaQuery.padding.bottom * .35;
     // }
     return height;
-  }
-
-  static double get spacingDefaultWidth => width(12);
-
-  static double get spacingDefaultHeight => height(12);
-
-  static String toStringSize() {
-    return 'Device Physical Size \n'
-        'width: ${_physicalSize.width.toInt()} px \n'
-        'height: ${_physicalSize.height.toInt()} px \n'
-        'devicePixelRatio: ${mediaQuery.devicePixelRatio} \n'
-        '\n'
-        'Device Size \n'
-        'width: ${_width.toInt()} px \n'
-        'height: ${_height.toInt()} px';
   }
 }

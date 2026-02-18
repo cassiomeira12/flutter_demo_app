@@ -1,15 +1,24 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:core/core.dart';
 
 class UploadInstallationAppUseCaseImpl implements UploadInstallationAppUseCase {
   final AppInstallationService _service;
+  final LocalStorageUseCase _localStorageUseCase;
 
   UploadInstallationAppUseCaseImpl({
     required AppInstallationService appInstallationService,
-  }) : _service = appInstallationService;
+    required LocalStorageUseCase localStorageUseCase,
+  }) : _service = appInstallationService,
+       _localStorageUseCase = localStorageUseCase;
 
   @override
-  Future<void> call() async {
-    final InstallationEntity installation = await _service.getInstallation();
-    return _service.upload(installation);
+  Future<InstallationEntity> call() async {
+    InstallationEntity installation = await _service.getInstallation();
+    final storageToken = await _localStorageUseCase.get<String>(PUSH_TOKEN);
+    final token = installation.deviceToken;
+    installation = await _service.upload(installation);
+    if (token != null && storageToken != token) {
+      await _localStorageUseCase.set(PUSH_TOKEN, token);
+    }
+    return installation;
   }
 }

@@ -134,37 +134,47 @@ class WebController extends BaseController {
 
   void openInstagram() {
     clickTagging(component: 'open_instagram_contacts_key');
-    final link = const String.fromEnvironment('web_contact_instagram');
+    const link = String.fromEnvironment('web_contact_instagram');
     _openWebUrlUseCase.call(link);
   }
 
   void openFacebook() {
     clickTagging(component: 'open_facebook_contacts_key');
-    final link = const String.fromEnvironment('web_contact_facebook');
+    const link = String.fromEnvironment('web_contact_facebook');
     _openWebUrlUseCase.call(link);
   }
 
   void openWhatsApp() {
     clickTagging(component: 'open_whatsapp_contacts_key');
-    final link = const String.fromEnvironment('web_contact_whatsapp');
+    const link = String.fromEnvironment('web_contact_whatsapp');
     _openWebUrlUseCase.call(link);
   }
 
   Future<void> downloadAndroidApp() async {
     clickTagging(component: 'download_google_store_key');
-    const androidPackageName = String.fromEnvironment('android_package_name');
-    final locale = await _currentDeviceLocaleUseCase.call();
-    final currentLanguage = locale.toLanguageTag();
-    final String url =
-        'https://play.google.com/store/apps/details?id=$androidPackageName&hl=$currentLanguage';
-    _openWebUrlUseCase.call(url);
+
+    // const androidPackageName = String.fromEnvironment('android_package_name');
+    // final locale = await _currentDeviceLocaleUseCase.call();
+    // final currentLanguage = locale.toLanguageTag();
+    // final String url =
+    //     'https://play.google.com/store/apps/details?id=$androidPackageName&hl=$currentLanguage';
+
+    const serverUrl = String.fromEnvironment('server_url');
+    const String downloadUrl = '$serverUrl/download_android_app';
+
+    _openWebUrlUseCase.call(downloadUrl);
   }
 
   void downloadAppleApp() {
     clickTagging(component: 'download_apple_store_key');
-    const appAppleId = String.fromEnvironment('apple_store_app_id');
-    final String url = 'https://apps.apple.com/br/app/$appAppleId';
-    _openWebUrlUseCase.call(url);
+
+    // const appAppleId = String.fromEnvironment('apple_store_app_id');
+    // const String url = 'https://apps.apple.com/br/app/$appAppleId';
+
+    const serverUrl = String.fromEnvironment('server_url');
+    const String downloadUrl = '$serverUrl/download_ios_app';
+
+    _openWebUrlUseCase.call(downloadUrl);
   }
 
   double _calculateHeightToScroll(GlobalKey key) {

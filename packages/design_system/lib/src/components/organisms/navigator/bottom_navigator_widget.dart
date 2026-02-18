@@ -98,10 +98,10 @@ class _BottomNavigatorWidgetState extends State<BottomNavigatorWidget> {
     required bool isSelected,
   }) {
     final theme = Theme.of(context);
-    Color color = isSelected
+    final Color color = isSelected
         ? theme.bottomNavigationBarTheme.selectedItemColor ?? theme.primaryColor
         : AppColors.transparent;
-    FlutterIcon icon = isSelected
+    final FlutterIcon icon = isSelected
         ? item.selectedIcon.copyWith(color: color)
         : item.unselectedIcon;
     return SafeArea(
@@ -138,7 +138,7 @@ class _BottomNavigatorWidgetState extends State<BottomNavigatorWidget> {
                   icon,
                   Flexible(
                     child: TextWidget(
-                      item.title,
+                      item.title.tr,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.field(

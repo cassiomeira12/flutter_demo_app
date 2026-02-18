@@ -61,7 +61,7 @@ class AppPermissionsServiceImpl implements AppPermissionsService {
           final status = await locationService.requestPermission();
           return parseStatus(status.name);
         case Permission.notification:
-          final status = await permission.request();
+          final status = await checkPermission(permission);
           if (status.isPermanentlyDenied && openSettings) {
             await openAppSettings();
           }

@@ -1,3 +1,5 @@
+import 'package:core/core.dart';
+
 abstract class UploadInstallationAppUseCase {
-  Future<void> call();
+  Future<InstallationEntity> call();
 }

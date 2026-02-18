@@ -18,10 +18,12 @@ class FirebaseCoreService implements FirebaseInitializeService {
        _appId = appId,
        _senderId = senderId;
 
+  FirebaseApp? _app;
+
   @override
   Future<void> init() async {
     try {
-      FirebaseOptions? options = Platform.isWeb
+      final FirebaseOptions? options = Platform.isWeb
           ? FirebaseOptions(
               projectId: _projectId,
               apiKey: _apiKey,
@@ -29,7 +31,7 @@ class FirebaseCoreService implements FirebaseInitializeService {
               messagingSenderId: _senderId,
             )
           : null;
-      await Firebase.initializeApp(options: options);
+      _app = await Firebase.initializeApp(options: options);
       Log.success('$runtimeType init successful', throwsCrashlytics: false);
     } catch (error, stackTrace) {
       Log.error(
@@ -40,4 +42,9 @@ class FirebaseCoreService implements FirebaseInitializeService {
       );
     }
   }
+
+  @override
+  String get messagingSenderId =>
+      _app?.options.messagingSenderId ??
+      const String.fromEnvironment('firebaseMessagingSenderId');
 }

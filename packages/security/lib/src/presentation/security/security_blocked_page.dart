@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'security.dart';
+import 'package:security/src/presentation/security/security.dart';
 
 class SecurityBlockedPage extends AppView<SecurityController> {
   const SecurityBlockedPage({super.key});

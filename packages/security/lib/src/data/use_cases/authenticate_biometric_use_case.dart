@@ -1,13 +1,11 @@
-import '../../domain/domain.dart';
+import 'package:security/src/domain/domain.dart';
 
 class AuthenticateBiometricUseCaseImpl implements AuthenticateBiometricUseCase {
-  final LocalAuthService _repository;
+  final LocalAuthService _service;
 
   AuthenticateBiometricUseCaseImpl({required LocalAuthService localAuthService})
-    : _repository = localAuthService;
+    : _service = localAuthService;
 
   @override
-  Future<bool> call() {
-    return _repository.authenticate();
-  }
+  Future<bool> call() => _service.authenticate();
 }

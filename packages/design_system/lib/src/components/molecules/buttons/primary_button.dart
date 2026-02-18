@@ -6,7 +6,6 @@ class PrimaryButton extends StatelessWidget {
   final Widget? icon;
   final VoidCallback? onPressed;
   final Color? textColor;
-  // TODO trocar para backgroundColor
   final Color? backgroundColor;
   final bool expandWidth;
   final ButtonSize size;

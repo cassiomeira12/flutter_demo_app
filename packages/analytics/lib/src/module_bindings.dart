@@ -1,10 +1,9 @@
+import 'package:analytics/src/data/data.dart';
 import 'package:core/core.dart';
-
-import 'data/data.dart';
 
 class AnalyticsModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AnalyticsServiceManager.instance.services.add(
       AptabaseAnalytics(
         apiKey: const String.fromEnvironment('analytics_aptabase_app_key'),

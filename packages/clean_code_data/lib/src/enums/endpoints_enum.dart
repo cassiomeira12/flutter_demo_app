@@ -16,7 +16,12 @@ enum EndpointsEnum {
   deleteUserAccount('/parse/functions/deleteAccount'),
   changeUserPassword('/parse/functions/change-password'),
   listUsers('/parse/users'),
-  listWebVisitHistory('/parse/functions/web-visit-history');
+  listWebVisitHistory('/parse/functions/web-visit-history'),
+  subscribeTopic('/parse/functions/subscribeTopic'),
+  unsubscribeTopic('/parse/functions/unsubscribeTopic'),
+  subscribeUserTopic('/parse/functions/subscribeUserTopic'),
+  unsubscribeUserTopic('/parse/functions/unsubscribeUserTopic'),
+  ;
 
   final String endpoint;
 

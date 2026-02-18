@@ -5,12 +5,12 @@ class AuthMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     final bool hasSession = AppBinding.hasInstance<SessionEntity>();
-    if (hasSession == false) {
+    if (!hasSession) {
       return RouteSettings(name: AppRouter.splash.name);
     }
 
     final bool hasUser = AppBinding.hasInstance<UserEntity>();
-    if (hasUser == false) {
+    if (!hasUser) {
       if (route != AppRouter.login.name) {
         final loginRouter = AppRoutes.findByRoute(AppRouter.login.name);
         if (loginRouter == null) {

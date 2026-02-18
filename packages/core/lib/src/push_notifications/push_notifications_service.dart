@@ -1,3 +1,5 @@
+import 'package:dependency/dependency.dart';
+
 abstract class PushNotificationsService {
   Future<void> init();
 
@@ -7,7 +9,14 @@ abstract class PushNotificationsService {
     required int id,
     required String? title,
     required String? body,
-    dynamic payload,
-    String? imageUrl,
+    required Map<String, dynamic>? payload,
+    required String? imageUrl,
+    required String? androidChannelId,
+    required String? androidPriority,
+    required String? androidVisibility,
+    required String? androidTag,
+    required bool? androidSticky,
   });
+
+  Future<PermissionStatus> requestPermission();
 }

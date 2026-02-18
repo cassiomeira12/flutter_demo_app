@@ -1,5 +1,5 @@
-import 'app_base_binding.dart';
-import 'get_binding.dart';
+import 'package:core/src/bindings/app_base_binding.dart';
+import 'package:core/src/bindings/get_binding.dart';
 
 extension AppBinding on AppBaseBinding {
   static final AppBaseBinding _binding = GetBinding.instance;

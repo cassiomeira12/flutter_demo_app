@@ -35,7 +35,6 @@ class IntroController extends BaseController {
       _finishIntroPages();
       return;
     }
-    _removeNativeSplashScreen();
   }
 
   void setPermission(Permission permission) {
@@ -76,7 +75,8 @@ class IntroController extends BaseController {
 
   Future<void> _setUpdatedAppFinished() async {
     final AppInfoEntity appInfoEntity = await _getAppInfoUseCase.call();
-    final String currentVersion = CURRENT_APP_VERSION + appInfoEntity.version;
+    final String currentVersion =
+        '${CURRENT_APP_VERSION}_${appInfoEntity.version}';
     await _localStorageUseCase.set<bool>(currentVersion, true);
   }
 
@@ -132,12 +132,5 @@ class IntroController extends BaseController {
         },
       );
     });
-  }
-
-  void _removeNativeSplashScreen() {
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      FlutterNativeSplash.remove,
-    );
   }
 }

@@ -28,7 +28,6 @@ dependencies:
   cached_network_image: 3.4.1
 
   # Logger
-  logger: 2.6.2
   talker: 5.1.9
 
   # Local Storage
@@ -67,6 +66,7 @@ dependencies:
 
   # Feature Flag
   flagsmith: 6.1.0
+  growthbook_sdk_flutter: 4.1.1
 
   # Push Messaging Notifications
   # firebase_messaging: 16.0.4
@@ -103,6 +103,8 @@ dependencies:
   synchronized: 3.4.0
   flutter_dynamic_launcher_icon: 0.0.2
   in_app_review: 2.0.11
+  string_normalizer: 0.4.0
+  app_settings: 7.0.0
 
   # Widget
   otp: 3.2.0

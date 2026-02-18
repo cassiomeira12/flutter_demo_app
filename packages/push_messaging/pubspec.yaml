@@ -17,6 +17,12 @@ dependencies:
   dependency:
     path: ../dependency
 
+  firebase_initialize:
+    path: ../firebase_initialize
+  analytics:
+    path: ../analytics
+  crashlytics:
+    path: ../crashlytics
   push_notifications:
     path: ../push_notifications
 

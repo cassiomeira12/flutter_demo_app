@@ -1,6 +1,8 @@
 PODS:
   - app_links (6.4.1):
     - FlutterMacOS
+  - app_settings (5.1.1):
+    - FlutterMacOS
   - connectivity_plus (0.0.1):
     - FlutterMacOS
   - device_info_plus (0.0.1):
@@ -28,9 +30,6 @@ PODS:
   - OrderedSet (6.0.3)
   - package_info_plus (0.0.1):
     - FlutterMacOS
-  - path_provider_foundation (0.0.1):
-    - Flutter
-    - FlutterMacOS
   - Sentry/HybridSDK (8.56.2)
   - sentry_flutter (9.9.1):
     - Flutter
@@ -49,6 +48,7 @@ PODS:
 
 DEPENDENCIES:
   - app_links (from `Flutter/ephemeral/.symlinks/plugins/app_links/macos`)
+  - app_settings (from `Flutter/ephemeral/.symlinks/plugins/app_settings/macos`)
   - connectivity_plus (from `Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos`)
   - device_info_plus (from `Flutter/ephemeral/.symlinks/plugins/device_info_plus/macos`)
   - flutter_inappwebview_macos (from `Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview_macos/macos`)
@@ -60,7 +60,6 @@ DEPENDENCIES:
   - location (from `Flutter/ephemeral/.symlinks/plugins/location/macos`)
   - mobile_scanner (from `Flutter/ephemeral/.symlinks/plugins/mobile_scanner/darwin`)
   - package_info_plus (from `Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos`)
-  - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - sentry_flutter (from `Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos`)
   - share_plus (from `Flutter/ephemeral/.symlinks/plugins/share_plus/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -75,6 +74,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_links:
     :path: Flutter/ephemeral/.symlinks/plugins/app_links/macos
+  app_settings:
+    :path: Flutter/ephemeral/.symlinks/plugins/app_settings/macos
   connectivity_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/connectivity_plus/macos
   device_info_plus:
@@ -97,8 +98,6 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/mobile_scanner/darwin
   package_info_plus:
     :path: Flutter/ephemeral/.symlinks/plugins/package_info_plus/macos
-  path_provider_foundation:
-    :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   sentry_flutter:
     :path: Flutter/ephemeral/.symlinks/plugins/sentry_flutter/macos
   share_plus:
@@ -112,6 +111,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_links: 05a6ec2341985eb05e9f97dc63f5837c39895c3f
+  app_settings: cd21e176b56f8172043640ade81322a98896bff4
   connectivity_plus: 4adf20a405e25b42b9c9f87feff8f4b6fde18a4e
   device_info_plus: 4fb280989f669696856f8b129e4a5e3cd6c48f76
   flutter_inappwebview_macos: c2d68649f9f8f1831bfcd98d73fd6256366d9d1d
@@ -124,7 +124,6 @@ SPEC CHECKSUMS:
   mobile_scanner: 9157936403f5a0644ca3779a38ff8404c5434a93
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: f0052d280d17aa382b932f399edf32507174e870
-  path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
   Sentry: b53951377b78e21a734f5dc8318e333dbfc682d7
   sentry_flutter: 580133c878f86698e23bb5dd7217a3387c4b79b5
   share_plus: 510bf0af1a42cd602274b4629920c9649c52f4cc
@@ -132,6 +131,6 @@ SPEC CHECKSUMS:
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
   url_launcher_macos: f87a979182d112f911de6820aefddaf56ee9fbfd
 
-PODFILE CHECKSUM: 8bcbfa445e7e9726a65f59f5c26dfd31fde1d311
+PODFILE CHECKSUM: 4d9d760e85b8a9df61d08eb650d2f42f9f0d721c
 
 COCOAPODS: 1.16.2

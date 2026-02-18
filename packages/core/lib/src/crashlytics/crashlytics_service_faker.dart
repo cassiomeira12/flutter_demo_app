@@ -30,4 +30,22 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     required Object error,
     StackTrace? stackTrace,
   }) async {}
+
+  @override
+  TrackOperation trackOperation({String? name, String? operation}) {
+    return FakeTrackOperation();
+  }
+}
+
+class FakeTrackOperation implements TrackOperation {
+  @override
+  TrackOperation startChild({String? name, String? operation}) {
+    return FakeTrackOperation();
+  }
+
+  @override
+  void catchError({Object? error, StackTrace? stackTrace}) {}
+
+  @override
+  void finish() {}
 }

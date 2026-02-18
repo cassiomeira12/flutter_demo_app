@@ -1,3 +1,7 @@
+export 'package:clean_code_data/clean_code_data.dart';
+export 'package:clean_code_domain/clean_code_domain.dart';
+export 'package:design_system/design_system.dart';
+
 export 'src/analytics/analytics.dart';
 export 'src/appsflyer/appsflyer.dart';
 export 'src/base/base.dart';
@@ -12,8 +16,8 @@ export 'src/helpers/helpers.dart';
 export 'src/listeners/listeners.dart';
 export 'src/logger/logger.dart';
 export 'src/middlewares/middlewares.dart';
-export 'src/native/native.dart';
 export 'src/module_bindings.dart';
+export 'src/native/native.dart';
 export 'src/observers/observers.dart';
 export 'src/platform/platform.dart';
 export 'src/push_messaging/push_messaging.dart';
@@ -24,7 +28,3 @@ export 'src/themes/themes.dart';
 export 'src/translations/en_us_translation.dart';
 export 'src/translations/pt_br_translation.dart';
 export 'src/translations/translation.dart';
-
-export 'package:clean_code_data/clean_code_data.dart';
-export 'package:clean_code_domain/clean_code_domain.dart';
-export 'package:design_system/design_system.dart';

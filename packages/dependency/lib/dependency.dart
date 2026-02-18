@@ -1,5 +1,17 @@
 // ignore_for_file: invalid_export_of_internal_element
 
+export 'dart:async';
+export 'dart:convert';
+export 'dart:io' hide Cookie, HeaderValue, X509Certificate;
+export 'dart:math';
+export 'dart:typed_data';
+
+export 'package:flutter/foundation.dart';
+export 'package:flutter/gestures.dart';
+export 'package:flutter/rendering.dart';
+export 'package:flutter/services.dart';
+export 'package:flutter_localizations/flutter_localizations.dart';
+
 export 'src/analytics.dart';
 export 'src/camera.dart';
 export 'src/crashlytics.dart';
@@ -23,13 +35,3 @@ export 'src/storage.dart';
 export 'src/svg.dart';
 export 'src/utilities.dart';
 export 'src/widgets.dart';
-
-export 'dart:io' hide X509Certificate, HeaderValue, Cookie;
-export 'dart:async';
-export 'dart:convert';
-export 'dart:math';
-export 'dart:typed_data';
-export 'package:flutter/services.dart';
-export 'package:flutter/gestures.dart';
-export 'package:flutter/foundation.dart';
-export 'package:flutter_localizations/flutter_localizations.dart';

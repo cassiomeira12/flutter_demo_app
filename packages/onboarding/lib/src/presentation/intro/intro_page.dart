@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'intro.dart';
-import 'page_view/page_view.dart';
+import 'package:onboarding/src/presentation/intro/intro.dart';
+import 'package:onboarding/src/presentation/intro/page_view/page_view.dart';
 
 class IntroPage extends AppView<IntroController> {
   const IntroPage({super.key});

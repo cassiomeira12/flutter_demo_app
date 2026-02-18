@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class PushNotificationsServiceFaker implements PushNotificationsService {
   @override
@@ -19,12 +20,22 @@ class PushNotificationsServiceFaker implements PushNotificationsService {
     required int id,
     required String? title,
     required String? body,
-    dynamic payload,
+    Map<String, dynamic>? payload,
     String? imageUrl,
+    String? androidChannelId,
+    String? androidPriority,
+    String? androidVisibility,
+    String? androidTag,
+    bool? androidSticky,
   }) async {
     Log.success(
       '$runtimeType openNotificationOnStartApp',
       throwsCrashlytics: false,
     );
+  }
+
+  @override
+  Future<PermissionStatus> requestPermission() async {
+    return PermissionStatus.denied;
   }
 }

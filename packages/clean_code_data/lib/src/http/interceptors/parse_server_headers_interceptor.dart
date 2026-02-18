@@ -3,30 +3,29 @@ import 'package:dependency/dependency.dart';
 
 class ParseServerHeadersInterceptor extends Interceptor {
   final EnvironmentEntity _environment;
-  final GetInstallationAppUseCase _getInstallationAppUseCase;
 
   ParseServerHeadersInterceptor({
     required EnvironmentEntity environment,
-    required GetInstallationAppUseCase getInstallationAppUseCase,
-  }) : _environment = environment,
-       _getInstallationAppUseCase = getInstallationAppUseCase;
+  }) : _environment = environment;
 
   @override
   Future<void> onRequest(
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    String? instalationId;
+    String? installationId;
 
     try {
-      final installation = await _getInstallationAppUseCase.call();
-      instalationId = installation.installationId;
+      final getInstallationAppUseCase =
+          AppBinding.find<GetInstallationAppUseCase>();
+      final installation = await getInstallationAppUseCase.call();
+      installationId = installation.installationId;
     } catch (_) {}
 
     options.headers.addAll({
       'X-Parse-Application-Id': _environment.appId,
       'X-Parse-REST-API-Key': _environment.restApiKey,
-      'X-Parse-Installation-Id': instalationId,
+      'X-Parse-Installation-Id': installationId,
     });
 
     // Add ClientKey only for Non Web App

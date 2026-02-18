@@ -1,9 +1,8 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../data/data.dart';
-import '../../domain/domain.dart';
-import 'security.dart';
+import 'package:security/src/data/data.dart';
+import 'package:security/src/domain/domain.dart';
+import 'package:security/src/presentation/security/security.dart';
 
 class SecurityBindings extends Bindings {
   @override
@@ -22,7 +21,6 @@ class SecurityBindings extends Bindings {
         checkBiometricsUseCase: AppBinding.find(),
         authenticateBiometricUseCase: AppBinding.find(),
         logoutUseCase: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
       ),
     );

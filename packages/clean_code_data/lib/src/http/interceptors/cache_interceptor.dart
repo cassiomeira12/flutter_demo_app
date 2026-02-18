@@ -78,6 +78,13 @@ class CacheInterceptor extends Interceptor {
 
           final dynamic data = jsonDecode(body);
 
+          Log.warning(
+            'Using Cache Data \n'
+            'path: $endpoint \n'
+            'data: $data \n',
+            throwsCrashlytics: false,
+          );
+
           handler.resolve(
             Response(
               data: data,

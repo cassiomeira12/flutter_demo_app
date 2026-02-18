@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'crashlytics_service_faker.dart';
+import 'package:core/src/crashlytics/crashlytics_service_faker.dart';
 
 class CrashlyticsServiceManager implements CrashlyticsService {
   CrashlyticsServiceManager._();
@@ -12,6 +11,9 @@ class CrashlyticsServiceManager implements CrashlyticsService {
   final List<CrashlyticsService> _initializedServices = List.empty(
     growable: true,
   );
+
+  final List<dynamic> _errors = List.empty(growable: true);
+  final List<dynamic> _stackTraces = List.empty(growable: true);
 
   Future<void> _runServiceFunction(
     Future<void> Function(CrashlyticsService service) function,
@@ -25,20 +27,20 @@ class CrashlyticsServiceManager implements CrashlyticsService {
   Future<void> init() async {
     bool useFallbackService = false;
 
-    final List<dynamic> errors = List.empty(growable: true);
-    final List<dynamic> stackTraces = List.empty(growable: true);
-
     for (final service in services) {
       try {
         await service.init();
         _initializedServices.add(service);
-        Log.info('${service.runtimeType} init successful');
+        Log.success(
+          '${service.runtimeType} init successful',
+          throwsCrashlytics: false,
+        );
       } catch (error, stackTrace) {
         if (!useFallbackService) {
           useFallbackService = true;
         }
-        errors.add(error);
-        stackTraces.add(stackTrace);
+        _errors.add(error);
+        _stackTraces.add(stackTrace);
       }
     }
 
@@ -52,10 +54,18 @@ class CrashlyticsServiceManager implements CrashlyticsService {
       final fallback = CrashlyticsServiceFaker();
       await fallback.init();
       _initializedServices.add(fallback);
-      for (int i = 0; i < errors.length; i++) {
-        captureException(error: errors[i], stackTrace: stackTraces[i]);
-      }
     }
+
+    for (int i = 0; i < _errors.length; i++) {
+      StackTrace? stackTrace;
+      try {
+        stackTrace = _stackTraces[i];
+      } catch (_) {}
+      captureException(error: _errors[i], stackTrace: stackTrace);
+    }
+
+    _errors.clear();
+    _stackTraces.clear();
   }
 
   @override
@@ -83,6 +93,10 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     required Object error,
     StackTrace? stackTrace,
   }) {
+    if (_initializedServices.isEmpty) {
+      _errors.add(error);
+      _stackTraces.add(stackTrace);
+    }
     return _runServiceFunction((service) {
       return service.captureException(error: error, stackTrace: stackTrace);
     });
@@ -93,11 +107,23 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     required Object error,
     StackTrace? stackTrace,
   }) {
+    if (_initializedServices.isEmpty) {
+      _errors.add(error);
+      _stackTraces.add(stackTrace);
+    }
     return _runServiceFunction((service) {
       return service.captureFatalException(
         error: error,
         stackTrace: stackTrace,
       );
     });
+  }
+
+  @override
+  TrackOperation trackOperation({String? name, String? operation}) {
+    return _initializedServices.first.trackOperation(
+      name: name,
+      operation: operation,
+    );
   }
 }

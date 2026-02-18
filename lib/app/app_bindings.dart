@@ -1,3 +1,4 @@
+import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
@@ -18,26 +19,23 @@ import 'package:webview/webview.dart';
 
 class AppBindings extends Bindings {
   @override
-  void dependencies() {
-    if (kReleaseMode) {
+  Future<void> dependencies() async {
+    if (!kDebugMode) {
       CrashlyticsModuleBindings().injectDependencies();
     }
 
     CoreModuleBindings().injectDependencies();
 
-    if (kReleaseMode) {
-      // FirebaseInitializeModuleBindings().injectDependencies();
+    // await FirebaseInitializeModuleBindings().injectDependencies();
+    if (!kDebugMode) {
       AnalyticsModuleBindings().injectDependencies();
     }
+    // await AppsFlyerModuleBindings().injectDependencies();
+    // await PushNotificationsModuleBindings().injectDependencies();
+    // await PushMessagingModuleBindings().injectDependencies();
 
-    // AppsFlyerModuleBindings().injectDependencies();
-    // PushNotificationsModuleBindings().injectDependencies();
-    // PushMessagingModuleBindings().injectDependencies();
-
-    if (kReleaseMode) {
-      DeeplinkModuleBindings().injectDependencies();
-      FeatureFlagModuleBindings().injectDependencies();
-    }
+    DeeplinkModuleBindings().injectDependencies();
+    FeatureFlagModuleBindings().injectDependencies();
 
     SplashModuleBindings().injectDependencies();
     WebAppModuleBindings().injectDependencies();
@@ -45,6 +43,7 @@ class AppBindings extends Bindings {
     NotificationsModuleBindings().injectDependencies();
     ForceUpdateModuleBindings().injectDependencies();
     LoginModuleBindings().injectDependencies();
+    AdminModuleBindings().injectDependencies();
     HomeModuleBindings().injectDependencies();
     SettingsModuleBindings().injectDependencies();
     UserAccountModuleBindings().injectDependencies();

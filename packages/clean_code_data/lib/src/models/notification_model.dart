@@ -1,4 +1,3 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class NotificationModel extends NotificationEntity {
@@ -22,7 +21,7 @@ class NotificationModel extends NotificationEntity {
     } catch (error, stacktrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stacktrace,
         complement: 'Json Data: $map',
       );
     }

@@ -3,17 +3,17 @@ import 'package:design_system/design_system.dart';
 class NavigatorItem {
   final String routeName;
   final Map<String, dynamic>? arguments;
-  final NavigatorBottom _bottomItem;
+  final NavigatorBottom? _bottomItem;
 
   NavigatorItem({
     required this.routeName,
     this.arguments,
-    required NavigatorBottom bottomItem,
-  }) : _bottomItem = bottomItem.copyWith(
+    NavigatorBottom? bottomItem,
+  }) : _bottomItem = bottomItem?.copyWith(
          customKey: bottomItem.customKey ?? routeName,
        );
 
-  NavigatorBottom get bottomItem => _bottomItem;
+  NavigatorBottom? get bottomItem => _bottomItem;
 }
 
 class NavigatorBottom {

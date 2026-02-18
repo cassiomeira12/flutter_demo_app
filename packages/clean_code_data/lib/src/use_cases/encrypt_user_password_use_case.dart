@@ -1,4 +1,3 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 

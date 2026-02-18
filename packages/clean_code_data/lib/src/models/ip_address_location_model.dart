@@ -1,4 +1,3 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class IpAddressLocationModel extends IpAddressLocationEntity {
@@ -38,7 +37,7 @@ class IpAddressLocationModel extends IpAddressLocationEntity {
     } catch (error, stacktrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stacktrace,
         complement: 'Json Data: $map',
       );
     }

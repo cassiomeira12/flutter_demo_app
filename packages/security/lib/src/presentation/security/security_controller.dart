@@ -1,14 +1,12 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../domain/domain.dart';
+import 'package:security/src/domain/domain.dart';
 
 class SecurityController extends LifecycleController {
   final LocalStorageUseCase _localStorageUseCase;
   final CheckBiometricsUseCase _checkBiometricsUseCase;
   final AuthenticateBiometricUseCase _authenticateBiometricUseCase;
   final LogoutUseCase _logoutUseCase;
-  final PushMessagingService _pushMessagingService;
   final AppSecurityManager _appSecurityManager;
 
   SecurityController({
@@ -16,13 +14,11 @@ class SecurityController extends LifecycleController {
     required CheckBiometricsUseCase checkBiometricsUseCase,
     required AuthenticateBiometricUseCase authenticateBiometricUseCase,
     required LogoutUseCase logoutUseCase,
-    required PushMessagingService pushMessagingService,
     required AppSecurityManager appSecurityManager,
   }) : _localStorageUseCase = localStorageUseCase,
        _checkBiometricsUseCase = checkBiometricsUseCase,
        _authenticateBiometricUseCase = authenticateBiometricUseCase,
        _logoutUseCase = logoutUseCase,
-       _pushMessagingService = pushMessagingService,
        _appSecurityManager = appSecurityManager;
 
   final RxBool isLoading = RxBool(true);
@@ -37,8 +33,20 @@ class SecurityController extends LifecycleController {
     _checkDeviceSupportedBiometrics();
     biometric.value = _appSecurityManager.biometricsEnabled;
     blurProtect.value = _appSecurityManager.useBlurProtect;
+    if (appInForeground) {
+      _asyncUnlockApp();
+    }
+  }
 
-    Future.delayed(const Duration(milliseconds: 500), unlockApp);
+  @override
+  void onAppForeground() {
+    super.onAppForeground();
+    _asyncUnlockApp();
+  }
+
+  Future<void> _asyncUnlockApp() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+    unlockApp();
   }
 
   Future<void> _checkDeviceSupportedBiometrics() async {
@@ -90,9 +98,6 @@ class SecurityController extends LifecycleController {
     try {
       clickTagging(component: 'security_blocked_app_logout_key');
       logoutTagging();
-
-      final user = AppBinding.find<UserEntity>();
-      await _pushMessagingService.unsubscribeTopic(user.id);
 
       await _logoutUseCase.call();
     } catch (_) {

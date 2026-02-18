@@ -3,8 +3,7 @@ import 'package:dependency/dependency.dart';
 import 'package:login/src/data/data.dart';
 import 'package:login/src/domain/domain.dart';
 import 'package:login/src/infra/infra.dart';
-
-import 'recovery_password.dart';
+import 'package:login/src/presentation/recovery_password/recovery_password.dart';
 
 class RecoveryPasswordBindings extends Bindings {
   @override

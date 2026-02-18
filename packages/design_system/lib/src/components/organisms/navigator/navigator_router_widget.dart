@@ -137,9 +137,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
         return page.children
             .map((child) {
               return GetPageRoute(
-                popGesture: (child.popGesture ?? true)
-                    ? Platform.isWeb || Platform.isIOS
-                    : false,
+                popGesture:
+                    (child.popGesture ?? true) &&
+                    (Platform.isWeb || Platform.isIOS),
                 settings: settings,
                 page: child.page,
                 routeName: child.name,
@@ -167,9 +167,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
 
         return subRoute ??
             GetPageRoute(
-              popGesture: (page.popGesture ?? true)
-                  ? Platform.isWeb || Platform.isIOS
-                  : false,
+              popGesture:
+                  (page.popGesture ?? true) &&
+                  (Platform.isWeb || Platform.isIOS),
               settings: settings,
               routeName: AppRouter.unknown.name,
               page: UnknownPage.new,
@@ -192,9 +192,9 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
   }) {
     if (settings.name == Navigator.defaultRouteName) {
       return GetPageRoute(
-        popGesture: (defaultPage.popGesture ?? true)
-            ? Platform.isWeb || Platform.isIOS
-            : false,
+        popGesture:
+            (defaultPage.popGesture ?? true) &&
+            (Platform.isWeb || Platform.isIOS),
         settings: RouteSettings(
           name: defaultPage.name,
           arguments: defaultPage.arguments,
@@ -232,9 +232,8 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
 
     if (foundSubRoute || foundChildSubRoute || routeName == child?.name) {
       return GetPageRoute(
-        popGesture: (child?.popGesture ?? true)
-            ? Platform.isWeb || Platform.isIOS
-            : false,
+        popGesture:
+            (child?.popGesture ?? true) && (Platform.isWeb || Platform.isIOS),
         settings: settings,
         page: child?.page,
         routeName: child?.name,

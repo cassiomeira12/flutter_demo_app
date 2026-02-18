@@ -31,7 +31,7 @@ class UserDataSourceImpl
       data: data,
     );
 
-    await mixinUpdate(http: _http, request: request);
+    await mixinUpdate(http: _http, request: request, defaultJsonKeys: []);
   }
 
   @override

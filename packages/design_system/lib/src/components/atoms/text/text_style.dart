@@ -126,6 +126,7 @@ class AppTextStyle extends TextStyle {
          color: color ?? Theme.of(context).textTheme.bodyLarge?.color,
          fontWeight: bold ? FontWeight.bold : FontWeight.w900,
          decoration: TextDecoration.underline,
+         decorationColor: color ?? Theme.of(context).textTheme.bodyLarge?.color,
          fontFeatures: [const FontFeature.tabularFigures()],
        );
 

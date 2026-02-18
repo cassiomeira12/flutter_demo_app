@@ -11,41 +11,38 @@ class SkeletonWidget extends StatelessWidget {
         final theme = Theme.of(context);
         final containerHeight = ResponsiveSizeHelper.height(250);
         final containerWidth = constraints.maxWidth * .9;
-        return Container(
-          child: ColoredBox(
-            color:
-                theme.bottomNavigationBarTheme.backgroundColor ??
-                theme.scaffoldBackgroundColor,
-            child: Skeletonizer(
-              enabled: true,
-              child: SizedBox(
-                width: constraints.maxWidth,
-                height: constraints.maxHeight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const TextWidget('-------------------'),
-                    const SpacerWidget(),
-                    const TextWidget('-----------------------------'),
-                    const SpacerWidget(),
-                    Container(
-                      width: containerWidth,
-                      height: containerHeight,
-                      color: theme.scaffoldBackgroundColor,
-                    ),
-                    const SpacerWidget(),
-                    const TextWidget('-------------------'),
-                    const SpacerWidget(),
-                    const TextWidget('-----------------------------'),
-                    const TextWidget('-------------------'),
-                    const SpacerWidget(),
-                    const TextWidget('-----------------------------'),
-                    const TextWidget('-------------------'),
-                    const SpacerWidget(),
-                    const TextWidget('-----------------------------'),
-                  ],
-                ),
+        return ColoredBox(
+          color:
+              theme.bottomNavigationBarTheme.backgroundColor ??
+              theme.scaffoldBackgroundColor,
+          child: Skeletonizer(
+            child: SizedBox(
+              width: constraints.maxWidth,
+              height: constraints.maxHeight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const TextWidget('-------------------'),
+                  const SpacerWidget(),
+                  const TextWidget('-----------------------------'),
+                  const SpacerWidget(),
+                  Container(
+                    width: containerWidth,
+                    height: containerHeight,
+                    color: theme.scaffoldBackgroundColor,
+                  ),
+                  const SpacerWidget(),
+                  const TextWidget('-------------------'),
+                  const SpacerWidget(),
+                  const TextWidget('-----------------------------'),
+                  const TextWidget('-------------------'),
+                  const SpacerWidget(),
+                  const TextWidget('-----------------------------'),
+                  const TextWidget('-------------------'),
+                  const SpacerWidget(),
+                  const TextWidget('-----------------------------'),
+                ],
               ),
             ),
           ),

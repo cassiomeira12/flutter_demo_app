@@ -5,4 +5,8 @@ class FirebaseInitializeServiceFaker implements FirebaseInitializeService {
   Future<void> init() async {
     Log.success('$runtimeType init', throwsCrashlytics: false);
   }
+
+  @override
+  String get messagingSenderId =>
+      const String.fromEnvironment('firebaseMessagingSenderId');
 }

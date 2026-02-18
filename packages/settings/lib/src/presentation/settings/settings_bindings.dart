@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'settings.dart';
+import 'package:settings/src/presentation/settings/settings.dart';
 
 class SettingsBindings extends Bindings {
   @override
@@ -13,7 +12,6 @@ class SettingsBindings extends Bindings {
         localStorageUseCase: AppBinding.find(),
         userAuthStorageUseCase: AppBinding.find(),
         updateUserLocaleUseCase: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
         appInfoEntity: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
       ),

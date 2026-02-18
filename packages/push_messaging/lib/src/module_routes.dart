@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:push_messaging/src/presentation/push_messaging_settings/push_messaging_settings.dart';
 
 class PushMessagingModuleRoutes implements ModuleRoutes {
   @override

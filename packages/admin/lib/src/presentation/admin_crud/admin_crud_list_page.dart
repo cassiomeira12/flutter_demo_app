@@ -1,9 +1,8 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:admin/src/presentation/admin_crud/admin_crud_details_page.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'admin_crud_details_page.dart';
 
 class AdminCrudListController<T> extends ListenableBaseController<T> {
   final Future<List<T>> Function() _fetchDataFunction;

@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'delete_account.dart';
+import 'package:user_account/src/presentation/delete_account/delete_account.dart';
 
 class DeleteAccountPage extends AppView<DeleteAccountController> {
   const DeleteAccountPage({super.key});

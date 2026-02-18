@@ -1,7 +1,6 @@
+import 'package:admin/src/presentation/admin/admin.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'admin.dart';
 
 class AdminBindings extends Bindings {
   @override

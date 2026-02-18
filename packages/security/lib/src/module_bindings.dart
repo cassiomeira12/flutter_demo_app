@@ -2,5 +2,5 @@ import 'package:core/core.dart';
 
 class SecurityModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {}
+  Future<void> injectDependencies() async {}
 }

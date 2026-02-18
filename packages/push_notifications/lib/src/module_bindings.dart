@@ -3,8 +3,12 @@ import 'package:push_notifications/src/data/data.dart';
 
 class PushNotificationsModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
-    AppBinding.replace<PushNotificationsService>(
+  Future<void> injectDependencies() async {
+    await AppBinding.replace<OnReceivedNotificationCallback>(
+      LocalPushOnReceivedNotificationCallback(),
+    );
+
+    await AppBinding.replace<PushNotificationsService>(
       LocalPushNotifications(
         appName: const String.fromEnvironment('app_name'),
         androidNotificationChannel: const String.fromEnvironment(
@@ -13,6 +17,8 @@ class PushNotificationsModuleBindings implements ModuleBinding {
         androidNotificationIcon: const String.fromEnvironment(
           'android_notification_icon',
         ),
+        requestPermissionUseCase: AppBinding.find(),
+        onClickedNotificationCallback: AppBinding.find(),
       ),
     );
   }

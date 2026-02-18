@@ -1,7 +1,6 @@
+import 'package:admin/src/presentation/create_notification/create_notification.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'create_notification.dart';
 
 class PushNotificationsPage extends AppView<PushNotificationsController> {
   final _formKey = GlobalKey<FormState>();
@@ -132,9 +131,9 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
 
                                   if (!context.mounted) return;
                                 } on BaseException catch (error) {
-                                  DialogWidget.show(
+                                  if (!context.mounted) return;
+                                  DialogWidget.showError(
                                     context,
-                                    title: 'default_error'.tr,
                                     message: error.toString().tr,
                                   );
                                 }
@@ -185,9 +184,9 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
                             controller.bodyController.clear();
                             controller.imageController.clear();
                           } on BaseException catch (error) {
-                            DialogWidget.show(
+                            if (!context.mounted) return;
+                            DialogWidget.showError(
                               context,
-                              title: 'default_error'.tr,
                               message: error.toString().tr,
                             );
                           }

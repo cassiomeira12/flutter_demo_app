@@ -64,9 +64,8 @@ class PasswordValidationBottomSheet extends StatelessWidget
                   Navigator.of(context).pop(true);
                 } on BaseException catch (error) {
                   if (!context.mounted) return;
-                  await DialogWidget.show(
+                  await DialogWidget.showError(
                     context,
-                    title: 'default_error'.tr,
                     message: error.toString().tr,
                   );
                   if (!context.mounted) return;

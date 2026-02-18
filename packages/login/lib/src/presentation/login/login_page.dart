@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'login.dart';
+import 'package:login/src/presentation/login/login.dart';
 
 class LoginPage extends AppView<LoginController> {
   final _formKey = GlobalKey<FormState>();
@@ -107,9 +106,8 @@ class LoginPage extends AppView<LoginController> {
                             );
                           } on BaseException catch (error) {
                             if (!context.mounted) return;
-                            DialogWidget.show(
+                            DialogWidget.showError(
                               context,
-                              title: 'default_error'.tr,
                               message: error.toString().tr,
                             );
                           }

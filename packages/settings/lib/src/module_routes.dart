@@ -2,9 +2,8 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:faq/faq.dart';
 import 'package:security/security.dart';
+import 'package:settings/src/presentation/presentation.dart';
 import 'package:user_account/user_account.dart';
-
-import 'presentation/presentation.dart';
 
 class SettingsModuleRoutes implements ModuleRoutes {
   @override

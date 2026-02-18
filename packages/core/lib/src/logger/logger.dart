@@ -1,25 +1,18 @@
+// ignore_for_file: avoid_redundant_argument_values
+
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class Log {
-  static final Logger _logger = Logger(
-    printer: PrettyPrinter(
-      methodCount: 0,
-      errorMethodCount: 15,
-      dateTimeFormat: (time) {
-        return 'Time: ${DateHelper.formatHourMinuteSeconds(time)}h';
-      },
-      // excludePaths: ['package:flutter_demo_app/core/logger/logger.dart'],
-    ),
-  );
-
   static final _talker = Talker(
     settings: TalkerSettings(
+      enabled: !kReleaseMode,
       timeFormat: TimeFormat.yearMonthDayAndTime,
       colors: {
         TalkerKey.info: AnsiPen()..cyan(),
         TalkerKey.verbose: AnsiPen()..green(),
         TalkerKey.debug: AnsiPen()..blue(),
+        TalkerKey.warning: AnsiPen()..red(),
       },
       titles: {
         TalkerKey.info: 'Log Info',
@@ -34,13 +27,11 @@ class Log {
 
   static void info(String msg) {
     final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.i(message, time: DateTime.now());
     _talker.info(message);
   }
 
   static void success(String msg, {bool throwsCrashlytics = true}) {
     final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.d(message, time: DateTime.now());
     _talker.verbose(message);
     if (throwsCrashlytics) {
       CrashlyticsServiceManager.instance.log(message);
@@ -49,7 +40,6 @@ class Log {
 
   static void debug(String msg, {bool throwsCrashlytics = true}) {
     final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.d(message, time: DateTime.now());
     _talker.debug(message);
     if (throwsCrashlytics) {
       CrashlyticsServiceManager.instance.log(message);
@@ -58,7 +48,6 @@ class Log {
 
   static void warning(String msg, {bool throwsCrashlytics = true}) {
     final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.w(message, time: DateTime.now());
     _talker.warning(message);
     if (throwsCrashlytics) {
       CrashlyticsServiceManager.instance.log(message);
@@ -73,13 +62,9 @@ class Log {
     BaseException? exception,
     bool throwsCrashlytics = true,
   }) {
-    final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.e(
-    //   message,
-    //   time: DateTime.now(),
-    //   error: error ?? exception?.error,
-    //   stackTrace: stackTrace ?? exception?.stacktrace,
-    // );
+    String message = '$_getClassNameAndPath\n\n';
+    if (msg.isNotEmpty) message += '$msg\n\n';
+    if (error.toString().isNotEmpty) message += '$error\n\n';
     _talker.error(message, exception, stackTrace);
     if (throwsCrashlytics) {
       _captureException(
@@ -97,13 +82,9 @@ class Log {
     StackTrace? stackTrace,
     bool throwsCrashlytics = true,
   }) {
-    final String message = '$_getClassNameAndPath \n\n$msg';
-    // _logger.f(
-    //   message,
-    //   time: DateTime.now(),
-    //   error: error,
-    //   stackTrace: stackTrace,
-    // );
+    String message = '$_getClassNameAndPath\n\n';
+    if (msg.isNotEmpty) message += '$msg\n\n';
+    if (error.toString().isNotEmpty) message += '$error\n\n';
     _talker.critical(message, error, stackTrace);
     if (throwsCrashlytics) {
       _captureException(error: error, stackTrace: stackTrace, isFatal: true);
@@ -121,12 +102,12 @@ class Log {
     if (isFatal) {
       CrashlyticsServiceManager.instance.captureFatalException(
         error: error ?? exception?.error,
-        stackTrace: stackTrace ?? exception?.stacktrace,
+        stackTrace: stackTrace ?? exception?.stackTrace,
       );
     } else {
       CrashlyticsServiceManager.instance.captureException(
         error: error ?? exception?.error,
-        stackTrace: stackTrace ?? exception?.stacktrace,
+        stackTrace: stackTrace ?? exception?.stackTrace,
       );
     }
   }

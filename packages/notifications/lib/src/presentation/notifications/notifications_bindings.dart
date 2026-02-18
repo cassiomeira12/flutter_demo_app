@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'notifications.dart';
+import 'package:notifications/src/presentation/notifications/notifications.dart';
 
 class NotificationsBindings extends Bindings {
   @override

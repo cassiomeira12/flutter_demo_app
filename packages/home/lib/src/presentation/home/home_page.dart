@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'home.dart';
+import 'package:home/src/presentation/presentation.dart';
 
 class HomePage extends AppView<HomeController> {
   const HomePage({super.key});
@@ -22,7 +21,7 @@ class HomePage extends AppView<HomeController> {
         }).toList(),
         selectedIndex: controller.selectedIndex,
         changeTab: controller.changeTab,
-        bottomItems: navigatorItems.map((item) => item.bottomItem).toList(),
+        bottomItems: navigatorItems.map((item) => item.bottomItem!).toList(),
       ),
     );
   }

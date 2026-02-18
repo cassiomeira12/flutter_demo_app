@@ -42,10 +42,11 @@ class BottomSheetWidget<T> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButtonWidget(
-                          icon: const FlutterIcon(
+                          icon: FlutterIcon(
                             Icons.close,
-                            key: Key('close_button'),
+                            key: const Key('close_button'),
                             size: IconSize.medium,
+                            color: Theme.of(context).colorScheme.error,
                           ),
                           onPressed: () => Navigator.of(context).pop(),
                         ),

@@ -1,12 +1,11 @@
+import 'package:clean_code_infra/src/data_sources/data_sources.dart';
+import 'package:clean_code_infra/src/http/http.dart';
 import 'package:clean_code_infra/src/local_storage/local_storage.dart';
 import 'package:core/core.dart';
 
-import 'data_sources/data_sources.dart';
-import 'http/http.dart';
-
 class InfraModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AppBinding.put<LocalStorage>(LocalStorageImpl(), permanent: true);
 
     AppBinding.put<HttpClient>(

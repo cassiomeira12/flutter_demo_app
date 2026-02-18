@@ -23,7 +23,7 @@ class AppBarSearchDelegate<T> extends SearchDelegate<T?> {
   List<Widget>? buildActions(BuildContext context) {
     return [
       IconButtonWidget(
-        icon: FlutterIcon(
+        icon: const FlutterIcon(
           Icons.clear,
           size: IconSize.medium,
           color: AppColors.statusWarning,

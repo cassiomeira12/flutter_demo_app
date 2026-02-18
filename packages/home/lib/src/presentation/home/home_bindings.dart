@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'home.dart';
+import 'package:home/src/presentation/home/home.dart';
 
 class HomeBindings extends Bindings {
   @override

@@ -1,7 +1,6 @@
+import 'package:admin/src/presentation/presentation.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../admin.dart';
 
 class DrawerAdminWidget extends AppView<AdminController> {
   const DrawerAdminWidget({super.key});
@@ -45,7 +44,7 @@ class DrawerAdminWidget extends AppView<AdminController> {
                   children: [
                     ...[
                       'users',
-                      'notifications',
+                      // 'notifications',
                       'web_visit_history',
                       'settings',
                     ].asMap().entries.map((entry) {

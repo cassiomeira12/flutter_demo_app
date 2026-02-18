@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'about.dart';
+import 'package:faq/src/presentation/about/about.dart';
 
 class AboutBindings extends Bindings {
   @override

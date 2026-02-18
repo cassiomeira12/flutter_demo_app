@@ -1,16 +1,15 @@
 import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_infra/src/http/interceptors/interceptors.dart';
 import 'package:dependency/dependency.dart';
-
-import 'interceptors/interceptors.dart';
 
 class HttpClientImpl implements HttpClient {
   final String _baseUrl;
 
   late Dio _dio;
 
-  final defaultConnectTimeout = const Duration(seconds: 10);
-  final defaultReceiveTimeout = const Duration(seconds: 10);
-  final defaultSendTimeout = const Duration(seconds: 10);
+  final defaultConnectTimeout = const Duration(seconds: 30);
+  final defaultReceiveTimeout = const Duration(seconds: 30);
+  final defaultSendTimeout = const Duration(seconds: 30);
 
   HttpClientImpl({
     required String baseUrl,
@@ -37,7 +36,9 @@ class HttpClientImpl implements HttpClient {
   @override
   void addInterceptor(dynamic interceptor) {
     if (interceptor is Interceptor) {
-      int index = _dio.interceptors.isEmpty ? 0 : _dio.interceptors.length - 1;
+      final int index = _dio.interceptors.isEmpty
+          ? 0
+          : _dio.interceptors.length - 1;
       _dio.interceptors.insert(index, interceptor);
     }
   }
@@ -164,6 +165,11 @@ class HttpClientImpl implements HttpClient {
           continue;
         }
       }
+      if (interceptor is ServerOtpInterceptor) {
+        if (!useDefaultInterceptors) {
+          continue;
+        }
+      }
       dio.interceptors.add(interceptor);
     }
 
@@ -192,8 +198,23 @@ class HttpClientImpl implements HttpClient {
   }
 
   HttpException _mapperDioError(DioException error) {
+    int? statusCode;
+    switch (error.type) {
+      case DioExceptionType.connectionTimeout:
+      case DioExceptionType.sendTimeout:
+        statusCode = 503;
+      case DioExceptionType.receiveTimeout:
+        statusCode = 504;
+      case DioExceptionType.badCertificate:
+      case DioExceptionType.badResponse:
+        statusCode = 400;
+      case DioExceptionType.cancel:
+      case DioExceptionType.connectionError:
+        statusCode = 502;
+      case DioExceptionType.unknown:
+    }
     return HttpException(
-      statusCode: error.response?.statusCode ?? -1,
+      statusCode: error.response?.statusCode ?? statusCode ?? -1,
       statusMessage: error.response?.statusMessage,
       message: error.message ?? error.error.toString(),
       data: error.response?.data,

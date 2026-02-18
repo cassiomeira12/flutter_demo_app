@@ -1,7 +1,6 @@
+import 'package:admin/src/presentation/admin_crud/admin_crud.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'admin_crud.dart';
 
 class AdminCrudBindings extends Bindings {
   @override

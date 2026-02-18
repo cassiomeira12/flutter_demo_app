@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'shared_preferences_store.dart';
+import 'package:feature_flag/src/data/data.dart';
 
 class FlagsmithFeatureFlag implements FeatureFlagService {
   final String apiKey;
@@ -18,25 +17,22 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
 
   late FlagsmithClient _client;
 
-  Identity? _user;
+  Identity? _deviceIdentity;
   final Map<String, Trait> _traits = {};
 
   @override
-  Future<void> init({Map<String, dynamic>? initConfigs}) async {
+  Future<void> init() async {
     late Map<String, dynamic> initialOfflineConfigs;
 
-    if (initConfigs != null) {
-      initialOfflineConfigs = initConfigs;
-    } else {
-      try {
-        final String path = initialConfigJson!;
-        final String initialOfflineConfigsFile = await rootBundle.loadString(
-          path,
-        );
-        initialOfflineConfigs = jsonDecode(initialOfflineConfigsFile);
-      } catch (_) {
-        initialOfflineConfigs = {};
-      }
+    try {
+      final String path = initialConfigJson!;
+      final String initialOfflineConfigsFile = await rootBundle.loadString(
+        path,
+      );
+      initialOfflineConfigs = jsonDecode(initialOfflineConfigsFile);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      initialOfflineConfigs = {};
     }
 
     _client = FlagsmithClient(
@@ -45,8 +41,8 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
         baseURI: baseURI,
         storageType: StorageType.custom,
         caches: true,
-        enableAnalytics: false,
         isDebug: kDebugMode,
+        enableAnalytics: kReleaseMode,
       ),
       storage: SharedPreferencesStore(localStorageUseCase: _localStorage),
       seeds: List.from(initialOfflineConfigs['flags'] ?? []).map((json) {
@@ -59,16 +55,19 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
 
   @override
   Future<void> setTraits(DeviceTraits traits) async {
-    if (_user == null) return;
+    _deviceIdentity = Identity(identifier: traits.deviceId);
     for (final param in traits.toMap().entries) {
       _traits[param.key] = Trait(key: param.key, value: param.value);
     }
-    await _client.getFeatureFlags(user: _user, traits: _traits.values.toList());
+    await _client.getFeatureFlags(
+      user: _deviceIdentity,
+      traits: _traits.values.toList(),
+    );
   }
 
   @override
   void setUserIdentifier(String? userId, {Map<String, dynamic>? property}) {
-    _user = Identity(identifier: userId ?? '');
+    _traits['userId'] = Trait(key: 'userId', value: userId);
   }
 
   @override
@@ -78,17 +77,17 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
   }) async {
     final bool hasFlag = await _client.hasFeatureFlag(
       flag.name,
-      user: _user,
+      user: _deviceIdentity,
       reload: reload,
     );
     if (hasFlag) {
       final bool enabled = await _client.isFeatureFlagEnabled(
         flag.name,
-        user: _user,
+        user: _deviceIdentity,
       );
       final String? value = await _client.getFeatureFlagValue(
         flag.name,
-        user: _user,
+        user: _deviceIdentity,
       );
       return RemoteFlag(isEnabled: enabled, value: value);
     }

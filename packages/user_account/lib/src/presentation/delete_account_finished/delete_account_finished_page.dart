@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'delete_account_finished.dart';
+import 'package:user_account/src/presentation/delete_account_finished/delete_account_finished.dart';
 
 class DeleteAccountFinishedPage
     extends AppView<DeleteAccountFinishedController> {

@@ -1,6 +1,5 @@
+import 'package:core/src/bindings/app_base_binding.dart';
 import 'package:dependency/dependency.dart';
-
-import 'app_base_binding.dart';
 
 class GetBinding implements AppBaseBinding {
   GetBinding._();

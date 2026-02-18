@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'security.dart';
+import 'package:security/src/presentation/security/security.dart';
 
 class SecurityPage extends AppView<SecurityController> {
   const SecurityPage({super.key});
@@ -52,7 +51,7 @@ class SecurityPage extends AppView<SecurityController> {
                                       DialogWidget.show(
                                         context,
                                         title: 'biometric'.tr,
-                                        message: enabled == true
+                                        message: enabled
                                             ? 'biometrics_success_activated'.tr
                                             : 'biometrics_disabled'.tr,
                                       );

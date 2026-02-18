@@ -2,9 +2,10 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class ThemeManager {
-  ThemeManager._internal();
-  static final ThemeManager instance = ThemeManager._internal();
   factory ThemeManager() => instance;
+  ThemeManager._internal();
+
+  static final ThemeManager instance = ThemeManager._internal();
 
   late ThemeScheme _light;
   late ThemeScheme _dark;

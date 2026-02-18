@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'user.dart';
+import 'package:user_account/src/presentation/user/user.dart';
 
 class UserBindings extends Bindings {
   @override

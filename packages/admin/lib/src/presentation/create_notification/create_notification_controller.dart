@@ -1,8 +1,7 @@
 import 'package:admin/src/domain/domain.dart';
+import 'package:admin/src/presentation/users/users.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../presentation.dart';
 
 class PushNotificationsController extends BaseController {
   final GetAllUsersUseCase _getAllUsersUseCase;

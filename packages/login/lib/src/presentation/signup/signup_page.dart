@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'signup.dart';
+import 'package:login/src/presentation/signup/signup.dart';
 
 class SignUpPage extends AppView<SignUpController> {
   final _formKey = GlobalKey<FormState>();
@@ -116,7 +115,7 @@ class SignUpPage extends AppView<SignUpController> {
                     if (_formKey.currentState?.validate() ?? false) {
                       FocusManager.instance.primaryFocus?.unfocus();
 
-                      if (controller.privacyAndTerms.value == false) {
+                      if (!controller.privacyAndTerms.value) {
                         return;
                       }
 
@@ -139,9 +138,8 @@ class SignUpPage extends AppView<SignUpController> {
                         );
                       } on BaseException catch (error) {
                         if (!context.mounted) return;
-                        DialogWidget.show(
+                        DialogWidget.showError(
                           context,
-                          title: 'default_error'.tr,
                           message: error.toString().tr,
                         );
                       }

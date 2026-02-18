@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'notifications.dart';
-import 'widgets/notification_widget.dart';
+import 'package:notifications/src/presentation/notifications/notifications.dart';
+import 'package:notifications/src/presentation/notifications/widgets/notification_widget.dart';
 
 class NotificationsPage extends AppView<NotificationsController> {
   const NotificationsPage({super.key});

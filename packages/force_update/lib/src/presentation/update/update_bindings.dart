@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'update.dart';
+import 'package:force_update/src/presentation/update/update.dart';
 
 class UpdateBindings extends Bindings {
   @override
@@ -9,9 +8,6 @@ class UpdateBindings extends Bindings {
     AppBinding.put<UpdateController>(
       UpdateController(
         appInfoEntity: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-        featureFlagService: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
         openWebUrlUseCase: AppBinding.find(),
       ),
     );

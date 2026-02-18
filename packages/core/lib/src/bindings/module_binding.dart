@@ -1,3 +1,3 @@
 abstract class ModuleBinding {
-  void injectDependencies();
+  Future<void> injectDependencies();
 }

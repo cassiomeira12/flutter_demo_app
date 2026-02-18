@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class AppInstallationServiceImpl
     with
@@ -8,16 +9,19 @@ class AppInstallationServiceImpl
   final AppInstallationDataSource _dataSource;
   final AppInfoService _appInfoService;
   final DeviceInfoService _deviceInfoService;
+  final FirebaseInitializeService _firebaseInitializeService;
   final PushMessagingService _pushMessagingService;
 
   AppInstallationServiceImpl({
     required AppInstallationDataSource appInstallationDataSource,
     required AppInfoService appInfoService,
     required DeviceInfoService deviceInfoService,
+    required FirebaseInitializeService firebaseInitializeService,
     required PushMessagingService pushMessagingService,
   }) : _dataSource = appInstallationDataSource,
        _appInfoService = appInfoService,
        _deviceInfoService = deviceInfoService,
+       _firebaseInitializeService = firebaseInitializeService,
        _pushMessagingService = pushMessagingService;
 
   @override
@@ -26,23 +30,39 @@ class AppInstallationServiceImpl
       final appInfo = await _appInfoService.getAppInfo();
       final deviceInfo = await _deviceInfoService.getDeviceInfo();
 
-      final String installationId =
-          '${deviceInfo.deviceId} ${appInfo.packageName}';
-      final String? token = await _pushMessagingService.getToken();
+      const String appName = String.fromEnvironment('app_name');
+      final String? deviceId = deviceInfo.deviceId;
       final String appIdentifier = appInfo.packageName;
-
+      final String installationId = '$deviceId $appIdentifier';
       final String timeZone = DateTime.now().timeZoneName;
+      final String emulator = Platform.appleDevice ? 'Simulator' : 'Emulator';
+      final String deviceType = Platform.isWeb
+          ? 'Web Browser'
+          : deviceInfo.isPhysicalDevice
+          ? 'Physical Device'
+          : emulator;
+
+      final String gcmSenderId = _firebaseInitializeService.messagingSenderId;
+      final String? token = await _pushMessagingService.getToken();
+      final String pushType = _pushMessagingService.getTokenType();
+
+      final String encodedInstallationId = md5
+          .convert(utf8.encode(installationId))
+          .toString();
 
       return InstallationEntity(
-        installationId: installationId,
-        appName: const String.fromEnvironment('app_name'),
+        installationId: encodedInstallationId,
+        appName: appName,
         appVersion: appInfo.version,
         appIdentifier: appIdentifier,
-        channels: [appIdentifier],
+        channels: [],
+        gcmSenderId: gcmSenderId,
         deviceToken: token,
-        gcmSenderId: const String.fromEnvironment('firebaseMessagingSenderId'),
+        pushType: pushType,
+        deviceId: deviceId,
         deviceBrand: deviceInfo.brand,
-        deviceType: deviceInfo.model,
+        deviceModel: deviceInfo.model,
+        deviceType: deviceType,
         deviceOsVersion: deviceInfo.osVersion,
         timeZone: 'UTC $timeZone',
         localeIdentifier: deviceInfo.localeName,
@@ -56,8 +76,8 @@ class AppInstallationServiceImpl
   }
 
   @override
-  Future<void> upload(InstallationEntity installation) async {
-    await mixinCreate(
+  Future<InstallationEntity> upload(InstallationEntity installation) async {
+    return mixinCreate(
       data: installation.toMap(),
       create: _dataSource.create,
       fromMap: InstallationModel.fromMap,

@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'web_controller.dart';
+import 'package:web_app/src/presentation/web/web.dart';
 
 class WebBindings extends Bindings {
   @override

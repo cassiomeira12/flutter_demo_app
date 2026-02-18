@@ -85,8 +85,9 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
     if (tokenEncrypted != null) {
       try {
         final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
+        if (passwordKey == null) return null;
         final String token = _securityEncrypterUseCase.decrypt(
-          password: passwordKey!,
+          password: passwordKey,
           data: tokenEncrypted,
         );
         return token;
@@ -119,9 +120,10 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
     final String? jsonEncrypted = await _userAuthStorageService.getUserData();
     if (jsonEncrypted != null) {
       final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
+      if (passwordKey == null) return null;
       try {
         final String json = _securityEncrypterUseCase.decrypt(
-          password: passwordKey!,
+          password: passwordKey,
           data: jsonEncrypted,
         );
         final Map<String, dynamic> data = jsonDecode(json);

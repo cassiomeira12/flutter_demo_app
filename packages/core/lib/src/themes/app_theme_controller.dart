@@ -47,7 +47,7 @@ class AppThemeController implements ThemeController {
     //     orElse: () => ThemeMode.system,
     //   ),
     // );
-    ThemeData? appTheme = ThemeManager.instance.themes[themeName];
+    final ThemeData? appTheme = ThemeManager.instance.themes[themeName];
     //if (ThemeManager.instance.themes.containsKey(data)) {
     // ThemeManager.instance.lightTheme = ThemeManager.instance.themes[data]!;
     //}
@@ -72,7 +72,7 @@ class AppThemeController implements ThemeController {
     //   return;
     // }
 
-    ThemeData? appTheme = ThemeManager.instance.themes[theme];
+    final ThemeData? appTheme = ThemeManager.instance.themes[theme];
 
     if (appTheme == null) throw Exception();
 

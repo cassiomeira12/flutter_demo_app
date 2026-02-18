@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../web.dart';
+import 'package:web_app/src/presentation/web/web.dart';
 
 class ContactCardWidget extends AppView<WebController> {
   const ContactCardWidget({super.key});
@@ -28,7 +27,7 @@ class ContactCardWidget extends AppView<WebController> {
               if (controller.showInstagramButton)
                 IconButtonWidget(
                   key: const Key('open_instagram_contacts_key'),
-                  icon: FlutterIcon(
+                  icon: const FlutterIcon(
                     BoxIcons.bxl_instagram,
                     size: IconSize.large,
                   ),
@@ -37,7 +36,7 @@ class ContactCardWidget extends AppView<WebController> {
               if (controller.showFacebookButton)
                 IconButtonWidget(
                   key: const Key('open_facebook_contacts_key'),
-                  icon: FlutterIcon(
+                  icon: const FlutterIcon(
                     BoxIcons.bxl_facebook_circle,
                     size: IconSize.large,
                   ),
@@ -46,7 +45,7 @@ class ContactCardWidget extends AppView<WebController> {
               if (controller.showWhatsAppButton)
                 IconButtonWidget(
                   key: const Key('open_whatsapp_contacts_key'),
-                  icon: FlutterIcon(
+                  icon: const FlutterIcon(
                     BoxIcons.bxl_whatsapp,
                     size: IconSize.large,
                   ),

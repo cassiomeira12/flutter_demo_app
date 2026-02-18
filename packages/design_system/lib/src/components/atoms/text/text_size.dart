@@ -8,11 +8,13 @@ enum TextSize {
   font_32._(32),
   font_24._(24),
   font_20._(20),
+  font_18._(18),
   font_16._(16),
   font_14._(14),
   font_12._(12),
   font_10._(10),
-  font_8._(8);
+  font_8._(8)
+  ;
 
   final double _baseValue;
 

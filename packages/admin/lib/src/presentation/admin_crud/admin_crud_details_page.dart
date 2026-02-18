@@ -198,7 +198,6 @@ class AdminCrudDetailsPage<T> extends AppView<AdminCrudDetailsController> {
                             await onSave.call(data);
 
                             if (!context.mounted) return;
-
                             await DialogWidget.show(
                               context,
                               title: 'created_success_title'.tr,
@@ -217,10 +216,8 @@ class AdminCrudDetailsPage<T> extends AppView<AdminCrudDetailsController> {
                             controller.backPage(result: true);
                           } on BaseException catch (error) {
                             if (!context.mounted) return;
-
-                            DialogWidget.show(
+                            DialogWidget.showError(
                               context,
-                              title: 'default_error'.tr,
                               message: error.toString().tr,
                             );
                           }

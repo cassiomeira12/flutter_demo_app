@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'delete_account_confirmation.dart';
+import 'package:user_account/src/presentation/delete_account_confirmation/delete_account_confirmation.dart';
 
 class DeleteAccountConfirmationPage
     extends AppView<DeleteAccountConfirmationController> {
@@ -92,9 +91,8 @@ class DeleteAccountConfirmationPage
                       await controller.deleteAccount();
                     } on BaseException catch (error) {
                       if (!context.mounted) return;
-                      DialogWidget.show(
+                      DialogWidget.showError(
                         context,
-                        title: 'default_error'.tr,
                         message: error.toString().tr,
                       );
                     }

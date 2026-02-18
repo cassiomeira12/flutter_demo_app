@@ -48,7 +48,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 ),
               )
             : titleWidget,
-        leadingWidth: canPop && Navigator.canPop(context) ? null : 0,
+        leadingWidth: hasDrawer || canPop && Navigator.canPop(context)
+            ? null
+            : 0,
         backgroundColor: backgroundColor,
         leading: leading ?? _leadingWidget(context),
         actions: [

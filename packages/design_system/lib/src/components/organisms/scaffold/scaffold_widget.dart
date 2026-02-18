@@ -89,6 +89,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
 
   @override
   Widget build(BuildContext context) {
+    widget.controller?.setPageContext(context);
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         return Obx(() {
@@ -121,7 +122,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
                             appBarActions: widget.appBarActions,
                             popupMenuItems: widget.appBarPopUpMenuItems,
                           )
-                        : widget.runPopGesture && widget.hideAppBar == false
+                        : widget.runPopGesture && !widget.hideAppBar
                         ? AppBar(toolbarHeight: 0)
                         : null,
                     body: widget.body != null

@@ -5,8 +5,13 @@ class PushNotificationModel extends PushNotificationEntity {
     required super.id,
     required super.title,
     required super.body,
-    required super.image,
+    required super.imageUrl,
     required super.data,
+    required super.androidChannelId,
+    required super.androidPriority,
+    required super.androidVisibility,
+    required super.androidTag,
+    required super.androidSticky,
   });
 
   factory PushNotificationModel.fromMap(Map<String, dynamic> map) {
@@ -15,13 +20,18 @@ class PushNotificationModel extends PushNotificationEntity {
         id: map['id'] ?? '',
         title: map['title'] ?? '',
         body: map['body'] ?? '',
-        image: map['image'],
+        imageUrl: map['imageUrl'],
         data: map['data'],
+        androidChannelId: map['androidChannelId'],
+        androidPriority: map['androidPriority'],
+        androidVisibility: map['androidVisibility'],
+        androidTag: map['androidTag'],
+        androidSticky: map['androidSticky'],
       );
     } catch (error, stacktrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stacktrace,
         complement: 'Json Data: $map',
       );
     }

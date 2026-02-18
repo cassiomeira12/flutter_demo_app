@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'push_messaging_settings.dart';
+import 'package:push_messaging/src/presentation/push_messaging_settings/push_messaging_settings.dart';
 
 class PushMessagingSettingsPage
     extends AppView<PushMessagingSettingsController> {
@@ -45,17 +44,15 @@ class PushMessagingSettingsPage
                           DialogWidget.show(
                             context,
                             title:
-                                '${'notification'.tr} ${enabledResult == true ? 'push_enabled'.tr : 'push_disabled'.tr}',
-                            message: enabledResult == true
+                                '${'notification'.tr} ${enabledResult ? 'push_enabled'.tr : 'push_disabled'.tr}',
+                            message: enabledResult
                                 ? 'you_will_receive_notifications'.tr
                                 : 'push_notifications_disabled'.tr,
                           );
                         } catch (error) {
                           if (!context.mounted) return;
-
-                          DialogWidget.show(
+                          DialogWidget.showError(
                             context,
-                            title: 'default_error'.tr,
                             message: error.toString().tr,
                           );
                         }
@@ -109,10 +106,8 @@ class PushMessagingSettingsPage
                                           );
                                         } on BaseException catch (error) {
                                           if (!context.mounted) return;
-
-                                          DialogWidget.show(
+                                          DialogWidget.showError(
                                             context,
-                                            title: 'default_error'.tr,
                                             message: error.toString().tr,
                                           );
                                         }

@@ -32,8 +32,8 @@ abstract class AppNavigator {
     return Get.arguments ?? nestedRouting[nestedId]?.args;
   }
 
-  static Future<dynamic>? to(Widget Function() page) async {
-    //
+  static Future<dynamic>? to(Widget Function() page) {
+    return Get.to(page);
   }
 
   static Future<dynamic>? toNamed(

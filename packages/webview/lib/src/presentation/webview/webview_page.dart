@@ -2,10 +2,9 @@
 
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../domain/domain.dart';
-import '../widgets/web_view/webview_widget.dart';
-import 'webview.dart';
+import 'package:webview/src/domain/domain.dart';
+import 'package:webview/src/presentation/presentation.dart';
+import 'package:webview/src/presentation/widgets/web_view/webview_widget.dart';
 
 class WebViewPage extends StatefulWidget
     implements NavigatorIndexListenerCallback, TapCurrentIndexCallback {
@@ -36,33 +35,33 @@ class WebViewPage extends StatefulWidget
             pattern: RegExp(
               r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/times\/.*$',
             ),
-            expiredTime: Duration(minutes: 5),
+            expiredTime: const Duration(minutes: 5),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
               r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/central-de-jogos\/.*$',
             ),
-            expiredTime: Duration(minutes: 5),
+            expiredTime: const Duration(minutes: 5),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
               r'^https:\/\/placar\.uol\.com\.br\/esporte\/futebol\/.*$',
             ),
-            expiredTime: Duration(seconds: 1),
+            expiredTime: const Duration(seconds: 1),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
               r'^https:\/\/www\.uol\.com\.br\/flash\/esporte\/.*$',
             ),
-            expiredTime: Duration(minutes: 10),
+            expiredTime: const Duration(minutes: 10),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(r'^https:\/\/www\.uol\.com\.br\/?$'),
-            expiredTime: Duration(minutes: 30),
+            expiredTime: const Duration(minutes: 30),
           ),
         ],
         openPage: openPage,

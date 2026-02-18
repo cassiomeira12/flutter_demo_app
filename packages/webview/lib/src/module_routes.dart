@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:webview/src/presentation/webview/webview.dart';
 
 class WebViewModuleRoutes implements ModuleRoutes {
   @override
@@ -8,7 +7,7 @@ class WebViewModuleRoutes implements ModuleRoutes {
     AppRouterPage(
       name: AppRouter.webview.name,
       page: () => WebViewPage(
-        urlParams: {
+        urlParams: const {
           'uol_app': 'placaruol',
           'app_capabilities': 'init-metrics,comments',
           'anchorAds': 'true',

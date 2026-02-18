@@ -24,6 +24,7 @@ analyzer:
     unnecessary_import: error
     unused_import: error
     discarded_futures: ignore
+    prefer_foreach: ignore
 
 linter:
   rules:

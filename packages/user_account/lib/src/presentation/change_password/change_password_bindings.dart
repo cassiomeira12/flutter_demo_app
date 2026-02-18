@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'change_password.dart';
+import 'package:user_account/src/presentation/change_password/change_password.dart';
 
 class ChangePasswordBindings extends Bindings {
   @override

@@ -11,8 +11,9 @@ class UserEntity {
   final List<UserPermissionsEnum> permissions;
   final String? locale;
   final String? sessionToken;
-  final String? phoneNumber;
-  final bool? phoneVerified;
+  final List<String> pushTopics;
+
+  String get firstName => name.split(' ').first;
 
   UserEntity({
     required this.id,
@@ -25,15 +26,13 @@ class UserEntity {
     required this.permissions,
     required this.locale,
     required this.sessionToken,
-    required this.phoneNumber,
-    required this.phoneVerified,
+    required this.pushTopics,
   });
 
   UserEntity copyWith({
     String? name,
-    String? phoneNumber,
-    bool? phoneVerified,
     String? locale,
+    List<String>? pushTopics,
   }) {
     return UserEntity(
       id: id,
@@ -46,21 +45,9 @@ class UserEntity {
       permissions: permissions,
       locale: locale ?? this.locale,
       sessionToken: sessionToken,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      phoneVerified: phoneVerified ?? this.phoneVerified,
+      pushTopics: pushTopics ?? this.pushTopics,
     );
   }
-
-  String get firstName {
-    return name.split(' ').first;
-  }
-
-  // String get phoneNumberWithoutCountry {
-  //   if (phoneNumber.isNotEmpty) {
-  //     return '(${phoneNumber.split('(').last.trim()}';
-  //   }
-  //   return phoneNumber;
-  // }
 
   Map<String, dynamic> toMap() {
     return {
@@ -74,59 +61,7 @@ class UserEntity {
       'permissions': permissions.map((item) => item.name).toList(),
       'locale': locale,
       'sessionToken': sessionToken,
-      'phoneNumber': phoneNumber,
-      'phoneVerified': phoneVerified,
+      'pushTopics': pushTopics,
     };
   }
 }
-
-// import 'package:dependency/dependency.dart';
-
-// class UserEntity {
-//   final String id;
-//   final String name;
-//   final String email;
-//   final String avatarUrl;
-//   final String? sessionToken;
-
-//   UserEntity({
-//     required this.id,
-//     required this.name,
-//     required this.email,
-//     required this.avatarUrl,
-//     required this.sessionToken,
-//   });
-
-//   UserEntity copyWith({
-//     String? name,
-//     String? phoneNumber,
-//     bool? phoneVerified,
-//     String? locale,
-//   }) {
-//     return UserEntity(
-//       id: id,
-//       name: name ?? this.name,
-//       email: email,
-//       avatarUrl: avatarUrl,
-//       sessionToken: sessionToken,
-//     );
-//   }
-
-//   String get firstName {
-//     return name.split(' ').first;
-//   }
-
-//   Map<String, dynamic> toMap() {
-//     return {
-//       'id': id,
-//       'nome': name,
-//       'email': email,
-//       'avatarUrl': avatarUrl,
-//       'token': sessionToken,
-//     };
-//   }
-
-//   String get locale {
-//     return Get.locale.toString();
-//   }
-// }

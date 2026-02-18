@@ -1,3 +1,19 @@
+# Master 1.2.1 [18-02-2026]
+
+- fix: remover logger lib
+- refactor: updates
+- fix: set UploadInstallationAppUseCase permanent binding
+- fix: set ListUserInstallationsUseCase permanent binding
+
+# Master 1.2.0 [16-02-2026]
+
+- feat: add force update images
+- fix: transalate bottom nav items title
+- feat: add analysis option on packages
+- feat: update push messaging package
+- feat: update push notifications package
+- fix: feature flag package
+
 # Master 1.1.0 [03-01-2026]
 
 - feat: update make file functions

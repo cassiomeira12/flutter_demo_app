@@ -1,5 +1,3 @@
-import 'package:clean_code_data/clean_code_data.dart';
-import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -13,6 +11,10 @@ class AppInfoServiceImpl implements AppInfoService {
       const String appName = String.fromEnvironment('app_name');
       final String packageName = Platform.isWeb
           ? 'Web $appName'
+                .replaceAll(RegExp('[()]'), '')
+                .replaceAll(RegExp(r'\s+'), '_')
+                .trim()
+                .toLowerCase()
           : package.packageName;
 
       return AppInfoModel(

@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class AppReviewUseCaseImpl implements AppReviewUseCase {
-  final _inAppReview = InAppReview.instance;
+  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   Future<bool> isAvailable() async {

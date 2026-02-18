@@ -87,7 +87,7 @@
     },
     {
       "name": "Android Logcat",
-      "command": "adb logcat | grep flutter",
+      "command": "adb logcat | grep \"flutter :\"",
       "request": "launch",
       "type": "node-terminal"
     },

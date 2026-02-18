@@ -6,7 +6,7 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
   late StreamSubscription<InternetStatus> _stream;
 
   InternetConnectionServiceImpl() {
-    _internetConnection = InternetConnection();
+    _internetConnection = InternetConnection.createInstance();
     _stream = _internetConnection.onStatusChange.listen(
       _listenChangeStatus,
       onDone: () {

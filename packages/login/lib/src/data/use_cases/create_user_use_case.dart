@@ -2,22 +2,22 @@ import 'package:core/core.dart';
 import 'package:login/src/domain/domain.dart';
 
 class CreateUserUseCaseImpl implements CreateUserUseCase {
-  final SignupService _singupService;
+  final SignupService _singUpService;
   final UserAuthStorageUseCase _authStorageUseCase;
   final UserService _userService;
-  final EncryptUserPasswordUseCase _encrypterUserPasswordUseCase;
+  final EncryptUserPasswordUseCase _encryptUserPasswordUseCase;
   final EncryptServerPublicKeyUseCase _encryptServerUseCase;
 
   CreateUserUseCaseImpl({
     required SignupService signupService,
     required UserAuthStorageUseCase authStorageUseCase,
     required UserService userService,
-    required EncryptUserPasswordUseCase encrypterUserPasswordUseCase,
+    required EncryptUserPasswordUseCase encryptUserPasswordUseCase,
     required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
-  }) : _singupService = signupService,
+  }) : _singUpService = signupService,
        _authStorageUseCase = authStorageUseCase,
        _userService = userService,
-       _encrypterUserPasswordUseCase = encrypterUserPasswordUseCase,
+       _encryptUserPasswordUseCase = encryptUserPasswordUseCase,
        _encryptServerUseCase = encryptServerPublicKeyUseCase;
 
   @override
@@ -36,7 +36,7 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
       'password': encryptedPassword,
     };
 
-    final user = await _singupService.create(data);
+    final user = await _singUpService.create(data);
 
     final String sessionToken = user.sessionToken!;
     final session = SessionEntity(token: sessionToken);
@@ -44,7 +44,7 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
     await AppBinding.replace<SessionEntity>(session);
     AppBinding.put<UserEntity>(user, permanent: true);
 
-    await _encrypterUserPasswordUseCase.encrypt(password: password);
+    await _encryptUserPasswordUseCase.encrypt(password: password);
 
     await _authStorageUseCase.saveSessionToken(sessionToken);
     await _authStorageUseCase.saveUserData(user.toMap());

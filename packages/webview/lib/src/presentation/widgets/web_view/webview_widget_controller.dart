@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../../data/data.dart';
-import '../../../domain/domain.dart';
+import 'package:webview/src/data/data.dart';
+import 'package:webview/src/domain/enums/load_webview_step_enum.dart';
 
 abstract class WebViewWidgetController {
   void setInAppWebViewController(InAppWebViewController? controller);

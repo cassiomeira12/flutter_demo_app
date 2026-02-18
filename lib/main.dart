@@ -5,11 +5,7 @@ import 'package:flutter_demo_app/translations/translation.dart';
 
 void main() {
   runZonedGuarded(() async {
-    final WidgetsBinding widgetsBinding =
-        WidgetsFlutterBinding.ensureInitialized();
-    if (!Platform.isMacOS) {
-      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-    }
+    WidgetsFlutterBinding.ensureInitialized();
 
     PlatformDispatcher.instance.onError = (error, stack) {
       _catchFlutterExceptions(error, stack);
@@ -22,10 +18,14 @@ void main() {
     };
 
     BaseController.SPLASH_ALREADY_EXECUTED = false;
-
     AppTranslation.initLocales();
-
     ThemeManager.instance.defineColor();
+
+    // debugPaintTextLayoutBoxes = true;
+    // debugPaintSizeEnabled = true;
+    // debugRepaintTextRainbowEnabled = true;
+
+    await ResponsiveSizeHelper.initializeFlutterView();
 
     runApp(const App());
   }, _catchFlutterExceptions);

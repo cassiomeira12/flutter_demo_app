@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'presentation/presentation.dart';
+import 'package:home/src/presentation/home/home.dart';
 
 class HomeModuleRoutes implements ModuleRoutes {
   @override

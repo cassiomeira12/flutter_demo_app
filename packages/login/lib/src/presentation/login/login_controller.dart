@@ -8,8 +8,7 @@ class LoginController extends BaseController
   final LocalStorageUseCase _localStorageUseCase;
   final UserAuthStorageUseCase _authStorageUseCase;
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
-  final UploadInstallationAppUseCase _uploadInstallationUseCase;
-  final PushMessagingService _pushMessagingService;
+  final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
   final AppInfoEntity _appInfoEntity;
 
   LoginController({
@@ -18,16 +17,14 @@ class LoginController extends BaseController
     required LocalStorageUseCase localStorageUseCase,
     required UserAuthStorageUseCase authStorageUseCase,
     required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required UploadInstallationAppUseCase uploadInstallationUseCase,
-    required PushMessagingService pushMessagingService,
+    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required AppInfoEntity appInfoEntity,
   }) : _environment = environment,
        _loginUseCase = loginUseCase,
        _localStorageUseCase = localStorageUseCase,
        _authStorageUseCase = authStorageUseCase,
        _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _uploadInstallationUseCase = uploadInstallationUseCase,
-       _pushMessagingService = pushMessagingService,
+       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
        _appInfoEntity = appInfoEntity;
 
   final emailTextController = Rxn<TextEditingController>();
@@ -44,10 +41,20 @@ class LoginController extends BaseController
     _getLoginEmailSaved();
   }
 
+  @override
+  void onReadyPage(BuildContext context) {
+    super.onReadyPage(context);
+    _showInvalidSessionAlert(context);
+  }
+
   Future<void> login({
     required String username,
     required String password,
   }) async {
+    final track = CrashlyticsServiceManager.instance.trackOperation(
+      name: 'login',
+      operation: 'user-login',
+    );
     try {
       clickTagging(component: 'login_button_key');
 
@@ -56,21 +63,11 @@ class LoginController extends BaseController
         password: password,
       );
 
-      try {
-        await _updateUserLocaleUseCase.call(user);
-        await _uploadInstallationUseCase.call();
-      } catch (error, stackTrace) {
-        Log.error(
-          'Login error updateUser uploadInstallation',
-          error: error,
-          stackTrace: stackTrace,
-        );
-      }
+      _updateUserData(user);
+      _updateUserInstallation();
 
       loginTagging();
       setUserIdentifier(user.id, property: user.toMap());
-
-      await _pushMessagingService.subscribeTopic(user.id);
 
       if (rememberMeInitial.value) {
         await _saveLoginEmail(username: username);
@@ -84,9 +81,12 @@ class LoginController extends BaseController
         AppNavigator.backAllAndToNamed(AppRouter.home);
       }
     } catch (error, stackTrace) {
+      track.catchError(error: error);
       Log.error(error.toString(), error: error, stackTrace: stackTrace);
       await SessionHelper.clear();
       rethrow;
+    } finally {
+      track.finish();
     }
   }
 
@@ -100,16 +100,38 @@ class LoginController extends BaseController
     AppNavigator.toNamed(AppRouter.recoveryPassword);
   }
 
+  Future<void> _updateUserData(UserEntity user) async {
+    try {
+      await _updateUserLocaleUseCase.call(user);
+    } catch (error, stackTrace) {
+      Log.error(
+        'Login error updateUser',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _updateUserInstallation() async {
+    try {
+      await _uploadInstallationAppUseCase.call();
+    } catch (error, stackTrace) {
+      Log.error(
+        'Login error uploadInstallation',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
   Future<void> _getLoginEmailSaved() async {
     final bool? rememberMe = await _localStorageUseCase.get<bool>(REMEMBER_ME);
-    rememberMeInitial.value = rememberMe ?? false;
-
     final Map<String, String?> credentials = await _authStorageUseCase
         .getCredentials();
-
     final String? username = credentials['username'];
     final String? password = credentials['password'];
 
+    rememberMeInitial.value = rememberMe ?? false;
     emailTextController.value = TextEditingController(text: username);
     passwordTextController.value = TextEditingController(text: password);
   }
@@ -132,5 +154,20 @@ class LoginController extends BaseController
     rememberMeInitial.value = remember;
     await _localStorageUseCase.set<bool>(REMEMBER_ME, remember);
     clickTagging(component: 'remember_checkbox_key_${remember ? 'on' : 'off'}');
+  }
+
+  Future<void> _showInvalidSessionAlert(BuildContext context) async {
+    final sessionExpired = await _localStorageUseCase.get<bool>(
+      SESSION_WAS_EXPIRED,
+    );
+    if (sessionExpired == true) {
+      if (!context.mounted) return;
+      _localStorageUseCase.delete(SESSION_WAS_EXPIRED);
+      SnackBarWidget.show(
+        context,
+        title: 'invalid_session_token'.tr,
+        message: 'login_again'.tr,
+      );
+    }
   }
 }

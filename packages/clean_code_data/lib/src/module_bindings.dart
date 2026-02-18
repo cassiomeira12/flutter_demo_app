@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 
 class DataModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AppBinding.put<FirebaseInitializeService>(
       FirebaseInitializeServiceFaker(),
       permanent: true,
@@ -18,8 +18,13 @@ class DataModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.put<FeatureFlagService>(
-      FeatureFlagServiceFaker(),
+    AppBinding.put<OnClickedNotificationCallback>(
+      OnClickedNotificationCallbackBase(),
+      permanent: true,
+    );
+
+    AppBinding.put<OnReceivedNotificationCallback>(
+      OnReceivedNotificationCallbackFaker(),
       permanent: true,
     );
 
@@ -170,6 +175,7 @@ class DataModuleBindings implements ModuleBinding {
         appInstallationDataSource: AppBinding.find(),
         appInfoService: AppBinding.find(),
         deviceInfoService: AppBinding.find(),
+        firebaseInitializeService: AppBinding.find(),
         pushMessagingService: AppBinding.find(),
       ),
     );
@@ -182,6 +188,7 @@ class DataModuleBindings implements ModuleBinding {
     AppBinding.put<UploadInstallationAppUseCase>(
       UploadInstallationAppUseCaseImpl(
         appInstallationService: AppBinding.find(),
+        localStorageUseCase: AppBinding.find(),
       ),
       permanent: true,
     );

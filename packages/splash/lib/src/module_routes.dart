@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'presentation/presentation.dart';
+import 'package:splash/src/presentation/presentation.dart';
 
 class SplashModuleRoutes implements ModuleRoutes {
   @override

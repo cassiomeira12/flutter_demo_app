@@ -1,7 +1,6 @@
+import 'package:admin/src/presentation/create_notification/create_notification.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'create_notification.dart';
 
 class PushNotificationsBindings extends Bindings {
   @override

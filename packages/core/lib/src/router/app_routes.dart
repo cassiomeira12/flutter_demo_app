@@ -21,6 +21,26 @@ abstract class AppRoutes {
     return findByRoute(currentRoute)!;
   }
 
+  static bool exist(AppRouter router) {
+    if (routes[router.name] != null) {
+      return true;
+    }
+
+    final nestedRoutes = routes.values.where(
+      (route) => route.nestedKey != null && route.children.isNotEmpty,
+    );
+
+    for (final nestedRoute in nestedRoutes) {
+      for (final subRouter in nestedRoute.children) {
+        if (subRouter.name == router.name) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   static AppRouterPage? findByRoute(String route, {int? nestedId}) {
     final int? currentNestedId =
         nestedId ?? BaseController.navigatorIndex.value;

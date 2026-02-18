@@ -1,8 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import '../../../data/data.dart';
-import 'webview_widget_controller.dart';
+import 'package:webview/src/data/callbacks/callbacks.dart';
+import 'package:webview/src/presentation/widgets/web_view/webview_widget_controller.dart';
 
 class WebViewWidget extends StatefulWidget {
   final String globalKeyHash;
@@ -142,7 +141,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
       const Duration(milliseconds: 500),
       _webViewController.showWebViewWidget,
     );
-    print('webview_widget $globalKeyHash -----------------------------------');
+    debugPrint('webview_widget $globalKeyHash -------------------------------');
     widget.onLog('initState');
   }
 
@@ -150,7 +149,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
   void dispose() {
     _webViewController.dispose();
     widget.onLog('dispose');
-    print('webview_widget $globalKeyHash -----------------------------------');
+    debugPrint('webview_widget $globalKeyHash -------------------------------');
     super.dispose();
   }
 

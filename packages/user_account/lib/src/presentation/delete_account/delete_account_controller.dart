@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'delete_account.dart';
+import 'package:user_account/src/presentation/delete_account/delete_account.dart';
 
 class DeleteAccountController extends BaseController {
   final DeleteAccountStore _deleteAccountStore;

@@ -69,7 +69,7 @@ class SharedPreferencesStore extends CoreStorage {
   @override
   Future<bool> seed(List<MapEntry<String, String>>? items) async {
     final saved = await getAll();
-    if (saved.isEmpty && items != null && items.isNotEmpty == true) {
+    if (saved.isEmpty && items != null && items.isNotEmpty) {
       for (final item in items) {
         await create(item.key, item.value);
       }

@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 
 class DomainModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     AppBinding.put<EnvironmentEntity>(
       EnvironmentEntity(
         appName: const String.fromEnvironment('app_name'),

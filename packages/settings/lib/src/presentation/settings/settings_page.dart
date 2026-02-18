@@ -1,10 +1,7 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'settings.dart';
-import 'widgets/clear_cache_bottom_sheet_widget.dart';
-import 'widgets/locale_bottom_sheet_widget.dart';
-import 'widgets/theme_bottom_sheet_widget.dart';
+import 'package:settings/src/presentation/settings/settings.dart';
+import 'package:settings/src/presentation/settings/widgets/widgets.dart';
 
 class SettingsPage extends AppView<SettingsController> {
   const SettingsPage({super.key});
@@ -57,7 +54,7 @@ class SettingsPage extends AppView<SettingsController> {
                       ],
                     ),
                   ),
-                  if (AppRoutes.findByRoute(AppRouter.user.name) != null)
+                  if (AppRoutes.exist(AppRouter.user))
                     SecondaryButton(
                       key: const Key('settings_my_user_data_key'),
                       text: 'my_data'.tr,
@@ -65,7 +62,7 @@ class SettingsPage extends AppView<SettingsController> {
                       icon: const FlutterIcon(BoxIcons.bx_user),
                       onPressed: controller.userData,
                     ),
-                  if (AppRoutes.findByRoute(AppRouter.security.name) != null)
+                  if (AppRoutes.exist(AppRouter.security))
                     SecondaryButton(
                       key: const Key('settings_security_key'),
                       text: 'security'.tr,
@@ -73,10 +70,7 @@ class SettingsPage extends AppView<SettingsController> {
                       icon: const FlutterIcon(BoxIcons.bx_building),
                       onPressed: controller.security,
                     ),
-                  if (AppRoutes.findByRoute(
-                        AppRouter.notificationsSettings.name,
-                      ) !=
-                      null)
+                  if (AppRoutes.exist(AppRouter.notificationsSettings))
                     SecondaryButton(
                       key: const Key('settings_notifications_key'),
                       text: 'notifications'.tr,
@@ -113,7 +107,7 @@ class SettingsPage extends AppView<SettingsController> {
                       );
                     },
                   ),
-                  if (AppRoutes.findByRoute(AppRouter.about.name) != null)
+                  if (AppRoutes.exist(AppRouter.about))
                     SecondaryButton(
                       key: const Key('settings_about_key'),
                       text: 'about'.tr,

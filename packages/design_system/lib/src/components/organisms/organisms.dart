@@ -8,3 +8,4 @@ export 'modal/search_modal_widget.dart';
 export 'navigator/navigator.dart';
 export 'scaffold/scaffold_widget.dart';
 export 'scroll/scroll.dart';
+export 'snack_bar/snack_bar_widget.dart';

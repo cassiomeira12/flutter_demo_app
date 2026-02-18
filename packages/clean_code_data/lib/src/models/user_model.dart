@@ -12,8 +12,7 @@ class UserModel extends UserEntity {
     required super.permissions,
     required super.locale,
     required super.sessionToken,
-    required super.phoneNumber,
-    required super.phoneVerified,
+    required super.pushTopics,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -44,52 +43,14 @@ class UserModel extends UserEntity {
         }).toList(),
         locale: map['locale'],
         sessionToken: map['sessionToken'] ?? map['token'],
-        phoneNumber: map['phoneNumber'],
-        phoneVerified: map['phoneVerified'] as bool?,
+        pushTopics: List.from(map['pushTopics'] ?? []),
       );
     } catch (error, stacktrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stacktrace,
         complement: 'Json Data: $map',
       );
     }
   }
 }
-
-// import 'package:clean_code_domain/clean_code_domain.dart';
-// import 'package:core/core.dart';
-
-// class UserModel extends UserEntity {
-//   UserModel({
-//     required super.id,
-//     required super.name,
-//     required super.email,
-//     required super.avatarUrl,
-//     required super.sessionToken,
-//   });
-
-//   factory UserModel.fromMap(Map<String, dynamic> map) {
-//     try {
-//       final String firstName = (map['name'] ?? map['nome'] as String? ?? '')
-//           .split(' ')
-//           .first;
-//       final String avatarUrl =
-//           'https://ui-avatars.com/api/?format=png&name=$firstName';
-
-//       return UserModel(
-//         id: map['objectId'] ?? map['id'] as String,
-//         name: map['name'] ?? map['nome'] as String,
-//         email: map['email'] ?? map['username'] as String,
-//         avatarUrl: map['avatarUrl'] as String? ?? avatarUrl,
-//         sessionToken: map['sessionToken'] ?? map['token'] as String?,
-//       );
-//     } catch (error, stacktrace) {
-//       throw BaseException(
-//         error: error,
-//         stacktrace: stacktrace,
-//         complement: 'Json Data: $map',
-//       );
-//     }
-//   }
-// }

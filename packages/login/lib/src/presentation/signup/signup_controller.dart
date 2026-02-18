@@ -6,20 +6,17 @@ class SignUpController extends BaseController
     with EmailValidator, PasswordValidator, ConfirmPasswordValidator {
   final CreateUserUseCase _createUserUseCase;
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
-  final UploadInstallationAppUseCase _uploadInstallationUseCase;
-  final PushMessagingService _pushpushMessagingService;
+  final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
   final OpenWebUrlUseCase _openWebUrlUseCase;
 
   SignUpController({
     required CreateUserUseCase createUserUseCase,
     required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required UploadInstallationAppUseCase uploadInstallationUseCase,
-    required PushMessagingService pushMessagingService,
+    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required OpenWebUrlUseCase openWebUrlUseCase,
   }) : _createUserUseCase = createUserUseCase,
        _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _uploadInstallationUseCase = uploadInstallationUseCase,
-       _pushpushMessagingService = pushMessagingService,
+       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
        _openWebUrlUseCase = openWebUrlUseCase;
 
   final privacyAndTerms = RxBool(false);
@@ -39,26 +36,41 @@ class SignUpController extends BaseController
         password: password,
       );
 
-      try {
-        await _updateUserLocaleUseCase.call(user);
-        await _uploadInstallationUseCase.call();
-      } catch (error, stackTrace) {
-        Log.error(
-          'Signup error uploadInstallation',
-          error: error,
-          stackTrace: stackTrace,
-        );
-      }
+      _updateUserData(user);
+      _updateUserInstallation();
 
       signupTagging();
       setUserIdentifier(user.id, property: user.toMap());
 
-      await _pushpushMessagingService.subscribeTopic(user.id);
-
       AppNavigator.backAndToNamed(AppRouter.home);
-    } catch (error) {
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
       await SessionHelper.clear();
       rethrow;
+    }
+  }
+
+  Future<void> _updateUserData(UserEntity user) async {
+    try {
+      await _updateUserLocaleUseCase.call(user);
+    } catch (error, stackTrace) {
+      Log.error(
+        'Login error updateUser',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _updateUserInstallation() async {
+    try {
+      await _uploadInstallationAppUseCase.call();
+    } catch (error, stackTrace) {
+      Log.error(
+        'SignUp error uploadInstallation',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 

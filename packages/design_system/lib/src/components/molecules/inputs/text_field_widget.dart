@@ -251,7 +251,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (widget.suffixIcon != null) widget.suffixIcon!,
-                  if (widget.readOnly != true &&
+                  if (!widget.readOnly &&
                       widget.enableClearTextSuffixIcon &&
                       _hasInputText)
                     IconButtonWidget(

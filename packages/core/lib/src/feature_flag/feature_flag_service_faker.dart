@@ -2,9 +2,9 @@ import 'package:core/core.dart';
 
 class FeatureFlagServiceFaker implements FeatureFlagService {
   @override
-  Future<void> init({Map<String, dynamic>? initConfigs}) async {
+  Future<void> init() async {
     Log.success(
-      '$runtimeType init initiConfigs: $initConfigs',
+      '$runtimeType init',
       throwsCrashlytics: false,
     );
   }

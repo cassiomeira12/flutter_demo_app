@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'login.dart';
+import 'package:login/src/presentation/login/login.dart';
 
 class LoginBindings extends Bindings {
   @override
@@ -13,8 +12,7 @@ class LoginBindings extends Bindings {
         localStorageUseCase: AppBinding.find(),
         authStorageUseCase: AppBinding.find(),
         updateUserLocaleUseCase: AppBinding.find(),
-        uploadInstallationUseCase: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
+        uploadInstallationAppUseCase: AppBinding.find(),
         appInfoEntity: AppBinding.find(),
       ),
     );

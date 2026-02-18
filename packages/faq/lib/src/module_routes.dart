@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
-
-import 'presentation/presentation.dart';
+import 'package:faq/src/presentation/about/about.dart';
 
 class FaqModuleRoutes implements ModuleRoutes {
   @override

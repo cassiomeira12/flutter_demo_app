@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'change_password.dart';
+import 'package:user_account/src/presentation/change_password/change_password.dart';
 
 class ChangePasswordPage extends AppView<ChangePasswordController> {
   final _formKey = GlobalKey<FormState>();
@@ -96,9 +95,9 @@ class ChangePasswordPage extends AppView<ChangePasswordController> {
                               }
                             });
                           } on BaseException catch (error) {
-                            DialogWidget.show(
+                            if (!context.mounted) return;
+                            DialogWidget.showError(
                               context,
-                              title: 'default_error'.tr,
                               message: error.toString().tr,
                             );
                           }

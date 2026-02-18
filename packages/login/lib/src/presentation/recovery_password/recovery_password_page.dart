@@ -1,7 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-
-import 'recovery_password.dart';
+import 'package:login/src/presentation/recovery_password/recovery_password.dart';
 
 class RecoveryPasswordPage extends AppView<RecoveryPasswordController> {
   final _formKey = GlobalKey<FormState>();
@@ -55,10 +54,8 @@ class RecoveryPasswordPage extends AppView<RecoveryPasswordController> {
                       );
                     } on BaseException catch (error) {
                       if (!context.mounted) return;
-
-                      DialogWidget.show(
+                      DialogWidget.showError(
                         context,
-                        title: 'default_error'.tr,
                         message: error.toString().tr,
                       );
                     }

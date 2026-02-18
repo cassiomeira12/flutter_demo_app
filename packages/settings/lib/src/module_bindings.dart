@@ -5,7 +5,7 @@ import 'package:user_account/user_account.dart';
 
 class SettingsModuleBindings implements ModuleBinding {
   @override
-  void injectDependencies() {
+  Future<void> injectDependencies() async {
     UserAccountModuleBindings().injectDependencies();
     SecurityModuleBindings().injectDependencies();
     FaqModuleBindings().injectDependencies();

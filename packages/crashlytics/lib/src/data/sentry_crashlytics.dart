@@ -14,6 +14,7 @@ class SentryCrashlytics implements CrashlyticsService {
       options.dsn = apiUrl;
       options.anrEnabled = true;
       options.debug = false;
+      options.sampleRate = 1.0;
       options.tracesSampleRate = 1.0;
       options.attachScreenshot = true;
       options.enableTimeToFullDisplayTracing = true;
@@ -75,5 +76,42 @@ class SentryCrashlytics implements CrashlyticsService {
     StackTrace? stackTrace,
   }) async {
     await Sentry.captureException(error, stackTrace: stackTrace);
+  }
+
+  @override
+  TrackOperation trackOperation({String? name, String? operation}) {
+    final track = Sentry.startTransaction(
+      name ?? 'name',
+      operation ?? 'operation',
+    );
+    return SentryTrackOperation(track: track);
+  }
+}
+
+class SentryTrackOperation implements TrackOperation {
+  final ISentrySpan track;
+  bool _catchError = false;
+
+  SentryTrackOperation({required this.track});
+
+  @override
+  TrackOperation startChild({String? operation}) {
+    final trackChild = track.startChild(operation ?? 'operation');
+    return SentryTrackOperation(track: trackChild);
+  }
+
+  @override
+  void catchError({Object? error}) {
+    track.throwable = error;
+    _catchError = error != null;
+  }
+
+  @override
+  void finish() {
+    track.finish(
+      status: _catchError
+          ? const SpanStatus.internalError()
+          : const SpanStatus.ok(),
+    );
   }
 }

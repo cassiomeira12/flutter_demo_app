@@ -22,25 +22,6 @@ class UserServiceImpl implements UserService {
     }
   }
 
-  // @override
-  // Future<UserModel> updateUserData(UserEntity user) async {
-  //   try {
-  //     final Map<String, dynamic> data = {
-  //       'name': user.name,
-  //       'locale': user.locale,
-  //     };
-
-  //     await _dataSource.updateUserData(objectId: user.id, data: data);
-
-  //     return await getUserData();
-  //   } on HttpException catch (error) {
-  //     throw ExceptionHelper.call(error);
-  //   } catch (error, stacktrace) {
-  //     Log.error(error.toString(), error: error, stackTrace: stacktrace);
-  //     throw BaseException();
-  //   }
-  // }
-
   @override
   Future<void> deleteUser(String reason) async {
     try {
@@ -57,8 +38,24 @@ class UserServiceImpl implements UserService {
   Future<UserEntity> update(
     String objectId, {
     required Map<String, dynamic> data,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    try {
+      try {
+        final Map<String, dynamic> updateData = {
+          'name': data['name'],
+          'locale': data['locale'],
+        };
+        await _dataSource.updateUserData(objectId: objectId, data: updateData);
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      }
+      return await getUserData();
+    } on HttpException catch (error) {
+      throw ExceptionHelper.call(error);
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      throw BaseException();
+    }
   }
 
   @override

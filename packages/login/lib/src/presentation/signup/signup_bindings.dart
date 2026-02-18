@@ -3,8 +3,7 @@ import 'package:dependency/dependency.dart';
 import 'package:login/src/data/data.dart';
 import 'package:login/src/domain/domain.dart';
 import 'package:login/src/infra/infra.dart';
-
-import 'signup.dart';
+import 'package:login/src/presentation/signup/signup.dart';
 
 class SignUpBindings extends Bindings {
   @override
@@ -20,7 +19,7 @@ class SignUpBindings extends Bindings {
         signupService: AppBinding.find(),
         authStorageUseCase: AppBinding.find(),
         userService: AppBinding.find(),
-        encrypterUserPasswordUseCase: AppBinding.find(),
+        encryptUserPasswordUseCase: AppBinding.find(),
         encryptServerPublicKeyUseCase: AppBinding.find(),
       ),
     );
@@ -29,8 +28,7 @@ class SignUpBindings extends Bindings {
       SignUpController(
         createUserUseCase: AppBinding.find(),
         updateUserLocaleUseCase: AppBinding.find(),
-        uploadInstallationUseCase: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
+        uploadInstallationAppUseCase: AppBinding.find(),
         openWebUrlUseCase: AppBinding.find(),
       ),
     );
