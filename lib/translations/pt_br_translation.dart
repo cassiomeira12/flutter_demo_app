@@ -14,6 +14,7 @@ class AppPtBrTranslation extends PtBrTranslation {
         'total_budget': 'Faturamento',
         'make_check_point': 'Bater ponto',
         'make_check_point_now': 'Deseja bater ponto agora?',
+        'empty_check_point_list': 'Você ainda não registrou nenhum ponto',
       },
     };
   }
