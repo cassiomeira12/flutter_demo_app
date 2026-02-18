@@ -55,7 +55,7 @@ abstract class AppModule {
           'url': 'https://uol.com.br/esporte/futebol/times/flamengo/',
         },
         bottomItem: NavigatorBottom(
-          title: 'Times'.tr,
+          title: 'Times',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -68,7 +68,7 @@ abstract class AppModule {
           'url': 'https://uol.com.br/esporte/futebol/central-de-jogos/',
         },
         bottomItem: NavigatorBottom(
-          title: 'Jogos'.tr,
+          title: 'Jogos',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -81,7 +81,7 @@ abstract class AppModule {
           'url': 'https://uol.com.br/esporte/futebol/campeonatos/',
         },
         bottomItem: NavigatorBottom(
-          title: 'Campeonatos'.tr,
+          title: 'Campeonatos',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -94,7 +94,7 @@ abstract class AppModule {
           'url': 'https://uol.com.br/flash/esporte/',
         },
         bottomItem: NavigatorBottom(
-          title: 'Flash'.tr,
+          title: 'Flash',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -107,7 +107,7 @@ abstract class AppModule {
           'url': 'https://uol.com.br/',
         },
         bottomItem: NavigatorBottom(
-          title: 'UOL'.tr,
+          title: 'UOL',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
