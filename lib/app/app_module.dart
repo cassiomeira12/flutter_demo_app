@@ -3,12 +3,15 @@ import 'package:analytics/analytics.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:dependency/dependency.dart';
+import 'package:firebase_initialize/firebase_initialize.dart';
 import 'package:flutter_demo_app/presentation/initial_bindings_page.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
 import 'package:notifications/notifications.dart';
 import 'package:onboarding/onboarding.dart';
+import 'package:push_messaging/push_messaging.dart';
+import 'package:push_notifications/push_notifications.dart';
 import 'package:security/security.dart';
 import 'package:settings/settings.dart';
 import 'package:splash/splash.dart';
@@ -25,13 +28,13 @@ abstract class AppModule {
     ),
     ...SplashModuleRoutes().pages,
     ...WebAppModuleRoutes().pages,
-    // ...FirebaseInitializeModuleRoutes().pages,
+    ...FirebaseInitializeModuleRoutes().pages,
     // ...AppsFlyerModuleRoutes().pages,
     ...AnalyticsModuleRoutes().pages,
     ...CrashlyticsModuleRoutes().pages,
     ...NotificationsModuleRoutes().pages,
-    // ...PushNotificationsModuleRoutes().pages,
-    // ...PushMessagingModuleRoutes().pages,
+    ...PushNotificationsModuleRoutes().pages,
+    ...PushMessagingModuleRoutes().pages,
     ...OnboardingModuleRoutes().pages,
     ...ForceUpdateModuleRoutes().pages,
     ...LoginModuleRoutes().pages,

@@ -20,11 +20,11 @@ class IntroPage extends AppView<IntroController> {
               [
                 if (!Platform.isWeb && Platform.isIOS)
                   AppTrackingPageView(onPermission: controller.setPermission),
-                // if (!Platform.isWeb && !Platform.isMacOS)
-                //   PushNotificationPageView(
-                //     onPermission: controller.setPermission,
-                //   ),
-                // LocationPageView(onPermission: controller.setPermission),
+                if (!Platform.isWeb && !Platform.isMacOS)
+                  PushNotificationPageView(
+                    onPermission: controller.setPermission,
+                  ),
+                LocationPageView(onPermission: controller.setPermission),
               ].map<Widget>((item) {
                 controller.pagesLength += 1;
                 return item;

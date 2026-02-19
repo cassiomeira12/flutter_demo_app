@@ -5,11 +5,14 @@ import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
+import 'package:firebase_initialize/firebase_initialize.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
 import 'package:notifications/notifications.dart';
 import 'package:onboarding/onboarding.dart';
+import 'package:push_messaging/push_messaging.dart';
+import 'package:push_notifications/push_notifications.dart';
 import 'package:security/security.dart';
 import 'package:settings/settings.dart';
 import 'package:splash/splash.dart';
@@ -26,13 +29,13 @@ class AppBindings extends Bindings {
 
     await CoreModuleBindings().injectDependencies();
 
-    // await FirebaseInitializeModuleBindings().injectDependencies();
+    await FirebaseInitializeModuleBindings().injectDependencies();
     if (!kDebugMode) {
       AnalyticsModuleBindings().injectDependencies();
     }
     // await AppsFlyerModuleBindings().injectDependencies();
-    // await PushNotificationsModuleBindings().injectDependencies();
-    // await PushMessagingModuleBindings().injectDependencies();
+    await PushNotificationsModuleBindings().injectDependencies();
+    await PushMessagingModuleBindings().injectDependencies();
 
     DeeplinkModuleBindings().injectDependencies();
     FeatureFlagModuleBindings().injectDependencies();
