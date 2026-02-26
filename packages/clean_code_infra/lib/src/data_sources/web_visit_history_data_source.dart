@@ -16,7 +16,6 @@ class WebVisitHistoryDataSourceImpl
     return await mixinList(
       http: _http,
       request: request,
-      method: HttpMethod.POST,
     );
   }
 }

@@ -56,7 +56,7 @@ class RecoveryPasswordPage extends AppView<RecoveryPasswordController> {
                       if (!context.mounted) return;
                       DialogWidget.showError(
                         context,
-                        message: error.toString().tr,
+                        message: error.message.tr,
                       );
                     }
                   }

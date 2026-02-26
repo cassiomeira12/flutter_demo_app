@@ -16,9 +16,7 @@ class WebVisitHistoryPage extends AppView<WebVisitHistoryController> {
           key: const Key('web_visit_history_update_popup_menu_item_key'),
           value: 'update'.tr,
           onTap: controller.refreshWebVisitHistory,
-          child: TextWidget(
-            'update'.tr,
-          ),
+          child: TextWidget('update'.tr),
         ),
       ],
       body: ScrollStateWidget<WebVisitHistoryEntity>(

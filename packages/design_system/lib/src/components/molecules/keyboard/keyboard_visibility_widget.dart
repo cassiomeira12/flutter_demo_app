@@ -1,24 +1,24 @@
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
-enum KeyboardVisibilityState { visible, hiden }
+enum KeyboardVisibilityState { visible, hidden }
 
-class KeyboardVisibiltyWidget extends StatefulWidget {
+class KeyboardVisibilityWidget extends StatefulWidget {
   final Widget child;
   final Function(KeyboardVisibilityState state) onKeyboardStateChange;
 
-  const KeyboardVisibiltyWidget({
+  const KeyboardVisibilityWidget({
     super.key,
     required this.child,
     required this.onKeyboardStateChange,
   });
 
   @override
-  State<KeyboardVisibiltyWidget> createState() =>
-      _KeyboardVisibiltyWidgetState();
+  State<KeyboardVisibilityWidget> createState() =>
+      _KeyboardVisibilityWidgetState();
 }
 
-class _KeyboardVisibiltyWidgetState extends State<KeyboardVisibiltyWidget>
+class _KeyboardVisibilityWidgetState extends State<KeyboardVisibilityWidget>
     with WidgetsBindingObserver {
   late KeyboardVisibilityState state;
 
@@ -45,7 +45,7 @@ class _KeyboardVisibiltyWidgetState extends State<KeyboardVisibiltyWidget>
     final newValue = ResponsiveSizeHelper.mediaQuery.viewInsets.bottom;
     return newValue != 0.0
         ? KeyboardVisibilityState.visible
-        : KeyboardVisibilityState.hiden;
+        : KeyboardVisibilityState.hidden;
   }
 
   void checkState() {

@@ -54,16 +54,23 @@ class SettingsController extends BaseController {
   }
 
   Future<void> logout() async {
+    final track = CrashlyticsServiceManager.instance.trackOperation(
+      name: 'logout-performance-tracking',
+      operation: 'user-login',
+    );
     try {
       clickTagging(component: 'settings_logout_key');
       logoutTagging();
       await _logoutUseCase.call();
-    } catch (_) {
+    } catch (error, stackTrace) {
+      Log.error('logout', error: error, stackTrace: stackTrace);
+      track.catchError(error: error);
     } finally {
       await _appSecurityManager.clearSettings();
       await _appSecurityManager.init();
       await SessionHelper.clear();
       AppNavigator.backAllAndToNamed(AppRouter.splash);
+      track.finish();
     }
   }
 

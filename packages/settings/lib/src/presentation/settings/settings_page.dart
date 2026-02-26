@@ -129,6 +129,26 @@ class SettingsPage extends AppView<SettingsController> {
                       );
                     },
                   ),
+                  if (!kReleaseMode)
+                    SecondaryButton(
+                      text: 'Debug crash',
+                      expandWidth: true,
+                      icon: const FlutterIcon(
+                        BoxIcons.bx_bug,
+                        color: Colors.black87,
+                      ),
+                      textColor: Colors.black87,
+                      backgroundColor: StaticColors.debug,
+                      onPressed: () {
+                        CrashlyticsServiceManager.instance.simulateCrash();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Theme.of(context).primaryColor,
+                            content: const TextWidget('Debug crash sent'),
+                          ),
+                        );
+                      },
+                    ),
                   const SpacerWidget(height: 2),
                   FutureButton(
                     key: const Key('settings_logout_key'),

@@ -10,4 +10,13 @@ class HttpException implements Exception {
     this.message,
     this.data,
   });
+
+  @override
+  String toString() {
+    return 'HttpException \n'
+        'statusCode: $statusCode \n'
+        'statusMessage: $statusMessage \n'
+        'message: $message \n'
+        'data: $data \n';
+  }
 }

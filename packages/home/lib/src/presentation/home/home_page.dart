@@ -31,6 +31,9 @@ class HomePage extends AppView<HomeController> {
     if (router == null) {
       return AppRoutes.routes.values.first;
     }
+    AppRoutes.routes.removeWhere((key, _) {
+      return key.contains('nestedKey=$index');
+    });
     final nestedRouteName = '${router.name}?nestedKey=$index';
     final routeUpdated = router.copyWith(
       nestedKey: index,

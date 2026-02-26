@@ -31,7 +31,7 @@ class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
 
     final String keyEncrypted = md5.convert(utf8.encode(key)).toString();
 
-    final String passwordEncrypted = _securityEncryptUseCase.encrypt(
+    final String passwordEncrypted = await _securityEncryptUseCase.encrypt(
       password: _encryptKey,
       data: password,
     );
@@ -51,7 +51,7 @@ class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
 
     if (passwordEncrypted == null) return null;
 
-    final String password = _securityEncryptUseCase.decrypt(
+    final String password = await _securityEncryptUseCase.decrypt(
       password: _encryptKey,
       data: passwordEncrypted,
     );

@@ -70,15 +70,9 @@ class FeatureFlagServiceManager implements FeatureFlagService {
   }
 
   @override
-  void setUserIdentifier(
-    String? userId, {
-    Map<String, dynamic>? property,
-  }) {
+  void setUserId(String? userId) {
     _runServiceFunction(
-      (service) async => service.setUserIdentifier(
-        userId,
-        property: property,
-      ),
+      (service) async => service.setUserId(userId),
     );
   }
 }

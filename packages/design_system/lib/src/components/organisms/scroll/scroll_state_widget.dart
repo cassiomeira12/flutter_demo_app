@@ -51,7 +51,7 @@ class ScrollStateWidget<T> extends StatelessWidget {
             );
           } catch (_) {}
         }
-        return const CircularLoadingWidget();
+        return const Center(child: CircularLoadingWidget());
       }
       if (errorMessage.value.isNotEmpty) {
         return Center(

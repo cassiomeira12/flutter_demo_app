@@ -140,7 +140,7 @@ class SignUpPage extends AppView<SignUpController> {
                         if (!context.mounted) return;
                         DialogWidget.showError(
                           context,
-                          message: error.toString().tr,
+                          message: error.message.tr,
                         );
                       }
                     }

@@ -48,7 +48,7 @@ class GetBinding implements AppBaseBinding {
   @override
   Future<void> replace<T>(T dependency, {String? tag}) async {
     Get.replace<T>(dependency, tag: tag);
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 
   @override

@@ -12,7 +12,9 @@ class Log {
         TalkerKey.info: AnsiPen()..cyan(),
         TalkerKey.verbose: AnsiPen()..green(),
         TalkerKey.debug: AnsiPen()..blue(),
-        TalkerKey.warning: AnsiPen()..red(),
+        TalkerKey.warning: AnsiPen()..yellow(),
+        TalkerKey.error: AnsiPen()..red(),
+        TalkerKey.critical: AnsiPen()..red(),
       },
       titles: {
         TalkerKey.info: 'Log Info',
@@ -34,7 +36,10 @@ class Log {
     final String message = '$_getClassNameAndPath \n\n$msg';
     _talker.verbose(message);
     if (throwsCrashlytics) {
-      CrashlyticsServiceManager.instance.log(message);
+      CrashlyticsServiceManager.instance.log(
+        message,
+        level: CrashlyticsLogLevel.debug,
+      );
     }
   }
 
@@ -42,7 +47,10 @@ class Log {
     final String message = '$_getClassNameAndPath \n\n$msg';
     _talker.debug(message);
     if (throwsCrashlytics) {
-      CrashlyticsServiceManager.instance.log(message);
+      CrashlyticsServiceManager.instance.log(
+        message,
+        level: CrashlyticsLogLevel.debug,
+      );
     }
   }
 
@@ -50,64 +58,103 @@ class Log {
     final String message = '$_getClassNameAndPath \n\n$msg';
     _talker.warning(message);
     if (throwsCrashlytics) {
-      CrashlyticsServiceManager.instance.log(message);
+      CrashlyticsServiceManager.instance.log(
+        message,
+        level: CrashlyticsLogLevel.warning,
+      );
     }
   }
 
   static void error(
     String msg, {
-    DateTime? time,
     Object? error,
     StackTrace? stackTrace,
-    BaseException? exception,
     bool throwsCrashlytics = true,
   }) {
-    String message = '$_getClassNameAndPath\n\n';
-    if (msg.isNotEmpty) message += '$msg\n\n';
-    if (error.toString().isNotEmpty) message += '$error\n\n';
-    _talker.error(message, exception, stackTrace);
-    if (throwsCrashlytics) {
-      _captureException(
-        error: error,
-        stackTrace: stackTrace,
-        exception: exception,
-      );
-    }
+    _parseThrowsException(
+      msg,
+      error: error,
+      stackTrace: stackTrace,
+      throwsCrashlytics: throwsCrashlytics,
+      isFatal: false,
+    );
   }
 
   static void fatalError(
     String msg, {
-    DateTime? time,
-    required Object error,
+    Object? error,
     StackTrace? stackTrace,
     bool throwsCrashlytics = true,
   }) {
-    String message = '$_getClassNameAndPath\n\n';
-    if (msg.isNotEmpty) message += '$msg\n\n';
-    if (error.toString().isNotEmpty) message += '$error\n\n';
-    _talker.critical(message, error, stackTrace);
-    if (throwsCrashlytics) {
-      _captureException(error: error, stackTrace: stackTrace, isFatal: true);
+    _parseThrowsException(
+      msg,
+      error: error,
+      stackTrace: stackTrace,
+      throwsCrashlytics: throwsCrashlytics,
+      isFatal: true,
+    );
+  }
+
+  static void _parseThrowsException(
+    String msg, {
+    required Object? error,
+    required StackTrace? stackTrace,
+    required bool throwsCrashlytics,
+    required bool isFatal,
+  }) {
+    String message = '$_getClassNameAndPath\n';
+    if (msg.isNotEmpty) message += '$msg\n';
+
+    Object? internalError = error;
+    StackTrace? internalStackTrace = stackTrace;
+    bool throwsToCrashlytics = throwsCrashlytics;
+
+    if (error is BaseException) {
+      internalError = error.error ?? error;
+      internalStackTrace = error.stackTrace ?? stackTrace;
+      throwsToCrashlytics = error.throwReport;
+    }
+
+    if (isFatal) {
+      _talker.critical(message, internalError, internalStackTrace);
+    } else {
+      _talker.error(message, internalError, internalStackTrace);
+    }
+
+    if (throwsToCrashlytics) {
+      _captureException(
+        message: msg,
+        error: internalError,
+        stackTrace: internalStackTrace,
+        isFatal: isFatal,
+      );
     }
   }
 
   static void _captureException({
+    required String message,
     Object? error,
     StackTrace? stackTrace,
-    BaseException? exception,
     bool isFatal = false,
   }) {
-    if (kDebugMode) return;
-    if (error == null && exception?.error == null) return;
+    if (error == null) {
+      return CrashlyticsServiceManager.instance.log(
+        message,
+        level: isFatal ? CrashlyticsLogLevel.fatal : CrashlyticsLogLevel.error,
+      );
+    }
+
     if (isFatal) {
       CrashlyticsServiceManager.instance.captureFatalException(
-        error: error ?? exception?.error,
-        stackTrace: stackTrace ?? exception?.stackTrace,
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
       );
     } else {
       CrashlyticsServiceManager.instance.captureException(
-        error: error ?? exception?.error,
-        stackTrace: stackTrace ?? exception?.stackTrace,
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
       );
     }
   }

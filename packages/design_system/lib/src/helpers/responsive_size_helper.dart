@@ -17,24 +17,19 @@ abstract class ResponsiveSizeHelper {
   static const double minHeight = 568;
 
   static Future<void> initializeFlutterView() async {
-    if (!kDebugMode && Platform.isAndroid) {
-      final completer = Completer<void>();
+    if (kDebugMode) {
+      final view = WidgetsBinding.instance.platformDispatcher.views.single;
+      _logPhysicalDevice(view);
+      await Future.delayed(const Duration(seconds: 1));
+    } else if (Platform.isAndroid) {
+      final completer = Completer();
       final oldOnMetricsChanged = PlatformDispatcher.instance.onMetricsChanged!;
       PlatformDispatcher.instance.onMetricsChanged = () {
         if (!completer.isCompleted) {
           final view = WidgetsBinding.instance.platformDispatcher.views.single;
           final mediaQuery = MediaQueryData.fromView(view);
-          Log.info(
-            'Device Physical Size \n'
-            'width: ${view.physicalSize.width.toInt()} px \n'
-            'height: ${view.physicalSize.height.toInt()} px \n'
-            'devicePixelRatio: ${mediaQuery.devicePixelRatio} \n'
-            '\n'
-            'Device Size \n'
-            'width: ${mediaQuery.size.width.toInt()} px \n'
-            'height: ${mediaQuery.size.height.toInt()} px',
-          );
           if (mediaQuery.size.width > 0 && mediaQuery.size.height > 0) {
+            _logPhysicalDevice(view);
             completer.complete(null);
           }
         }
@@ -44,12 +39,18 @@ abstract class ResponsiveSizeHelper {
     }
   }
 
+  static MediaQueryData get mediaQuery {
+    return MediaQueryData.fromView(
+      WidgetsBinding.instance.platformDispatcher.views.single,
+    );
+  }
+
   static final FlutterView _view =
       WidgetsBinding.instance.platformDispatcher.views.single;
-  static final MediaQueryData mediaQuery = MediaQueryData.fromView(_view);
+  static final MediaQueryData _mediaQuery = MediaQueryData.fromView(_view);
 
-  static final double _width = mediaQuery.size.width;
-  static final double _height = mediaQuery.size.height;
+  static final double _width = MediaQueryData.fromView(_view).size.width;
+  static final double _height = MediaQueryData.fromView(_view).size.height;
 
   static double get spacingDefaultWidth => width(12);
   static double get spacingDefaultHeight => height(12);
@@ -75,19 +76,40 @@ abstract class ResponsiveSizeHelper {
   }
 
   static double get appBarHeight {
-    double height = kToolbarHeight + mediaQuery.padding.top;
+    double height = kToolbarHeight + _mediaQuery.padding.top;
     if (Platform.isAndroid) {
-      height += mediaQuery.padding.top * .35;
+      height += _mediaQuery.padding.top * .35;
     }
     return height;
   }
 
   static double get navigationBarHeight {
     final double height =
-        kBottomNavigationBarHeight + mediaQuery.padding.bottom;
+        kBottomNavigationBarHeight + _mediaQuery.padding.bottom;
     // if (Platform.isAndroid) {
     //   height += mediaQuery.padding.bottom * .35;
     // }
     return height;
+  }
+
+  static EdgeInsets get cardPadding {
+    return EdgeInsets.symmetric(
+      horizontal: ResponsiveSizeHelper.width(20),
+      vertical: ResponsiveSizeHelper.width(10),
+    );
+  }
+
+  static void _logPhysicalDevice(FlutterView view) {
+    final mediaQuery = MediaQueryData.fromView(view);
+    Log.info(
+      'Device Physical Size \n'
+      'width: ${view.physicalSize.width.toInt()} px \n'
+      'height: ${view.physicalSize.height.toInt()} px \n'
+      'devicePixelRatio: ${mediaQuery.devicePixelRatio} \n'
+      '\n'
+      'Device Size \n'
+      'width: ${mediaQuery.size.width.toInt()} px \n'
+      'height: ${mediaQuery.size.height.toInt()} px',
+    );
   }
 }

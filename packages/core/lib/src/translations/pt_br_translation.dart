@@ -180,6 +180,7 @@ class PtBrTranslation extends Translations {
         'test_push_send_success_title': 'Teste de notificação enviado',
         'test_push_send_success_message':
             'Um teste push de notificação foi enviado para este dispositivo, em breve você receberá um push de confirmação.',
+        'send_push': 'Enviar push',
         // Security
         'security': 'Segurança',
         'biometric': 'Biometria',
@@ -247,6 +248,10 @@ class PtBrTranslation extends Translations {
         // Web Visit History
         'web_visit_history': 'Histórico de visitas',
         'empty_web_visit_history_list': 'Histórico de visitas vazio',
+        'delete': 'Deletar',
+        'change': 'Alterar',
+        'yes': 'Sim',
+        'not': 'Não',
       },
     };
   }

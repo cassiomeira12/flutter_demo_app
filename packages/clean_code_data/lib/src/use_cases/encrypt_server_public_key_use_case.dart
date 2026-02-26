@@ -13,7 +13,7 @@ class EncryptServerPublicKeyUseCaseImpl
        _rsaEncrypterUseCase = rsaEncrypterUseCase;
 
   @override
-  String call(String data) {
+  Future<String> call(String data) async {
     final String key = _serverRSAPublicKeyBase64;
     if (key.isEmpty) return data;
     final String publicKey = utf8.decode(base64.decode(key));

@@ -1,7 +1,7 @@
 abstract class AnalyticsService {
   Future<void> init();
 
-  Future<void> setUserId(String userId);
+  Future<void> setUserId(String? userId);
 
   Future<void> setUserProperty({
     required String name,

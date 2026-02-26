@@ -20,7 +20,7 @@ class ForceUpdateModuleRoutes implements ModuleRoutes {
     AppRouterPage(
       name: AppRouter.forceUpdate.name,
       page: ForceUpdatePage.new,
-      binding: ForceUpdateBindings(),
+      binding: UpdateBindings(),
     ),
   ];
 }

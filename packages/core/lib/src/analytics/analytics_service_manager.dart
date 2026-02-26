@@ -58,7 +58,7 @@ class AnalyticsServiceManager implements AnalyticsService {
   }
 
   @override
-  Future<void> setUserId(String userId) async {
+  Future<void> setUserId(String? userId) async {
     Log.info('userId: $userId');
     await _runServiceFunction((service) => service.setUserId(userId));
   }

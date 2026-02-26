@@ -20,6 +20,20 @@
         "name": "blocking_app"
       },
       "feature_state_value": "false"
+    },
+    {
+      "enabled": true,
+      "feature": {
+        "name": "download_android_store"
+      },
+      "feature_state_value": "false"
+    },
+    {
+      "enabled": true,
+      "feature": {
+        "name": "download_apple_store"
+      },
+      "feature_state_value": "false"
     }
   ]
 }

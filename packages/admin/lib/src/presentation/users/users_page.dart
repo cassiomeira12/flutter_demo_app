@@ -11,6 +11,14 @@ class UsersPage extends AppView<UsersController> {
     return ScaffoldWidget(
       title: 'users'.tr,
       controller: controller,
+      appBarPopUpMenuItems: [
+        PopupMenuItem(
+          key: const Key('users_history_update_popup_menu_item_key'),
+          value: 'update'.tr,
+          onTap: controller.getAllUsers,
+          child: TextWidget('update'.tr),
+        ),
+      ],
       body: ScrollStateWidget<UserEntity>(
         list: controller.users,
         errorMessage: controller.errorMessage,

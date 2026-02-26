@@ -1,19 +1,24 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class InternetConnectionServiceImpl implements InternetConnectionService {
   late InternetConnection _internetConnection;
-  late StreamSubscription<InternetStatus> _stream;
+  late StreamSubscription<InternetStatus> _internetConnectionSubscription;
 
   InternetConnectionServiceImpl() {
     _internetConnection = InternetConnection.createInstance();
-    _stream = _internetConnection.onStatusChange.listen(
+    _internetConnectionSubscription = _internetConnection.onStatusChange.listen(
       _listenChangeStatus,
       onDone: () {
-        _stream.pause();
+        _internetConnectionSubscription.pause();
       },
       onError: (error, stackTrace) {
-        _stream.cancel();
+        _internetConnectionSubscription.cancel();
+        Log.error(
+          'InternetConnectionSubscription',
+          error: error,
+          stackTrace: stackTrace,
+        );
       },
     );
   }
@@ -53,19 +58,19 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
 
   @override
   void pauseStream() {
-    _stream.pause();
+    _internetConnectionSubscription.pause();
   }
 
   @override
   void resumeStream() {
-    _stream.resume();
+    _internetConnectionSubscription.resume();
   }
 
   @override
   void dispose() {
     _clearInactiveStreams();
     if (_listenerStreamList.isEmpty) {
-      _stream.cancel();
+      _internetConnectionSubscription.cancel();
     }
   }
 }

@@ -34,8 +34,8 @@ class _AppState extends State<App> {
           ],
         );
       }).toList(),
-      locale: PlatformDispatcher.instance.locale,
       translations: AppTranslation(),
+      locale: PlatformDispatcher.instance.locale,
       fallbackLocale: Translation.fallbackLocale,
       supportedLocales: Translation.supportedLocales,
       localizationsDelegates: const [
@@ -45,7 +45,7 @@ class _AppState extends State<App> {
       ],
       navigatorObservers: [
         AppMemoryObserver(),
-        if (kReleaseMode) CrashlyticsObserver(),
+        if (!kDebugMode) CrashlyticsObserver(),
       ],
       builder: (context, child) {
         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {

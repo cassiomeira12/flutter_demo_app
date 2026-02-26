@@ -3,13 +3,15 @@ import 'package:dependency/dependency.dart';
 
 class ClipboardUseCaseImpl implements ClipboardUseCase {
   @override
-  Future<void> copy(String text) async {
+  Future<void> copy(String text, {bool autoClear = false}) async {
     await Clipboard.setData(ClipboardData(text: text));
     // After 10s clear clipboard text for security
-    Future.delayed(
-      const Duration(seconds: 10),
-      () => Clipboard.setData(const ClipboardData(text: '')),
-    );
+    if (autoClear) {
+      Future.delayed(
+        const Duration(seconds: 10),
+        () => Clipboard.setData(const ClipboardData(text: '')),
+      );
+    }
   }
 
   @override

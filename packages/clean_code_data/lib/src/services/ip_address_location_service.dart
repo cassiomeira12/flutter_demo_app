@@ -17,11 +17,15 @@ class IpAddressLocationServiceImpl implements IpAddressLocationService {
       final model = IpAddressLocationModel.fromMap(result);
 
       return model;
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('getIpAddress', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'getIpAddress',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

@@ -8,7 +8,7 @@ class AnalyticsServiceFaker implements AnalyticsService {
   }
 
   @override
-  Future<void> setUserId(String userId) async {}
+  Future<void> setUserId(String? userId) async {}
 
   @override
   Future<void> setUserProperty({

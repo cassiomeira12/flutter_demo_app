@@ -2,18 +2,17 @@ import 'package:core/core.dart';
 
 class GetUserLocalDataUseCaseImpl implements GetUserDataUseCase {
   final UserAuthStorageUseCase _authStorageUseCase;
+  final SessionEntity _sessionEntity;
 
   GetUserLocalDataUseCaseImpl({
     required UserAuthStorageUseCase authStorageUseCase,
-  }) : _authStorageUseCase = authStorageUseCase;
+    required SessionEntity sessionEntity,
+  }) : _authStorageUseCase = authStorageUseCase,
+       _sessionEntity = sessionEntity;
 
   @override
   Future<UserModel> call() async {
-    if (!AppBinding.hasInstance<SessionEntity>()) {
-      throw BaseException();
-    }
-    final session = AppBinding.find<SessionEntity>();
-    if (session.token != null) {
+    if (_sessionEntity.isAuthenticated) {
       final localUser = await _authStorageUseCase.getUserData();
       if (localUser == null) throw BaseException();
       final UserModel user = UserModel.fromMap(localUser);

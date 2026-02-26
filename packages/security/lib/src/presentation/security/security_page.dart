@@ -21,12 +21,12 @@ class SecurityPage extends AppView<SecurityController> {
                   return const CircularLoadingWidget();
                 }
                 return Column(
-                  spacing: ResponsiveSizeHelper.spacingDefaultHeight * 3,
+                  spacing: ResponsiveSizeHelper.spacingDefaultHeight * 2,
                   children: [
                     ColoredBox(
                       color: Theme.of(context).highlightColor,
                       child: Padding(
-                        padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
+                        padding: ResponsiveSizeHelper.cardPadding,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -98,7 +98,7 @@ class SecurityPage extends AppView<SecurityController> {
                     ColoredBox(
                       color: Theme.of(context).highlightColor,
                       child: Padding(
-                        padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
+                        padding: ResponsiveSizeHelper.cardPadding,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [

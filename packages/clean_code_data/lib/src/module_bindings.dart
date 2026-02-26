@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class DataModuleBindings implements ModuleBinding {
   @override
@@ -28,10 +29,15 @@ class DataModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.put<AppsFlyerService>(AppsFlyerServiceFaker(), permanent: true);
+    AppBinding.put<AppsFlyerService>(
+      AppsFlyerServiceFaker(),
+      permanent: true,
+    );
 
     AppBinding.lazyPut<NotificationService>(
-      () => NotificationServiceImpl(notificationDataSource: AppBinding.find()),
+      () => NotificationServiceImpl(
+        notificationDataSource: AppBinding.find(),
+      ),
     );
     AppBinding.lazyPut<CountUnreadNotificationsUseCase>(
       () => CountUnreadNotificationsUseCaseImpl(
@@ -40,8 +46,24 @@ class DataModuleBindings implements ModuleBinding {
     );
 
     AppBinding.lazyPut<LocalStorageUseCase>(
-      () => LocalStorageUseCaseImpl(localStorage: AppBinding.find()),
+      () => LocalStorageUseCaseImpl(
+        localStorage: AppBinding.find(),
+      ),
     );
+
+    await AppBinding.putAsync<ThemeController>(() async {
+      return AppThemeController.init(
+        localStorageUseCase: AppBinding.find(),
+        setThemData: (theme) {
+          Get.changeTheme(theme);
+          Get.forceAppUpdate();
+        },
+        setThemMode: (mode) {
+          Get.changeThemeMode(mode);
+          Get.forceAppUpdate();
+        },
+      );
+    }, permanent: true);
 
     AppBinding.lazyPut<FileStorageUseCase>(() => FileStorageUseCaseImpl());
     AppBinding.lazyPut<SecureStorageUseCase>(() => SecureStorageUseCaseImpl());
@@ -67,6 +89,10 @@ class DataModuleBindings implements ModuleBinding {
     AppBinding.lazyPut<GetAppInfoUseCase>(
       () => GetAppInfoUseCaseImpl(appInfoService: AppBinding.find()),
     );
+
+    await AppBinding.find<GetAppInfoUseCase>().call().then((appInfo) {
+      AppBinding.lazyPut<AppInfoEntity>(() => appInfo);
+    });
 
     AppBinding.lazyPut<ClipboardUseCase>(() => ClipboardUseCaseImpl());
 
@@ -110,6 +136,12 @@ class DataModuleBindings implements ModuleBinding {
         securityEncrypterUseCase: AppBinding.find(),
       ),
     );
+
+    await AppBinding.putAsync<SessionEntity>(() async {
+      final userAuthStorage = AppBinding.find<UserAuthStorageUseCase>();
+      final String? token = await userAuthStorage.getSessionToken();
+      return SessionEntity(token: token);
+    }, permanent: true);
 
     AppBinding.put<UserService>(
       UserServiceImpl(userDataSource: AppBinding.find()),
@@ -204,11 +236,14 @@ class DataModuleBindings implements ModuleBinding {
       () => AppPermissionsServiceImpl(),
     );
     AppBinding.lazyPut<RequestPermissionUseCase>(
-      () =>
-          RequestPermissionUseCaseImpl(appPermissionService: AppBinding.find()),
+      () => RequestPermissionUseCaseImpl(
+        appPermissionService: AppBinding.find(),
+      ),
     );
     AppBinding.lazyPut<CheckPermissionUseCase>(
-      () => CheckPermissionUseCaseImpl(appPermissionService: AppBinding.find()),
+      () => CheckPermissionUseCaseImpl(
+        appPermissionService: AppBinding.find(),
+      ),
     );
 
     AppBinding.lazyPut<LoginService>(
@@ -235,7 +270,10 @@ class DataModuleBindings implements ModuleBinding {
     );
 
     AppBinding.lazyPut<GetUserDataUseCase>(
-      () => GetUserLocalDataUseCaseImpl(authStorageUseCase: AppBinding.find()),
+      () => GetUserLocalDataUseCaseImpl(
+        authStorageUseCase: AppBinding.find(),
+        sessionEntity: AppBinding.find(),
+      ),
     );
     AppBinding.put<UpdateUserDataUseCase>(
       UpdateUserDataUseCaseImpl(userService: AppBinding.find()),

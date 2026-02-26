@@ -47,10 +47,11 @@ mixin AnalyticsMixin {
     tagging('tutorial_complete');
   }
 
-  void setUserIdentifier(String userId, {Map<String, dynamic>? property}) {
+  void setUserIdentifier(String? userId, {Map<String, dynamic>? property}) {
     AnalyticsServiceManager.instance.setUserId(userId);
     CrashlyticsServiceManager.instance.setUserId(userId);
-    FeatureFlagServiceManager.instance.setUserIdentifier(userId);
+    FeatureFlagServiceManager.instance.setUserId(userId);
+
     if (property != null) {
       final Map<String, dynamic> properties = {
         'userId': userId,
@@ -66,10 +67,6 @@ mixin AnalyticsMixin {
           properties['name'] ?? property['nome'] ?? property['username'];
       CrashlyticsServiceManager.instance.setUserProperty(
         name: userNameIdentifier ?? '',
-        property: properties,
-      );
-      FeatureFlagServiceManager.instance.setUserIdentifier(
-        userId,
         property: properties,
       );
     }

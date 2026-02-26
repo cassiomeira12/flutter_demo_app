@@ -32,6 +32,7 @@ export 'login_use_case.dart';
 export 'logout_use_case.dart';
 export 'open_app_use_case.dart';
 export 'open_web_url_use_case.dart';
+export 'performance_metric_use_case.dart';
 export 'read_notification_use_case.dart';
 export 'request_permission_use_case.dart';
 export 'rsa_encrypter_use_case.dart';

@@ -8,11 +8,25 @@ class AppThemeController implements ThemeController {
 
   String _currentThemeData = 'system';
 
-  AppThemeController({
+  AppThemeController._({
     required LocalStorageUseCase localStorageUseCase,
     this.setThemData,
     this.setThemMode,
   }) : _localStorage = localStorageUseCase;
+
+  static Future<AppThemeController> init({
+    required LocalStorageUseCase localStorageUseCase,
+    required ValueChanged<ThemeData>? setThemData,
+    required ValueChanged<ThemeMode>? setThemMode,
+  }) async {
+    final controller = AppThemeController._(
+      localStorageUseCase: localStorageUseCase,
+      setThemData: setThemData,
+      setThemMode: setThemMode,
+    );
+    await controller._loadCurrentTheme();
+    return controller;
+  }
 
   @override
   String get currentThemeData => _currentThemeData;
@@ -24,17 +38,14 @@ class AppThemeController implements ThemeController {
   }
 
   @override
-  Future<void> init() async => _getTheme();
-
-  @override
   void addCustomThemes(List<Map<String, ThemeData>> customThemes) {
     for (final theme in customThemes) {
       ThemeManager.instance.themes.addAll(theme);
     }
-    _getTheme();
+    _loadCurrentTheme();
   }
 
-  Future<void> _getTheme() async {
+  Future<void> _loadCurrentTheme() async {
     final String themeName = await theme;
     final ThemeMode themeMode = ThemeMode.values.firstWhere(
       (mode) => mode.name == themeName,

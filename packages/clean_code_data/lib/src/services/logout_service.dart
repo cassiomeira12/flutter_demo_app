@@ -10,11 +10,15 @@ class LogoutServiceImpl implements LogoutService {
   Future<void> logout() async {
     try {
       await _dataSource.logout();
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('logout', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'logout',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

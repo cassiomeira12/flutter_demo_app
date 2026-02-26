@@ -21,9 +21,19 @@ class WebVisitHistoryWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextWidget(
-            webVisitHistoryEntity.ip,
-            style: AppTextStyle.footnote(context),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextWidget(
+                webVisitHistoryEntity.ip,
+                style: AppTextStyle.footnote(context),
+              ),
+              if (webVisitHistoryEntity.createdAt != null)
+                TextWidget(
+                  DateHelper.formatDate(webVisitHistoryEntity.createdAt!),
+                  style: AppTextStyle.footnote(context),
+                ),
+            ],
           ),
           if (webVisitHistoryEntity.countryComplete.isNotEmpty)
             TextWidget(

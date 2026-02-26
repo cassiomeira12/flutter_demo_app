@@ -8,7 +8,7 @@ class DeviceTraits {
   final String version;
   final String build;
   final bool isWeb;
-  final bool debugMode;
+  final String environment;
   final String deviceId;
 
   DeviceTraits({
@@ -21,7 +21,7 @@ class DeviceTraits {
     required this.version,
     required this.build,
     required this.isWeb,
-    required this.debugMode,
+    required this.environment,
     required this.deviceId,
   });
 
@@ -36,7 +36,7 @@ class DeviceTraits {
       'version': version,
       'build': build,
       'isWeb': isWeb.toString(),
-      'debugMode': debugMode.toString(),
+      'environment': environment,
       'deviceId': deviceId,
     };
   }

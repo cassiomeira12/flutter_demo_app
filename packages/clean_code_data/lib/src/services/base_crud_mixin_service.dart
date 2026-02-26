@@ -22,11 +22,15 @@ mixin CreateServiceMixin<T> {
       final Map<String, dynamic> result = await create(data);
 
       return fromMap(result);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('mixinCreate', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'mixinCreate',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
@@ -38,11 +42,15 @@ mixin DeleteServiceMixin<T> {
   }) async {
     try {
       await delete(objectId);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('mixinDelete', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'mixinDelete',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
@@ -60,17 +68,21 @@ mixin ListServiceMixin<T> {
       for (final json in result) {
         try {
           listData.add(fromMap(json));
-        } on BaseException catch (error, stackTrace) {
-          Log.error(error.toString(), exception: error, stackTrace: stackTrace);
+        } on BaseException catch (error) {
+          Log.error('mixinList fromMap', error: error);
         }
       }
 
       return listData;
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('mixinList', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'mixinList',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
@@ -99,11 +111,15 @@ mixin UpdateServiceMixin<T> {
       result['updatedAt'] = result['updatedAt'] as String;
 
       return fromMap(result);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('mixinUpdate', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'mixinUpdate',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

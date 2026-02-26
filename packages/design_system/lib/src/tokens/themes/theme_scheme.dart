@@ -1,6 +1,6 @@
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
-import 'package:flutter/material.dart' as Material;
+import 'package:flutter/material.dart' as material;
 
 class ThemeScheme {
   final ColorScheme colorScheme;
@@ -14,7 +14,7 @@ class ThemeScheme {
       primaryColor: colorScheme.primary,
       primaryColorLight: colorScheme.primary,
       primaryColorDark: colorScheme.primary,
-      colorScheme: Material.ColorScheme.light(
+      colorScheme: material.ColorScheme.light(
         brightness: colorScheme.themeBrightness,
         primary: colorScheme.primary,
         error: colorScheme.error,
@@ -52,6 +52,9 @@ class ThemeScheme {
       inputDecorationTheme: _inputDecorationTheme,
       textButtonTheme: _textButtonThemeData,
       outlinedButtonTheme: _outlinedButtonTheme,
+      dividerTheme: _dividerTheme,
+      datePickerTheme: _datePickerTheme,
+      timePickerTheme: _timePickerTheme,
     );
   }
 
@@ -210,6 +213,30 @@ class ThemeScheme {
           (255 * .70).toInt(),
         ),
       ),
+    ),
+  );
+
+  DividerThemeData get _dividerTheme => DividerThemeData(
+    color: colorScheme.textColor.withAlpha((255 * .20).toInt()),
+  );
+
+  DatePickerThemeData get _datePickerTheme => DatePickerThemeData(
+    cancelButtonStyle: ButtonStyle(
+      backgroundColor: WidgetStateProperty.all(Colors.transparent),
+      foregroundColor: WidgetStateProperty.all(colorScheme.error),
+    ),
+    confirmButtonStyle: ButtonStyle(
+      foregroundColor: WidgetStateProperty.all(Colors.white),
+    ),
+  );
+
+  TimePickerThemeData get _timePickerTheme => TimePickerThemeData(
+    cancelButtonStyle: ButtonStyle(
+      backgroundColor: WidgetStateProperty.all(Colors.transparent),
+      foregroundColor: WidgetStateProperty.all(colorScheme.error),
+    ),
+    confirmButtonStyle: ButtonStyle(
+      foregroundColor: WidgetStateProperty.all(Colors.white),
     ),
   );
 }

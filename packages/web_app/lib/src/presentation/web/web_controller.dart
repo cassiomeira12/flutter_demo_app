@@ -94,7 +94,7 @@ class WebController extends BaseController {
     final bool hasInstance = AppBinding.hasInstance<SessionEntity>();
     if (hasInstance) {
       final session = AppBinding.find<SessionEntity>();
-      if (session.token != null) {
+      if (session.isAuthenticated) {
         AppNavigator.backAllAndToNamed(AppRouter.home);
         return;
       }
@@ -150,31 +150,56 @@ class WebController extends BaseController {
     _openWebUrlUseCase.call(link);
   }
 
+  Future<bool> _getFeatureFlagValue(RemoteFlagsEnum flag) async {
+    final RemoteFlag? featureFlag = await FeatureFlagServiceManager.instance
+        .getFlag(flag);
+    if (featureFlag?.isEnabled ?? false) {
+      return featureFlag?.value == 'true';
+    }
+    return false;
+  }
+
   Future<void> downloadAndroidApp() async {
     clickTagging(component: 'download_google_store_key');
 
-    // const androidPackageName = String.fromEnvironment('android_package_name');
-    // final locale = await _currentDeviceLocaleUseCase.call();
-    // final currentLanguage = locale.toLanguageTag();
-    // final String url =
-    //     'https://play.google.com/store/apps/details?id=$androidPackageName&hl=$currentLanguage';
+    final bool downloadFromStore = await _getFeatureFlagValue(
+      RemoteFlagsEnum.downloadAndroidStore,
+    );
 
-    const serverUrl = String.fromEnvironment('server_url');
-    const String downloadUrl = '$serverUrl/download_android_app';
+    late String url;
 
-    _openWebUrlUseCase.call(downloadUrl);
+    if (downloadFromStore) {
+      const androidPackageName = String.fromEnvironment('android_package_name');
+      final locale = await _currentDeviceLocaleUseCase.call();
+      final currentLanguage = locale.toLanguageTag();
+      url =
+          'https://play.google.com/store/apps/details?id=$androidPackageName&hl=$currentLanguage';
+    } else {
+      const serverUrl = String.fromEnvironment('server_url');
+      url = '$serverUrl/download_android_app';
+    }
+
+    _openWebUrlUseCase.call(url);
   }
 
-  void downloadAppleApp() {
+  Future<void> downloadAppleApp() async {
     clickTagging(component: 'download_apple_store_key');
 
-    // const appAppleId = String.fromEnvironment('apple_store_app_id');
-    // const String url = 'https://apps.apple.com/br/app/$appAppleId';
+    final bool downloadFromStore = await _getFeatureFlagValue(
+      RemoteFlagsEnum.downloadAppleStore,
+    );
 
-    const serverUrl = String.fromEnvironment('server_url');
-    const String downloadUrl = '$serverUrl/download_ios_app';
+    late String url;
 
-    _openWebUrlUseCase.call(downloadUrl);
+    if (downloadFromStore) {
+      const appAppleId = String.fromEnvironment('apple_store_app_id');
+      url = 'https://apps.apple.com/br/app/$appAppleId';
+    } else {
+      const serverUrl = String.fromEnvironment('server_url');
+      url = '$serverUrl/download_ios_app';
+    }
+
+    _openWebUrlUseCase.call(url);
   }
 
   double _calculateHeightToScroll(GlobalKey key) {

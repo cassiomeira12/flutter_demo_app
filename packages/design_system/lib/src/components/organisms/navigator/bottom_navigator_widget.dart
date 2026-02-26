@@ -21,7 +21,7 @@ class BottomNavigatorWidget extends StatefulWidget {
 }
 
 class _BottomNavigatorWidgetState extends State<BottomNavigatorWidget> {
-  bool showBottomNavigator = true;
+  final ValueNotifier<bool> showBottomNavigator = ValueNotifier(true);
 
   int? _lastIndexSelected;
   late Map<int, RxBool> _observableIndex;
@@ -52,14 +52,16 @@ class _BottomNavigatorWidgetState extends State<BottomNavigatorWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return KeyboardVisibiltyWidget(
+    return KeyboardVisibilityWidget(
       onKeyboardStateChange: (state) {
-        setState(() {
-          showBottomNavigator = state == KeyboardVisibilityState.hiden;
-        });
+        showBottomNavigator.value = state == KeyboardVisibilityState.hidden;
       },
-      child: showBottomNavigator
-          ? Container(
+      child: ValueListenableBuilder<bool>(
+        valueListenable: showBottomNavigator,
+        builder: (BuildContext context, bool showWebView, child) {
+          return Visibility(
+            visible: showWebView,
+            child: Container(
               height: ResponsiveSizeHelper.navigationBarHeight,
               decoration: BoxDecoration(
                 color: theme.bottomNavigationBarTheme.backgroundColor,
@@ -84,8 +86,10 @@ class _BottomNavigatorWidgetState extends State<BottomNavigatorWidget> {
                   );
                 }).toList(),
               ),
-            )
-          : const SizedBox.shrink(),
+            ),
+          );
+        },
+      ),
     );
   }
 

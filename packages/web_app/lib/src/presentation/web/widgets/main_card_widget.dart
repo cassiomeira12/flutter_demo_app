@@ -12,6 +12,10 @@ class MainCardWidget extends AppView<WebController> {
       height: MediaQuery.of(context).size.height,
       color: Colors.transparent,
       alignment: Alignment.topCenter,
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveSizeHelper.width(30),
+        vertical: ResponsiveSizeHelper.height(100),
+      ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

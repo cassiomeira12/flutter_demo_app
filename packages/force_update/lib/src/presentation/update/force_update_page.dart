@@ -1,8 +1,8 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:force_update/src/presentation/force_update/force_update.dart';
+import 'package:force_update/src/presentation/update/update.dart';
 
-class ForceUpdatePage extends AppView<ForceUpdateController> {
+class ForceUpdatePage extends AppView<UpdateController> {
   const ForceUpdatePage({super.key});
 
   @override

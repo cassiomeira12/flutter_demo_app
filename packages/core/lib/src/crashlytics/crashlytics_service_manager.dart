@@ -69,12 +69,15 @@ class CrashlyticsServiceManager implements CrashlyticsService {
   }
 
   @override
-  void log(String message) {
-    _runServiceFunction((service) async => service.log(message));
+  void log(
+    String message, {
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+  }) {
+    _runServiceFunction((service) async => service.log(message, level: level));
   }
 
   @override
-  Future<void> setUserId(String userId) {
+  Future<void> setUserId(String? userId) {
     return _runServiceFunction((service) => service.setUserId(userId));
   }
 
@@ -90,6 +93,7 @@ class CrashlyticsServiceManager implements CrashlyticsService {
 
   @override
   Future<void> captureException({
+    String? message,
     required Object error,
     StackTrace? stackTrace,
   }) {
@@ -98,12 +102,17 @@ class CrashlyticsServiceManager implements CrashlyticsService {
       _stackTraces.add(stackTrace);
     }
     return _runServiceFunction((service) {
-      return service.captureException(error: error, stackTrace: stackTrace);
+      return service.captureException(
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
+      );
     });
   }
 
   @override
   Future<void> captureFatalException({
+    String? message,
     required Object error,
     StackTrace? stackTrace,
   }) {
@@ -113,6 +122,7 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     }
     return _runServiceFunction((service) {
       return service.captureFatalException(
+        message: message,
         error: error,
         stackTrace: stackTrace,
       );
@@ -120,10 +130,20 @@ class CrashlyticsServiceManager implements CrashlyticsService {
   }
 
   @override
-  TrackOperation trackOperation({String? name, String? operation}) {
+  TrackOperation trackOperation({
+    String? name,
+    String? operation,
+    DateTime? startTimestamp,
+  }) {
     return _initializedServices.first.trackOperation(
       name: name,
       operation: operation,
+      startTimestamp: startTimestamp,
     );
+  }
+
+  @override
+  void simulateCrash() {
+    _runServiceFunction((service) async => service.simulateCrash());
   }
 }

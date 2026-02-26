@@ -5,7 +5,7 @@ export 'floating_button/floating_button_widget.dart';
 export 'icon_button/icon_button_widget.dart';
 export 'image/image_widget.dart';
 export 'inputs/inputs.dart';
-export 'keyboard/keyboard_visibilty_widget.dart';
+export 'keyboard/keyboard_visibility_widget.dart';
 export 'progress_bar/progress_bar_widget.dart';
 export 'skeleton/skeleton.dart';
 export 'switch_title/switch_title_widget.dart';

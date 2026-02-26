@@ -10,6 +10,7 @@ class LoginController extends BaseController
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
   final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
   final AppInfoEntity _appInfoEntity;
+  final FeatureFlagLifecycleController _featureFlagLifecycleController;
 
   LoginController({
     required EnvironmentEntity environment,
@@ -19,13 +20,15 @@ class LoginController extends BaseController
     required UpdateUserLocaleUseCase updateUserLocaleUseCase,
     required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required AppInfoEntity appInfoEntity,
+    required FeatureFlagLifecycleController featureFlagLifecycleController,
   }) : _environment = environment,
        _loginUseCase = loginUseCase,
        _localStorageUseCase = localStorageUseCase,
        _authStorageUseCase = authStorageUseCase,
        _updateUserLocaleUseCase = updateUserLocaleUseCase,
        _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
-       _appInfoEntity = appInfoEntity;
+       _appInfoEntity = appInfoEntity,
+       _featureFlagLifecycleController = featureFlagLifecycleController;
 
   final emailTextController = Rxn<TextEditingController>();
   final passwordTextController = Rxn<TextEditingController>();
@@ -47,12 +50,18 @@ class LoginController extends BaseController
     _showInvalidSessionAlert(context);
   }
 
+  @override
+  void onClose() {
+    _featureFlagLifecycleController.uploadDeviceTraits();
+    super.onClose();
+  }
+
   Future<void> login({
     required String username,
     required String password,
   }) async {
     final track = CrashlyticsServiceManager.instance.trackOperation(
-      name: 'login',
+      name: 'login-performance-tracking',
       operation: 'user-login',
     );
     try {
@@ -126,24 +135,32 @@ class LoginController extends BaseController
 
   Future<void> _getLoginEmailSaved() async {
     final bool? rememberMe = await _localStorageUseCase.get<bool>(REMEMBER_ME);
-    final Map<String, String?> credentials = await _authStorageUseCase
-        .getCredentials();
-    final String? username = credentials['username'];
-    final String? password = credentials['password'];
+    try {
+      final Map<String, String?> credentials = await _authStorageUseCase
+          .getCredentials();
+      final String? username = credentials['username'];
+      final String? password = credentials['password'];
 
-    rememberMeInitial.value = rememberMe ?? false;
-    emailTextController.value = TextEditingController(text: username);
-    passwordTextController.value = TextEditingController(text: password);
+      rememberMeInitial.value = rememberMe ?? false;
+      emailTextController.value = TextEditingController(text: username);
+      passwordTextController.value = TextEditingController(text: password);
+    } catch (error, stackTrace) {
+      Log.error('getLoginEmailSaved', error: error, stackTrace: stackTrace);
+    }
   }
 
   Future<void> _saveLoginEmail({
     required String username,
     String? password,
   }) async {
-    await _authStorageUseCase.saveCredentials(
-      username: username,
-      password: password,
-    );
+    try {
+      await _authStorageUseCase.saveCredentials(
+        username: username,
+        password: password,
+      );
+    } catch (error, stackTrace) {
+      Log.error('saveLoginEmail', error: error, stackTrace: stackTrace);
+    }
   }
 
   Future<void> _removeLoginEmailSaved() async {

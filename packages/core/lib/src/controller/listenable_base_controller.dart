@@ -15,11 +15,14 @@ abstract class ListenableBaseController<T> extends BaseController {
   }
 
   Future<void> onFetchListData() async {
-    isLoading.value = true;
-    errorMessage.value = '';
     try {
+      isLoading.value = true;
+      errorMessage.value = '';
       list.value = await fetchDataFunction.call();
-    } catch (error) {
+    } on BaseException catch (error) {
+      errorMessage.value = error.message.tr;
+    } catch (error, stackTrace) {
+      Log.error('onFetchListData', error: error, stackTrace: stackTrace);
       errorMessage.value = error.toString();
     } finally {
       isLoading.value = false;

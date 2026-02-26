@@ -13,11 +13,15 @@ class RecoveryPasswordServiceImpl implements RecoveryPasswordService {
   Future<void> recoveryPassword(String email) async {
     try {
       await _dataSource.recoveryPassword(email);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('recoveryPassword', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'recoveryPassword',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

@@ -70,8 +70,10 @@
     "pinput",
     "skeletonizer",
     "TOTP",
+    "OAEP",
     "validatorless",
     "crashlytics",
-    "deeplink"
+    "deeplink",
+    "encrypter"
   ]
 }

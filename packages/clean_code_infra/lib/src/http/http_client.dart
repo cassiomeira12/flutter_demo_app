@@ -65,9 +65,9 @@ class HttpClientImpl implements HttpClient {
         ),
       );
 
-      return _mapperResponse(response);
+      return _parseHttpResponse(response);
     } on DioException catch (error) {
-      throw _mapperDioError(error);
+      throw _parseHttpException(error);
     }
   }
 
@@ -89,9 +89,9 @@ class HttpClientImpl implements HttpClient {
         ),
       );
 
-      return _mapperResponse(response);
+      return _parseHttpResponse(response);
     } on DioException catch (error) {
-      throw _mapperDioError(error);
+      throw _parseHttpException(error);
     }
   }
 
@@ -113,9 +113,9 @@ class HttpClientImpl implements HttpClient {
         ),
       );
 
-      return _mapperResponse(response);
+      return _parseHttpResponse(response);
     } on DioException catch (error) {
-      throw _mapperDioError(error);
+      throw _parseHttpException(error);
     }
   }
 
@@ -137,9 +137,9 @@ class HttpClientImpl implements HttpClient {
         ),
       );
 
-      return _mapperResponse(response);
+      return _parseHttpResponse(response);
     } on DioException catch (error) {
-      throw _mapperDioError(error);
+      throw _parseHttpException(error);
     }
   }
 
@@ -189,16 +189,20 @@ class HttpClientImpl implements HttpClient {
         ),
       );
 
-      return _mapperResponse(response);
+      return _parseHttpResponse(response);
     } on DioException catch (error) {
-      throw _mapperDioError(error);
+      throw _parseHttpException(error);
     } finally {
       dio.close();
     }
   }
 
-  HttpException _mapperDioError(DioException error) {
-    int? statusCode;
+  HttpException _parseHttpException(DioException error) {
+    int? statusCode = error.response?.statusCode;
+    String? statusMessage = error.response?.statusMessage;
+
+    final internalError = error.error;
+
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
@@ -213,22 +217,23 @@ class HttpClientImpl implements HttpClient {
         statusCode = 502;
       case DioExceptionType.unknown:
     }
+
+    if (internalError is SocketException) {
+      statusMessage = internalError.message;
+      if (internalError.address == null && internalError.port == null) {
+        statusCode = -1; // No internet connection
+      }
+    }
+
     return HttpException(
-      statusCode: error.response?.statusCode ?? statusCode ?? -1,
-      statusMessage: error.response?.statusMessage,
+      statusCode: statusCode ?? -1,
+      statusMessage: statusMessage,
       message: error.message ?? error.error.toString(),
       data: error.response?.data,
     );
   }
 
-  HttpResponse<T> _mapperResponse<T>(Response<T>? response) {
-    if (response == null) {
-      throw HttpException();
-      // throw HttpException(
-      //   response: HttpResponse(statusCode: 500),
-      // );
-    }
-
+  HttpResponse<T> _parseHttpResponse<T>(Response<T> response) {
     if (response.statusCode == 200 && response.data != null) {
       if (response.data is Map<String, dynamic>) {
         final data = response.data! as Map<String, dynamic>;

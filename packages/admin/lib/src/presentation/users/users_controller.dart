@@ -27,11 +27,14 @@ class UsersController extends BaseController {
   }
 
   Future<void> getAllUsers() async {
-    isLoading.value = true;
-    errorMessage.value = '';
     try {
+      isLoading.value = true;
+      errorMessage.value = '';
       users.value = await _getAllUsersUseCase.call(0);
-    } catch (error) {
+    } on BaseException catch (error) {
+      errorMessage.value = error.message.tr;
+    } catch (error, stackTrace) {
+      Log.error('getAllUsers', error: error, stackTrace: stackTrace);
       errorMessage.value = error.toString();
     } finally {
       isLoading.value = false;

@@ -293,9 +293,9 @@ Future<void> notificationBackgroundHandler(RemoteMessage message) async {
       permanent: true,
     );
 
-    CrashlyticsModuleBindings().injectDependencies();
-    FirebaseInitializeModuleBindings().injectDependencies();
-    AnalyticsModuleBindings().injectDependencies();
+    await CrashlyticsModuleBindings().injectDependencies();
+    await FirebaseInitializeModuleBindings().injectDependencies();
+    await AnalyticsModuleBindings().injectDependencies();
 
     await CrashlyticsServiceManager.instance.init();
     await AppBinding.find<FirebaseInitializeService>().init();

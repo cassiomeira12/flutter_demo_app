@@ -1,7 +1,7 @@
 abstract class BaseEntity {
   final String objectId;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   BaseEntity({
     required this.objectId,
@@ -11,15 +11,15 @@ abstract class BaseEntity {
 
   BaseEntity copyWith({
     String? objectId,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'objectId': objectId,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt?.toString(),
+      'updatedAt': updatedAt?.toString(),
     };
   }
 }

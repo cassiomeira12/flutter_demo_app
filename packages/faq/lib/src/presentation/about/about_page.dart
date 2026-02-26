@@ -31,7 +31,7 @@ class AboutPage extends AppView<AboutController> {
                         if (!context.mounted) return;
                         DialogWidget.showError(
                           context,
-                          message: error.toString().tr,
+                          message: error.message.tr,
                         );
                       } catch (error) {
                         if (!context.mounted) return;

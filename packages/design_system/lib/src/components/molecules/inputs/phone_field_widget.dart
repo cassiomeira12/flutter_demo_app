@@ -1,5 +1,3 @@
-// ignore_for_file: use_key_in_widget_constructors
-
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 

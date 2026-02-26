@@ -1,4 +1,4 @@
 abstract class SecurityEncryptUseCase {
-  String encrypt({required String password, required String data});
-  String decrypt({required String password, required String data});
+  Future<String> encrypt({required String password, required String data});
+  Future<String> decrypt({required String password, required String data});
 }

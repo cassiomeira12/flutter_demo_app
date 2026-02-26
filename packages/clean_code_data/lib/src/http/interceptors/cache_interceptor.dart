@@ -30,7 +30,7 @@ class CacheInterceptor extends Interceptor {
 
       const String encryptKey = String.fromEnvironment('encrypter_key');
 
-      final String dataEncrypted = _securityEncryptUseCase.encrypt(
+      final String dataEncrypted = await _securityEncryptUseCase.encrypt(
         password: encryptKey,
         data: jsonEncode(response.data),
       );
@@ -71,7 +71,7 @@ class CacheInterceptor extends Interceptor {
         if (bodyEncrypted != null && bodyEncrypted.isNotEmpty) {
           const String encryptKey = String.fromEnvironment('encrypter_key');
 
-          final String body = _securityEncryptUseCase.decrypt(
+          final String body = await _securityEncryptUseCase.decrypt(
             password: encryptKey,
             data: bodyEncrypted,
           );

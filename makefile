@@ -1,7 +1,8 @@
 PLATFORMS := android ios macos web
+BUILD_MODES := debug profile release
 ENVS := $(shell ls .env*)
 GIT_COMMITS_COUNT := $(shell git rev-list --count HEAD ^master)
-BUILD_NAME := $(shell echo "$(shell grep 'version: ' pubspec.yaml)" | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\+.*/\1/')
+BUILD_NAME := $(shell echo "$(shell grep 'version: ' pubspec.yaml)" | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\-.*/\1/')
 CURRENT_GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 
 .PHONY: rebase
@@ -16,6 +17,38 @@ push:
 	@echo ""
 	@git push --force-with-lease
 
+.PHONY: logs
+logs:
+	@echo ""
+	@read -p "Enter the project name: " project_name; \
+	echo ""; \
+	echo "----------------------------------------------"; \
+	echo ""; \
+	echo "# $${project_name} v${BUILD_NAME} [$(shell date '+%d-%m-%Y')]"; \
+	echo ""; \
+	git log -n ${GIT_COMMITS_COUNT} --pretty=format:"- %s"; \
+	echo ""; \
+	echo "----------------------------------------------"; \
+	echo ""; \
+
+.PHONY: delete-branch
+delete-branch:
+	@echo ""
+	@read -p "Enter the branch to delete: " branch_selected; \
+	echo ""; \
+	read -p "Delete local branch? [y/n]: " delete_local; \
+	echo ""; \
+	if [[ $$delete_local == "y" ]]; then \
+		git branch --delete --force $${branch_selected}
+	fi; \
+	echo ""; \
+	read -p "Delete remote branch? [y/n]: " delete_remote; \
+	echo ""; \
+	if [[ $$delete_remote == "y" ]]; then \
+		git push origin --delete $${branch_selected}
+	fi; \
+	echo ""; \
+
 .PHONY: merge
 merge:
 	@echo ""
@@ -25,8 +58,8 @@ merge:
 	echo ""; \
 	git merge --squash $${branch_selected} --strategy-option theirs; \
 
-.PHONY: recreate_branch
-recreate_branch:
+.PHONY: recreate-branch
+recreate-branch:
 	@echo ""
 	@read -p "Enter the branch to recreate: " branch_selected; \
 	echo ""; \
@@ -47,8 +80,8 @@ tag:
 	git tag -a $${app_name}-v${BUILD_NAME} -m "$${app_name} Release v${BUILD_NAME}"
 	git tag
 
-.PHONY: clean_build
-clean_build:
+.PHONY: clean-build
+clean-build:
 	@echo ""
 	@echo "deleting build folders..."
 	@rm -rf build .dart_tool/flutter_build android/build ios/build
@@ -64,16 +97,16 @@ clean:
 	@rm -rf pubspec.lock
 	@rm -rf ios/Pods ios/Podfile.lock
 	@rm -rf macos/Pods macos/Podfile.lock
-	@$(MAKE) clean_build
+	@$(MAKE) clean-build
 	@$(MAKE) pubget
 
-.PHONY: full_clean
-full_clean:
+.PHONY: full-clean
+full-clean:
 	@echo ""
 	@echo "full clean flutter..."
 	@rm -rf .dart_tool .idea build .flutter-plugins-dependencies
 	dart pub cache clean --force
-	@$(MAKE) clean_build
+	@$(MAKE) clean-build
 	@flutter precache --ios --macos
 	@$(MAKE) pubget
 
@@ -87,7 +120,7 @@ pubget:
 	@echo "pod install macOS..."
 	@cd macos && pod install --repo-update > /dev/null && cd ..
 
-choice_env:
+choice-env:
 	@echo ""
 	@echo "Please choose an env:"
 	@i=1; for option in $(shell echo ${ENVS}); do \
@@ -101,11 +134,29 @@ choice_env:
 		echo "Error: No env was selected."; \
 		rm -rf .env_selected; \
 	else \
-		APP_NAME=$$(echo ${ENVS} | cut -d ' ' -f $$env_choice); \
-		echo "$$APP_NAME" > .env_selected; \
+		CHOICE_SELECTED=$$(echo ${ENVS} | cut -d ' ' -f $$env_choice); \
+		echo "$$CHOICE_SELECTED" > .env_selected; \
 	fi;
 
-choice_platform:
+choice-build-mode:
+	@echo ""
+	@echo "Please choose an build mode:"
+	@i=1; for option in $(shell echo ${BUILD_MODES}); do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done
+	@echo ""
+	@read -p "Enter the number of the build mode: " build_mode_choice; \
+	echo ""; \
+	if [ -z "$$build_mode_choice" ]; then \
+		echo "Error: No build mode was selected."; \
+		rm -rf .build_mode_selected; \
+	else \
+		CHOICE_SELECTED=$$(echo ${BUILD_MODES} | cut -d ' ' -f $$build_mode_choice); \
+		echo "$$CHOICE_SELECTED" > .build_mode_selected; \
+	fi;
+
+choice-platform:
 	@echo ""
 	@echo "Please choose an platform to build:"
 	@i=1; for option in $(shell echo ${PLATFORMS}); do \
@@ -119,62 +170,77 @@ choice_platform:
 		echo "Error: No platform was selected."; \
 		rm -rf .platform_selected; \
 	else \
-		APP_NAME=$$(echo ${PLATFORMS} | cut -d' ' -f$$platform_choice); \
-		echo "$$APP_NAME" > .platform_selected; \
+		CHOICE_SELECTED=$$(echo ${PLATFORMS} | cut -d' ' -f$$platform_choice); \
+		echo "$$CHOICE_SELECTED" > .platform_selected; \
 	fi;
 
 .PHONY: build
 build:
-	@$(MAKE) choice_platform
+	@$(MAKE) choice-platform
 	@if [ -f .platform_selected ]; then \
 		PLATFORM=$$(cat .platform_selected); \
 		rm -rf .platform_selected; \
-		"$(MAKE)" choice_env; \
+		"$(MAKE)" choice-env; \
 		if [[ $$PLATFORM == "android" ]]; then \
-			"$(MAKE)" build_android; \
+			"$(MAKE)" build-android; \
 		fi; \
 		if [[ $$PLATFORM == "ios" ]]; then \
-			"$(MAKE)" build_ios; \
+			"$(MAKE)" build-ios; \
 		fi; \
 		if [[ $$PLATFORM == "macos" ]]; then \
-			"$(MAKE)" build_macos; \
+			"$(MAKE)" build-macos; \
 		fi; \
 		if [[ $$PLATFORM == "web" ]]; then \
-			"$(MAKE)" build_web; \
+			"$(MAKE)" build-web; \
 		fi; \
 	fi; \
 
-.PHONY: build_android
-build_android:
+.PHONY: build-android
+build-android:
 	@if [[ ! (-f .env_selected) ]]; then \
-		$(MAKE) choice_env; \
+		$(MAKE) choice-env; \
+	fi; \
+	if [[ ! (-f .build_mode_selected) ]]; then \
+		$(MAKE) choice-build-mode; \
 	fi; \
 	echo "Build Android"; \
 	ENV=$$(cat .env_selected); \
-	rm -rf .env_selected; \
-	ARGS="--dart-define-from-file=$$ENV"; \
+	BUILD_MODE=$$(cat .build_mode_selected); \
+	BUILD_NAME_SUFFIX=""; \
 	BUILD_NUMBER=${GIT_COMMITS_COUNT}; \
-	BUILD_FOLDER="v${BUILD_NAME}+$${BUILD_NUMBER}"; \
+	if [[ $$BUILD_MODE == "debug" ]]; then \
+		BUILD_NAME_SUFFIX="-dev"; \
+	fi; \
+	if [[ $$BUILD_MODE == "profile" ]]; then \
+		BUILD_NAME_SUFFIX="-rc.${GIT_COMMITS_COUNT}"; \
+	fi; \
+	if [[ $$BUILD_MODE != "release" ]]; then \
+		BUILD_NUMBER=1; \
+	fi; \
+	rm -rf .env_selected .build_mode_selected; \
+	ARGS="--$$BUILD_MODE --dart-define-from-file=$$ENV --no-tree-shake-icons"; \
+	BUILD_FOLDER="v${BUILD_NAME}"; \
 	ENV_APP_NAME=$$(grep '"app_name": ' $$ENV | sed 's/"app_name": //'); \
 	ENV_APP_NAME=$${ENV_APP_NAME//[\", ]/}; \
 	APPLE_DEVELOPMENT_TEAM=$$(grep '"apple_development_team": ' $$ENV | sed 's/"apple_development_team": //'); \
 	APPLE_DEVELOPMENT_TEAM=$${APPLE_DEVELOPMENT_TEAM//[\", ]/}; \
 	BASE_HREF=$$(grep '"baseHREF": ' $$ENV | sed 's/"baseHREF": //'); \
 	BASE_HREF=$${BASE_HREF//[\", ]/}; \
-	echo "App: $${ENV_APP_NAME}"; \
-	echo "Build Name: ${BUILD_NAME}"; \
+	BUILD_NAME_FULL="${BUILD_NAME}$$BUILD_NAME_SUFFIX"; \
+	echo "App: $${ENV_APP_NAME} [$$BUILD_MODE]"; \
+	echo "Build Name: $${BUILD_NAME_FULL}"; \
 	echo "Build Number: $${BUILD_NUMBER}"; \
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android"; \
 	echo ""; \
 	"$(MAKE)" clean; \
-	flutter build apk --release $$ARGS --no-tree-shake-icons --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+	flutter build apk $$ARGS --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
 	if [ -d "build/app/outputs/flutter-apk" ]; then \
-		cp -r build/app/outputs/flutter-apk/*.apk releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.apk; \
+		cp -r build/app/outputs/flutter-apk/*.apk releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.apk; \
 	fi; \
 	if [ -d "build/app/outputs/bundle/release" ]; then \
-		cp -r build/app/outputs/bundle/release/*.aab releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.aab; \
+		cp -r build/app/outputs/bundle/release/*.aab releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.aab; \
 	fi; \
 	if [ -d "build/app/outputs/bundle/release" ]; then \
 		echo "Generate Android Native Symbols"; \
@@ -187,25 +253,40 @@ build_android:
 	fi; \
 	open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 
-.PHONY: build_ios
-build_ios:
+.PHONY: build-ios
+build-ios:
 	@if [[ ! (-f .env_selected) ]]; then \
-		$(MAKE) choice_env; \
+		$(MAKE) choice-env; \
+	fi; \
+	if [[ ! (-f .build_mode_selected) ]]; then \
+		$(MAKE) choice-build-mode; \
 	fi; \
 	echo "Build iOS"; \
 	ENV=$$(cat .env_selected); \
-	rm -rf .env_selected; \
-	ARGS="--dart-define-from-file=$$ENV"; \
+	BUILD_MODE=$$(cat .build_mode_selected); \
+	BUILD_NAME_SUFFIX=""; \
 	BUILD_NUMBER=${GIT_COMMITS_COUNT}; \
-	BUILD_FOLDER="v${BUILD_NAME}+$${BUILD_NUMBER}"; \
+	if [[ $$BUILD_MODE == "debug" ]]; then \
+		BUILD_NAME_SUFFIX="-dev"; \
+	fi; \
+	if [[ $$BUILD_MODE == "profile" ]]; then \
+		BUILD_NAME_SUFFIX="-rc.${GIT_COMMITS_COUNT}"; \
+	fi; \
+	if [[ $$BUILD_MODE != "release" ]]; then \
+		BUILD_NUMBER=1; \
+	fi; \
+	rm -rf .env_selected .build_mode_selected; \
+	ARGS="--$$BUILD_MODE --dart-define-from-file=$$ENV --no-tree-shake-icons"; \
+	BUILD_FOLDER="v${BUILD_NAME}"; \
 	ENV_APP_NAME=$$(grep '"app_name": ' $$ENV | sed 's/"app_name": //'); \
 	ENV_APP_NAME=$${ENV_APP_NAME//[\", ]/}; \
 	APPLE_DEVELOPMENT_TEAM=$$(grep '"apple_development_team": ' $$ENV | sed 's/"apple_development_team": //'); \
 	APPLE_DEVELOPMENT_TEAM=$${APPLE_DEVELOPMENT_TEAM//[\", ]/}; \
 	BASE_HREF=$$(grep '"baseHREF": ' $$ENV | sed 's/"baseHREF": //'); \
 	BASE_HREF=$${BASE_HREF//[\", ]/}; \
-	echo "App: $${ENV_APP_NAME}"; \
-	echo "Build Name: ${BUILD_NAME}"; \
+	BUILD_NAME_FULL="${BUILD_NAME}$$BUILD_NAME_SUFFIX"; \
+	echo "App: $${ENV_APP_NAME} [$$BUILD_MODE]"; \
+	echo "Build Name: $${BUILD_NAME_FULL}"; \
 	echo "Build Number: $${BUILD_NUMBER}"; \
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
@@ -213,15 +294,15 @@ build_ios:
 	echo ""; \
 	"$(MAKE)" clean; \
 	if [[ $$APPLE_DEVELOPMENT_TEAM ]]; then \
-		flutter build ipa --release $$ARGS --export-method ad-hoc --no-tree-shake-icons --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+		flutter build ipa $$ARGS --export-method ad-hoc --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
 	else \
-		flutter build ipa --release $$ARGS --export-method ad-hoc --no-codesign --no-tree-shake-icons --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+		flutter build ipa $$ARGS --export-method ad-hoc --no-codesign --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
 	fi; \
 	if [ -d "build/ios/archive" ]; then \
-		cp -r build/ios/archive/*.xcarchive releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.xcarchive; \
+		cp -r build/ios/archive/*.xcarchive releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.xcarchive; \
 	fi; \
 	if [ -d "build/ios/ipa" ]; then \
-		cp -r build/ios/ipa/*.ipa releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.ipa; \
+		cp -r build/ios/ipa/*.ipa releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.ipa; \
 	fi; \
 	if [ -d "build/ios/archive" ]; then \
 		echo "Generate iOS dSYMs"; \
@@ -234,24 +315,24 @@ build_ios:
 	fi; \
 	open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 
-.PHONY: build_macos
-build_macos:
+.PHONY: build-macos
+build-macos:
 	@if [[ ! (-f .env_selected) ]]; then \
-		$(MAKE) choice_env; \
+		$(MAKE) choice-env; \
 	fi; \
 	echo "Build MacOS"; \
 	ENV=$$(cat .env_selected); \
 	rm -rf .env_selected; \
-	ARGS="--dart-define-from-file=$$ENV"; \
+	ARGS="--release --dart-define-from-file=$$ENV --no-tree-shake-icons"; \
 	BUILD_NUMBER=${GIT_COMMITS_COUNT}; \
-	BUILD_FOLDER="v${BUILD_NAME}+$${BUILD_NUMBER}"; \
+	BUILD_FOLDER="v${BUILD_NAME}"; \
 	ENV_APP_NAME=$$(grep '"app_name": ' $$ENV | sed 's/"app_name": //'); \
 	ENV_APP_NAME=$${ENV_APP_NAME//[\", ]/}; \
 	APPLE_DEVELOPMENT_TEAM=$$(grep '"apple_development_team": ' $$ENV | sed 's/"apple_development_team": //'); \
 	APPLE_DEVELOPMENT_TEAM=$${APPLE_DEVELOPMENT_TEAM//[\", ]/}; \
 	BASE_HREF=$$(grep '"baseHREF": ' $$ENV | sed 's/"baseHREF": //'); \
 	BASE_HREF=$${BASE_HREF//[\", ]/}; \
-	echo "App: $${ENV_APP_NAME}"; \
+	echo "App: $${ENV_APP_NAME} [release]"; \
 	echo "Build Name: ${BUILD_NAME}"; \
 	echo "Build Number: $${BUILD_NUMBER}"; \
 	echo "Base HREF: $${BASE_HREF}"; \
@@ -259,30 +340,30 @@ build_macos:
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER/macOS"; \
 	echo ""; \
 	"$(MAKE)" clean; \
-	flutter build macos --release $$ARGS --no-tree-shake-icons --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+	flutter build macos $$ARGS --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
 	if [ -d "build/macos/Build/Products/Release" ]; then \
 		cp -r build/macos/Build/Products/Release/*.app releases/$$ENV_APP_NAME/$$BUILD_FOLDER/macOS/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.app; \
 	fi; \
 	open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 
-.PHONY: build_web
-build_web:
+.PHONY: build-web
+build-web:
 	@if [[ ! (-f .env_selected) ]]; then \
-		$(MAKE) choice_env; \
+		$(MAKE) choice-env; \
 	fi; \
 	echo "Build Web"; \
 	ENV=$$(cat .env_selected); \
 	rm -rf .env_selected; \
-	ARGS="--dart-define-from-file=$$ENV"; \
+	ARGS="--release --dart-define-from-file=$$ENV --no-tree-shake-icons"; \
 	BUILD_NUMBER=${GIT_COMMITS_COUNT}; \
-	BUILD_FOLDER="v${BUILD_NAME}+$${BUILD_NUMBER}"; \
+	BUILD_FOLDER="v${BUILD_NAME}"; \
 	ENV_APP_NAME=$$(grep '"app_name": ' $$ENV | sed 's/"app_name": //'); \
 	ENV_APP_NAME=$${ENV_APP_NAME//[\", ]/}; \
 	APPLE_DEVELOPMENT_TEAM=$$(grep '"apple_development_team": ' $$ENV | sed 's/"apple_development_team": //'); \
 	APPLE_DEVELOPMENT_TEAM=$${APPLE_DEVELOPMENT_TEAM//[\", ]/}; \
 	BASE_HREF=$$(grep '"baseHREF": ' $$ENV | sed 's/"baseHREF": //'); \
 	BASE_HREF=$${BASE_HREF//[\", ]/}; \
-	echo "App: $${ENV_APP_NAME}"; \
+	echo "App: $${ENV_APP_NAME} [release]"; \
 	echo "Build Name: ${BUILD_NAME}"; \
 	echo "Build Number: $${BUILD_NUMBER}"; \
 	echo "Base HREF: $${BASE_HREF}"; \
@@ -290,8 +371,8 @@ build_web:
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 	echo ""; \
 	"$(MAKE)" clean; \
-	flutter build web --release $$ARGS --base-href $${BASE_HREF} --no-tree-shake-icons --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+	flutter build web $$ARGS --base-href $${BASE_HREF} --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
 	if [ -d "build/web" ]; then \
-		cp -r build/web/ releases/$$ENV_APP_NAME/$$BUILD_FOLDER/WebApp/; \
+		cp -r build/web/ releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Web/; \
 	fi; \
 	open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \

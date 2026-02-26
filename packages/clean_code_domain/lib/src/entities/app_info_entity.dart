@@ -16,4 +16,6 @@ class AppInfoEntity {
   });
 
   String get formattedName => '$version ($build)';
+
+  String get versionOnly => version.split('-').first;
 }

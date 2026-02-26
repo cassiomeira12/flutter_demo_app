@@ -43,8 +43,12 @@ class WebVisitHistoryModel extends WebVisitHistoryEntity {
         isp: map['isp'] as String?,
         org: map['org'] as String?,
         ispOrg: map['as'] as String?,
-        createdAt: map['createdAt'] ?? '',
-        updatedAt: map['updatedAt'] ?? '',
+        createdAt: map['createdAt'] == null
+            ? null
+            : DateTime.parse(map['createdAt']).toLocal(),
+        updatedAt: map['updatedAt'] == null
+            ? null
+            : DateTime.parse(map['updatedAt']).toLocal(),
       );
     } catch (error, stacktrace) {
       throw BaseException(

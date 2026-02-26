@@ -22,10 +22,10 @@ class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     required String currentPassword,
     required String newPassword,
   }) async {
-    final encryptedCurrentPassword = _encryptServerUseCase.call(
+    final encryptedCurrentPassword = await _encryptServerUseCase.call(
       currentPassword,
     );
-    final encryptedNewPassword = _encryptServerUseCase.call(newPassword);
+    final encryptedNewPassword = await _encryptServerUseCase.call(newPassword);
 
     final user = await _service.changePassword(
       username: username,

@@ -44,6 +44,10 @@ class LocalPushNotifications implements PushNotificationsService {
       macOS: appleSettings,
     );
 
+    if (Platform.isAndroid) {
+      await _createAndroidNotificationChannel();
+    }
+
     await _notification.initialize(
       settings,
       onDidReceiveNotificationResponse: (notification) async {
@@ -142,6 +146,28 @@ class LocalPushNotifications implements PushNotificationsService {
     );
   }
 
+  Future<void> _createAndroidNotificationChannel() async {
+    try {
+      final androidPlugin = _notification
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >();
+      androidPlugin?.createNotificationChannel(
+        AndroidNotificationChannel(
+          _androidNotificationChannel,
+          _appName,
+          importance: Importance.max,
+        ),
+      );
+    } catch (error, stackTrace) {
+      Log.error(
+        'createAndroidNotificationChannel',
+        error: error,
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
   Future<NotificationDetails> _createDetails({
     String? channelId,
     String? priority,
@@ -199,12 +225,13 @@ class LocalPushNotifications implements PushNotificationsService {
     final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId ?? _androidNotificationChannel,
       _appName,
+      ledOnMs: 1000,
+      ledOffMs: 500,
+      fullScreenIntent: true,
       importance: Importance.max,
       priority: Priority.values.firstWhere(
         (value) => value.name == (priority ?? 'high'),
       ),
-      ledOnMs: 1000,
-      ledOffMs: 500,
       visibility: NotificationVisibility.values.firstWhere(
         (value) => value.name == (visibility ?? 'public'),
       ),

@@ -17,7 +17,9 @@ class CoreModuleBindings implements ModuleBinding {
     );
 
     AppBinding.lazyPut<ChangeLocaleNativeMethod>(
-      () => ChangeLocaleNativeMethod(methodChannel: AppBinding.find()),
+      () => ChangeLocaleNativeMethod(
+        methodChannel: AppBinding.find(),
+      ),
     );
 
     await InfraModuleBindings().injectDependencies();
@@ -30,27 +32,15 @@ class CoreModuleBindings implements ModuleBinding {
     );
 
     AppBinding.put<FeatureFlagLifecycleController>(
-      FeatureFlagLifecycleController(),
+      FeatureFlagLifecycleController(
+        appInfoEntity: AppBinding.find(),
+        getDeviceInfoUseCase: AppBinding.find(),
+      ),
       permanent: true,
     );
 
     AppBinding.put<AppSecurityManager>(
       AppAppSecurityManager(localStorageUseCase: AppBinding.find()),
-      permanent: true,
-    );
-
-    AppBinding.put<ThemeController>(
-      AppThemeController(
-        localStorageUseCase: AppBinding.find(),
-        setThemData: (theme) {
-          Get.changeTheme(theme);
-          Get.forceAppUpdate();
-        },
-        setThemMode: (mode) {
-          Get.changeThemeMode(mode);
-          Get.forceAppUpdate();
-        },
-      ),
       permanent: true,
     );
 

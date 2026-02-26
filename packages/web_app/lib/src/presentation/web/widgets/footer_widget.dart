@@ -9,11 +9,11 @@ class FooterWidget extends AppView<WebController> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(
-        horizontal: ResponsiveSizeHelper.width(20),
-        vertical: ResponsiveSizeHelper.width(20),
-      ),
       color: Theme.of(context).primaryColor,
+      padding: EdgeInsets.symmetric(
+        horizontal: ResponsiveSizeHelper.width(30),
+        vertical: ResponsiveSizeHelper.height(100),
+      ),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         alignment: WrapAlignment.spaceEvenly,

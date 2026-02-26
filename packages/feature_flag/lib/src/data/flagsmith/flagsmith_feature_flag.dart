@@ -31,7 +31,7 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
       );
       initialOfflineConfigs = jsonDecode(initialOfflineConfigsFile);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error('initialOfflineConfigs', error: error, stackTrace: stackTrace);
       initialOfflineConfigs = {};
     }
 
@@ -41,8 +41,8 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
         baseURI: baseURI,
         storageType: StorageType.custom,
         caches: true,
-        isDebug: kDebugMode,
-        enableAnalytics: kReleaseMode,
+        isDebug: !kReleaseMode,
+        enableAnalytics: false,
       ),
       storage: SharedPreferencesStore(localStorageUseCase: _localStorage),
       seeds: List.from(initialOfflineConfigs['flags'] ?? []).map((json) {
@@ -55,19 +55,25 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
 
   @override
   Future<void> setTraits(DeviceTraits traits) async {
-    _deviceIdentity = Identity(identifier: traits.deviceId);
-    for (final param in traits.toMap().entries) {
-      _traits[param.key] = Trait(key: param.key, value: param.value);
+    try {
+      _deviceIdentity = Identity(identifier: traits.deviceId);
+      for (final param in traits.toMap().entries) {
+        _traits[param.key] = Trait(key: param.key, value: param.value);
+      }
+      await _client.getFeatureFlags(
+        user: _deviceIdentity,
+        traits: _traits.values.toList(),
+      );
+    } on FlagsmithApiException catch (_) {
+      // ignore Api Exceptions
+    } catch (_) {
+      rethrow;
     }
-    await _client.getFeatureFlags(
-      user: _deviceIdentity,
-      traits: _traits.values.toList(),
-    );
   }
 
   @override
-  void setUserIdentifier(String? userId, {Map<String, dynamic>? property}) {
-    _traits['userId'] = Trait(key: 'userId', value: userId);
+  void setUserId(String? userId) {
+    _traits['userId'] = Trait(key: 'userId', value: userId ?? 'null');
   }
 
   @override
@@ -75,22 +81,29 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
     RemoteFlagsEnum flag, {
     bool reload = false,
   }) async {
-    final bool hasFlag = await _client.hasFeatureFlag(
-      flag.name,
-      user: _deviceIdentity,
-      reload: reload,
-    );
-    if (hasFlag) {
-      final bool enabled = await _client.isFeatureFlagEnabled(
+    try {
+      final bool hasFlag = await _client.hasFeatureFlag(
         flag.name,
         user: _deviceIdentity,
+        reload: reload,
       );
-      final String? value = await _client.getFeatureFlagValue(
-        flag.name,
-        user: _deviceIdentity,
-      );
-      return RemoteFlag(isEnabled: enabled, value: value);
+      if (hasFlag) {
+        final bool enabled = await _client.isFeatureFlagEnabled(
+          flag.name,
+          user: _deviceIdentity,
+        );
+        final String? value = await _client.getFeatureFlagValue(
+          flag.name,
+          user: _deviceIdentity,
+        );
+        return RemoteFlag(isEnabled: enabled, value: value);
+      }
+      return null;
+    } on FlagsmithApiException catch (_) {
+      // ignore Api Exceptions
+      return null;
+    } catch (_) {
+      rethrow;
     }
-    return null;
   }
 }

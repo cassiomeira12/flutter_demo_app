@@ -24,9 +24,9 @@
       "toolArgs": [
         // "--verbose",
         "--${input:mode}",
-        "--dart-define-from-file=${input:env}",
-        "--web-port=1203",
         "--web-hostname=localhost",
+        "--web-port=1203",
+        "--dart-define-from-file=${input:env}",
         "--web-experimental-hot-reload"
       ]
     },
@@ -39,9 +39,10 @@
         "--${input:mode}",
         "-d",
         "web-server",
-        "--web-port=1203",
         "--web-hostname=localhost",
-        "--dart-define-from-file=${input:env}"
+        "--web-port=1203",
+        "--dart-define-from-file=${input:env}",
+        "--web-experimental-hot-reload"
       ]
     },
     {
@@ -51,9 +52,9 @@
       "toolArgs": [
         "--no-build",
         "--${input:mode}",
-        "--dart-define-from-file=${input:env}",
-        "--web-port=1203",
         "--web-hostname=localhost",
+        "--web-port=1203",
+        "--dart-define-from-file=${input:env}",
         "--web-experimental-hot-reload"
       ]
     },

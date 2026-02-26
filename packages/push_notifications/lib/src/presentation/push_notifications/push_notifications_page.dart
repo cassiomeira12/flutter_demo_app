@@ -136,7 +136,7 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
                                   if (!context.mounted) return;
                                   DialogWidget.showError(
                                     context,
-                                    message: error.toString().tr,
+                                    message: error.message.tr,
                                   );
                                 }
                               }
@@ -190,7 +190,7 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
                             if (!context.mounted) return;
                             DialogWidget.showError(
                               context,
-                              message: error.toString().tr,
+                              message: error.message.tr,
                             );
                           }
                         }

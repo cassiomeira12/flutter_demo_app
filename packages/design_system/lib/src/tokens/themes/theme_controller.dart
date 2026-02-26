@@ -5,8 +5,6 @@ abstract class ThemeController {
 
   String get currentThemeData;
 
-  Future<void> init();
-
   void addCustomThemes(List<Map<String, ThemeData>> customThemes);
 
   Future<void> changeTheme(String theme);

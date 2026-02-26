@@ -20,7 +20,7 @@ class RefreshTokenInterceptor extends Interceptor {
       if (hasToken) {
         final bool serverError = err.response?.statusCode == 500;
         final session = AppBinding.find<SessionEntity>();
-        if (serverError && session.token != null) {
+        if (serverError && session.isAuthenticated) {
           Log.warning(
             'Response ERROR ${err.requestOptions.method} \n'
             'path: ${err.requestOptions.uri} \n'

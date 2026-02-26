@@ -1,3 +1,4 @@
+import 'package:analytics/src/data/aptabase_storage_manager.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -15,14 +16,19 @@ class AptabaseAnalytics implements AnalyticsService {
       Log.info('Aptabase is not supported on Web');
       return;
     }
-    await Aptabase.init(
+
+    final StorageManager storageManager = AptabaseStorageManager();
+    await storageManager.init();
+
+    Aptabase.init(
       _apiKey,
-      InitOptions(host: _apiUrl, printDebugMessages: true),
+      InitOptions(host: _apiUrl, printDebugMessages: !kReleaseMode),
+      storageManager,
     );
   }
 
   @override
-  Future<void> setUserId(String userId) async {}
+  Future<void> setUserId(String? userId) async {}
 
   @override
   Future<void> setUserProperty({

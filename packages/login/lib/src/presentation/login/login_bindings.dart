@@ -14,6 +14,7 @@ class LoginBindings extends Bindings {
         updateUserLocaleUseCase: AppBinding.find(),
         uploadInstallationAppUseCase: AppBinding.find(),
         appInfoEntity: AppBinding.find(),
+        featureFlagLifecycleController: AppBinding.find(),
       ),
     );
   }

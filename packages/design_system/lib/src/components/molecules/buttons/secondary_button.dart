@@ -59,7 +59,9 @@ class SecondaryButton extends StatelessWidget {
                 HapticFeedback.lightImpact();
               },
         style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(theme.highlightColor),
+          backgroundColor: WidgetStateProperty.all(
+            backgroundColor ?? theme.highlightColor,
+          ),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(5),

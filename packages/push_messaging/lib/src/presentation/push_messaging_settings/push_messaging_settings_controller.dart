@@ -9,6 +9,7 @@ class PushMessagingSettingsController extends BaseController {
   final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
   final PushMessagingService _messagingService;
   final PushNotificationsService _pushNotificationsService;
+  final ClipboardUseCase _clipboardUseCase;
 
   PushMessagingSettingsController({
     required TestPushNotificationUseCase testPushNotificationUseCase,
@@ -18,15 +19,18 @@ class PushMessagingSettingsController extends BaseController {
     required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required PushMessagingService messagingService,
     required PushNotificationsService pushNotificationsService,
+    required ClipboardUseCase clipboardUseCase,
   }) : _testPushNotificationUseCase = testPushNotificationUseCase,
        _checkPermissionUseCase = checkPermissionUseCase,
        _requestPermissionUseCase = requestPermissionUseCase,
        _localStorageUseCase = localStorageUseCase,
        _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
        _messagingService = messagingService,
-       _pushNotificationsService = pushNotificationsService;
+       _pushNotificationsService = pushNotificationsService,
+       _clipboardUseCase = clipboardUseCase;
 
   RxBool notificationsEnabled = RxBool(false);
+  RxString pushToken = RxString('');
 
   @override
   void onReady() {
@@ -47,6 +51,10 @@ class PushMessagingSettingsController extends BaseController {
         Permission.notification,
       );
       notificationsEnabled.value = permission.isGranted;
+      if (permission.isGranted) {
+        final String? token = await _messagingService.getToken();
+        pushToken.value = token ?? '';
+      }
     } catch (_) {
       notificationsEnabled.value = false;
     } finally {
@@ -144,6 +152,7 @@ class PushMessagingSettingsController extends BaseController {
       try {
         await _messagingService.init();
         final String? token = await _messagingService.getToken();
+        pushToken.value = token ?? '';
         Log.success(
           'Firebase Push Messaging TOKEN [$token]',
           throwsCrashlytics: false,
@@ -163,5 +172,10 @@ class PushMessagingSettingsController extends BaseController {
   Future<void> testPush() async {
     clickTagging(component: 'test_push_notification_key');
     await _testPushNotificationUseCase.call();
+  }
+
+  Future<void> copyToken() async {
+    final String? token = await _messagingService.getToken();
+    _clipboardUseCase.copy(token ?? '');
   }
 }

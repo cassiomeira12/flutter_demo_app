@@ -20,6 +20,11 @@ class OnClickedNotificationCallbackBase
               'As configurações de notificações estão funcionando corretamente.',
         );
         return;
+      case 'update-available':
+        if (AppBinding.hasInstance<FeatureFlagLifecycleController>()) {
+          AppBinding.find<FeatureFlagLifecycleController>().onAppForeground();
+        }
+        return;
       default:
     }
   }

@@ -66,11 +66,8 @@ class GrowthBookFeatureFlag implements FeatureFlagService {
   }
 
   @override
-  void setUserIdentifier(String? userId, {Map<String, dynamic>? property}) {
-    final properties = {
-      'userId': userId,
-      ...property ?? {},
-    };
+  void setUserId(String? userId) {
+    final properties = {'userId': userId};
     Log.info(
       'GrowthBook Feature Flag setUserIdentifier\n'
       '$properties',

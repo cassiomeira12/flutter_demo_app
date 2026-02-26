@@ -1,3 +1,4 @@
+import 'package:clean_code_data/src/use_cases/use_cases.dart';
 import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
 
@@ -38,16 +39,19 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
 
   @override
   Future<File?> readFile({required String path}) async {
-    final File file = File(path);
-
-    try {
-      if (await file.exists()) {
-        return file;
-      }
-      return null;
-    } catch (error) {
-      return null;
-    }
+    return await IsolateUseCase.isolate<File?>(
+      builder: () async {
+        try {
+          final File file = File(path);
+          if (await file.exists()) {
+            return file;
+          }
+          return null;
+        } catch (error) {
+          return null;
+        }
+      },
+    );
   }
 
   @override
@@ -55,16 +59,19 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
     required String path,
     required List<int> bytes,
   }) async {
-    final File file = File(path);
-
-    try {
-      if (await file.exists()) {
-        await file.delete();
-      }
-      return await file.writeAsBytes(bytes);
-    } catch (error) {
-      rethrow;
-    }
+    return await IsolateUseCase.isolate<File>(
+      builder: () async {
+        try {
+          final File file = File(path);
+          if (await file.exists()) {
+            await file.delete();
+          }
+          return await file.writeAsBytes(bytes);
+        } catch (error) {
+          rethrow;
+        }
+      },
+    );
   }
 
   @override
@@ -72,15 +79,18 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
     required String path,
     required String contents,
   }) async {
-    final File file = File(path);
-
-    try {
-      if (await file.exists()) {
-        await file.delete();
-      }
-      return await file.writeAsString(contents);
-    } catch (error) {
-      rethrow;
-    }
+    return await IsolateUseCase.isolate<File>(
+      builder: () async {
+        try {
+          final File file = File(path);
+          if (await file.exists()) {
+            await file.delete();
+          }
+          return await file.writeAsString(contents);
+        } catch (error) {
+          rethrow;
+        }
+      },
+    );
   }
 }

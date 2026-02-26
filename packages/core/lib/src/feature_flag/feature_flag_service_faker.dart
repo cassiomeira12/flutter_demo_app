@@ -24,7 +24,7 @@ class FeatureFlagServiceFaker implements FeatureFlagService {
   }
 
   @override
-  void setUserIdentifier(String? userId, {Map<String, dynamic>? property}) {
-    Log.info('setUserIdentifier userId: $userId property: $property');
+  void setUserId(String? userId) {
+    Log.info('setUserIdentifier userId: $userId');
   }
 }

@@ -4,16 +4,14 @@ import 'package:dependency/dependency.dart';
 class SplashController extends BaseController {
   final GetUserDataUseCase _getUserDataUseCase;
   final LocalStorageUseCase _localStorageUseCase;
-  final UserAuthStorageUseCase _authStorageUseCase;
-  final GetDeviceInfoUseCase _getDeviceInfoUseCase;
-  final GetAppInfoUseCase _getAppInfoUseCase;
+  final SessionEntity _sessionEntity;
+  final AppInfoEntity _appInfoEntity;
   final CheckPermissionUseCase _checkPermissionUseCase;
   final PushMessagingService _pushMessagingService;
   final PushNotificationsService _pushNotificationsService;
   final GetDeviceLocaleUseCase _getDeviceLocaleUseCase;
   final FirebaseInitializeService _firebaseInitializeService;
   final AppsFlyerService _appsFlyerService;
-  final ThemeController _themeController;
   final AppSecurityManager _appSecurityManager;
   final GetInstallationAppUseCase _getInstallationAppUseCase;
   final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
@@ -22,38 +20,32 @@ class SplashController extends BaseController {
   SplashController({
     required GetUserDataUseCase getUserDataUseCase,
     required LocalStorageUseCase localStorageUseCase,
-    required UserAuthStorageUseCase authStorageUseCase,
-    required GetDeviceInfoUseCase getDeviceInfoUseCase,
-    required GetAppInfoUseCase getAppInfoUseCase,
+    required SessionEntity sessionEntity,
+    required AppInfoEntity appInfoEntity,
     required CheckPermissionUseCase checkPermissionUseCase,
     required PushMessagingService pushMessagingService,
     required PushNotificationsService pushNotificationsService,
     required GetDeviceLocaleUseCase getDeviceLocaleUseCase,
     required FirebaseInitializeService firebaseInitializeService,
     required AppsFlyerService appsFlyerService,
-    required ThemeController themeController,
     required AppSecurityManager appSecurityManager,
     required GetInstallationAppUseCase getInstallationAppUseCase,
     required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required FeatureFlagLifecycleController featureFlagLifecycleController,
   }) : _getUserDataUseCase = getUserDataUseCase,
        _localStorageUseCase = localStorageUseCase,
-       _authStorageUseCase = authStorageUseCase,
-       _getDeviceInfoUseCase = getDeviceInfoUseCase,
-       _getAppInfoUseCase = getAppInfoUseCase,
+       _sessionEntity = sessionEntity,
+       _appInfoEntity = appInfoEntity,
        _checkPermissionUseCase = checkPermissionUseCase,
        _pushMessagingService = pushMessagingService,
        _pushNotificationsService = pushNotificationsService,
        _getDeviceLocaleUseCase = getDeviceLocaleUseCase,
        _firebaseInitializeService = firebaseInitializeService,
        _appsFlyerService = appsFlyerService,
-       _themeController = themeController,
        _appSecurityManager = appSecurityManager,
        _getInstallationAppUseCase = getInstallationAppUseCase,
        _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
        _featureFlagLifecycleController = featureFlagLifecycleController;
-
-  late AppInfoEntity _appInfoEntity;
 
   @override
   void onInit() {
@@ -65,31 +57,55 @@ class SplashController extends BaseController {
   Future<void> onReady() async {
     super.onReady();
 
+    final startFirebaseInitializeTimestamp = DateTime.timestamp();
     await _firebaseInitializeService.init();
-    await CrashlyticsServiceManager.instance.init();
+    final endFirebaseInitializeTimestamp = DateTime.timestamp();
 
-    await Future.wait([
-      _themeController.init(),
-      _appSecurityManager.init(),
-      _appsFlyerService.init(),
-      AnalyticsServiceManager.instance.init(),
-      FeatureFlagServiceManager.instance.init(),
-    ]);
+    final startCrashlyticsInitializeTimestamp = DateTime.timestamp();
+    await CrashlyticsServiceManager.instance.init();
+    final endCrashlyticsInitializeTimestamp = DateTime.timestamp();
+
+    final splashTrack = CrashlyticsServiceManager.instance.trackOperation(
+      name: 'splash-performance-tracking',
+      operation: 'splash-loading',
+      startTimestamp: startFirebaseInitializeTimestamp,
+    );
+
+    final firebaseInitializeTrack = splashTrack.startChild(
+      operation: 'splash-firebase-initialize-track',
+      startTimestamp: startFirebaseInitializeTimestamp,
+    );
+    firebaseInitializeTrack.finish(
+      endTimestamp: endFirebaseInitializeTimestamp,
+    );
+
+    final crashlyticsInitializeTrack = splashTrack.startChild(
+      operation: 'splash-crashlytics-initialize-track',
+      startTimestamp: startCrashlyticsInitializeTimestamp,
+    );
+    crashlyticsInitializeTrack.finish(
+      endTimestamp: endCrashlyticsInitializeTimestamp,
+    );
+
+    await PerformanceMetricUseCase.call(
+      name: 'splash-services-initialize',
+      track: splashTrack,
+      builder: () => Future.wait([
+        _appSecurityManager.init(),
+        _appsFlyerService.init(),
+        _getDeviceLocaleUseCase.call().then(Get.updateLocale),
+        AnalyticsServiceManager.instance.init(),
+        FeatureFlagServiceManager.instance.init(),
+      ]),
+    );
 
     if (!Platform.isWeb) {
       final bool introDone = await _checkIntroDone();
       if (!introDone) {
-        AppNavigator.backAllAndToNamed(AppRouter.intro);
-        return;
+        splashTrack.finish();
+        return AppNavigator.backAllAndToNamed(AppRouter.intro);
       }
     }
-
-    await _getDeviceLocaleUseCase.call().then(Get.updateLocale);
-
-    _appInfoEntity = await _getAppInfoUseCase.call().then((appInfo) {
-      AppBinding.lazyPut<AppInfoEntity>(() => appInfo);
-      return appInfo;
-    });
 
     if (Platform.isWeb || Platform.isMobile) {
       _initPushNotification();
@@ -100,20 +116,32 @@ class SplashController extends BaseController {
       );
     }
 
-    final UserEntity? userAuthenticated = await _getUserAuthenticated();
+    final UserEntity? user = await PerformanceMetricUseCase.call<UserEntity?>(
+      name: 'splash-get-user-authenticated',
+      track: splashTrack,
+      builder: _getUserAuthenticated,
+    );
 
-    await _initFeatureFlagServices();
-    await _checkUpdatedApp();
+    setUserIdentifier(user?.id, property: user?.toMap());
+
+    await PerformanceMetricUseCase.call(
+      name: 'splash-check-updated-app',
+      track: splashTrack,
+      builder: _checkUpdatedApp,
+    );
 
     if (Platform.isWeb) {
+      splashTrack.finish();
       AppNavigator.backAllAndToNamed(AppRouter.web);
-    } else {
-      _updateUserInstallation();
-      if (userAuthenticated != null) {
-        await _appSecurityManager.checkIfNeedBlockApp();
-      }
-      await _openNextPage(userAuthenticated: userAuthenticated);
+      return;
     }
+
+    splashTrack.finish();
+    _updateUserInstallation();
+    if (user != null) {
+      await _appSecurityManager.checkIfNeedBlockApp();
+    }
+    _openNextPage(userAuthenticated: user);
   }
 
   @override
@@ -185,34 +213,23 @@ class SplashController extends BaseController {
   Future<void> _openNextPage({required UserEntity? userAuthenticated}) async {
     if (userAuthenticated != null) {
       if (userAuthenticated.permissions.contains(UserPermissionsEnum.ADMIN)) {
-        AppNavigator.backAllAndToNamed(AppRouter.admin);
-      } else {
-        AppNavigator.backAllAndToNamed(AppRouter.home);
+        return AppNavigator.backAllAndToNamed(AppRouter.admin);
       }
-      return;
+      return AppNavigator.backAllAndToNamed(AppRouter.home);
     }
 
-    AppNavigator.backAllAndToNamed(AppRouter.login);
+    return AppNavigator.backAllAndToNamed(AppRouter.login);
   }
 
   Future<UserEntity?> _getUserAuthenticated() async {
     try {
-      final bool hasSession = await _createSessionBinding();
-      if (hasSession) {
-        final UserEntity user = await _getUserDataUseCase.call();
-        setUserIdentifier(user.id, property: user.toMap());
-        return user;
+      if (_sessionEntity.isAuthenticated) {
+        return await _getUserDataUseCase.call();
       }
       return null;
-    } on InvalidTokenException {
+    } catch (_) {
       return null;
     }
-  }
-
-  Future<bool> _createSessionBinding() async {
-    final String? token = await _authStorageUseCase.getSessionToken();
-    AppBinding.put<SessionEntity>(SessionEntity(token: token), permanent: true);
-    return token != null;
   }
 
   Future<bool> _checkIntroDone() async {
@@ -220,49 +237,15 @@ class SplashController extends BaseController {
     return introDone ?? false;
   }
 
-  Future<void> _initFeatureFlagServices() async {
-    try {
-      final DeviceInfoEntity deviceInfo = await _getDeviceInfoUseCase.call();
-
-      final deviceTraits = DeviceTraits(
-        brand: deviceInfo.brand,
-        model: deviceInfo.model,
-        osVersion: deviceInfo.osVersion,
-        localeName: deviceInfo.localeName,
-        platform: deviceInfo.platform,
-        packageName: _appInfoEntity.packageName,
-        version: _appInfoEntity.version,
-        build: _appInfoEntity.build,
-        isWeb: kIsWeb,
-        debugMode: kDebugMode,
-        deviceId: deviceInfo.deviceId ?? 'unknown',
-      );
-
-      await FeatureFlagServiceManager.instance.setTraits(deviceTraits);
-    } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-    }
-  }
-
   Future<void> _updateFeatureFlags() async {
     try {
+      await _featureFlagLifecycleController.uploadDeviceTraits();
       await _featureFlagLifecycleController.updateFeatureFlags();
 
-      Future.wait([
-        _checkIfAppIsBlocked(),
-        _checkNeedUpdateApp(),
-      ]).then((List results) {
-        final bool blockedApp = results[0];
-        final bool needUpdateApp = results[1];
-
-        if (!blockedApp) {
-          _unsubscribeBlockedTopic();
-        }
-
-        if (needUpdateApp && !Platform.isWeb) {
-          AppNavigator.toNamed(AppRouter.update);
-        }
-      });
+      final bool blockedApp = await _checkIfAppIsBlocked();
+      if (!blockedApp) {
+        _unsubscribeBlockedTopic();
+      }
     } catch (error, stackTrace) {
       Log.error('_updateFeatureFlags', error: error, stackTrace: stackTrace);
     }
@@ -273,15 +256,6 @@ class SplashController extends BaseController {
         .getFlag(RemoteFlagsEnum.blockingApp);
     if (blockingAppFlag?.isEnabled ?? false) {
       return blockingAppFlag?.value == 'true';
-    }
-    return false;
-  }
-
-  Future<bool> _checkNeedUpdateApp() async {
-    final RemoteFlag? updateAppFlag = await FeatureFlagServiceManager.instance
-        .getFlag(RemoteFlagsEnum.updateApp);
-    if (updateAppFlag?.isEnabled ?? false) {
-      return updateAppFlag?.value == 'true';
     }
     return false;
   }

@@ -21,13 +21,13 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
     String? password,
   }) async {
     final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
-    final String userNameEncrypted = _securityEncrypterUseCase.encrypt(
+    final String userNameEncrypted = await _securityEncrypterUseCase.encrypt(
       password: passwordKey!,
       data: username,
     );
     final String? passwordEncrypted = password == null
         ? null
-        : _securityEncrypterUseCase.encrypt(
+        : await _securityEncrypterUseCase.encrypt(
             password: passwordKey,
             data: password,
           );
@@ -46,7 +46,7 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
     for (final entry in encrypted.entries) {
       if (entry.value != null) {
         try {
-          credentials[entry.key] = _securityEncrypterUseCase.decrypt(
+          credentials[entry.key] = await _securityEncrypterUseCase.decrypt(
             password: passwordKey!,
             data: entry.value!,
           );
@@ -66,7 +66,7 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
   @override
   Future<void> saveSessionToken(String token) async {
     final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
-    final String tokenEncrypted = _securityEncrypterUseCase.encrypt(
+    final String tokenEncrypted = await _securityEncrypterUseCase.encrypt(
       password: passwordKey!,
       data: token,
     );
@@ -82,28 +82,28 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
   Future<String?> getSessionToken() async {
     final String? tokenEncrypted = await _userAuthStorageService
         .getSessionToken();
-    if (tokenEncrypted != null) {
-      try {
-        final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
-        if (passwordKey == null) return null;
-        final String token = _securityEncrypterUseCase.decrypt(
-          password: passwordKey,
-          data: tokenEncrypted,
-        );
-        return token;
-      } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
-        return null;
-      }
+    if (tokenEncrypted == null) return null;
+
+    try {
+      final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
+      if (passwordKey == null) return null;
+
+      final String token = await _securityEncrypterUseCase.decrypt(
+        password: passwordKey,
+        data: tokenEncrypted,
+      );
+      return token;
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      return null;
     }
-    return tokenEncrypted;
   }
 
   @override
   Future<void> saveUserData(Map<String, dynamic> data) async {
     final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
     final String json = jsonEncode(data);
-    final String jsonEncrypted = _securityEncrypterUseCase.encrypt(
+    final String jsonEncrypted = await _securityEncrypterUseCase.encrypt(
       password: passwordKey!,
       data: json,
     );
@@ -118,21 +118,21 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
   @override
   Future<Map<String, dynamic>?> getUserData() async {
     final String? jsonEncrypted = await _userAuthStorageService.getUserData();
-    if (jsonEncrypted != null) {
+    if (jsonEncrypted == null) return null;
+
+    try {
       final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
       if (passwordKey == null) return null;
-      try {
-        final String json = _securityEncrypterUseCase.decrypt(
-          password: passwordKey,
-          data: jsonEncrypted,
-        );
-        final Map<String, dynamic> data = jsonDecode(json);
-        return data;
-      } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
-        throw InvalidTokenException();
-      }
+
+      final String json = await _securityEncrypterUseCase.decrypt(
+        password: passwordKey,
+        data: jsonEncrypted,
+      );
+      final Map<String, dynamic> data = jsonDecode(json);
+      return data;
+    } catch (error, stackTrace) {
+      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      throw InvalidTokenException();
     }
-    return null;
   }
 }

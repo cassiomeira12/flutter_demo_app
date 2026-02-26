@@ -9,7 +9,7 @@ class AboutCardWidget extends AppView<WebController> {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      color: Theme.of(context).hintColor,
+      color: AppColors.disabledColorDark,
       alignment: Alignment.topCenter,
       padding: EdgeInsets.symmetric(
         horizontal: ResponsiveSizeHelper.width(30),

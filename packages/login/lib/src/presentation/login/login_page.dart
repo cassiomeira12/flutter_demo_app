@@ -108,7 +108,7 @@ class LoginPage extends AppView<LoginController> {
                             if (!context.mounted) return;
                             DialogWidget.showError(
                               context,
-                              message: error.toString().tr,
+                              message: error.message.tr,
                             );
                           }
                         }

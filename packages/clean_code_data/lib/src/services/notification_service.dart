@@ -32,11 +32,15 @@ class NotificationServiceImpl
   Future<int> countUnread(UserEntity user) async {
     try {
       return await _dataSource.countUnread(user.id);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('countUnread', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'countUnread',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -44,11 +48,15 @@ class NotificationServiceImpl
   Future<void> readNotifications(NotificationEntity notification) async {
     try {
       return await _dataSource.readNotifications(notification.objectId);
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('countUnread', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'countUnread',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -60,11 +68,15 @@ class NotificationServiceImpl
         body: body,
         imageUrl: imageUrl,
       );
-    } on HttpException catch (error) {
-      throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
-      throw BaseException();
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } catch (error, stackTrace) {
+      Log.error('testPush', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'testPush',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }

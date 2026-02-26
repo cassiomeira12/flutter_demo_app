@@ -97,8 +97,8 @@ class WebVisitHistoryEntity extends BaseEntity {
     String? org,
     String? ispOrg,
     String? objectId,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return WebVisitHistoryEntity(
       website: website ?? this.website,

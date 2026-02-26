@@ -66,7 +66,7 @@ class PasswordValidationBottomSheet extends StatelessWidget
                   if (!context.mounted) return;
                   await DialogWidget.showError(
                     context,
-                    message: error.toString().tr,
+                    message: error.message.tr,
                   );
                   if (!context.mounted) return;
                   Navigator.of(context).pop();

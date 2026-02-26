@@ -8,6 +8,7 @@ class UpdateBindings extends Bindings {
     AppBinding.put<UpdateController>(
       UpdateController(
         appInfoEntity: AppBinding.find(),
+        currentDeviceLocaleUseCase: AppBinding.find(),
         openWebUrlUseCase: AppBinding.find(),
       ),
     );

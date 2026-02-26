@@ -45,6 +45,16 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    indexChangeStream?.cancel();
+    BaseController.navigatorIndex.value = null;
+    AppRoutes.routes.values.where((route) => route.navigator).forEach((route) {
+      AppRoutes.routes[route.name] = route.copyWith(navigator: false);
+    });
+  }
+
   void _updateNavigationIndex(int? index) {
     if (index != null) {
       if (_nestedNavigatorList[index] is SizedBox) {
@@ -88,13 +98,6 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
     } catch (error, stackTrace) {
       Log.error('onTapCurrentIndex', error: error, stackTrace: stackTrace);
     }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    indexChangeStream?.cancel();
-    BaseController.navigatorIndex.value = null;
   }
 
   final RxList<Widget> _nestedNavigatorList = RxList.empty(growable: true);

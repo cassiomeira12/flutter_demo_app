@@ -34,7 +34,7 @@ class LoginUseCaseImpl implements LoginUseCase {
     required String username,
     required String password,
   }) async {
-    final encryptedPassword = _encryptServerUseCase.call(password);
+    final encryptedPassword = await _encryptServerUseCase.call(password);
 
     final user =
         await _loginService.login(
@@ -77,7 +77,7 @@ class LoginUseCaseImpl implements LoginUseCase {
 
     final String keyEncrypted = md5.convert(utf8.encode(key)).toString();
 
-    final String passwordEncrypted = _securityEncrypterUseCase.encrypt(
+    final String passwordEncrypted = await _securityEncrypterUseCase.encrypt(
       password: keyEncrypted,
       data: password,
     );

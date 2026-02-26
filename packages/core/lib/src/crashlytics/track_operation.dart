@@ -1,7 +1,10 @@
 abstract class TrackOperation {
-  TrackOperation startChild({String? operation});
+  TrackOperation startChild({
+    required String operation,
+    DateTime? startTimestamp,
+  });
 
   void catchError({Object? error});
 
-  void finish();
+  void finish({DateTime? endTimestamp});
 }

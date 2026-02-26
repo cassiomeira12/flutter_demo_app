@@ -39,6 +39,8 @@ dependencies:
   path_provider: 2.1.5
 
   # Database
+  hive: 2.2.3
+  hive_flutter: 1.1.0
 
   # Fonts
   google_fonts: 6.3.3

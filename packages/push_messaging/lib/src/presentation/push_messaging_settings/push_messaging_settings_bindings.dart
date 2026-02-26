@@ -18,6 +18,7 @@ class PushMessagingSettingsBindings extends Bindings {
         uploadInstallationAppUseCase: AppBinding.find(),
         messagingService: AppBinding.find(),
         pushNotificationsService: AppBinding.find(),
+        clipboardUseCase: AppBinding.find(),
       ),
     );
   }

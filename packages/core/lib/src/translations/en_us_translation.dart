@@ -174,6 +174,7 @@ class EnUsTranslation extends Translations {
         'test_push_send_success_title': 'Test Push Sent',
         'test_push_send_success_message':
             'Test Push Notification was sent to this device',
+        'send_push': 'Sent push',
         // Security
         'security': 'Security',
         'biometric': 'Biometric',
@@ -241,6 +242,10 @@ class EnUsTranslation extends Translations {
         // Web Visit History
         'web_visit_history': 'Web visit history',
         'empty_web_visit_history_list': 'Empty web visit history',
+        'delete': 'Delete',
+        'change': 'Change',
+        'yes': 'Yes',
+        'not': 'No',
       },
     };
   }

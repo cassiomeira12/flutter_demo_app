@@ -16,8 +16,12 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-      throw BaseException();
+      Log.error('subscribeTopic', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'subscribeTopic',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -28,8 +32,12 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-      throw BaseException();
+      Log.error('unsubscribeTopic', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'unsubscribeTopic',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -40,8 +48,12 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-      throw BaseException();
+      Log.error('subscribeUserTopic', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'subscribeUserTopic',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -52,8 +64,12 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-      throw BaseException();
+      Log.error('unsubscribeUserTopic', error: error, stackTrace: stackTrace);
+      throw BaseException(
+        message: 'unsubscribeUserTopic',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 }
