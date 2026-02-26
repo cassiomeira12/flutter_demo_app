@@ -1,3 +1,7 @@
+# Fortress v1.4.5 [26-02-2026]
+
+- feat: master updates
+
 # Fortress v1.4.4 [18-02-2026]
 
 - feat: master updates
