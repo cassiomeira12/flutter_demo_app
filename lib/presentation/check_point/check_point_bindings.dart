@@ -2,43 +2,40 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
-import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:flutter_demo_app/presentation/check_point/check_point.dart';
 
-class AboutBindings extends Bindings {
+class CheckPointBindings extends Bindings {
   @override
   void dependencies() {
-    AppBinding.put<CheckPointDataSource>(
-      CheckPointDataSourceImpl(
-        http: AppBinding.find(),
-      ),
-    );
-    AppBinding.put<CheckPointService>(
-      CheckPointServiceImpl(
-        checkPointDataSource: AppBinding.find(),
-      ),
-    );
-    AppBinding.put<GetCurrentPointsUseCase>(
-      GetCurrentPointsUseCaseImpl(
+    AppBinding.put<UpdateWorkDayUseCase>(
+      UpdateWorkDayUseCaseImpl(
         checkPointService: AppBinding.find(),
       ),
     );
-    AppBinding.put<RegisterPointUseCase>(
-      RegisterPointUseCaseImpl(
+    AppBinding.put<UpdateHourPointUseCase>(
+      UpdateHourPointUseCaseImpl(
         checkPointService: AppBinding.find(),
       ),
     );
-    AppBinding.put<GetTotalHoursAppUseCase>(
-      GetTotalHoursAppUseCaseImpl(
+    AppBinding.put<DeleteHourPointUseCase>(
+      DeleteHourPointUseCaseImpl(
+        checkPointService: AppBinding.find(),
+      ),
+    );
+    AppBinding.put<RegisterCustomPointUseCase>(
+      RegisterCustomPointUseCaseImpl(
         checkPointService: AppBinding.find(),
       ),
     );
 
     AppBinding.put<CheckPointController>(
       CheckPointController(
-        getCurrentPointsUseCase: AppBinding.find(),
-        registerPointUseCase: AppBinding.find(),
-        getTotalHoursUseCase: AppBinding.find(),
+        updateWorkDayUseCase: AppBinding.find(),
+        updateHourPointUseCase: AppBinding.find(),
+        deleteHourPointUseCase: AppBinding.find(),
+        registerCustomPointUseCase: AppBinding.find(),
+        checkPointsController: AppBinding.find(),
+        checkPointsStore: AppBinding.find(),
       ),
     );
   }

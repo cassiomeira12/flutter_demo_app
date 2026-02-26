@@ -1,3 +1,18 @@
+# Work Point v1.0.5 [26-02-2026]
+
+- refactor: update error message
+- fix: update show error message
+- fix: update checkpoints module
+- feat: update translations
+- fix: update check point module
+- feat: add check checkpoints module
+- feat: add updateWorkDay, updateWorkPoint and registerCustomPoint
+- refactor: use isAuthenticated getter
+- feat: metric performance check point
+- refactor: use isolate on get current points
+- refactor: remove title center
+- refactor: update launch json
+
 # Work Point v1.0.4 [18-02-2026]
 
 - fix: master updates
