@@ -23,7 +23,9 @@ enum EndpointsEnum {
   unsubscribeUserTopic('/parse/functions/unsubscribeUserTopic'),
   listCurrentPoints('/parse/functions/listPoints'),
   registerPoint('/parse/functions/registerPoint'),
-  totalCurrentMonth('/parse/functions/resumeWorkMonth')
+  totalCurrentMonth('/parse/functions/resumeWorkMonth'),
+  updateWorkDay('/parse/functions/updateWorkDay'),
+  updateWorkPoint('/parse/functions/updateWorkPoint')
   ;
 
   final String endpoint;

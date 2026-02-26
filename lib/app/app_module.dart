@@ -45,14 +45,14 @@ abstract class AppModule {
     ...UserAccountModuleRoutes().pages,
     ...SecurityModuleRoutes().pages,
     ...WebViewModuleRoutes().pages,
-    ...CheckPointModule.routes,
+    ...CheckPointsModule().pages,
   ];
 
   static void setupHomePages() {
     HomePage.initialIndex = 0;
     HomePage.navigatorItems = [
       NavigatorItem(
-        routeName: AppRouter.checkPoint.name,
+        routeName: AppRouter.checkPoints.name,
         bottomItem: NavigatorBottom(
           title: 'home',
           selectedIcon: const FlutterIcon(

@@ -66,4 +66,96 @@ class CheckPointDataSourceImpl implements CheckPointDataSource {
       rethrow;
     }
   }
+
+  @override
+  Future<Map<String, dynamic>> updateWorkDay({
+    required int day,
+    required int month,
+    required int year,
+    bool allowance = false,
+    bool holiday = false,
+    bool dayOff = false,
+    required String info,
+  }) async {
+    try {
+      final request = HttpRequest(
+        url: EndpointsEnum.updateWorkDay.endpoint,
+        data: {
+          'day': day,
+          'month': month,
+          'year': year,
+          'allowance': allowance,
+          'holiday': holiday,
+          'dayOff': dayOff,
+          'info': info,
+        },
+      );
+
+      final response = await _http.post<Map<String, dynamic>>(request);
+
+      final Map<String, dynamic> json = response.data!;
+
+      final Map<String, dynamic> result = json['result'];
+
+      return result;
+    } on HttpException catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> updateWorkPoint(
+    String objectId, {
+    required String? time,
+  }) async {
+    try {
+      final request = HttpRequest(
+        url: EndpointsEnum.updateWorkPoint.endpoint,
+        data: {
+          'workPointId': objectId,
+          'time': time,
+        },
+      );
+
+      final response = await _http.post<Map<String, dynamic>>(request);
+
+      final Map<String, dynamic> json = response.data!;
+
+      final Map<String, dynamic> result = json['result'];
+
+      return result;
+    } on HttpException catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Map<String, dynamic>> registerCustomPoint({
+    required int day,
+    required int month,
+    required int year,
+    required String? time,
+  }) async {
+    try {
+      final request = HttpRequest(
+        url: EndpointsEnum.updateWorkPoint.endpoint,
+        data: {
+          'day': day,
+          'month': month,
+          'year': year,
+          'time': time,
+        },
+      );
+
+      final response = await _http.post<Map<String, dynamic>>(request);
+
+      final Map<String, dynamic> json = response.data!;
+
+      final Map<String, dynamic> result = json['result'];
+
+      return result;
+    } on HttpException catch (_) {
+      rethrow;
+    }
+  }
 }

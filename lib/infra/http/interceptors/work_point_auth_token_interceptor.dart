@@ -6,7 +6,7 @@ class WorkPointAuthTokenInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (AppBinding.hasInstance<SessionEntity>()) {
       final session = AppBinding.find<SessionEntity>();
-      if (session.token != null) {
+      if (session.isAuthenticated) {
         options.headers.addAll({'Authorization': 'Bearer ${session.token}'});
       }
     }

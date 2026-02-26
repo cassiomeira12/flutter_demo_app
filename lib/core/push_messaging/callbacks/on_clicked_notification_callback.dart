@@ -18,7 +18,7 @@ class WorkPointOnClickedNotificationCallback
       }
       try {
         await Future.delayed(const Duration(seconds: 1));
-        await AppBinding.find<CheckPointController>().registerPoint();
+        await AppBinding.find<CheckPointsController>().registerPoint();
       } catch (error, stackTrace) {
         Log.error(error.toString(), error: error, stackTrace: stackTrace);
       }
