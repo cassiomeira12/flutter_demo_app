@@ -1,3 +1,4 @@
+import 'package:core/core.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class GetCurrentPointsUseCaseImpl implements GetCurrentPointsUseCase {
@@ -17,10 +18,15 @@ class GetCurrentPointsUseCaseImpl implements GetCurrentPointsUseCase {
       year: year,
     );
 
-    final today = DateTime.now();
-    if (today.year == year && today.month == month) {
-      results = results.where((item) => item.day <= today.day + 1).toList();
-    }
+    results = await IsolateUseCase.isolate<List<CheckDayPointEntity>>(
+      builder: () async {
+        final today = DateTime.now();
+        if (today.year == year && today.month == month) {
+          return results.where((item) => item.day <= today.day + 1).toList();
+        }
+        return results;
+      },
+    );
 
     return results.reversed.toList();
   }
