@@ -70,6 +70,7 @@ class PtBrTranslation extends Translations {
         'password_not_equals_error': 'As senhas não são iguais',
         'url_input_invalid_error': 'Link de Url inválida',
         'secret_otp_invalid': 'Chave de autenticação inválida',
+        'otp_code_copied': 'Código {otp_code} copiado!',
         //
         'recovery_password_button': 'Recuperar senha',
         'login_button': 'Entrar',

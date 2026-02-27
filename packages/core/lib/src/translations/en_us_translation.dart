@@ -65,6 +65,7 @@ class EnUsTranslation extends Translations {
         'password_not_equals_error': 'Passwords are not the same',
         'url_input_invalid_error': 'Invalid Url Link',
         'secret_otp_invalid': 'Invalid authentication key',
+        'otp_code_copied': 'Code {otp_code} copied!',
         //
         'recovery_password_button': 'Type your password',
         'login_button': 'Signin',

@@ -17,6 +17,6 @@ class EncryptServerPublicKeyUseCaseImpl
     final String key = _serverRSAPublicKeyBase64;
     if (key.isEmpty) return data;
     final String publicKey = utf8.decode(base64.decode(key));
-    return _rsaEncrypterUseCase.encrypt(publicKey: publicKey, data: data);
+    return await _rsaEncrypterUseCase.encrypt(publicKey: publicKey, data: data);
   }
 }

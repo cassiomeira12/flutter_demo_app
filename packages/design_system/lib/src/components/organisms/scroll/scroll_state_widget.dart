@@ -59,6 +59,10 @@ class ScrollStateWidget<T> extends StatelessWidget {
             margin: EdgeInsets.symmetric(
               horizontal: ResponsiveSizeHelper.width(20),
             ),
+            constraints: BoxConstraints(
+              minWidth: ResponsiveSizeHelper.mediaQuery.size.width * .8,
+              maxHeight: ResponsiveSizeHelper.mediaQuery.size.height * .6,
+            ),
             decoration: BoxDecoration(
               color: Theme.of(context).highlightColor,
               borderRadius: BorderRadius.circular(30),
@@ -77,10 +81,12 @@ class ScrollStateWidget<T> extends StatelessWidget {
                     size: IconSize.bigger,
                   ),
                   const SpacerWidget(),
-                  TextWidget(
-                    errorMessage.value.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyle.subtitle(context),
+                  Flexible(
+                    child: TextWidget(
+                      errorMessage.value.tr,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyle.subtitle(context),
+                    ),
                   ),
                   const SpacerWidget(height: 2),
                   SecondaryButton(

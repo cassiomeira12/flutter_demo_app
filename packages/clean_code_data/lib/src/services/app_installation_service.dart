@@ -53,7 +53,7 @@ class AppInstallationServiceImpl
       return InstallationEntity(
         installationId: encodedInstallationId,
         appName: appName,
-        appVersion: appInfo.version,
+        appVersion: appInfo.versionOnly,
         appIdentifier: appIdentifier,
         channels: [],
         gcmSenderId: gcmSenderId,

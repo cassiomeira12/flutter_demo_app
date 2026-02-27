@@ -1,3 +1,10 @@
+# Master v1.2.4 [27-02-2026]
+
+- refactor: update makefile tag function
+- refactor: update clipboard use case
+- fix: async encrypt function
+- refactor: update version to v1.2.4
+
 # Master v1.2.3 [26-02-2026]
 
 - fix: catch when has no internet connection

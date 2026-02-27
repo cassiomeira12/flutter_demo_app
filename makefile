@@ -30,6 +30,8 @@ logs:
 	echo ""; \
 	echo "----------------------------------------------"; \
 	echo ""; \
+	echo "Git message | [${CURRENT_GIT_BRANCH}] refactor: update changelog"; \
+	echo ""; \
 
 .PHONY: delete-branch
 delete-branch:
@@ -39,13 +41,13 @@ delete-branch:
 	read -p "Delete local branch? [y/n]: " delete_local; \
 	echo ""; \
 	if [[ $$delete_local == "y" ]]; then \
-		git branch --delete --force $${branch_selected}
+		git branch --delete --force $${branch_selected}; \
 	fi; \
 	echo ""; \
 	read -p "Delete remote branch? [y/n]: " delete_remote; \
 	echo ""; \
 	if [[ $$delete_remote == "y" ]]; then \
-		git push origin --delete $${branch_selected}
+		git push origin --delete $${branch_selected}; \
 	fi; \
 	echo ""; \
 
@@ -56,7 +58,23 @@ merge:
 	echo ""; \
 	echo "Git Merge [$${branch_selected}] -> [${CURRENT_GIT_BRANCH}]"; \
 	echo ""; \
+	read -p "Enter the project name: " project_name; \
+	echo ""; \
+	echo "Project Name [$${project_name}]"; \
+	echo ""; \
+	buildMode="release"; \
+	if [[ ${CURRENT_GIT_BRANCH} == "master" ]]; then \
+		buildMode="${CURRENT_GIT_BRANCH}"; \
+		project_name="flutter demo app"; \
+	fi; \
+	echo ""; \
 	git merge --squash $${branch_selected} --strategy-option theirs; \
+	echo ""; \
+	echo "-------------------"; \
+	currentVersion=$$(grep 'version: ' pubspec.yaml); \
+	currentBuildName=$$(echo "$${currentVersion}" | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\-.*/\1/'); \
+	echo "Git merge message | $${buildMode}: $${project_name} v$${currentBuildName}"; \
+	echo "-------------------"; \
 
 .PHONY: recreate-branch
 recreate-branch:
@@ -77,8 +95,9 @@ recreate-branch:
 tag:
 	@echo ""
 	@read -p "Enter the App name: " app_name; \
+	echo "\nCreate tag [$${app_name}-v${BUILD_NAME}] - $${app_name} Release v${BUILD_NAME} \n"
 	git tag -a $${app_name}-v${BUILD_NAME} -m "$${app_name} Release v${BUILD_NAME}"
-	git tag
+	git push --tags
 
 .PHONY: clean-build
 clean-build:
