@@ -177,21 +177,23 @@ class CredentialPage extends AppView<CredentialController> {
                                     controller.clickTagging(
                                       component: 'copy_password',
                                     );
-                                    controller.copyText(text).then((_) {
-                                      if (!context.mounted) return;
-                                      ScaffoldMessenger.of(
-                                        context,
-                                      ).showSnackBar(
-                                        SnackBar(
-                                          backgroundColor: Theme.of(
+                                    controller
+                                        .copyText(text, autoClear: true)
+                                        .then((_) {
+                                          if (!context.mounted) return;
+                                          ScaffoldMessenger.of(
                                             context,
-                                          ).primaryColor,
-                                          content: TextWidget(
-                                            'password_copied'.tr,
-                                          ),
-                                        ),
-                                      );
-                                    });
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              backgroundColor: Theme.of(
+                                                context,
+                                              ).primaryColor,
+                                              content: TextWidget(
+                                                'password_copied'.tr,
+                                              ),
+                                            ),
+                                          );
+                                        });
                                   },
                                 ),
                               ),
