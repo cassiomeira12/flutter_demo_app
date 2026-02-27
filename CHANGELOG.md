@@ -1,3 +1,9 @@
+# Work Point UOL v1.6.4 [27-02-2026]
+
+- feat: add workpoints module
+- refactor: remove work point module
+- refactor: change env names
+
 # Work Point UOL v1.6.3 [26-02-2026]
 
 - fix: master updates
