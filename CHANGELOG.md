@@ -1,3 +1,7 @@
+# Work Point v1.0.6 [27-02-2026]
+
+- fix: master updates
+
 # Work Point v1.0.5 [26-02-2026]
 
 - refactor: update error message
