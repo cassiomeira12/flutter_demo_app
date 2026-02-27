@@ -29,16 +29,25 @@ class CredentialsController extends BaseController {
   }
 
   Future<void> getAllCredentials() async {
-    isLoading.value = true;
-    errorMessage.value = '';
+    final track = CrashlyticsServiceManager.instance.trackOperation(
+      name: 'get-all-credentials-performance-tracking',
+      operation: 'get-all-credentials',
+    );
     try {
+      isLoading.value = true;
+      errorMessage.value = '';
       credentials.value = await _listCredentialUseCase.call();
-      // TODO Remover na próxima versão
-      _updateCredentialWithFaviconUrl(credentials);
-    } catch (error) {
+    } on BaseException catch (error) {
+      Log.error('getAllCredentials', error: error);
+      errorMessage.value = error.message.tr;
+      track.catchError(error: error);
+    } catch (error, stackTrace) {
+      Log.error('getAllCredentials', error: error, stackTrace: stackTrace);
       errorMessage.value = error.toString();
+      track.catchError(error: error);
     } finally {
       isLoading.value = false;
+      track.finish();
     }
   }
 
@@ -64,22 +73,5 @@ class CredentialsController extends BaseController {
     try {
       _listCredentialUseCase.call();
     } catch (_) {}
-  }
-
-  // TODO Remover na próxima versão
-  Future<void> _updateCredentialWithFaviconUrl(
-    List<CredentialEntity> list,
-  ) async {
-    final listWithoutFavIcons = list.where((item) => item.faviconUrl == null);
-    for (final item in listWithoutFavIcons) {
-      try {
-        final String? favIconUrl = item.url == null
-            ? null
-            : '${Uri.parse(item.url!).origin}/favicon.ico';
-        await _updateCredentialUseCase.call(
-          item.copyWith(faviconUrl: favIconUrl),
-        );
-      } catch (_) {}
-    }
   }
 }

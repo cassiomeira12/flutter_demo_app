@@ -29,7 +29,7 @@ class UpdateCredentialUseCaseImpl implements UpdateCredentialUseCase {
     );
 
     final String? password = await _encryptUserPasswordUseCase.decrypt();
-    final CredentialEntity encryptedData = _encryptCredential(
+    final CredentialEntity encryptedData = await _encryptCredential(
       dataUpdated,
       password: password!,
     );
@@ -40,10 +40,10 @@ class UpdateCredentialUseCaseImpl implements UpdateCredentialUseCase {
     return dataUpdated.copyWith(updatedAt: updated.updatedAt);
   }
 
-  CredentialEntity _encryptCredential(
+  Future<CredentialEntity> _encryptCredential(
     CredentialEntity credential, {
     required String password,
-  }) {
+  }) async {
     final Map<String, dynamic> json = credential.toMap();
 
     final String objectId = json.remove('objectId');
@@ -52,7 +52,7 @@ class UpdateCredentialUseCaseImpl implements UpdateCredentialUseCase {
 
     for (final key in json.keys) {
       if (json[key] != null) {
-        json[key] = _securityEncryptUseCase.encrypt(
+        json[key] = await _securityEncryptUseCase.encrypt(
           password: password,
           data: json[key],
         );
