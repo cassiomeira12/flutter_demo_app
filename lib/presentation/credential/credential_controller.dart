@@ -25,8 +25,6 @@ class CredentialController extends BaseController with UrlValidator {
        _openWebUrlUseCase = openWebUrlUseCase,
        _clipboardUseCase = clipboardUseCase;
 
-  final timeToClearClipboard = const Duration(seconds: 15);
-
   final credentialNameTextController = TextEditingController();
   final userNameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
@@ -195,13 +193,8 @@ class CredentialController extends BaseController with UrlValidator {
     return error;
   }
 
-  Future<void> copyText(String text) async {
-    await _clipboardUseCase.copy(text);
-    Future.delayed(timeToClearClipboard, _clearClipboard);
-  }
-
-  void _clearClipboard() {
-    _clipboardUseCase.copy('');
+  Future<void> copyText(String text, {bool autoClear = false}) async {
+    await _clipboardUseCase.copy(text, autoClear: autoClear);
   }
 
   int _passwordUsedManyTimes(String password) {

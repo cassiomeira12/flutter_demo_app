@@ -25,17 +25,22 @@ class ListCredentialUseCaseImpl implements ListCredentialUseCase {
     List<CredentialEntity> list,
   ) async {
     final String? password = await _encryptUserPasswordUseCase.decrypt();
-    final List<CredentialEntity> decryptedList = list.map((item) {
-      return _decryptCredential(item, password: password!);
-    }).toList();
+    final List<CredentialEntity> decryptedList = List.empty(growable: true);
+    for (final credential in list) {
+      final decryptedCredential = await _decryptCredential(
+        credential,
+        password: password!,
+      );
+      decryptedList.add(decryptedCredential);
+    }
     decryptedList.sort((a, b) => a.name.compareTo(b.name));
     return decryptedList;
   }
 
-  CredentialEntity _decryptCredential(
+  Future<CredentialEntity> _decryptCredential(
     CredentialEntity credential, {
     required String password,
-  }) {
+  }) async {
     final Map<String, dynamic> json = credential.toMap();
 
     final String objectId = json.remove('objectId');
@@ -44,7 +49,7 @@ class ListCredentialUseCaseImpl implements ListCredentialUseCase {
 
     for (final key in json.keys) {
       if (json[key] != null) {
-        json[key] = _securityEncryptUseCase.decrypt(
+        json[key] = await _securityEncryptUseCase.decrypt(
           password: password,
           data: json[key],
         );

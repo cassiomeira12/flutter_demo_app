@@ -23,8 +23,6 @@ class OtpWidget extends StatefulWidget {
 class _OtpWidgetState extends State<OtpWidget> {
   late bool _running;
 
-  final timeToClearClipboard = const Duration(seconds: 15);
-
   @override
   void initState() {
     _running = widget.initialShow;
@@ -38,13 +36,9 @@ class _OtpWidgetState extends State<OtpWidget> {
     }
   }
 
-  void _clearClipboard() {
-    widget._clipboardUseCase.copy('');
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_running == false) {
+    if (!_running) {
       return Container(
         margin: EdgeInsets.symmetric(
           horizontal: ResponsiveSizeHelper.width(10),
@@ -76,18 +70,19 @@ class _OtpWidgetState extends State<OtpWidget> {
         );
         return InkWell(
           onTap: () {
-            widget._clipboardUseCase.copy(code).then((_) {
+            widget._clipboardUseCase.copy(code, autoClear: true).then((_) {
               if (!context.mounted) return;
-              if (widget.initialShow == false) {
+              if (!widget.initialShow) {
                 setState(() => _running = false);
               }
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   backgroundColor: Theme.of(context).primaryColor,
-                  content: TextWidget('Código $code copiado!'),
+                  content: TextWidget(
+                    'otp_code_copied'.tr.replaceFirst('{otp_code}', code),
+                  ),
                 ),
               );
-              Future.delayed(timeToClearClipboard, _clearClipboard);
             });
           },
           child: Padding(

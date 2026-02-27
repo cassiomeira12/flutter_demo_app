@@ -1,3 +1,9 @@
+# Fortress v1.4.6 [27-02-2026]
+
+- refactor: update clipboard copy text
+- refactor: update version to v1.4.6
+- fix: update encrypter functions to future
+
 # Fortress v1.4.5 [26-02-2026]
 
 - feat: master updates
