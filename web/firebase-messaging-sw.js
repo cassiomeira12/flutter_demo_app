@@ -7,27 +7,26 @@ firebase.initializeApp(config);
 
 const messaging = firebase.messaging();
 
-// messaging.onMessage((payload) => {
-//   console.log(payload);
+messaging.onMessage((payload) => {
+  console.log('Received onMessage: ', payload);
 
-//   const notificationTitle = 'Background Message Title';
-//   const notificationOptions = {
-//     body: 'Background Message body.',
-//     // icon: '/firebase-logo.png'
-//   };
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/icons/Icon-192.png'
+  };
 
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-// });
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
 
-// messaging.onBackgroundMessage((payload) => {
-//   console.log(payload);
+messaging.onBackgroundMessage((payload) => {
+  console.log('Background onBackgroundMessage: ', payload);
 
-//   // Customize notification here
-//   const notificationTitle = 'Background Message Title';
-//   const notificationOptions = {
-//     body: 'Background Message body.',
-//     // icon: '/firebase-logo.png'
-//   };
+  const notificationTitle = payload.notification.title;
+  const notificationOptions = {
+    body: payload.notification.body,
+    icon: '/icons/Icon-192.png'
+  };
 
-//   self.registration.showNotification(notificationTitle, notificationOptions);
-// });
+  self.registration.showNotification(notificationTitle, notificationOptions);
+});
