@@ -12,8 +12,8 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.webview.dev",
-      "options": [".env.webview", ".env.webview.dev"]
+      "default": ".env.webview.stg",
+      "options": [".env.webview.prod", ".env.webview.stg"]
     }
   ],
   "configurations": [
