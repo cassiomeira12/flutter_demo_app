@@ -1,1 +1,1 @@
-export 'push_notifications_test/push_messaging_test.dart';
+export 'test_push_notifications/test_push_messaging.dart';

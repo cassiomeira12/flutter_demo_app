@@ -12,8 +12,8 @@ class AdminBindings extends Bindings {
         // getUserDataUseCase: AppBinding.find(),
         // openWebUrlUseCase: AppBinding.find(),
         logoutUseCase: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-        pushMessagingService: AppBinding.find(),
+        // localStorageUseCase: AppBinding.find(),
+        // pushMessagingService: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
       ),
     );

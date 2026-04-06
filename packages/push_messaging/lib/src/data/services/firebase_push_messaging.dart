@@ -90,11 +90,7 @@ class FirebasePushMessaging implements PushMessagingService {
         vapidKey: vapidKey,
       );
     } catch (error, stackTrace) {
-      Log.error(
-        'Firebase Push Messaging TOKEN',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace, msg: 'Firebase Push Messaging TOKEN');
       return null;
     }
   }
@@ -104,11 +100,7 @@ class FirebasePushMessaging implements PushMessagingService {
     try {
       await FirebaseMessaging.instance.deleteToken();
     } catch (error, stackTrace) {
-      Log.error(
-        'Firebase Push Messaging Delete TOKEN',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace, msg: 'Firebase Push Messaging Delete TOKEN');
     }
   }
 
@@ -254,7 +246,7 @@ class FirebasePushMessaging implements PushMessagingService {
             sound: true,
           );
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 

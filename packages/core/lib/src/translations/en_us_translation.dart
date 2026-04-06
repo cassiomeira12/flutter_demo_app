@@ -247,6 +247,18 @@ class EnUsTranslation extends Translations {
         'change': 'Change',
         'yes': 'Yes',
         'not': 'No',
+        // Error Page
+        'error_page_title': 'Oops, something went wrong!',
+        'error_page_message':
+            'We had an internal problem. Please try again in a few moments.',
+        'error_webview_no_network_title': 'You have no connection',
+        'error_webview_no_network_message':
+            'Check your internet connection and try again',
+        'slow_network_title': 'Your connection is a little slow',
+        // Theme Page
+        'launcher_icon': 'App icon',
+        'change_launcher_icon': 'App icon changed',
+        'need_restart_the_app': 'You need to restart the application',
       },
     };
   }

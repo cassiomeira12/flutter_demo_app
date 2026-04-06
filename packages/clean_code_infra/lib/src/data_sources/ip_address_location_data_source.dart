@@ -9,10 +9,17 @@ class IpAddressLocationDataSourceImpl
 
   @override
   Future<Map<String, dynamic>> getIpAddress({String? ip}) async {
+    String endpoint = EndpointsEnum.ipLocation.endpoint;
+    if (ip != null) endpoint += '/$ip';
+
     final request = HttpRequest(
-      url: '${EndpointsEnum.ipLocation.endpoint}/$ip',
+      url: endpoint,
     );
 
-    return await mixinRead(http: _http, request: request, defaultJsonKeys: []);
+    return await mixinRead(
+      http: _http,
+      request: request,
+      defaultJsonKeys: [],
+    );
   }
 }

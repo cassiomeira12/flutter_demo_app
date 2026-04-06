@@ -4,12 +4,13 @@ import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
 class ToggleButton extends StatefulWidget {
-  bool value;
   final String text;
   final ValueChanged<bool> onPressed;
   final AppIcons? icon;
   final bool expandWidth;
   final ButtonSize size;
+
+  bool value;
 
   ToggleButton({
     super.key,
@@ -28,11 +29,14 @@ class ToggleButton extends StatefulWidget {
 class _ToggleButtonState extends State<ToggleButton> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SecondaryButton(
       text: widget.text,
-      // borderColor: widget.value ? AppColors.secondary : AppColors.neutral,
-      // backgroundColor: widget.value ? AppColors.secondary : null,
-      textColor: widget.value ? AppColors.white : null,
+      borderColor: widget.value ? theme.primaryColor : null,
+      backgroundColor: widget.value ? theme.primaryColor : null,
+      textColor: theme.textButtonTheme.style?.textStyle?.resolve({
+        WidgetState.selected,
+      })?.color,
       expandWidth: widget.expandWidth,
       size: widget.size,
       onPressed: () {

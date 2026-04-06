@@ -75,8 +75,8 @@ class AppsflyerServiceImpl implements AppsFlyerService {
         },
         onError: (int errorCode, String errorMessage) {
           Log.error(
-            '$runtimeType init ERROR',
-            error: '$errorCode - $errorMessage',
+            '$runtimeType init ERROR $errorCode - $errorMessage',
+            StackTrace.current,
             throwsCrashlytics: false,
           );
           // completer.completeError('$runtimeType init ERROR');
@@ -84,12 +84,7 @@ class AppsflyerServiceImpl implements AppsFlyerService {
       );
     } catch (error, stackTrace) {
       // timer.cancel();
-      Log.error(
-        '$runtimeType init ERROR',
-        error: error,
-        stackTrace: stackTrace,
-        throwsCrashlytics: false,
-      );
+      Log.error(error, stackTrace, msg: '$runtimeType init ERROR');
       // completer.completeError('$runtimeType init ERROR');
     }
 

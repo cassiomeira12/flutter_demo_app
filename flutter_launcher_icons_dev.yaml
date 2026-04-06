@@ -1,0 +1,18 @@
+# dart run flutter_launcher_icons
+
+flutter_launcher_icons:
+  android: "ic_launcher_dev"
+  adaptive_icon_foreground_inset: 16
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/png/AppIconDEV.png"
+  ios: true
+  min_sdk_android: 21
+  remove_alpha_ios: true
+  image_path: "assets/png/AppIconDEV.png"
+  web:
+    generate: false
+  windows:
+    generate: false
+  macos:
+    generate: true
+    image_path: "assets/png/AppIconDEV.png"

@@ -3,8 +3,8 @@ import 'package:core/core.dart';
 mixin AnalyticsMixin {
   String get page => '$runtimeType'.replaceAll('Controller', 'Page');
 
-  void appOpenedTagging() {
-    tagging('app_open');
+  void appStartedTagging() {
+    tagging('app_started');
   }
 
   void appTerminateTagging() {
@@ -129,6 +129,11 @@ mixin AnalyticsMixin {
       'Event: $event \n'
       'Page: ${parameters?['screen_class']} \n'
       'Parameters: $parameters',
+      throwsCrashlytics: false,
+    );
+    CrashlyticsServiceManager.instance.logUserInteraction(
+      event,
+      parameters: parameters,
     );
     AnalyticsServiceManager.instance.logEvent(
       name: event,

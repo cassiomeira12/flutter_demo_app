@@ -4,7 +4,9 @@ abstract class BaseCrudService<T>
         DeleteService<T>,
         ListService<T>,
         ReadService<T>,
-        UpdateService<T> {}
+        UpdateService<T> {
+  T parseMap(Map<String, dynamic> map);
+}
 
 abstract class CreateService<T> {
   Future<T> create(Map<String, dynamic> data) {
@@ -19,7 +21,12 @@ abstract class DeleteService<T> {
 }
 
 abstract class ListService<T> {
-  Future<List<T>> list() {
+  Future<List<T>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) {
     throw UnimplementedError();
   }
 }

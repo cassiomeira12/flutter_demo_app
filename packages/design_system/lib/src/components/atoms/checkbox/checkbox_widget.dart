@@ -4,10 +4,11 @@ import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
 class CheckboxWidget extends StatefulWidget {
-  bool value;
   final ValueChanged<bool> onChanged;
   final Color? checkColor;
   final Color? borderColor;
+
+  bool value;
 
   CheckboxWidget({
     super.key,

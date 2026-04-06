@@ -49,11 +49,7 @@ class _AppState extends State<App> {
       ],
       builder: (context, child) {
         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-          Log.error(
-            'ErrorWidget.builder',
-            error: errorDetails.exception,
-            stackTrace: errorDetails.stack,
-          );
+          CrashlyticsService.catchFlutterError(errorDetails);
           return ColoredBox(
             color: Theme.of(context).colorScheme.error,
             child: TextWidget(errorDetails.toString()),

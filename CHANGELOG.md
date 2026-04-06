@@ -1,3 +1,9 @@
+# Master v1.3.0 [31-03-2026]
+
+- refactor: update crashlytics logs
+- feat: add android launcher icon adaptive
+- feat: add hive local database
+
 # Master v1.2.4 [27-02-2026]
 
 - refactor: update makefile tag function

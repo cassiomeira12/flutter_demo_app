@@ -44,7 +44,7 @@ class SignUpController extends BaseController
 
       AppNavigator.backAndToNamed(AppRouter.home);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       await SessionHelper.clear();
       rethrow;
     }
@@ -54,11 +54,7 @@ class SignUpController extends BaseController
     try {
       await _updateUserLocaleUseCase.call(user);
     } catch (error, stackTrace) {
-      Log.error(
-        'Login error updateUser',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -66,11 +62,7 @@ class SignUpController extends BaseController
     try {
       await _uploadInstallationAppUseCase.call();
     } catch (error, stackTrace) {
-      Log.error(
-        'SignUp error uploadInstallation',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 

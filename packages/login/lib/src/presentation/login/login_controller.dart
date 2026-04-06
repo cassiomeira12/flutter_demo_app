@@ -62,7 +62,6 @@ class LoginController extends BaseController
   }) async {
     final track = CrashlyticsServiceManager.instance.trackOperation(
       name: 'login-performance-tracking',
-      operation: 'user-login',
     );
     try {
       clickTagging(component: 'login_button_key');
@@ -90,8 +89,8 @@ class LoginController extends BaseController
         AppNavigator.backAllAndToNamed(AppRouter.home);
       }
     } catch (error, stackTrace) {
-      track.catchError(error: error);
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      track.setStatus(TrackOperationStatus.internalError);
+      Log.error(error, stackTrace);
       await SessionHelper.clear();
       rethrow;
     } finally {
@@ -113,11 +112,7 @@ class LoginController extends BaseController
     try {
       await _updateUserLocaleUseCase.call(user);
     } catch (error, stackTrace) {
-      Log.error(
-        'Login error updateUser',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -125,11 +120,7 @@ class LoginController extends BaseController
     try {
       await _uploadInstallationAppUseCase.call();
     } catch (error, stackTrace) {
-      Log.error(
-        'Login error uploadInstallation',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -145,7 +136,7 @@ class LoginController extends BaseController
       emailTextController.value = TextEditingController(text: username);
       passwordTextController.value = TextEditingController(text: password);
     } catch (error, stackTrace) {
-      Log.error('getLoginEmailSaved', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
@@ -159,7 +150,7 @@ class LoginController extends BaseController
         password: password,
       );
     } catch (error, stackTrace) {
-      Log.error('saveLoginEmail', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 

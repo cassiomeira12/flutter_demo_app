@@ -1,31 +1,31 @@
-abstract class BaseUseCaseSync<T> {
-  T call();
+abstract class BaseUseCaseSync<R> {
+  R call();
 }
 
-abstract class BaseUseCaseSyncParam<T, U> {
-  U call(T param);
+abstract class BaseUseCaseSyncParam<R, P> {
+  R call(P param);
 }
 
-abstract class BaseUseCaseAsync<T> {
-  Future<T> call();
+abstract class BaseUseCaseAsync<R> {
+  Future<R> call();
 }
 
-abstract class BaseUseCaseAsyncParam<T, U> {
-  Future<U> call(T param);
+abstract class BaseUseCaseAsyncParam<R, P> {
+  Future<R> call(P param);
 }
 
 abstract class BaseUseCaseParam {
   Map<String, dynamic> toMap();
 }
 
-abstract class BaseCrudUseCase<T> {
-  Future<T> create(BaseUseCaseParam param);
+abstract class BaseCrudUseCase<R> {
+  Future<R> create(BaseUseCaseParam param);
 
-  Future<void> delete(String objectId);
+  Future<void> delete(String id);
 
-  Future<List<T>> list();
+  Future<List<R>> list();
 
-  Future<T> read(String objectId);
+  Future<R> read(String id);
 
-  Future<T> update(String objectId, {required BaseUseCaseParam param});
+  Future<R> update(String id, {required BaseUseCaseParam param});
 }

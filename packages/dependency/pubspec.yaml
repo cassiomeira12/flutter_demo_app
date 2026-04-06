@@ -72,7 +72,6 @@ dependencies:
 
   # Push Messaging Notifications
   # firebase_messaging: 16.0.4
-  # flutter_local_notifications: 19.5.0
 
   # Permissions
   permission_handler: 12.0.1
@@ -118,9 +117,13 @@ dependencies:
   intl_phone_field: 3.2.0
   flutter_masked_text3: 0.9.4
 
+  # Dev Dependencies
+  faker: 2.2.0
+  mocktail: 1.0.4
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
-  uses-material-design: true
+  uses-material-design: false

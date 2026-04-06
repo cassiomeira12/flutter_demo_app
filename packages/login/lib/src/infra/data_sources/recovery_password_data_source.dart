@@ -8,15 +8,11 @@ class RecoveryPasswordDataSourceImpl implements RecoveryPasswordDataSource {
 
   @override
   Future<void> recoveryPassword(String email) async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.recoveryPassword.endpoint,
-        data: {'email': email},
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.recoveryPassword.endpoint,
+      data: {'email': email},
+    );
 
-      await _http.post<Map<String, dynamic>>(request);
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    await _http.post<Map<String, dynamic>>(request);
   }
 }

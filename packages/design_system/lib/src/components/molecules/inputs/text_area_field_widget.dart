@@ -1,5 +1,3 @@
-// ignore_for_file: must_be_immutable
-
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 

@@ -11,6 +11,24 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
   void log(
     String message, {
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.debug,
+  }) {}
+
+  @override
+  void logHttp(
+    String message, {
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.http,
+  }) {
+    Log.warning(message);
+  }
+
+  @override
+  void logUserInteraction(
+    String event, {
+    Map<String, dynamic>? parameters,
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.user,
   }) {}
 
   @override
@@ -21,6 +39,9 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     required String name,
     required Map<String, dynamic> property,
   }) async {}
+
+  @override
+  void setIpAddress(IpAddressLocationEntity ipAddress) {}
 
   @override
   Future<void> captureException({
@@ -38,13 +59,19 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
 
   @override
   TrackOperation trackOperation({
-    String? name,
-    String? operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   }) {
+    final String msg =
+        '[Start] Tracking Operation \n'
+        'name: $name \n'
+        'description: $description \n'
+        'startAt: $startTimestamp';
+    Log.tracking(msg);
     return FakeTrackOperation(
       name: name,
-      operation: operation,
+      description: description,
       startTimestamp: startTimestamp ?? DateTime.timestamp(),
     );
   }
@@ -54,42 +81,60 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
 }
 
 class FakeTrackOperation implements TrackOperation {
-  final String? _name;
-  final String? _operation;
+  final String _parentName;
+  final String? _description;
   final DateTime _startTimestamp;
+  final bool isChild;
+
+  bool finished = false;
 
   FakeTrackOperation({
-    required String? name,
-    required String? operation,
+    required String name,
+    required String? description,
     required DateTime startTimestamp,
-  }) : _name = name,
-       _operation = operation,
+    this.isChild = false,
+  }) : _parentName = name,
+       _description = description,
        _startTimestamp = startTimestamp;
 
   @override
   TrackOperation startChild({
-    String? name,
-    String? operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   }) {
+    final String msg =
+        '[Start] Child Tracking Operation \n'
+        'parent: $_parentName \n'
+        'name: $name \n'
+        'description: $description \n'
+        'startAt: $startTimestamp';
+    Log.tracking(msg);
     return FakeTrackOperation(
-      name: name ?? _operation,
-      operation: operation,
+      name: name,
+      description: null,
       startTimestamp: startTimestamp ?? DateTime.timestamp(),
+      isChild: true,
     );
   }
 
   @override
-  void catchError({Object? error, StackTrace? stackTrace}) {}
+  void setData({required String key, required dynamic value}) {}
+
+  @override
+  void setStatus(TrackOperationStatus? status) {}
 
   @override
   void finish({DateTime? endTimestamp}) {
+    if (finished) return;
+    finished = true;
     final endTime = endTimestamp ?? DateTime.timestamp();
+    final seconds = endTime.difference(_startTimestamp).inMilliseconds / 1000;
     final String msg =
-        'Tracking Operation \n'
-        'name: $_name \n'
-        'operation: $_operation \n'
-        'duration: ${endTime.difference(_startTimestamp).inMilliseconds / 1000} seconds';
-    Log.warning(msg, throwsCrashlytics: false);
+        '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
+        '${isChild ? 'parent:' : 'name:'} $_parentName \n'
+        'description: $_description \n'
+        'duration: ${seconds.toStringAsFixed(3)} seconds';
+    Log.tracking(msg);
   }
 }

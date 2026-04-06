@@ -34,7 +34,7 @@ class UsersController extends BaseController {
     } on BaseException catch (error) {
       errorMessage.value = error.message.tr;
     } catch (error, stackTrace) {
-      Log.error('getAllUsers', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       errorMessage.value = error.toString();
     } finally {
       isLoading.value = false;

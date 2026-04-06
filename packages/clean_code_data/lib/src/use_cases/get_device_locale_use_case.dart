@@ -14,9 +14,13 @@ class GetDeviceLocaleUseCaseImpl implements GetDeviceLocaleUseCase {
   @override
   Future<Locale> call() async {
     try {
-      final Locale? locale = await _getCurrentLocaleUseCase.call();
+      final results = await Future.wait([
+        _getCurrentLocaleUseCase.call(),
+        _getDeviceInfoUseCase.call(),
+      ]);
+      final Locale? locale = results.first as Locale?;
       if (locale != null) return locale;
-      final deviceInfo = await _getDeviceInfoUseCase.call();
+      final DeviceInfoEntity deviceInfo = results.last! as DeviceInfoEntity;
       if (deviceInfo.localeName == null) {
         return Translation.fallbackLocale;
       }
@@ -25,7 +29,8 @@ class GetDeviceLocaleUseCaseImpl implements GetDeviceLocaleUseCase {
       final String languageCode = split.first;
       final String? countryCode = split.length > 1 ? split.last : null;
       return Locale(languageCode, countryCode);
-    } catch (_) {
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       try {
         final deviceInfo = await _getDeviceInfoUseCase.call();
         if (deviceInfo.localeName == null) {
@@ -36,7 +41,8 @@ class GetDeviceLocaleUseCaseImpl implements GetDeviceLocaleUseCase {
         final String languageCode = split.first;
         final String? countryCode = split.length > 1 ? split.last : null;
         return Locale(languageCode, countryCode);
-      } catch (_) {
+      } catch (error, stackTrace) {
+        Log.error(error, stackTrace);
         return Translation.fallbackLocale;
       }
     }

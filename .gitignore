@@ -65,3 +65,6 @@ android/app/Firebase/*/google-services*.json
 
 # Web Firebase Configs
 web/firebase-config*.js
+
+# Coverage
+coverage/lcov.info

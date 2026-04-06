@@ -51,11 +51,7 @@ class BlockingController extends BaseController {
         await _localStorageUseCase.set<bool>(BLOCKED_APP, true);
         pushSubscribed.value = true;
       } catch (error, stackTrace) {
-        Log.error(
-          'BlockedApp subscribe topic',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'BlockedApp subscribe topic');
       }
     }
   }

@@ -97,15 +97,7 @@ class SettingsPage extends AppView<SettingsController> {
                     text: 'theme'.tr,
                     expandWidth: true,
                     icon: const FlutterIcon(BoxIcons.bx_brightness),
-                    onPressed: () {
-                      BottomSheetWidget.show(
-                        context: context,
-                        child: ThemeBottomSheetWidget(
-                          currentThemeData: controller.currentThemeData,
-                          onChangeTheme: controller.onChangeTheme,
-                        ),
-                      );
-                    },
+                    onPressed: controller.themes,
                   ),
                   if (AppRoutes.exist(AppRouter.about))
                     SecondaryButton(

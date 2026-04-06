@@ -16,7 +16,7 @@ class RecoveryPasswordServiceImpl implements RecoveryPasswordService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('recoveryPassword', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'recoveryPassword',
         error: error,

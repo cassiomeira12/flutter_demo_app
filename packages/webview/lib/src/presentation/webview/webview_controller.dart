@@ -44,6 +44,8 @@ class WebViewController extends LifecycleController {
 
   LoadWebviewStepEnum? get currentStep => _webViewController?.currentStep;
 
+  bool get canTryReloadAgain => _timesToRetryReload > 0;
+
   Stream<bool>? internetConnectionStream;
 
   Future<bool> get hasInternet => _checkInternetUseCase.call();
@@ -62,7 +64,6 @@ class WebViewController extends LifecycleController {
 
   final ValueNotifier<bool> _isLoading = ValueNotifier(true);
   ValueListenable<bool> get isLoadingValue => _isLoading;
-  // final RxBool _isLoading = RxBool(true);
   bool get isLoading => _isLoading.value;
   void setLoading(bool loading) {
     if (_isLoading.value != loading) {
@@ -83,7 +84,6 @@ class WebViewController extends LifecycleController {
 
   final ValueNotifier<bool> _hasError = ValueNotifier(false);
   ValueListenable<bool> get hasErrorValue => _hasError;
-  // final RxBool _hasError = RxBool(false);
   bool get hasError => _hasError.value;
   void setError(bool error) {
     if (_hasError.value != error) {
@@ -100,9 +100,10 @@ class WebViewController extends LifecycleController {
     }
   }
 
+  bool? isNetworkError;
+
   final ValueNotifier<bool> _processGone = ValueNotifier(false);
   ValueListenable<bool> get processGoneValue => _processGone;
-  // final RxBool _processGone = RxBool(false);
   bool get processGone => _processGone.value;
   void setProcessGone(bool processGone) {
     if (_processGone.value != processGone) {
@@ -122,16 +123,19 @@ class WebViewController extends LifecycleController {
 
   final ValueNotifier<bool> showWebView = ValueNotifier(true);
 
+  ValueNotifier<int> get lastProgress {
+    return _webViewController?.lastProgress ?? ValueNotifier(0);
+  }
+
   void setWebViewController(WebViewWidgetController? controller) {
     _webViewController = controller;
   }
 
   void addLog(String log) {
     final String time = DateHelper.formatHourMinuteSeconds(DateTime.now());
-    final String loggedTimer = '[$time] $_globalKeyHash $log';
-    _logs.add(loggedTimer);
+    final String loggedTimer = 'webview_widget [$time] $_globalKeyHash $log';
     CrashlyticsServiceManager.instance.log(loggedTimer);
-    debugPrint('webview_widget $loggedTimer');
+    _logs.add(loggedTimer.replaceAll('webview_widget ', ''));
   }
 
   void updateScrollPosition(int x, int y) {
@@ -142,10 +146,6 @@ class WebViewController extends LifecycleController {
   void scrollToTop() {
     _webViewController?.scrollTo(x: 0, y: 0, animated: true);
   }
-
-  // void stopWebViewLoadingTimer() {
-  //   _webViewController?.stopLoadingTimer();
-  // }
 
   Future<void> saveScrollPosition() async {
     final scrollPosition = {'x': scrollX, 'y': scrollY};
@@ -211,6 +211,7 @@ class WebViewController extends LifecycleController {
   void tryAgain() {
     addLog('tryAgain');
     _resetTimesToRetry();
+    isNetworkError = null;
     if (processGone || hasError) {
       _recreateWebView();
     }
@@ -235,8 +236,9 @@ class WebViewController extends LifecycleController {
       return;
     }
 
-    if (_timesToRetryReload <= 0) {
+    if (!canTryReloadAgain) {
       addLog('recreateWebView not executed');
+      isNetworkError = true;
       errorMessage.value =
           'Não foi possível carregar a página, verifique sua conexão com a internet';
       setError(true);
@@ -295,19 +297,26 @@ class WebViewController extends LifecycleController {
     }
   }
 
+  Future<bool> checkInternetConnection() => _checkInternetUseCase.call();
+
   void noInternetConnectionCallback() {
     addLog('noInternetConnectionCallback');
     _lastTimeReloadedWebView = _previousTimeReloadedWebView;
-    Get.showSnackbar(
-      const GetSnackBar(
-        title: 'Internet',
-        message: 'Você está sem conexão com a internet',
-        backgroundColor: AppColors.statusWarning,
-        maxWidth: ResponsiveSizeHelper.maxWidth,
-        duration: Duration(seconds: 1),
-        snackStyle: SnackStyle.GROUNDED,
-      ),
+    DialogWidget.show(
+      super.context,
+      title: 'Internet',
+      message: 'Você está sem conexão com a internet',
     );
+    // Get.showSnackbar(
+    //   const GetSnackBar(
+    //     title: 'Internet',
+    //     message: 'Você está sem conexão com a internet',
+    //     backgroundColor: AppColors.statusWarning,
+    //     maxWidth: ResponsiveSizeHelper.maxWidth,
+    //     duration: Duration(seconds: 1),
+    //     snackStyle: SnackStyle.GROUNDED,
+    //   ),
+    // );
   }
 
   Future<void> shareLogs() async {

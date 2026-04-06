@@ -1,4 +1,4 @@
-import 'package:clean_code_data/clean_code_data.dart';
+import 'package:core/core.dart';
 
 abstract class NotificationDataSource
     implements CreateDataSource, ListDataSource {
@@ -6,5 +6,5 @@ abstract class NotificationDataSource
 
   Future<void> readNotifications(String notificationId);
 
-  Future<void> testPush({String? title, String? body, String? imageUrl});
+  Future<void> testPush(BaseUseCaseParam? param);
 }

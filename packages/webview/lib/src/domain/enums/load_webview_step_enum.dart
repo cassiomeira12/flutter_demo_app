@@ -5,7 +5,8 @@ enum LoadWebviewStepEnum {
   progressChanged(3),
   pageVisible(4),
   loadStopped(5),
-  successLoaded(6);
+  successLoaded(6)
+  ;
 
   final int priority;
 
@@ -40,8 +41,4 @@ enum LoadWebviewStepEnum {
   bool get isOnLoadStoppedStep {
     return this == LoadWebviewStepEnum.loadStopped;
   }
-
-  // static List<LoadWebviewStepEnum> get loadedWebViewSteps {
-  //   return [LoadWebviewStepEnum.loadStopped, LoadWebviewStepEnum.successLoaded];
-  // }
 }

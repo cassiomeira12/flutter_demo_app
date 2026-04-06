@@ -1,2 +1,3 @@
+export 'scroll_state_notifier_widget.dart';
 export 'scroll_state_widget.dart';
 export 'scroll_view_widget.dart';

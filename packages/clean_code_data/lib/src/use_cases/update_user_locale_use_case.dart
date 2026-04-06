@@ -23,6 +23,7 @@ class UpdateUserLocaleUseCaseImpl implements UpdateUserLocaleUseCase {
       final userUpdated = user.copyWith(locale: definedLocale.toString());
       await _updateUserDataUseCase.call(userUpdated);
       await _authStorageUseCase.saveUserData(userUpdated.toMap());
+      Log.debug('Update to defined locale [$definedLocale]');
       await _updateLocaleUseCase.call(definedLocale);
       return;
     }
@@ -35,17 +36,20 @@ class UpdateUserLocaleUseCaseImpl implements UpdateUserLocaleUseCase {
         final String languageCode = split.first;
         final String? countryCode = split.length > 1 ? split.last : null;
         final locale = Locale(languageCode, countryCode);
+        Log.debug('Update to user locale [$locale]');
         await _updateLocaleUseCase.call(locale);
       }
       return;
     }
 
     final userUpdated = user.copyWith(locale: deviceLocale.toString());
+
     try {
       await _updateUserDataUseCase.call(userUpdated);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
+    } finally {
+      await _authStorageUseCase.saveUserData(userUpdated.toMap());
     }
-    await _authStorageUseCase.saveUserData(userUpdated.toMap());
   }
 }

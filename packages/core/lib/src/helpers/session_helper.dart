@@ -11,7 +11,7 @@ abstract class SessionHelper {
       await AppBinding.replace<SessionEntity>(SessionEntity());
       await AppBinding.delete<UserEntity>(force: true);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 }

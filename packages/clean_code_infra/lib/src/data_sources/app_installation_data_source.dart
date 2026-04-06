@@ -14,14 +14,19 @@ class AppInstallationDataSourceImpl
       data: data,
     );
 
-    return mixinCreate(http: _http, request: request);
+    return mixinCreate(
+      http: _http,
+      request: request,
+    );
   }
 
   @override
   Future<List<Map<String, dynamic>>> list(String userId) {
     final request = HttpRequest(
       url: EndpointsEnum.listUserInstallations.endpoint,
-      data: {'userId': userId},
+      data: {
+        'userId': userId,
+      },
     );
 
     return mixinList(

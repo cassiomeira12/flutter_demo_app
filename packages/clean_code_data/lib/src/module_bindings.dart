@@ -202,6 +202,16 @@ class DataModuleBindings implements ModuleBinding {
       ),
     );
 
+    AppBinding.putAsync<IpAddressLocationEntity>(() async {
+      try {
+        final ip = await AppBinding.find<GetIpAddressLocationUseCase>().call();
+        CrashlyticsServiceManager.instance.setIpAddress(ip);
+        return ip;
+      } catch (_) {
+        return IpAddressLocationEntity.emptyIpAddress();
+      }
+    }, permanent: true);
+
     AppBinding.lazyPut<AppInstallationService>(
       () => AppInstallationServiceImpl(
         appInstallationDataSource: AppBinding.find(),

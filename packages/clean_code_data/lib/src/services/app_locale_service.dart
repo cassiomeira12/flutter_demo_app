@@ -18,9 +18,12 @@ class AppLocaleServiceImpl implements AppLocaleService {
         return Locale(languageCode, countryCode);
       }
       return null;
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
       rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 

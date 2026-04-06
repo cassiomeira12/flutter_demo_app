@@ -16,8 +16,6 @@ class ChangeLocaleNativeMethod {
       );
     } on MissingPluginException {
       // do nothing
-    } catch (error) {
-      Log.error(error.toString());
     }
   }
 }

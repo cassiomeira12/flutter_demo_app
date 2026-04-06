@@ -20,6 +20,8 @@ class UnauthenticatedInterceptor extends Interceptor with AnalyticsMixin {
   ) async {
     if (err.type == DioExceptionType.badResponse) {
       try {
+        if (err.response?.data is String) return super.onError(err, handler);
+
         final Map<String, dynamic> body = err.response?.data ?? {};
 
         final errorMessages = [
@@ -45,12 +47,8 @@ class UnauthenticatedInterceptor extends Interceptor with AnalyticsMixin {
 
           AppNavigator.backAllAndToNamed(AppRouter.splash);
         }
-      } catch (error, stacktrace) {
-        Log.error(
-          'UnauthenticatedInterceptor',
-          error: error,
-          stackTrace: stacktrace,
-        );
+      } catch (error, stackTrace) {
+        Log.error(error, stackTrace, msg: 'UnauthenticatedInterceptor');
       }
     }
 

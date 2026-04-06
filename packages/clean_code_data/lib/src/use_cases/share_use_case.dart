@@ -23,7 +23,7 @@ class ShareUseCaseImpl implements ShareUseCase {
       final result = await SharePlus.instance.share(params);
       return ShareResultEntity(raw: result.raw, status: result.status.name);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return ShareResultEntity(raw: '', status: 'error');
     }
   }

@@ -8,5 +8,5 @@ abstract class NotificationService
 
   Future<void> readNotifications(NotificationEntity notification);
 
-  Future<void> testPush({String? title, String? body, String? imageUrl});
+  Future<Result<void>> testPush(TestPushNotificationDto? param);
 }

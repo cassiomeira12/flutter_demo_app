@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, overridden_fields
+// ignore_for_file: overridden_fields
 
 import 'package:dependency/dependency.dart';
 

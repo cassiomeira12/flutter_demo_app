@@ -31,12 +31,11 @@ class GrowthBookFeatureFlag implements FeatureFlagService {
       },
       onInitializationFailure: (GBError? error) {
         Log.error(
-          'GrowthBook Feature Flag \n',
-          error: error?.error,
-          stackTrace: error?.stackTrace == null
-              ? null
+          error?.error ?? 'GrowthBookFeatureFlag init',
+          error?.stackTrace == null
+              ? StackTrace.current
               : StackTrace.fromString(error!.stackTrace),
-          throwsCrashlytics: false,
+          msg: 'GrowthBook Feature Flag',
         );
       },
     );

@@ -16,13 +16,12 @@ class UserServiceImpl implements UserService {
       return user;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('getUserData', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'getUserData',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -32,13 +31,12 @@ class UserServiceImpl implements UserService {
       await _dataSource.deleteUser(reason: reason);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('deleteUser', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'deleteUser',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -55,18 +53,17 @@ class UserServiceImpl implements UserService {
         };
         await _dataSource.updateUserData(objectId: objectId, data: updateData);
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
       return await getUserData();
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('update', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'update',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -88,13 +85,12 @@ class UserServiceImpl implements UserService {
       return user;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('changePassword', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'changePassword',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

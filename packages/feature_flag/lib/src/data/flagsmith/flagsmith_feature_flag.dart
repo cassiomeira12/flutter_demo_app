@@ -31,7 +31,7 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
       );
       initialOfflineConfigs = jsonDecode(initialOfflineConfigsFile);
     } catch (error, stackTrace) {
-      Log.error('initialOfflineConfigs', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace, msg: 'initialOfflineConfigs');
       initialOfflineConfigs = {};
     }
 

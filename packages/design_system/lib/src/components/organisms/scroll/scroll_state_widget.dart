@@ -1,5 +1,5 @@
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:design_system/design_system.dart';
 
 class ScrollStateWidget<T> extends StatelessWidget {
   final RxList<T> list;
@@ -49,7 +49,9 @@ class ScrollStateWidget<T> extends StatelessWidget {
                 },
               ),
             );
-          } catch (_) {}
+          } catch (error, stackTrace) {
+            Log.error(error, stackTrace);
+          }
         }
         return const Center(child: CircularLoadingWidget());
       }

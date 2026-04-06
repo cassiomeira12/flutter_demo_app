@@ -1,4 +1,4 @@
-import 'package:clean_code_data/clean_code_data.dart';
+import 'package:core/core.dart';
 
 class NotificationDataSourceImpl
     with CreateDataSourceMixin, ListDataSourceMixin
@@ -14,12 +14,31 @@ class NotificationDataSourceImpl
       data: data,
     );
 
-    return await mixinCreate(http: _http, request: request);
+    return await mixinCreate(
+      http: _http,
+      request: request,
+    );
   }
 
   @override
-  Future<List<Map<String, dynamic>>> list() async {
-    final request = HttpRequest(url: EndpointsEnum.listNotification.endpoint);
+  Future<List<Map<String, dynamic>>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) async {
+    final Map<String, dynamic> parameters = {
+      'limit': limit,
+      'skip': skip,
+      'order': order,
+    };
+
+    if (where != null) parameters['where'] = where;
+
+    final request = HttpRequest(
+      url: EndpointsEnum.listNotification.endpoint,
+      queryParameters: parameters,
+    );
 
     return await mixinList(
       http: _http,
@@ -30,9 +49,8 @@ class NotificationDataSourceImpl
 
   @override
   Future<int> countUnread(String userId) async {
-    try {
-      final String stringMutation =
-          '''
+    final String stringMutation =
+        '''
         query unreadNotifications {
           notifications(
             where: {
@@ -53,46 +71,39 @@ class NotificationDataSourceImpl
         }
       ''';
 
-      final request = HttpRequest(
-        url: EndpointsEnum.graphql.endpoint,
-        data: {'query': stringMutation},
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.graphql.endpoint,
+      data: {
+        'query': stringMutation,
+      },
+    );
 
-      final response = await _http.post<Map<String, dynamic>>(request);
+    final response = await _http.post<Map<String, dynamic>>(request);
 
-      final Map<String, dynamic> json = response.data!;
+    final Map<String, dynamic> json = response.data!;
 
-      return json['data']['notifications']['count'] as int;
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    return json['data']['notifications']['count'] as int;
   }
 
   @override
   Future<void> readNotifications(String notificationId) async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.readNotification.endpoint,
-        data: {'notificationId': notificationId},
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.readNotification.endpoint,
+      data: {
+        'notificationId': notificationId,
+      },
+    );
 
-      await _http.post(request);
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    await _http.post(request);
   }
 
   @override
-  Future<void> testPush({String? title, String? body, String? imageUrl}) async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.testPushNotification.endpoint,
-        data: {'title': title, 'body': body, 'imageUrl': imageUrl},
-      );
+  Future<void> testPush(BaseUseCaseParam? param) async {
+    final request = HttpRequest(
+      url: EndpointsEnum.testPushNotification.endpoint,
+      data: param?.toMap(),
+    );
 
-      await _http.post(request);
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    await _http.post(request);
   }
 }

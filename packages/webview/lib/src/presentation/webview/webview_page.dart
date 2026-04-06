@@ -29,41 +29,7 @@ class WebViewPage extends StatefulWidget
         checkInternetUseCase: AppBinding.find(),
         openWebUrlUseCase: AppBinding.find(),
         shareUseCase: AppBinding.find(),
-        reloadExpiredUrls: [
-          ReloadExpiredUrlEntity(
-            enable: true,
-            pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/times\/.*$',
-            ),
-            expiredTime: const Duration(minutes: 5),
-          ),
-          ReloadExpiredUrlEntity(
-            enable: true,
-            pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/central-de-jogos\/.*$',
-            ),
-            expiredTime: const Duration(minutes: 5),
-          ),
-          ReloadExpiredUrlEntity(
-            enable: true,
-            pattern: RegExp(
-              r'^https:\/\/placar\.uol\.com\.br\/esporte\/futebol\/.*$',
-            ),
-            expiredTime: const Duration(seconds: 1),
-          ),
-          ReloadExpiredUrlEntity(
-            enable: true,
-            pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/flash\/esporte\/.*$',
-            ),
-            expiredTime: const Duration(minutes: 10),
-          ),
-          ReloadExpiredUrlEntity(
-            enable: true,
-            pattern: RegExp(r'^https:\/\/www\.uol\.com\.br\/?$'),
-            expiredTime: const Duration(minutes: 30),
-          ),
-        ],
+        reloadExpiredUrls: reloadExpiredUrls,
         openPage: openPage,
       ),
       tag: globalKeyHash,
@@ -105,8 +71,10 @@ class _WebViewPageState extends State<WebViewPage>
   @override
   void initState() {
     super.initState();
-    final arguments = AppNavigator.arguments as Map<String, dynamic>? ?? {};
-    url = widget.url ?? arguments['url'] ?? '';
+    final arguments = AppNavigator.arguments;
+    if (arguments is Map<String, dynamic>) {
+      url = widget.url ?? arguments['url'] ?? '';
+    }
     controller.url = url;
     if (url.isEmpty) {
       controller.errorMessage.value = 'Url empty';
@@ -147,7 +115,7 @@ class _WebViewPageState extends State<WebViewPage>
                     final newUri = Uri(
                       scheme: uri.scheme,
                       host: uri.host,
-                      path: uri.path,
+                      path: uri.path.endsWith('/') ? uri.path : '${uri.path}/',
                       queryParameters: {
                         ...uri.queryParameters,
                         ...widget.urlParams,
@@ -166,18 +134,29 @@ class _WebViewPageState extends State<WebViewPage>
                   onError: ({required bool isNetworkError, String? error}) {
                     controller.errorMessage.value =
                         error ?? 'Sem mensagem de erro';
+                    controller.isNetworkError = isNetworkError;
                     controller.setError(true);
                     if (!isNetworkError) {
-                      Log.error(
-                        'WebView Error: $error',
-                        error: Exception(error),
-                      );
+                      Log.error('WebView Error: $error', StackTrace.current);
                     }
                   },
                   onSaveScroll: controller.updateScrollPosition,
-                  processGone: () => controller.setProcessGone(true),
+                  processGone: () {
+                    if (controller.canTryReloadAgain) {
+                      SnackBarWidget.show(
+                        context,
+                        title: 'slow_network_title'.tr,
+                        message: '${'try_again'.tr}...',
+                        backgroundColor: SemanticColors.warning300,
+                        duration: const Duration(seconds: 3),
+                      );
+                      controller.addLog('Conexão lenta, mostrar toast');
+                    }
+                    controller.setProcessGone(true);
+                  },
                   onLog: controller.addLog,
                   openExternalLink: controller.openExternalLink,
+                  checkInternet: controller.checkInternetConnection,
                   noInternetConnectionCallback:
                       controller.noInternetConnectionCallback,
                 );
@@ -189,7 +168,21 @@ class _WebViewPageState extends State<WebViewPage>
             valueListenable: controller.isLoadingValue,
             builder: (BuildContext context, bool isLoading, child) {
               if (isLoading) {
-                return widget.skeletonWidget ?? const SkeletonWidget();
+                return Column(
+                  children: [
+                    ValueListenableBuilder<int>(
+                      valueListenable: controller.lastProgress,
+                      builder: (BuildContext context, int percentage, child) {
+                        return ProgressBarWidget(
+                          percentage: percentage.toDouble(),
+                        );
+                      },
+                    ),
+                    Expanded(
+                      child: widget.skeletonWidget ?? const SkeletonWidget(),
+                    ),
+                  ],
+                );
               }
               return const SizedBox.shrink();
             },
@@ -198,6 +191,15 @@ class _WebViewPageState extends State<WebViewPage>
             valueListenable: controller.hasErrorValue,
             builder: (BuildContext context, bool hasError, child) {
               if (controller.hasError) {
+                if (controller.isNetworkError == true) {
+                  return ErrorPage(
+                    icon: Icons.wifi_off,
+                    title: 'error_webview_no_network_title'.tr,
+                    message: 'error_webview_no_network_message'.tr,
+                    errorMessage: controller.errorMessage.value,
+                    onTryAgain: controller.tryAgain,
+                  );
+                }
                 return ErrorPage(
                   errorMessage: controller.errorMessage.value,
                   onTryAgain: controller.tryAgain,

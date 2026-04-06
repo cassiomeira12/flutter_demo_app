@@ -19,7 +19,12 @@ abstract class DeleteDataSource {
 }
 
 abstract class ListDataSource {
-  Future<List<Map<String, dynamic>>> list() {
+  Future<List<Map<String, dynamic>>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) {
     throw UnimplementedError();
   }
 }

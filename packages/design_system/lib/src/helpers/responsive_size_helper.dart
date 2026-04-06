@@ -52,8 +52,8 @@ abstract class ResponsiveSizeHelper {
   static final double _width = MediaQueryData.fromView(_view).size.width;
   static final double _height = MediaQueryData.fromView(_view).size.height;
 
-  static double get spacingDefaultWidth => width(12);
-  static double get spacingDefaultHeight => height(12);
+  static double get spacingDefaultWidth => width(16);
+  static double get spacingDefaultHeight => height(16);
 
   static double width(double size) {
     if (_width > maxWidth) {
@@ -90,6 +90,12 @@ abstract class ResponsiveSizeHelper {
     //   height += mediaQuery.padding.bottom * .35;
     // }
     return height;
+  }
+
+  static EdgeInsets get defaultHorizontalPadding {
+    return EdgeInsets.symmetric(
+      horizontal: ResponsiveSizeHelper.width(20),
+    );
   }
 
   static EdgeInsets get cardPadding {

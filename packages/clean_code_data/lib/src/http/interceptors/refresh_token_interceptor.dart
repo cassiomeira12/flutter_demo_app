@@ -41,7 +41,8 @@ class RefreshTokenInterceptor extends Interceptor {
 
             final response = await _getRetryRequest(err, sessionToken);
             return handler.resolve(response);
-          } catch (_) {
+          } catch (error, stackTrace) {
+            Log.error(error, stackTrace);
             super.onError(err, handler);
           }
         }

@@ -24,8 +24,11 @@ mixin CreateServiceMixin<T> {
       return fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('mixinCreate', error: error, stackTrace: stackTrace);
+      Log.exception(error, stackTrace);
       throw BaseException(
         message: 'mixinCreate',
         error: error,
@@ -44,8 +47,11 @@ mixin DeleteServiceMixin<T> {
       await delete(objectId);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('mixinDelete', error: error, stackTrace: stackTrace);
+      Log.exception(error, stackTrace);
       throw BaseException(
         message: 'mixinDelete',
         error: error,
@@ -69,15 +75,18 @@ mixin ListServiceMixin<T> {
         try {
           listData.add(fromMap(json));
         } on BaseException catch (error) {
-          Log.error('mixinList fromMap', error: error);
+          Log.baseException(error);
         }
       }
 
       return listData;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('mixinList', error: error, stackTrace: stackTrace);
+      Log.exception(error, stackTrace);
       throw BaseException(
         message: 'mixinList',
         error: error,
@@ -113,8 +122,11 @@ mixin UpdateServiceMixin<T> {
       return fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('mixinUpdate', error: error, stackTrace: stackTrace);
+      Log.exception(error, stackTrace);
       throw BaseException(
         message: 'mixinUpdate',
         error: error,

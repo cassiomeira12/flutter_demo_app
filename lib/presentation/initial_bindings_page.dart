@@ -13,7 +13,14 @@ class _InitialBindingsPageState extends State<InitialBindingsPage> {
   @override
   void initState() {
     super.initState();
-    AppBindings().dependencies().whenComplete(() {
+    PerformanceMetricUseCase.call(
+      name: 'initialize-dependencies-performance-tracking',
+      builder: (_) => _initializeAppDependencies(),
+    );
+  }
+
+  Future<void> _initializeAppDependencies() async {
+    await AppBindings().dependencies().whenComplete(() {
       AppNavigator.toNamed(AppRouter.splash);
     });
   }

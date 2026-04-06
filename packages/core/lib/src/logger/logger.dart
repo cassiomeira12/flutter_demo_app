@@ -1,12 +1,22 @@
 // ignore_for_file: avoid_redundant_argument_values
 
-import 'package:core/core.dart';
+import 'dart:io';
+
+import 'package:core/core.dart' hide Platform;
 import 'package:dependency/dependency.dart';
 
-class Log {
+abstract class Log {
+  static bool get isFlutterTest {
+    try {
+      return Platform.environment.containsKey('FLUTTER_TEST');
+    } catch (_) {
+      return false;
+    }
+  }
+
   static final _talker = Talker(
     settings: TalkerSettings(
-      enabled: !kReleaseMode,
+      enabled: !isFlutterTest && !kReleaseMode,
       timeFormat: TimeFormat.yearMonthDayAndTime,
       colors: {
         TalkerKey.info: AnsiPen()..cyan(),
@@ -38,7 +48,7 @@ class Log {
     if (throwsCrashlytics) {
       CrashlyticsServiceManager.instance.log(
         message,
-        level: CrashlyticsLogLevel.debug,
+        level: CrashlyticsLogLevel.info,
       );
     }
   }
@@ -65,14 +75,19 @@ class Log {
     }
   }
 
+  static void tracking(String msg) {
+    final String message = '$_getClassNameAndPath \n\n$msg';
+    _talker.warning(message);
+  }
+
   static void error(
-    String msg, {
-    Object? error,
-    StackTrace? stackTrace,
+    Object error,
+    StackTrace? stackTrace, {
+    String? msg,
     bool throwsCrashlytics = true,
   }) {
     _parseThrowsException(
-      msg,
+      msg ?? _getClassNameAndPath.split(' ').first,
       error: error,
       stackTrace: stackTrace,
       throwsCrashlytics: throwsCrashlytics,
@@ -80,14 +95,43 @@ class Log {
     );
   }
 
-  static void fatalError(
-    String msg, {
-    Object? error,
-    StackTrace? stackTrace,
+  static void exception(
+    Object error,
+    StackTrace? stackTrace, {
+    String? msg,
     bool throwsCrashlytics = true,
   }) {
     _parseThrowsException(
-      msg,
+      msg ?? 'Exception',
+      error: error,
+      stackTrace: stackTrace,
+      throwsCrashlytics: throwsCrashlytics,
+      isFatal: true,
+    );
+  }
+
+  static void baseException(
+    BaseException error, {
+    String? msg,
+    bool throwsCrashlytics = true,
+  }) {
+    _parseThrowsException(
+      msg ?? 'Exception',
+      error: error,
+      stackTrace: error.stackTrace,
+      throwsCrashlytics: throwsCrashlytics,
+      isFatal: true,
+    );
+  }
+
+  static void fatalException(
+    Object error,
+    StackTrace stackTrace, {
+    String? msg,
+    bool throwsCrashlytics = true,
+  }) {
+    _parseThrowsException(
+      msg ?? 'Fatal Exception',
       error: error,
       stackTrace: stackTrace,
       throwsCrashlytics: throwsCrashlytics,
@@ -166,7 +210,18 @@ class Log {
     bool ignoreStackClass(String line) {
       final bool ignoreLogger = !line.contains('logger.dart');
       final bool ignoreAnalytics = !line.contains('analytics_mixin.dart');
-      return ignoreLogger && ignoreAnalytics;
+      final bool ignoreCrashlytics = !line.contains('crashlytics_service');
+      final bool ignoreDartIterable = !line.contains('iterable.dart');
+      final bool ignoreDartAsync = !line.contains('dart:async');
+      final bool ignoreDartCore = !line.contains('dart:core');
+      final bool ignoreDartSdk = !line.contains('dart-sdk');
+      return ignoreLogger &&
+          ignoreAnalytics &&
+          ignoreCrashlytics &&
+          ignoreDartIterable &&
+          ignoreDartAsync &&
+          ignoreDartCore &&
+          ignoreDartSdk;
     }
 
     // gets the first one that is not from this file
@@ -174,6 +229,18 @@ class Log {
       ignoreStackClass,
       orElse: () => '',
     );
+
+    if (kIsWeb) {
+      final splitStackTrace = stackTraceLine.split(' ');
+      if (splitStackTrace.isEmpty) return stackTraceLine;
+      final package = splitStackTrace.first.contains('package:')
+          ? splitStackTrace.first
+          : 'package:${splitStackTrace.first}';
+      final line = splitStackTrace[1];
+      final functionName = splitStackTrace.last;
+      return '$functionName ($package:$line)';
+    }
+
     final classAndMethodName =
         RegExp(r'\b([\w]+\.[\w]+)\b').firstMatch(stackTraceLine)?.group(1) ??
         '';
@@ -181,6 +248,7 @@ class Log {
       RegExp(r'^.*\s'),
       '',
     );
+
     return '$classAndMethodName $stackTraceLineWithoutBlankSpace';
   }
 }

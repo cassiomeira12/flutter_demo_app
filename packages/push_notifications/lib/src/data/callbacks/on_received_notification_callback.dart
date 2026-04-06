@@ -26,7 +26,7 @@ class LocalPushOnReceivedNotificationCallback
         androidSticky: map['androidSticky'],
       );
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 }

@@ -111,32 +111,27 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
                                     .text
                                     .trim();
 
-                                try {
-                                  await controller.testPush(
-                                    title: title,
-                                    body: body,
-                                    imageUrl: imageUrl.isEmpty
-                                        ? null
-                                        : imageUrl,
+                                final result = await controller.testPush(
+                                  title: title,
+                                  body: body,
+                                  imageUrl: imageUrl.isEmpty ? null : imageUrl,
+                                );
+
+                                if (!context.mounted) return;
+
+                                if (result is Error) {
+                                  DialogWidget.showError(
+                                    context,
+                                    message: result.error.message.tr,
                                   );
-
-                                  if (!context.mounted) return;
-
-                                  await DialogWidget.show(
+                                } else {
+                                  DialogWidget.show(
                                     context,
                                     title:
                                         'notification_created_success_title'.tr,
                                     message:
                                         'notification_created_success_message'
                                             .tr,
-                                  );
-
-                                  if (!context.mounted) return;
-                                } on BaseException catch (error) {
-                                  if (!context.mounted) return;
-                                  DialogWidget.showError(
-                                    context,
-                                    message: error.message.tr,
                                   );
                                 }
                               }
@@ -153,14 +148,14 @@ class PushNotificationsPage extends AppView<PushNotificationsController> {
                         if (_formKey.currentState?.validate() ?? false) {
                           FocusManager.instance.primaryFocus?.unfocus();
 
-                          final String title = controller.titleController.text
-                              .trim();
-                          final String body = controller.bodyController.text
-                              .trim();
-                          final String imageUrl = controller
-                              .imageController
-                              .text
-                              .trim();
+                          // final String title = controller.titleController.text
+                          //     .trim();
+                          // final String body = controller.bodyController.text
+                          //     .trim();
+                          // final String imageUrl = controller
+                          //     .imageController
+                          //     .text
+                          //     .trim();
 
                           // final UserEntity user = controller.userSelected!;
 

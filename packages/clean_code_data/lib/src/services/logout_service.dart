@@ -12,13 +12,12 @@ class LogoutServiceImpl implements LogoutService {
       await _dataSource.logout();
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('logout', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'logout',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

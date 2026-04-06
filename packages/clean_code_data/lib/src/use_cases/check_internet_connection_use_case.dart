@@ -17,19 +17,13 @@ class CheckInternetConnectionUseCaseImpl
   Stream<bool> get internetStream => _internetStream.stream;
 
   @override
-  Future<bool> call() {
-    return _service.hasInternetAccess();
-  }
+  Future<bool> call() => _service.hasInternetAccess();
 
   @override
-  void pauseStream() {
-    _service.pauseStream();
-  }
+  void pauseStream() => _service.pauseStream();
 
   @override
-  void resumeStream() {
-    _service.resumeStream();
-  }
+  void resumeStream() => _service.resumeStream();
 
   @override
   void dispose() {

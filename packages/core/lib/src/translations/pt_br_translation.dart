@@ -253,6 +253,18 @@ class PtBrTranslation extends Translations {
         'change': 'Alterar',
         'yes': 'Sim',
         'not': 'Não',
+        // Error Page
+        'error_page_title': 'Oops, algo deu errado!',
+        'error_page_message':
+            'Tivemos um problema interno. Tente novamente em alguns instantes.',
+        'error_webview_no_network_title': 'Você está sem conexão',
+        'error_webview_no_network_message':
+            'Verifique sua conexão com a internet e tente novamente',
+        'slow_network_title': 'Sua conexão está um pouco lenta',
+        // Theme Page
+        'launcher_icon': 'Ícone do App',
+        'change_launcher_icon': 'Ícone trocado',
+        'need_restart_the_app': 'É necessário reiniciar o aplicativo',
       },
     };
   }

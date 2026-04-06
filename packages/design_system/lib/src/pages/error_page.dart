@@ -2,12 +2,18 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class ErrorPage extends StatelessWidget {
+  final IconData? icon;
+  final String? title;
+  final String? message;
   final FlutterErrorDetails? errorDetails;
   final String? errorMessage;
   final VoidCallback? onTryAgain;
 
   const ErrorPage({
     super.key,
+    this.icon,
+    this.title,
+    this.message,
     this.errorDetails,
     this.errorMessage,
     this.onTryAgain,
@@ -21,20 +27,18 @@ class ErrorPage extends StatelessWidget {
       runPopGesture: false,
       body: Center(
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveSizeHelper.width(20),
-          ),
+          padding: ResponsiveSizeHelper.defaultHorizontalPadding,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
               FlutterIcon(
-                Icons.warning,
+                icon ?? Icons.warning,
                 size: IconSize.bigger,
                 color: Theme.of(context).colorScheme.error,
               ),
               TextWidget(
-                'Oops, algo deu errado!',
+                title ?? 'error_page_title'.tr,
                 style: AppTextStyle.subtitle(
                   context,
                   fontSize: TextSize.font_20,
@@ -42,7 +46,7 @@ class ErrorPage extends StatelessWidget {
               ),
               const SpacerWidget(height: 2),
               TextWidget(
-                'Tivemos um problema interno. Tente novamente em alguns instantes.',
+                message ?? 'error_page_message'.tr,
                 style: AppTextStyle.message(
                   context,
                   fontSize: TextSize.font_14,
@@ -50,19 +54,23 @@ class ErrorPage extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               const SpacerWidget(height: 2),
-              if (kDebugMode)
-                TextWidget(
-                  errorMessage.toString(),
-                  style: AppTextStyle.error(context),
-                  textAlign: TextAlign.center,
-                ),
-              const SpacerWidget(),
               if (onTryAgain != null)
                 PrimaryButton(
-                  text: 'Tentar novamente',
+                  text: 'try_again'.tr,
                   backgroundColor: Theme.of(context).colorScheme.error,
                   onPressed: onTryAgain,
                   size: ButtonSize.medium,
+                ),
+              if (!kReleaseMode)
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: ResponsiveSizeHelper.spacingDefaultHeight,
+                  ),
+                  child: TextWidget(
+                    errorMessage.toString(),
+                    style: AppTextStyle.error(context),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
             ],
           ),

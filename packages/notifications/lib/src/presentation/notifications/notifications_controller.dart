@@ -29,7 +29,7 @@ class NotificationsController extends LifecycleController {
     } on BaseException catch (error) {
       errorMessage.value = error.message.tr;
     } catch (error, stackTrace) {
-      Log.error('getAllNotifications', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       errorMessage.value = error.toString();
     } finally {
       isLoading.value = false;

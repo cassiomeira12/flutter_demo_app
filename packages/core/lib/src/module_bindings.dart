@@ -1,4 +1,3 @@
-import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:core/src/security/app_security_manager_impl.dart';
 import 'package:dependency/dependency.dart';
@@ -35,6 +34,7 @@ class CoreModuleBindings implements ModuleBinding {
       FeatureFlagLifecycleController(
         appInfoEntity: AppBinding.find(),
         getDeviceInfoUseCase: AppBinding.find(),
+        localStorageUseCase: AppBinding.find(),
       ),
       permanent: true,
     );

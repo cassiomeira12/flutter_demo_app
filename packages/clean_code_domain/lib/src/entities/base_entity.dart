@@ -22,4 +22,7 @@ abstract class BaseEntity {
       'updatedAt': updatedAt?.toString(),
     };
   }
+
+  @override
+  String toString() => toMap().toString();
 }

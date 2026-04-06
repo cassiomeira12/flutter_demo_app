@@ -1,13 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="LaunchTheme" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">false</item>
         <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenBackground">@color/colorBackground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/colorBackground</item>
+    </style>
+    <style name="LaunchThemeSTG" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowSplashScreenBehavior">icon_preferred</item>
-        <item name="android:windowSplashScreenBackground">#ffffff</item>
-        <item name="android:windowSplashScreenIconBackgroundColor">#ffffff</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenBackground">@color/colorBackground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/colorBackground</item>
+    </style>
+    <style name="LaunchThemeDEV" parent="@android:style/Theme.Light.NoTitleBar">
+        <item name="android:windowSplashScreenBehavior">icon_preferred</item>
+        <item name="android:forceDarkAllowed">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:windowLayoutInDisplayCutoutMode">shortEdges</item>
+        <item name="android:windowSplashScreenBackground">@color/colorBackground</item>
+        <item name="android:windowSplashScreenIconBackgroundColor">@color/colorBackground</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Light.NoTitleBar">
         <item name="android:windowBackground">?android:colorBackground</item>

@@ -11,9 +11,19 @@ class WebVisitHistoryServiceImpl
   }) : _dataSource = webVisitHistoryDataSource;
 
   @override
-  Future<List<WebVisitHistoryEntity>> list() {
+  Future<List<WebVisitHistoryEntity>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) {
     return mixinList(
-      list: _dataSource.list,
+      list: () => _dataSource.list(
+        limit: limit,
+        skip: skip,
+        order: order,
+        where: where,
+      ),
       fromMap: WebVisitHistoryModel.fromMap,
     );
   }

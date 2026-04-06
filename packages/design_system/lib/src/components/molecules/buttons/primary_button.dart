@@ -35,19 +35,16 @@ class PrimaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final buttonBackgroundColor =
-        backgroundColor ??
+    final backgroundColor =
+        this.backgroundColor ??
         theme.textButtonTheme.style?.backgroundColor?.resolve({
           WidgetState.selected,
         });
-    // final buttonDisabledBackgroundColor = theme
-    //     .textButtonTheme
-    //     .style
-    //     ?.backgroundColor
-    //     ?.resolve({WidgetState.disabled});
-    final textColor = theme.textButtonTheme.style?.textStyle?.resolve({
-      WidgetState.selected,
-    })?.color;
+    final textColor =
+        this.textColor ??
+        theme.textButtonTheme.style?.textStyle?.resolve({
+          WidgetState.selected,
+        })?.color;
 
     return Container(
       height: size.height,
@@ -69,8 +66,8 @@ class PrimaryButton extends StatelessWidget {
           ),
           backgroundColor: WidgetStateProperty.all(
             onPressed == null
-                ? buttonBackgroundColor?.withAlpha((255 * .50).toInt())
-                : buttonBackgroundColor,
+                ? backgroundColor?.withAlpha((255 * .50).toInt())
+                : backgroundColor,
           ),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(

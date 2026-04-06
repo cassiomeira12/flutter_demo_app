@@ -4,8 +4,8 @@ import 'package:flutter_demo_app/app/app.dart';
 import 'package:flutter_demo_app/translations/translation.dart';
 
 void main() {
-  runZonedGuarded(() async {
-    WidgetsFlutterBinding.ensureInitialized();
+  CrashlyticsService.zonedGuarded(() async {
+    CrashlyticsService.ensureInitialized();
 
     FlutterError.onError = CrashlyticsService.catchFlutterError;
     PlatformDispatcher.instance.onError = CrashlyticsService.catchException;
@@ -14,12 +14,15 @@ void main() {
     ThemeManager.instance.defineColor();
     BaseController.SPLASH_ALREADY_EXECUTED = false;
 
-    // debugPaintTextLayoutBoxes = true;
     // debugPaintSizeEnabled = true;
+    // debugPaintTextLayoutBoxes = true;
     // debugRepaintTextRainbowEnabled = true;
 
-    await ResponsiveSizeHelper.initializeFlutterView();
+    await PerformanceMetricUseCase.call(
+      name: 'initialize-flutter-view-performance-tracking',
+      builder: (_) => ResponsiveSizeHelper.initializeFlutterView(),
+    );
 
-    runApp(const App());
-  }, CrashlyticsService.catchException);
+    runApp(CrashlyticsService.wrapperWidget(const App()));
+  });
 }

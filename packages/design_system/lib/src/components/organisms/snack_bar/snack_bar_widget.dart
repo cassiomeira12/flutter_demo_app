@@ -7,6 +7,7 @@ abstract class SnackBarWidget {
     required String title,
     String? message,
     Duration? duration,
+    Color? backgroundColor,
   }) {
     final theme = Theme.of(context);
     final buttonBackgroundColor = theme.textButtonTheme.style?.backgroundColor
@@ -37,12 +38,13 @@ abstract class SnackBarWidget {
               backgroundColor: buttonBackgroundColor,
               textColor: textColor,
               onPressed: () {
+                if (!context.mounted) return;
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
               },
             )
           : null,
-      duration: duration ?? const Duration(milliseconds: 4000),
-      backgroundColor: Theme.of(context).colorScheme.error,
+      duration: duration ?? const Duration(seconds: 4),
+      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.error,
     );
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

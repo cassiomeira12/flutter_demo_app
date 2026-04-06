@@ -103,11 +103,18 @@ class PushMessagingSettingsPage
                                     onPressed:
                                         controller.notificationsEnabled.value
                                         ? () async {
-                                            try {
-                                              await controller.testPush();
+                                            final result = await controller
+                                                .testPush();
 
-                                              if (!context.mounted) return;
+                                            if (!context.mounted) return;
 
+                                            if (result is Error) {
+                                              DialogWidget.showError(
+                                                context,
+                                                message:
+                                                    result.error.message.tr,
+                                              );
+                                            } else {
                                               DialogWidget.show(
                                                 context,
                                                 title:
@@ -116,12 +123,6 @@ class PushMessagingSettingsPage
                                                 message:
                                                     'test_push_send_success_message'
                                                         .tr,
-                                              );
-                                            } on BaseException catch (error) {
-                                              if (!context.mounted) return;
-                                              DialogWidget.showError(
-                                                context,
-                                                message: error.message.tr,
                                               );
                                             }
                                           }

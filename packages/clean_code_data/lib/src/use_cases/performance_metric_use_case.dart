@@ -4,33 +4,37 @@ import 'package:flutter/foundation.dart';
 class PerformanceMetricUseCase {
   static Future<T> call<T>({
     required String name,
-    String? operation,
+    String? description,
     TrackOperation? track,
-    required Future<T> Function() builder,
+    required Future<T> Function(TrackOperation track) builder,
   }) async {
-    late TrackOperation internalTrack;
-    if (track != null) {
-      internalTrack = track.startChild(operation: name);
-    } else {
-      internalTrack = CrashlyticsServiceManager.instance.trackOperation(
-        name: name,
-        operation: operation,
-      );
-    }
     final startTimestamp = DateTime.timestamp();
+    final TrackOperation internalTrack = track == null
+        ? CrashlyticsServiceManager.instance.trackOperation(
+            name: name,
+            description: description,
+            startTimestamp: startTimestamp,
+          )
+        : track.startChild(
+            name: name,
+            description: description,
+            startTimestamp: startTimestamp,
+          );
     try {
-      return await builder.call();
-    } catch (error) {
-      internalTrack.catchError(error: error);
-      rethrow;
+      return await builder.call(internalTrack);
+    } catch (error, stackTrace) {
+      internalTrack.setStatus(TrackOperationStatus.internalError);
+      Log.error(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     } finally {
-      internalTrack.finish();
       final endTimestamp = DateTime.timestamp();
+      internalTrack.finish(endTimestamp: endTimestamp);
+      final seconds =
+          endTimestamp.difference(startTimestamp).inMilliseconds / 1000;
       final String msg =
           'Tracking Operation \n'
           'name: $name \n'
-          'operation: $operation \n'
-          'duration: ${endTimestamp.difference(startTimestamp).inMilliseconds / 1000} seconds';
+          'duration: ${seconds.toStringAsFixed(3)} seconds';
       if (kProfileMode) {
         Log.warning(msg, throwsCrashlytics: false);
       }

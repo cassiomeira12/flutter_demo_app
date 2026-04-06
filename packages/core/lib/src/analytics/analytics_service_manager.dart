@@ -1,7 +1,11 @@
 import 'package:core/core.dart';
 import 'package:core/src/analytics/analytics_service_faker.dart';
+import 'package:core/src/analytics/mixins/mixin.dart';
+import 'package:dependency/dependency.dart';
 
-class AnalyticsServiceManager implements AnalyticsService {
+class AnalyticsServiceManager
+    with FallbackEventsMixin
+    implements AnalyticsService {
   AnalyticsServiceManager._();
 
   static final instance = AnalyticsServiceManager._();
@@ -16,33 +20,40 @@ class AnalyticsServiceManager implements AnalyticsService {
     Function(AnalyticsService service) function,
   ) {
     return Future.wait(
-      _initializedServices.map((service) => function(service)),
+      _initializedServices.map((service) async {
+        try {
+          await function(service);
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+      }),
     );
   }
 
   @override
   Future<void> init() async {
-    bool useFallbackService = false;
+    final initializedServices = List<AnalyticsService>.empty(growable: true);
 
     for (final service in services) {
       try {
         await service.init();
-        _initializedServices.add(service);
+        initializedServices.add(service);
         Log.success(
           '${service.runtimeType} init successful',
           throwsCrashlytics: false,
         );
       } catch (error, stackTrace) {
-        if (!useFallbackService) {
-          useFallbackService = true;
-        }
-        Log.error(
-          '$runtimeType init ERROR',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: '$runtimeType init ERROR');
       }
     }
+
+    if (initializedServices.isEmpty || !kReleaseMode) {
+      final fallback = AnalyticsServiceFaker();
+      await fallback.init();
+      initializedServices.add(fallback);
+    }
+
+    _initializedServices.addAll(initializedServices);
 
     if (services.isNotEmpty) {
       for (final service in _initializedServices) {
@@ -50,16 +61,17 @@ class AnalyticsServiceManager implements AnalyticsService {
       }
     }
 
-    if (useFallbackService || _initializedServices.isEmpty) {
-      final fallback = AnalyticsServiceFaker();
-      await fallback.init();
-      _initializedServices.add(fallback);
+    if (_initializedServices.isNotEmpty) {
+      sendAllUninitializedEvents();
     }
   }
 
   @override
   Future<void> setUserId(String? userId) async {
     Log.info('userId: $userId');
+    if (_initializedServices.isEmpty) {
+      return saveUserId(userId);
+    }
     await _runServiceFunction((service) => service.setUserId(userId));
   }
 
@@ -72,6 +84,9 @@ class AnalyticsServiceManager implements AnalyticsService {
       'Event: $name \n'
       'Parameters: $property',
     );
+    if (_initializedServices.isEmpty) {
+      return saveUserProperty(name: name, property: property);
+    }
     await _runServiceFunction((service) {
       return service.setUserProperty(name: name, property: property);
     });
@@ -82,6 +97,9 @@ class AnalyticsServiceManager implements AnalyticsService {
     required String name,
     Map<String, dynamic>? parameters,
   }) async {
+    if (_initializedServices.isEmpty) {
+      return saveLog(name: name, parameters: parameters);
+    }
     await _runServiceFunction((service) {
       return service.logEvent(name: name, parameters: parameters);
     });

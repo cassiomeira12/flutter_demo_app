@@ -14,11 +14,7 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
       },
       onError: (error, stackTrace) {
         _internetConnectionSubscription.cancel();
-        Log.error(
-          'InternetConnectionSubscription',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'InternetConnectionSubscription');
       },
     );
   }
@@ -29,14 +25,22 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
     growable: true,
   );
 
+  static Timer? _onListenerChangeTimer;
+
   void _listenChangeStatus(InternetStatus status) {
     _clearInactiveStreams();
-    if (_lastStatus != null && _lastStatus != status) {
-      for (final streamController in _listenerStreamList) {
-        streamController.add(status == InternetStatus.connected);
-      }
+    if (_onListenerChangeTimer?.isActive ?? false) {
+      _onListenerChangeTimer?.cancel();
     }
-    _lastStatus = status;
+    _onListenerChangeTimer = Timer(const Duration(seconds: 1), () {
+      if (_lastStatus != null && _lastStatus != status) {
+        Log.debug('Change internet connection status [${status.name}]');
+        for (final streamController in _listenerStreamList) {
+          streamController.add(status == InternetStatus.connected);
+        }
+      }
+      _lastStatus = status;
+    });
   }
 
   void _clearInactiveStreams() {
@@ -51,10 +55,7 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
   }
 
   @override
-  Future<bool> hasInternetAccess() async {
-    final bool result = await _internetConnection.hasInternetAccess;
-    return result;
-  }
+  Future<bool> hasInternetAccess() => _internetConnection.hasInternetAccess;
 
   @override
   void pauseStream() {

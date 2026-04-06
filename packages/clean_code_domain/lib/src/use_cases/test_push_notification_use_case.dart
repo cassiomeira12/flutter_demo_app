@@ -1,3 +1,4 @@
-abstract class TestPushNotificationUseCase {
-  Future<void> call({String? title, String? body, String? imageUrl});
-}
+import 'package:core/core.dart';
+
+abstract class TestPushNotificationUseCase
+    extends BaseUseCaseAsyncParam<Result<void>, TestPushNotificationDto?> {}

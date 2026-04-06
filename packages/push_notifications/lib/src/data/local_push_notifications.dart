@@ -116,6 +116,11 @@ class LocalPushNotifications implements PushNotificationsService {
   }
 
   @override
+  Future<PermissionStatus> requestPermission() {
+    return _requestPermissionUseCase.call(Permission.notification);
+  }
+
+  @override
   Future<void> showNotification({
     required int id,
     required String? title,
@@ -160,11 +165,7 @@ class LocalPushNotifications implements PushNotificationsService {
         ),
       );
     } catch (error, stackTrace) {
-      Log.error(
-        'createAndroidNotificationChannel',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -252,10 +253,5 @@ class LocalPushNotifications implements PushNotificationsService {
     );
 
     return platformChannelSpecifics;
-  }
-
-  @override
-  Future<PermissionStatus> requestPermission() {
-    return _requestPermissionUseCase.call(Permission.notification);
   }
 }

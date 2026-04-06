@@ -117,11 +117,7 @@ class PushMessagingSettingsController extends BaseController {
     try {
       await _uploadInstallationAppUseCase.call();
     } catch (error, stackTrace) {
-      Log.error(
-        'Push Messaging Settings error uploadInstallation',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -158,20 +154,26 @@ class PushMessagingSettingsController extends BaseController {
           throwsCrashlytics: false,
         );
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
 
       try {
         await _pushNotificationsService.init();
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
     }
   }
 
-  Future<void> testPush() async {
+  Future<Result<void>> testPush() async {
     clickTagging(component: 'test_push_notification_key');
-    await _testPushNotificationUseCase.call();
+    final result = await _testPushNotificationUseCase.call(null);
+
+    if (result is Error) {
+      Log.baseException(result.error);
+    }
+
+    return result;
   }
 
   Future<void> copyToken() async {

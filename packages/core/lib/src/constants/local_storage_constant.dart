@@ -14,3 +14,4 @@ const String SESSION_WAS_EXPIRED = 'session_was_expired';
 const String SUBSCRIBE_PUSH_TOPICS = 'subscribe_push_topics';
 const String PUSH_TOKEN = 'push_token';
 const String APP_INSTALLATION = 'app_installation';
+const String LAST_OPENED_UPDATE_PAGE = 'last_opened_update_page';

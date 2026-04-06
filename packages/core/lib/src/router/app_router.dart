@@ -24,6 +24,7 @@ enum AppRouter {
   about('/settings/about'),
   user('/settings/user'),
   security('/settings/security'),
+  themes('/settings/themes'),
   securityBlocked('/security_blocked'),
   changePassword('/settings/user/change_password'),
   deleteAccount('/delete_account'),

@@ -27,13 +27,13 @@ class PushNotificationsController extends BaseController {
 
   // UserEntity? get userSelected => usersStore.userSelected;
 
-  @override
-  void onInit() {
-    super.onInit();
-    // userController.value = TextEditingValue(
-    //   text: usersStore.userSelected?.username ?? '',
-    // );
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   userController.value = TextEditingValue(
+  //     text: usersStore.userSelected?.username ?? '',
+  //   );
+  // }
 
   Future<List<UserEntity>> searchUsers(
     String? query,
@@ -72,15 +72,23 @@ class PushNotificationsController extends BaseController {
     );
   }
 
-  Future<void> testPush({
+  Future<Result<void>> testPush({
     required String title,
     required String body,
     String? imageUrl,
   }) async {
-    await _testPushNotificationUseCase.call(
-      title: title,
-      body: body,
-      imageUrl: imageUrl,
+    final result = await _testPushNotificationUseCase.call(
+      TestPushNotificationDto(
+        title: title,
+        body: body,
+        imageUrl: imageUrl,
+      ),
     );
+
+    if (result is Error) {
+      Log.baseException(result.error);
+    }
+
+    return result;
   }
 }

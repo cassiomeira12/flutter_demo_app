@@ -22,13 +22,12 @@ class LoginServiceImpl implements LoginService {
       return user;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('login', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'login',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

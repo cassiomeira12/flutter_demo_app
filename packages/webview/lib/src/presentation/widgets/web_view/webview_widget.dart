@@ -19,6 +19,7 @@ class WebViewWidget extends StatefulWidget {
   final void Function() processGone;
   final void Function(String log) onLog;
   final void Function(Uri uri) openExternalLink;
+  final Future<bool> Function() checkInternet;
   final void Function() noInternetConnectionCallback;
 
   final Widget? onLoadingWidget;
@@ -43,6 +44,7 @@ class WebViewWidget extends StatefulWidget {
     this.onErrorWidget,
     required this.onLog,
     required this.openExternalLink,
+    required this.checkInternet,
     required this.noInternetConnectionCallback,
   });
 
@@ -82,15 +84,9 @@ class _WebViewWidgetState extends State<WebViewWidget>
     return _pullToRefreshController;
   }
 
-  URLRequest get _initialRequest {
-    late String url;
-    if (widget.replaceUrl == null) {
-      url = widget.initialUrl;
-    } else {
-      url = widget.replaceUrl!(widget.initialUrl);
-    }
-    return URLRequest(url: WebUri(url));
-  }
+  Uri get _initialUri => Uri.parse(
+    widget.replaceUrl?.call(widget.initialUrl) ?? widget.initialUrl,
+  );
 
   @override
   void initState() {
@@ -130,26 +126,32 @@ class _WebViewWidgetState extends State<WebViewWidget>
     _initialScrollY = widget.initialScrollY ?? 0;
     _webViewController = WebViewWidgetControllerImpl(
       globalKeyHash: globalKeyHash,
-      url: widget.initialUrl,
+      uri: _initialUri,
       processGone: widget.processGone,
       secondsToStartWebViewReload: widget.secondsToStartWebViewReload,
       loading: widget.loading,
       onLog: widget.onLog,
+      checkInternet: widget.checkInternet,
       noInternetConnectionCallback: widget.noInternetConnectionCallback,
+    );
+    _webViewController.startTrackPerformance(_initialUri);
+    final showWebViewTrack = _webViewController.trackPerformance?.startChild(
+      name: 'webview-show-widget-track',
     );
     Future.delayed(
       const Duration(milliseconds: 500),
-      _webViewController.showWebViewWidget,
+      () {
+        _webViewController.showWebViewWidget();
+        showWebViewTrack?.finish();
+      },
     );
-    debugPrint('webview_widget $globalKeyHash -------------------------------');
-    widget.onLog('initState');
+    widget.onLog('initState $globalKeyHash -------------------------------');
   }
 
   @override
   void dispose() {
     _webViewController.dispose();
-    widget.onLog('dispose');
-    debugPrint('webview_widget $globalKeyHash -------------------------------');
+    widget.onLog('dispose $globalKeyHash -------------------------------');
     super.dispose();
   }
 
@@ -166,35 +168,29 @@ class _WebViewWidgetState extends State<WebViewWidget>
           return InAppWebView(
             key: GlobalKey(debugLabel: globalKeyHash),
             initialSettings: InAppWebViewSettings(
-              isInspectable: kDebugMode,
+              isInspectable: !kReleaseMode,
               userAgent: widget.userAgent,
-              // javaScriptEnabled: true,
               allowsLinkPreview: false,
-              // allowBackgroundAudioPlaying: false,
               allowsBackForwardNavigationGestures: false,
               allowsInlineMediaPlayback: Platform.appleDevice,
               disableDefaultErrorPage: true,
-              // disableHorizontalScroll: false,
               verticalScrollBarEnabled: false,
               horizontalScrollBarEnabled: false,
               mediaPlaybackRequiresUserGesture: false,
               sharedCookiesEnabled: Platform.appleDevice,
-              //
               supportZoom: false,
-              // minimumZoomScale: 1.0,
-              // maximumZoomScale: 1.0,
-              //
               supportMultipleWindows: true,
-              // useHybridComposition: true,
               useOnLoadResource: true,
               useOnNavigationResponse: true,
               useOnRenderProcessGone: true,
               useShouldOverrideUrlLoading: true,
-              //
-              transparentBackground: true,
               underPageBackgroundColor: StaticColors.white,
             ),
-            initialUrlRequest: _initialRequest,
+            initialUrlRequest: URLRequest(
+              url: WebUri(
+                widget.replaceUrl?.call(widget.initialUrl) ?? widget.initialUrl,
+              ),
+            ),
             pullToRefreshController: pullToRefreshController(context),
             onWebViewCreated: (controller) {
               _webViewController.setInAppWebViewController(controller);
@@ -240,6 +236,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
               return onReceivedError(
                 request,
                 error,
+                webViewController: _webViewController,
                 onError: widget.onError,
                 onLog: widget.onLog,
               );
@@ -248,6 +245,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
               return onReceivedHttpError(
                 request,
                 errorResponse,
+                webViewController: _webViewController,
                 onError: widget.onError,
                 onLog: widget.onLog,
                 processGone: widget.processGone,
@@ -257,6 +255,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
               _webViewController.setInAppWebViewController(null);
               return onRenderProcessGone(
                 detail,
+                webViewController: _webViewController,
                 onLog: widget.onLog,
                 processGone: widget.processGone,
               );
@@ -264,6 +263,7 @@ class _WebViewWidgetState extends State<WebViewWidget>
             onWebContentProcessDidTerminate: (_) {
               _webViewController.setInAppWebViewController(null);
               return onWebContentProcessDidTerminate(
+                webViewController: _webViewController,
                 onLog: widget.onLog,
                 processGone: widget.processGone,
               );

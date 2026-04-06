@@ -16,11 +16,10 @@ class SentryCrashlytics implements CrashlyticsService {
         options.debug = !kReleaseMode;
         options.sampleRate = 1.0;
         options.tracesSampleRate = 1.0;
-        options.profilesSampleRate = 1.0;
         options.anrEnabled = true;
         options.sendDefaultPii = true;
         options.attachScreenshot = true;
-        options.attachViewHierarchy = true;
+        options.attachStacktrace = true;
         options.enablePrintBreadcrumbs = true;
         options.reportSilentFlutterErrors = true;
         options.enableTimeToFullDisplayTracing = true;
@@ -32,9 +31,46 @@ class SentryCrashlytics implements CrashlyticsService {
   void log(
     String message, {
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.debug,
   }) {
     final breadcrumb = Breadcrumb(
       message: message,
+      category: 'console',
+      type: type.name,
+      level: SentryLevel.fromName(level.name),
+    );
+
+    Sentry.addBreadcrumb(breadcrumb);
+  }
+
+  @override
+  void logHttp(
+    String message, {
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.http,
+  }) {
+    final breadcrumb = Breadcrumb(
+      message: message,
+      category: 'http',
+      type: type.name,
+      level: SentryLevel.fromName(level.name),
+    );
+
+    Sentry.addBreadcrumb(breadcrumb);
+  }
+
+  @override
+  void logUserInteraction(
+    String event, {
+    Map<String, dynamic>? parameters,
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.user,
+  }) {
+    final breadcrumb = Breadcrumb(
+      message: event,
+      data: parameters,
+      category: 'ui.User Interaction',
+      type: type.name,
       level: SentryLevel.fromName(level.name),
     );
 
@@ -43,8 +79,12 @@ class SentryCrashlytics implements CrashlyticsService {
 
   @override
   Future<void> setUserId(String? userId) async {
-    _user ??= SentryUser(id: userId);
-    _user?.id = userId;
+    try {
+      _user ??= SentryUser(id: userId);
+      _user?.id = userId;
+    } catch (_) {
+      _user = null;
+    }
 
     Sentry.configureScope((scope) => scope.setUser(_user));
   }
@@ -70,6 +110,19 @@ class SentryCrashlytics implements CrashlyticsService {
       ..remove('ipAddress');
 
     _user?.data = property;
+
+    Sentry.configureScope((scope) => scope.setUser(_user));
+  }
+
+  @override
+  void setIpAddress(IpAddressLocationEntity ipAddress) {
+    _user?.ipAddress = ipAddress.ip;
+
+    _user?.geo = SentryGeo(
+      countryCode: ipAddress.countryCode,
+      city: ipAddress.city,
+      region: ipAddress.region,
+    );
 
     Sentry.configureScope((scope) => scope.setUser(_user));
   }
@@ -102,16 +155,19 @@ class SentryCrashlytics implements CrashlyticsService {
 
   @override
   TrackOperation trackOperation({
-    String? name,
-    String? operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   }) {
-    final track = Sentry.startTransaction(
-      name ?? 'name',
-      operation ?? 'operation',
-      startTimestamp: startTimestamp,
+    return SentryTrackOperation(
+      Sentry.startTransaction(
+        name,
+        name,
+        description: description,
+        startTimestamp: startTimestamp,
+        waitForChildren: true,
+      ),
     );
-    return SentryTrackOperation(track: track, operation: operation);
   }
 
   @override
@@ -124,42 +180,77 @@ class SentryCrashlytics implements CrashlyticsService {
 }
 
 class SentryTrackOperation implements TrackOperation {
-  final ISentrySpan track;
-  final String? _parentOperation;
+  final ISentrySpan _sentrySpan;
+  bool finished = false;
 
-  bool _catchError = false;
+  TrackOperationStatus _resultStatus = TrackOperationStatus.ok;
 
-  SentryTrackOperation({
-    required this.track,
-    String? operation,
-  }) : _parentOperation = operation;
+  SentryTrackOperation(
+    ISentrySpan sentrySpan,
+  ) : _sentrySpan = sentrySpan;
 
   @override
   TrackOperation startChild({
-    required String operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   }) {
-    final trackChild = track.startChild(
-      operation,
-      description: _parentOperation,
-      startTimestamp: startTimestamp,
+    return SentryTrackOperation(
+      _sentrySpan.startChild(
+        name,
+        description: description ?? name,
+        startTimestamp: startTimestamp,
+      ),
     );
-    return SentryTrackOperation(track: trackChild);
   }
 
   @override
-  void catchError({Object? error}) {
-    track.throwable = error;
-    _catchError = error != null;
+  void setData({
+    required String key,
+    required dynamic value,
+  }) {
+    _sentrySpan.setData(key, value);
+  }
+
+  @override
+  void setStatus(TrackOperationStatus? status) {
+    _resultStatus = status ?? TrackOperationStatus.ok;
   }
 
   @override
   void finish({DateTime? endTimestamp}) {
-    track.finish(
+    if (finished) return;
+    finished = true;
+    _sentrySpan.finish(
       endTimestamp: endTimestamp,
-      status: _catchError
-          ? const SpanStatus.internalError()
-          : const SpanStatus.ok(),
+      status: _parseSpanStatus,
     );
+  }
+
+  SpanStatus get _parseSpanStatus {
+    switch (_resultStatus) {
+      case TrackOperationStatus.ok:
+        return const SpanStatus.ok();
+      case TrackOperationStatus.cancelled:
+        return const SpanStatus.cancelled();
+      case TrackOperationStatus.internalError:
+        return const SpanStatus.internalError();
+      case TrackOperationStatus.unknownError:
+        return const SpanStatus.unknownError();
+      case TrackOperationStatus.notFound:
+        return const SpanStatus.notFound();
+      case TrackOperationStatus.alreadyExists:
+        return const SpanStatus.alreadyExists();
+      case TrackOperationStatus.permissionDenied:
+        return const SpanStatus.permissionDenied();
+      case TrackOperationStatus.aborted:
+        return const SpanStatus.aborted();
+      case TrackOperationStatus.unavailable:
+        return const SpanStatus.unavailable();
+      case TrackOperationStatus.dataLoss:
+        return const SpanStatus.dataLoss();
+      case TrackOperationStatus.unauthenticated:
+        return const SpanStatus.unauthenticated();
+    }
   }
 }

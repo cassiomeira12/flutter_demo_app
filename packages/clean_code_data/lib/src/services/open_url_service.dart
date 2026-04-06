@@ -11,9 +11,9 @@ class OpenUrlServiceImpl implements OpenUrlService {
       } else {
         throw Exception('Could not launch $uri');
       }
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
-      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -26,9 +26,9 @@ class OpenUrlServiceImpl implements OpenUrlService {
       } else {
         throw Exception('Could not launch $uri');
       }
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
-      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

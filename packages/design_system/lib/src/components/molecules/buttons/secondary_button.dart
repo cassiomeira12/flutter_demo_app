@@ -42,9 +42,6 @@ class SecondaryButton extends StatelessWidget {
         theme.outlinedButtonTheme.style?.textStyle?.resolve({
           WidgetState.selected,
         })?.color;
-    // final iconColor = theme.outlinedButtonTheme.style?.textStyle?.resolve({
-    //   WidgetState.selected,
-    // })?.color;
 
     return Container(
       height: size.height,
@@ -70,7 +67,6 @@ class SecondaryButton extends StatelessWidget {
                   context,
                 ).textColor.withAlpha((255 * .20).toInt()),
                 style: onPressed == null ? BorderStyle.none : BorderStyle.solid,
-                // strokeAlign: BorderSide.strokeAlignCenter,
               ),
             ),
           ),

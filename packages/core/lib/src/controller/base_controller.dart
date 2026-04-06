@@ -12,7 +12,9 @@ class BaseController extends GetxController with AnalyticsMixin {
     return navigatorIndex.value;
   }
 
-  BuildContext? _currentContext;
+  bool _buildContextSet = false;
+  late BuildContext _currentContext;
+  BuildContext get context => _currentContext;
 
   @override
   void onInit() {
@@ -33,13 +35,14 @@ class BaseController extends GetxController with AnalyticsMixin {
   }
 
   void setPageContext(BuildContext context) {
-    if (_currentContext != null) return;
+    if (_buildContextSet) return;
     _currentContext = context;
     onReadyPage(context);
+    _buildContextSet = true;
   }
 
   void onReadyPage(BuildContext context) {
-    if (_currentContext != null) return;
+    if (_buildContextSet) return;
     _currentContext = context;
   }
 

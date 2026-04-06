@@ -27,18 +27,18 @@ class AppPermissionsServiceImpl implements AppPermissionsService {
         default:
           return await permission.status;
       }
-    } on MissingPluginException catch (error, stacktrace) {
+    } on MissingPluginException catch (error, stackTrace) {
       if (permission == Permission.notification) {
         // ignore exception notification on macos
         if (Platform.isMacOS) {
           return PermissionStatus.permanentlyDenied;
         }
       }
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+      Log.exception(error, stackTrace);
       rethrow;
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
-      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -69,18 +69,18 @@ class AppPermissionsServiceImpl implements AppPermissionsService {
         default:
           return await permission.request();
       }
-    } on MissingPluginException catch (error, stacktrace) {
+    } on MissingPluginException catch (error, stackTrace) {
       if (permission == Permission.notification) {
         // ignore exception notification on macos
         if (Platform.isMacOS) {
           return PermissionStatus.permanentlyDenied;
         }
       }
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+      Log.exception(error, stackTrace);
       rethrow;
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
-      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

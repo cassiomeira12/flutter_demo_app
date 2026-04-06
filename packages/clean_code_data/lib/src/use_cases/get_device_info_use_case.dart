@@ -7,8 +7,7 @@ class GetDeviceInfoUseCaseImpl implements GetDeviceInfoUseCase {
     : _service = deviceInfoService;
 
   @override
-  Future<DeviceInfoModel> call() async {
-    final deviceInfo = await _service.getDeviceInfo();
-    return deviceInfo as DeviceInfoModel;
+  Future<DeviceInfoEntity> call() {
+    return _service.getDeviceInfo();
   }
 }

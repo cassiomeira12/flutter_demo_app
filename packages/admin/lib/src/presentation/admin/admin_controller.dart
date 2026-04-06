@@ -5,20 +5,20 @@ class AdminController extends BaseController {
   // final IGetUserDataUseCase _getUserDataUseCase;
   // final IOpenWebUrlUseCase _openWebUrlUseCase;
   final LogoutUseCase _logoutUseCase;
-  final LocalStorageUseCase _localStorageUseCase;
-  final PushMessagingService _pushMessagingService;
+  // final LocalStorageUseCase _localStorageUseCase;
+  // final PushMessagingService _pushMessagingService;
   final AppSecurityManager _appSecurityManager;
 
   AdminController({
     //required IGetUserDataUseCase getUserDataUseCase,
     //required IOpenWebUrlUseCase openWebUrlUseCase,
     required LogoutUseCase logoutUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required PushMessagingService pushMessagingService,
+    // required LocalStorageUseCase localStorageUseCase,
+    // required PushMessagingService pushMessagingService,
     required AppSecurityManager appSecurityManager,
   }) : _logoutUseCase = logoutUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _pushMessagingService = pushMessagingService,
+       //  _localStorageUseCase = localStorageUseCase,
+       //  _pushMessagingService = pushMessagingService,
        _appSecurityManager = appSecurityManager;
 
   final EnvironmentEntity environment = AppBinding.find<EnvironmentEntity>();

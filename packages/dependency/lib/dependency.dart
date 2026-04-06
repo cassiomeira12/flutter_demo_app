@@ -2,7 +2,7 @@
 
 export 'dart:async';
 export 'dart:convert';
-export 'dart:io' hide Cookie, HeaderValue, X509Certificate;
+export 'dart:io' hide Cookie, HeaderValue, Platform, X509Certificate;
 export 'dart:math';
 export 'dart:typed_data';
 
@@ -17,7 +17,8 @@ export 'src/camera.dart';
 export 'src/crashlytics.dart';
 export 'src/database.dart';
 export 'src/deeplink.dart';
-export 'src/dependecy_injection.dart';
+export 'src/dependency_injection.dart';
+export 'src/dev_dependencies.dart';
 export 'src/device_info.dart';
 export 'src/feature_flag.dart';
 export 'src/firebase.dart';

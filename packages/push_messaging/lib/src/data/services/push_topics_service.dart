@@ -16,7 +16,7 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('subscribeTopic', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'subscribeTopic',
         error: error,
@@ -32,7 +32,7 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('unsubscribeTopic', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'unsubscribeTopic',
         error: error,
@@ -48,7 +48,7 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('subscribeUserTopic', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'subscribeUserTopic',
         error: error,
@@ -64,7 +64,7 @@ class PushTopicsServiceImpl implements PushTopicsService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('unsubscribeUserTopic', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'unsubscribeUserTopic',
         error: error,

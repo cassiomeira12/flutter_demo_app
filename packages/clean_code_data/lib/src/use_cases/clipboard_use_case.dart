@@ -13,7 +13,8 @@ class ClipboardUseCaseImpl implements ClipboardUseCase {
       Log.info('Clipboard copy: [$text]');
       if (autoClear) _clearClipboard(secondsToClear);
     } catch (error, stackTrace) {
-      Log.error('Clipboard.copy', error: error, stackTrace: stackTrace);
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -23,12 +24,8 @@ class ClipboardUseCaseImpl implements ClipboardUseCase {
       final ClipboardData? data = await Clipboard.getData('text/plain');
       return data?.text ?? '';
     } catch (error, stackTrace) {
-      Log.error('Clipboard.paste', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'Clipboard.paste',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -38,11 +35,7 @@ class ClipboardUseCaseImpl implements ClipboardUseCase {
       await Clipboard.setData(const ClipboardData(text: ''));
       Log.info('Clipboard clearClipboardData');
     } catch (error, stackTrace) {
-      Log.error(
-        'Clipboard.clearClipboard',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 }

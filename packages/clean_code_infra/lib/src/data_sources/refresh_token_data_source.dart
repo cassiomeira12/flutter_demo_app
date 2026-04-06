@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 
 class RefreshTokenDataSourceImpl implements RefreshTokenDataSource {
   @override
-  Future<Map<String, dynamic>> refresh() async {
+  Future<Map<String, dynamic>> refresh() {
     throw UnimplementedError();
   }
 }

@@ -4,12 +4,15 @@ import 'package:dependency/dependency.dart';
 class FeatureFlagLifecycleController extends LifecycleController {
   final AppInfoEntity _appInfoEntity;
   final GetDeviceInfoUseCase _getDeviceInfoUseCase;
+  final LocalStorageUseCase _localStorage;
 
   FeatureFlagLifecycleController({
     required AppInfoEntity appInfoEntity,
     required GetDeviceInfoUseCase getDeviceInfoUseCase,
+    required LocalStorageUseCase localStorageUseCase,
   }) : _appInfoEntity = appInfoEntity,
-       _getDeviceInfoUseCase = getDeviceInfoUseCase;
+       _getDeviceInfoUseCase = getDeviceInfoUseCase,
+       _localStorage = localStorageUseCase;
 
   final _updateAppStream = StreamController<bool>.broadcast();
   final _updateAppRequiredStream = StreamController<bool>.broadcast();
@@ -33,11 +36,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
       },
       onError: (error, stackTrace) {
         _updateAppSubscription?.cancel();
-        Log.error(
-          'UpdateAppSubscription',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'UpdateAppSubscription');
       },
     );
 
@@ -48,11 +47,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
       },
       onError: (error, stackTrace) {
         _updateAppRequiredSubscription?.cancel();
-        Log.error(
-          'UpdateAppRequiredSubscription',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'UpdateAppRequiredSubscription');
       },
     );
 
@@ -63,14 +58,13 @@ class FeatureFlagLifecycleController extends LifecycleController {
       },
       onError: (error, stackTrace) {
         _blockingAppSubscription?.cancel();
-        Log.error(
-          'BlockingAppSubscription',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'BlockingAppSubscription');
       },
     );
   }
+
+  @override
+  void onReady() {}
 
   @override
   void onAppForeground() {
@@ -112,11 +106,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
 
       await FeatureFlagServiceManager.instance.setTraits(deviceTraits);
     } catch (error, stackTrace) {
-      Log.error(
-        'uploadDeviceTraits',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 
@@ -165,11 +155,20 @@ class FeatureFlagLifecycleController extends LifecycleController {
     return false;
   }
 
-  void _listenUpdateApp(bool updateApp) {
+  Future<void> _listenUpdateApp(bool updateApp) async {
+    if (Platform.isWeb) return;
+
     if (updateApp) {
-      if (!Platform.isWeb &&
-          AppNavigator.currentRoute != AppRouter.update.name) {
-        AppNavigator.toNamed(AppRouter.update);
+      if (AppNavigator.currentRoute != AppRouter.update.name) {
+        final String? lastOpened = await _localStorage.get<String>(
+          LAST_OPENED_UPDATE_PAGE,
+        );
+        final now = DateTime.timestamp();
+        if (lastOpened == null ||
+            now.difference(DateTime.parse(lastOpened)).inHours > 24) {
+          AppNavigator.toNamed(AppRouter.update);
+          _localStorage.set<String>(LAST_OPENED_UPDATE_PAGE, now.toString());
+        }
       }
     } else {
       if (AppNavigator.currentRoute == AppRouter.update.name) {
@@ -179,9 +178,10 @@ class FeatureFlagLifecycleController extends LifecycleController {
   }
 
   void _listenAppRequired(bool updateRequired) {
+    if (Platform.isWeb) return;
+
     if (updateRequired) {
-      if (!Platform.isWeb &&
-          AppNavigator.currentRoute != AppRouter.forceUpdate.name) {
+      if (AppNavigator.currentRoute != AppRouter.forceUpdate.name) {
         AppNavigator.backAllAndToNamed(AppRouter.forceUpdate);
       }
     } else {

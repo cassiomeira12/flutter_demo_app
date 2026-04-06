@@ -11,9 +11,25 @@ abstract class CrashlyticsService {
     required Map<String, dynamic> property,
   });
 
+  void setIpAddress(IpAddressLocationEntity ipAddress);
+
   void log(
     String message, {
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.debug,
+  });
+
+  void logHttp(
+    String message, {
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.http,
+  });
+
+  void logUserInteraction(
+    String event, {
+    Map<String, dynamic>? parameters,
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.user,
   });
 
   Future<void> captureException({
@@ -29,29 +45,43 @@ abstract class CrashlyticsService {
   });
 
   TrackOperation trackOperation({
-    String? name,
-    String? operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   });
 
   void simulateCrash();
 
-  static void catchFlutterError(FlutterErrorDetails details) {
-    catchException(details.exception, details.stack);
+  static WidgetsBinding ensureInitialized() {
+    return SentryWidgetsFlutterBinding.ensureInitialized();
   }
 
-  static bool catchException(Object error, StackTrace? stackTrace) {
+  static Widget wrapperWidget(Widget child) {
+    return SentryWidget(child: child);
+  }
+
+  static R? zonedGuarded<R>(
+    R Function() body, {
+    void Function(Object error, StackTrace? stack)? onError,
+  }) {
+    return Sentry.runZonedGuarded<R>(
+      body,
+      onError ?? CrashlyticsService.catchException,
+    );
+  }
+
+  static void catchFlutterError(FlutterErrorDetails details) {
+    catchException(details.exception, details.stack ?? StackTrace.current);
+  }
+
+  static bool catchException(Object error, StackTrace stackTrace) {
     final bool memoryError = error.toString().contains('memory');
     final bool disposeError = error.toString().contains('dispose');
     if (memoryError || disposeError) {
-      Log.fatalError(
-        'potential memory leak',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.fatalException(error, stackTrace, msg: 'Potential Memory Leak');
       return true;
     }
-    Log.fatalError('catchException', error: error, stackTrace: stackTrace);
+    Log.fatalException(error, stackTrace, msg: 'Unexpected Error');
     return true;
   }
 }
@@ -62,4 +92,11 @@ enum CrashlyticsLogLevel {
   warning,
   error,
   fatal,
+}
+
+enum CrashlyticsLogType {
+  http,
+  debug,
+  user,
+  navigation,
 }

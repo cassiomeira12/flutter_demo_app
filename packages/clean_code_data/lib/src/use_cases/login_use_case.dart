@@ -61,8 +61,8 @@ class LoginUseCaseImpl implements LoginUseCase {
 
       return user;
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
-      throw BaseException();
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 

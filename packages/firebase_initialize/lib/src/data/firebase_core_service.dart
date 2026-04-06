@@ -34,12 +34,7 @@ class FirebaseCoreService implements FirebaseInitializeService {
       _app = await Firebase.initializeApp(options: options);
       Log.success('$runtimeType init successful', throwsCrashlytics: false);
     } catch (error, stackTrace) {
-      Log.error(
-        '$runtimeType init ERROR',
-        error: error,
-        stackTrace: stackTrace,
-        throwsCrashlytics: false,
-      );
+      Log.error(error, stackTrace, msg: '$runtimeType init ERROR');
     }
   }
 

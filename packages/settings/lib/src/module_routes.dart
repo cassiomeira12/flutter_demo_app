@@ -17,6 +17,7 @@ class SettingsModuleRoutes implements ModuleRoutes {
         ...UserAccountModuleSubRoutes().pages,
         ...SecurityModuleSubRoutes().pages,
         ...FaqModuleRoutes().pages,
+        ...AppThemesModuleRoutes().pages,
       ],
     ),
   ];

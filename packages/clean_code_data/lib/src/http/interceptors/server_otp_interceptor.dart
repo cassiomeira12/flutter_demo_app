@@ -69,7 +69,7 @@ class ServerOtpInterceptor extends Interceptor {
 
       return encryptedCode;
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }

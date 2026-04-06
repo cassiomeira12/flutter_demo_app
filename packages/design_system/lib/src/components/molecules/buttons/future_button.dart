@@ -47,14 +47,11 @@ class _FutureButtonState extends State<FutureButton> {
         theme.textButtonTheme.style?.backgroundColor?.resolve({
           WidgetState.selected,
         });
-    // final buttonDisabledBackgroundColor = theme
-    //     .textButtonTheme
-    //     .style
-    //     ?.backgroundColor
-    //     ?.resolve({WidgetState.disabled});
-    final textColor = theme.textButtonTheme.style?.textStyle?.resolve({
-      WidgetState.selected,
-    })?.color;
+    final textColor =
+        widget.textColor ??
+        theme.textButtonTheme.style?.textStyle?.resolve({
+          WidgetState.selected,
+        })?.color;
 
     return Container(
       height: widget.size.height,

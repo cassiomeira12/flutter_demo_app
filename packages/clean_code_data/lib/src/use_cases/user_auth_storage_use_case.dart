@@ -94,7 +94,7 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
       );
       return token;
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }
@@ -131,7 +131,7 @@ class UserAuthStorageUseCaseImpl implements UserAuthStorageUseCase {
       final Map<String, dynamic> data = jsonDecode(json);
       return data;
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw InvalidTokenException();
     }
   }

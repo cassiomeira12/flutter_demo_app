@@ -6,6 +6,7 @@ export 'installation_entity.dart';
 export 'ip_address_location_entity.dart';
 export 'notification_entity.dart';
 export 'push_notification_entity.dart';
+export 'result.dart';
 export 'session_entity.dart';
 export 'share_result_entity.dart';
 export 'user_entity.dart';

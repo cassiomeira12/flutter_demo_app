@@ -8,6 +8,14 @@ class PushNotificationsModuleBindings implements ModuleBinding {
       LocalPushOnReceivedNotificationCallback(),
     );
 
+    if (Platform.isWeb) {
+      return await AppBinding.replace<PushNotificationsService>(
+        WebPushNotification(
+          requestPermissionUseCase: AppBinding.find(),
+        ),
+      );
+    }
+
     await AppBinding.replace<PushNotificationsService>(
       LocalPushNotifications(
         appName: const String.fromEnvironment('app_name'),

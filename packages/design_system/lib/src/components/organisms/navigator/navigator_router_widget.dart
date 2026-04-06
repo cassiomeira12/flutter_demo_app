@@ -83,7 +83,7 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
         page.onChangeIndex(isCurrentPage);
       }
     } catch (error, stackTrace) {
-      Log.error('onChangeIndex', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
@@ -96,7 +96,7 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
         page.onTap();
       }
     } catch (error, stackTrace) {
-      Log.error('onTapCurrentIndex', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 

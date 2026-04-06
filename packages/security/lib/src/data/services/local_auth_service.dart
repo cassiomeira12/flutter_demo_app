@@ -38,11 +38,11 @@ class LocalAuthServiceImpl implements LocalAuthService {
         case LocalAuthExceptionCode.userRequestedFallback:
         case LocalAuthExceptionCode.deviceError:
         case LocalAuthExceptionCode.unknownError:
-          Log.error('LocalAuthException', error: error, stackTrace: stackTrace);
+          Log.error(error, stackTrace);
           return false;
       }
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace, msg: 'authenticate: Unexpected Exception');
       return false;
     }
   }
@@ -54,8 +54,8 @@ class LocalAuthServiceImpl implements LocalAuthService {
       final bool canAuthenticate =
           canAuthenticateWithBiometrics || await auth.isDeviceSupported();
       return canAuthenticate;
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace, msg: 'authenticate: Unexpected Exception');
       return false;
     }
   }

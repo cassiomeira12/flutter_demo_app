@@ -2,17 +2,18 @@ import 'package:core/core.dart';
 
 abstract class ExceptionHelper {
   static BaseException call(HttpException error, {StackTrace? stackTrace}) {
-    int? statusCode;
+    int? statusCode = error.statusCode;
     String? errorMessage = error.message;
 
     if (error.data == null) {
       statusCode = error.statusCode;
     } else {
+      if (error.data is String) {
+        errorMessage = error.data;
+      }
       if (error.data is Map<String, dynamic>) {
         statusCode = error.data['code'] as int?;
         errorMessage = error.data['error'] ?? error.message;
-      } else {
-        statusCode = error.statusCode;
       }
     }
 
@@ -60,11 +61,7 @@ abstract class ExceptionHelper {
       case 504:
         throw ServerTimeoutException();
       default:
-        Log.error(
-          'Unexpected Http Exception',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'Unexpected Http Exception');
         throw BaseException(
           message: errorMessage ?? 'default_error',
           error: error,

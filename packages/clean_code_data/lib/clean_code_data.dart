@@ -5,5 +5,6 @@ export 'src/http/http.dart';
 export 'src/local_storage/local_storage.dart';
 export 'src/models/models.dart';
 export 'src/module_bindings.dart';
+export 'src/repositories/repositories.dart';
 export 'src/services/services.dart';
 export 'src/use_cases/use_cases.dart';

@@ -21,6 +21,9 @@ class AppAppSecurityManager extends LifecycleController
   @override
   bool get useBlurProtect => _securityBlurProtection;
 
+  @override
+  void onReady() {}
+
   Future<void> _initBiometricSecurity() async {
     try {
       final bool? enabled = await _localStorage.get<bool>(USE_BIOMETRICS);

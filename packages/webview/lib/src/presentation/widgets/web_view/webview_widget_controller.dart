@@ -7,32 +7,39 @@ abstract class WebViewWidgetController {
   void setInAppWebViewController(InAppWebViewController? controller);
 
   Future<Uri?> get originalUri;
-
   Future<Uri?> get currentUri;
 
   Uri? setCurrentUri(Uri? uri);
 
   Future<String> get defaultUserAgent;
-
   Future<String> get currentUserAgent;
 
   Stream<bool> get showWebView;
 
   void showWebViewWidget();
-
   void hideWebViewWidget();
 
   bool get isPaused;
 
   void pause();
-
   void resume();
+
+  TrackOperation? get trackPerformance;
+  void startTrackPerformance(Uri? uri);
+  void finishTrackPerformance({
+    String? error,
+    TrackOperationStatus status = TrackOperationStatus.ok,
+  });
+  TrackOperation? startOnCreatedWebViewTrack();
+  void startOnStartLoadingTrack();
 
   Future<void> scrollTo({
     required int x,
     required int y,
     bool animated = false,
   });
+
+  Future<void> loadUrl(Uri uri);
 
   Future<void> reload({bool initialUrl = false});
 
@@ -50,7 +57,7 @@ abstract class WebViewWidgetController {
 
   String get globalKeyHash;
 
-  int get lastProgress;
+  ValueNotifier<int> get lastProgress;
   void setProgress(int value);
 
   void clearLoadingManager();
@@ -62,6 +69,8 @@ abstract class WebViewWidgetController {
   void nextStep();
   void errorStep();
 
+  void finishFullLoadingTracking();
+
   void dispose();
 }
 
@@ -71,22 +80,31 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
   final int _secondsToStartWebViewReload;
   final void Function(bool isLoading) loading;
   final void Function(String log) onLog;
+  final Future<bool> Function() _checkInternet;
   final void Function() noInternetConnectionCallback;
 
   WebViewWidgetControllerImpl({
     required String globalKeyHash,
-    required String url,
+    required Uri? uri,
     required this.processGone,
     required int secondsToStartWebViewReload,
     required this.loading,
     required this.onLog,
+    required Future<bool> Function() checkInternet,
     required this.noInternetConnectionCallback,
   }) : _globalKeyHash = globalKeyHash,
+       _checkInternet = checkInternet,
        _secondsToStartWebViewReload = secondsToStartWebViewReload {
-    _currentUri = Uri.parse(url);
+    _currentUri = uri;
   }
 
   final StreamController<bool> _showWebView = StreamController();
+
+  DateTime? _fullLoadingTrack;
+  TrackOperation? _trackPerformance;
+  TrackOperation? _onCreatedWebViewTrack;
+  TrackOperation? _onStartedLoadingTrack;
+
   @override
   Stream<bool> get showWebView => _showWebView.stream;
 
@@ -152,7 +170,7 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
       if (uri == null) return null;
       return setCurrentUri(uri);
     } catch (error, stackTrace) {
-      Log.error('currentUri', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }
@@ -165,7 +183,7 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
       if (uri == null) return null;
       return _replaceUri(uri);
     } catch (error, stackTrace) {
-      Log.error('originalUri', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }
@@ -175,7 +193,7 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
     try {
       return await InAppWebViewController.getDefaultUserAgent();
     } catch (error, stackTrace) {
-      Log.error('defaultUserAgent', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       rethrow;
     }
   }
@@ -205,15 +223,14 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
       _pauseLoadingTimer();
     } catch (error, stackTrace) {
       _isPaused = false;
-      Log.error('pause', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
   @override
   void resume() {
     if (_webviewWasRemovedFromWidgetTree) {
-      showWebViewWidget();
-      return;
+      return showWebViewWidget();
     }
 
     onLog('resume');
@@ -228,8 +245,64 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
       _resumeLoadingTimer();
     } catch (error, stackTrace) {
       _isPaused = true;
-      Log.error('resume', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
+  }
+
+  @override
+  TrackOperation? get trackPerformance => _trackPerformance;
+
+  @override
+  void startTrackPerformance(Uri? uri) {
+    final Uri? currentUri = uri ?? _currentUri;
+    if (currentUri == null) return;
+    late String url;
+    try {
+      url = '${currentUri.origin}${currentUri.path}';
+    } catch (_) {
+      url = currentUri.toString();
+    }
+    if (_trackPerformance == null) {
+      _fullLoadingTrack = DateTime.timestamp();
+      _trackPerformance = CrashlyticsServiceManager.instance.trackOperation(
+        name: 'webview-performance-tracking',
+        description: url,
+      );
+    }
+    _trackPerformance?.setData(key: 'url', value: currentUri.toString());
+  }
+
+  @override
+  void finishTrackPerformance({
+    String? error,
+    TrackOperationStatus status = TrackOperationStatus.ok,
+  }) {
+    if (error != null) {
+      _trackPerformance?.setStatus(status);
+      _trackPerformance?.setData(key: 'error', value: error);
+    }
+
+    _onCreatedWebViewTrack?.finish();
+    _onStartedLoadingTrack?.finish();
+    _trackPerformance?.finish();
+
+    _onCreatedWebViewTrack = null;
+    _onStartedLoadingTrack = null;
+    _trackPerformance = null;
+  }
+
+  @override
+  TrackOperation? startOnCreatedWebViewTrack() {
+    return _onCreatedWebViewTrack = _trackPerformance?.startChild(
+      name: 'webview-on-created-track',
+    );
+  }
+
+  @override
+  void startOnStartLoadingTrack() {
+    _onStartedLoadingTrack = _trackPerformance?.startChild(
+      name: 'webview-on-start-track',
+    );
   }
 
   @override
@@ -241,17 +314,25 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
     try {
       await inAppWebViewController?.scrollTo(x: x, y: y, animated: animated);
     } catch (error, stackTrace) {
-      Log.error('scrollTo', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
+  }
+
+  @override
+  Future<void> loadUrl(Uri uri) async {
+    await inAppWebViewController?.loadUrl(
+      urlRequest: URLRequest(
+        url: WebUri.uri(uri),
+      ),
+    );
   }
 
   @override
   Future<void> reload({bool initialUrl = false}) async {
     try {
       loading(true);
-      // TODO alterar aqui
-      final checker = AppBinding.find<CheckInternetConnectionUseCase>();
-      final hasInternet = await checker.call();
+
+      final hasInternet = await _checkInternet.call();
       onLog('reload has internet connection [$hasInternet]');
       if (!hasInternet) {
         loading(false);
@@ -259,29 +340,30 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
         return;
       }
 
+      final uri = initialUrl ? await originalUri : await currentUri;
+
       if (Platform.isAndroid) {
         if (initialUrl) {
+          finishTrackPerformance(
+            error: 'reload',
+            status: TrackOperationStatus.cancelled,
+          );
           return processGone();
         }
-        return inAppWebViewController?.reload();
+
+        return loadUrl(uri!);
       }
 
       clearLoadingManager();
       startLoadingTimer();
 
-      final uri = initialUrl ? await originalUri : await currentUri;
       if (Platform.appleDevice) {
-        return inAppWebViewController?.loadUrl(
-          urlRequest: URLRequest(
-            url: WebUri.uri(uri!),
-            // cachePolicy: URLRequestCachePolicy.RELOAD_IGNORING_LOCAL_CACHE_DATA,
-            cachePolicy: URLRequestCachePolicy.RELOAD_REVALIDATING_CACHE_DATA,
-          ),
-        );
+        return loadUrl(uri!);
       }
+
       return inAppWebViewController?.reload();
     } catch (error, stackTrace) {
-      Log.error('reload', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
@@ -296,7 +378,7 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
         callback: callback,
       );
     } catch (error, stackTrace) {
-      Log.error('addJavaScriptHandler', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
@@ -311,8 +393,11 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
         contentWorld: contentWorld,
       );
     } catch (error, stackTrace) {
-      Log.error('evaluateJavascript', error: error, stackTrace: stackTrace);
-      rethrow;
+      throw BaseException(
+        message: 'evaluateJavascript',
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
   }
 
@@ -323,13 +408,11 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
   @override
   LoadWebviewStepEnum get currentStep => _currentStep;
 
-  int _lastProgress = 0;
+  final ValueNotifier<int> _lastProgress = ValueNotifier(0);
   @override
-  int get lastProgress => _lastProgress;
+  ValueNotifier<int> get lastProgress => _lastProgress;
   @override
-  void setProgress(int value) {
-    _lastProgress = value;
-  }
+  void setProgress(int value) => _lastProgress.value = value;
 
   @override
   Timer? checkWebViewIsLoadingTicker;
@@ -345,45 +428,58 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
   Future<void> _checkIfWebViewIsReady(Timer timer) async {
     try {
       final time = Duration(milliseconds: timer.tick * tickerMilliseconds);
-      onLog('Timer ${time.inMilliseconds} milliseconds');
+      final seconds = time.inMilliseconds / 1000;
+
+      onLog('Timer ${seconds.toStringAsFixed(3)} seconds');
       if (time.inSeconds < _secondsToStartWebViewReload) {
         // call javascript after start progressChanged step
         if (_currentStep.isGreaterThanProgressStep) {
-          final bool isReady = await evaluateJavascript(
-            source: scriptLoadingFinished,
-          );
-          onLog('checkIfWebViewIsReady isReady [$isReady]');
-          final bool hideSkeleton = isReady;
-          if (hideSkeleton) {
-            successStep();
-            stopLoadingTimer();
-            loading(false);
-            timer.cancel();
+          try {
+            final bool isReady = await evaluateJavascript(
+              source: scriptLoadingFinished,
+            );
+            if (_checkWebViewIsLoadingTicker == null) return;
+            final bool hideSkeleton = isReady;
+            if (hideSkeleton) {
+              onLog(
+                'checkIfWebViewIsReady isReady ${lastProgress.value}% ⏳',
+              );
+              successStep();
+              stopLoadingTimer();
+              loading(false);
+              timer.cancel();
+              finishTrackPerformance();
+            }
+          } on BaseException catch (error) {
+            Log.baseException(error);
           }
         }
       } else {
         onLog(
-          'loading timeout ${_secondsToStartWebViewReload}s -> FORCE RELOAD',
+          'checkIfWebViewIsReady FORCE RELOAD ${_secondsToStartWebViewReload}s',
         );
-        errorStep();
         stopLoadingTimer();
-        processGone();
         timer.cancel();
+        errorStep();
+        finishTrackPerformance(
+          error: 'loading timeout',
+          status: TrackOperationStatus.dataLoss,
+        );
+        processGone();
       }
     } catch (_) {}
   }
 
   @override
   Future<void> startLoadingTimer() async {
-    //webViewController.currentStep.isGreaterThanProgressStep
     if (currentStep.isFinished) return;
     if (_checkWebViewIsLoadingTicker?.tick == 0) return;
 
     loading(true);
-    if (_checkWebViewIsLoadingTicker == null) {
-      onLog('LoadingTimer [start] ⏲');
-    } else {
-      onLog('LoadingTimer [restart] ⏲');
+    onLog(
+      'LoadingTimer [${_checkWebViewIsLoadingTicker == null ? 'start' : 'restart'}] ⏲',
+    );
+    if (_checkWebViewIsLoadingTicker != null) {
       _checkWebViewIsLoadingTicker?.cancel();
     }
     final period = Duration(milliseconds: tickerMilliseconds);
@@ -447,11 +543,26 @@ class WebViewWidgetControllerImpl implements WebViewWidgetController {
   @override
   void errorStep() {
     _currentStep = LoadWebviewStepEnum.error;
+    _fullLoadingTrack = null;
+  }
+
+  @override
+  void finishFullLoadingTracking() {
+    if (_fullLoadingTrack != null) {
+      final endTracking = DateTime.timestamp();
+      final seconds =
+          endTracking.difference(_fullLoadingTrack!).inMilliseconds / 1000;
+      onLog('Full loading track: ${seconds.toStringAsFixed(3)} seconds');
+    }
   }
 
   @override
   void dispose() {
     _showWebView.close();
     stopLoadingTimer();
+    finishTrackPerformance(
+      error: 'backPage',
+      status: TrackOperationStatus.cancelled,
+    );
   }
 }

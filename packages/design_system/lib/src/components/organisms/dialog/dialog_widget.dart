@@ -101,7 +101,17 @@ abstract class DialogWidget {
           children: [
             TextWidget(title, textAlign: TextAlign.center),
             const SpacerWidget(),
-            TextWidget(message, textAlign: TextAlign.center),
+            Container(
+              constraints: const BoxConstraints(
+                maxHeight: ResponsiveSizeHelper.maxHeight * .5,
+              ),
+              child: SingleChildScrollView(
+                child: TextWidget(
+                  message,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
             const SpacerWidget(height: 2),
             PrimaryButton(
               key: const Key('dialog_ok_button_key'),

@@ -1,7 +1,11 @@
 import 'package:core/core.dart';
 import 'package:core/src/crashlytics/crashlytics_service_faker.dart';
+import 'package:core/src/crashlytics/mixins/mixin.dart';
+import 'package:dependency/dependency.dart';
 
-class CrashlyticsServiceManager implements CrashlyticsService {
+class CrashlyticsServiceManager
+    with FallbackEventsMixin, FallbackTrackOperationsMixin
+    implements CrashlyticsService {
   CrashlyticsServiceManager._();
 
   static final instance = CrashlyticsServiceManager._();
@@ -12,37 +16,48 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     growable: true,
   );
 
-  final List<dynamic> _errors = List.empty(growable: true);
-  final List<dynamic> _stackTraces = List.empty(growable: true);
-
   Future<void> _runServiceFunction(
     Future<void> Function(CrashlyticsService service) function,
   ) {
     return Future.wait(
-      _initializedServices.map((service) => function(service)),
+      _initializedServices.map((service) async {
+        try {
+          await function(service);
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+      }),
     );
   }
 
   @override
   Future<void> init() async {
-    bool useFallbackService = false;
+    final initializedServices = List<CrashlyticsService>.empty(growable: true);
 
     for (final service in services) {
       try {
         await service.init();
-        _initializedServices.add(service);
+        initializedServices.add(service);
         Log.success(
           '${service.runtimeType} init successful',
           throwsCrashlytics: false,
         );
       } catch (error, stackTrace) {
-        if (!useFallbackService) {
-          useFallbackService = true;
-        }
-        _errors.add(error);
-        _stackTraces.add(stackTrace);
+        saveExceptions(
+          message: '${service.runtimeType} init error',
+          error: error,
+          stackTrace: stackTrace,
+        );
       }
     }
+
+    if (initializedServices.isEmpty || !kReleaseMode) {
+      final fallback = CrashlyticsServiceFaker();
+      await fallback.init();
+      initializedServices.add(fallback);
+    }
+
+    _initializedServices.addAll(initializedServices);
 
     if (services.isNotEmpty) {
       for (final service in _initializedServices) {
@@ -50,34 +65,82 @@ class CrashlyticsServiceManager implements CrashlyticsService {
       }
     }
 
-    if (useFallbackService || _initializedServices.isEmpty) {
-      final fallback = CrashlyticsServiceFaker();
-      await fallback.init();
-      _initializedServices.add(fallback);
+    if (_initializedServices.isNotEmpty) {
+      _sendFallbackEvents();
     }
+  }
 
-    for (int i = 0; i < _errors.length; i++) {
-      StackTrace? stackTrace;
-      try {
-        stackTrace = _stackTraces[i];
-      } catch (_) {}
-      captureException(error: _errors[i], stackTrace: stackTrace);
-    }
-
-    _errors.clear();
-    _stackTraces.clear();
+  Future<void> _sendFallbackEvents() async {
+    await sendAllUninitializedEvents();
+    sendAllUninitializedTrackOperation();
   }
 
   @override
   void log(
     String message, {
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.debug,
   }) {
-    _runServiceFunction((service) async => service.log(message, level: level));
+    if (_initializedServices.isEmpty) {
+      return saveLog(message, level: level);
+    }
+    _runServiceFunction(
+      (service) async => service.log(
+        message,
+        level: level,
+        type: type,
+      ),
+    );
   }
 
   @override
-  Future<void> setUserId(String? userId) {
+  void logHttp(
+    String message, {
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.http,
+  }) {
+    if (_initializedServices.isEmpty) {
+      return saveLogHttp(message, level: level, type: type);
+    }
+    _runServiceFunction(
+      (service) async => service.logHttp(
+        message,
+        level: level,
+        type: type,
+      ),
+    );
+  }
+
+  @override
+  void logUserInteraction(
+    String event, {
+    Map<String, dynamic>? parameters,
+    CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
+    CrashlyticsLogType type = CrashlyticsLogType.user,
+  }) {
+    if (_initializedServices.isEmpty) {
+      return saveLogUserInteraction(
+        event,
+        parameters: parameters,
+        level: level,
+        type: type,
+      );
+    }
+    _runServiceFunction(
+      (service) async => service.logUserInteraction(
+        event,
+        parameters: parameters,
+        level: level,
+        type: type,
+      ),
+    );
+  }
+
+  @override
+  Future<void> setUserId(String? userId) async {
+    if (_initializedServices.isEmpty) {
+      return saveUserId(userId);
+    }
     return _runServiceFunction((service) => service.setUserId(userId));
   }
 
@@ -85,10 +148,21 @@ class CrashlyticsServiceManager implements CrashlyticsService {
   Future<void> setUserProperty({
     required String name,
     required Map<String, dynamic> property,
-  }) {
+  }) async {
+    if (_initializedServices.isEmpty) {
+      return saveUserProperty(name: name, property: property);
+    }
     return _runServiceFunction((service) {
       return service.setUserProperty(name: name, property: property);
     });
+  }
+
+  @override
+  void setIpAddress(IpAddressLocationEntity ipAddress) {
+    if (_initializedServices.isEmpty) {
+      return saveIpAddress(ipAddress);
+    }
+    _runServiceFunction((service) async => service.setIpAddress(ipAddress));
   }
 
   @override
@@ -96,10 +170,13 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     String? message,
     required Object error,
     StackTrace? stackTrace,
-  }) {
+  }) async {
     if (_initializedServices.isEmpty) {
-      _errors.add(error);
-      _stackTraces.add(stackTrace);
+      return saveExceptions(
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
     return _runServiceFunction((service) {
       return service.captureException(
@@ -115,10 +192,13 @@ class CrashlyticsServiceManager implements CrashlyticsService {
     String? message,
     required Object error,
     StackTrace? stackTrace,
-  }) {
+  }) async {
     if (_initializedServices.isEmpty) {
-      _errors.add(error);
-      _stackTraces.add(stackTrace);
+      return saveFatalExceptions(
+        message: message,
+        error: error,
+        stackTrace: stackTrace,
+      );
     }
     return _runServiceFunction((service) {
       return service.captureFatalException(
@@ -131,14 +211,32 @@ class CrashlyticsServiceManager implements CrashlyticsService {
 
   @override
   TrackOperation trackOperation({
-    String? name,
-    String? operation,
+    required String name,
+    String? description,
     DateTime? startTimestamp,
   }) {
-    return _initializedServices.first.trackOperation(
-      name: name,
-      operation: operation,
-      startTimestamp: startTimestamp,
+    if (_initializedServices.isEmpty) {
+      return UninitializedTrackOperation(
+        name: name,
+        description: description,
+        startTimestamp: startTimestamp ?? DateTime.timestamp(),
+        onFinishedOperation: (UninitializedTrackOperation parent) {
+          if (_initializedServices.isEmpty) {
+            saveUninitializedTrackOperation(parent);
+          } else {
+            callbackFinishedTrackOperation(parent);
+          }
+        },
+      );
+    }
+    return CollectionTrackOperation(
+      _initializedServices.map((service) {
+        return service.trackOperation(
+          name: name,
+          description: description,
+          startTimestamp: startTimestamp,
+        );
+      }).toList(),
     );
   }
 

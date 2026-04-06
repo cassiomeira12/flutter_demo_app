@@ -188,25 +188,6 @@ mixin NavigatorCallbacksExtension {
     return null;
   }
 
-  // Future<FetchRequest?> shouldInterceptFetchRequest(
-  //   InAppWebViewController controller,
-  //   FetchRequest fetchRequest,
-  // ) async {
-  //   // print('webview_widget $globalKeyHash shouldInterceptFetchRequest');
-  //   //debugPrint('webview_widget $globalKeyHash_widget shouldInterceptFetchRequest ${fetchRequest}');
-  //   return fetchRequest;
-  // }
-
-  // Future<NavigationResponseAction?> onNavigationResponse(
-  //   InAppWebViewController controller,
-  //   NavigationResponse navigationResponse, {
-  //   required String globalKeyHash,
-  //   required void Function(String log) onLog,
-  // }) async {
-  //   onLog('onNavigationResponse ${Platform.currentPlatform}');
-  //   return NavigationResponseAction.ALLOW;
-  // }
-
   void onScrollChanged({
     required int x,
     required int y,

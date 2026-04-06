@@ -28,4 +28,22 @@ class IpAddressLocationEntity {
     required this.ispOrg,
     required this.ip,
   });
+
+  factory IpAddressLocationEntity.emptyIpAddress() {
+    return IpAddressLocationEntity(
+      country: null,
+      countryCode: null,
+      region: null,
+      regionName: null,
+      city: null,
+      zip: null,
+      latitude: null,
+      longitude: null,
+      timezone: null,
+      isp: null,
+      org: null,
+      ispOrg: null,
+      ip: null,
+    );
+  }
 }

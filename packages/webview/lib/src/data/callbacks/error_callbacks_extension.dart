@@ -1,25 +1,24 @@
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:webview/src/presentation/widgets/web_view/webview_widget_controller.dart';
 
 mixin ErrorCallbacksExtension {
   void onReceivedError(
     WebResourceRequest request,
     WebResourceError error, {
+    required WebViewWidgetController webViewController,
     required void Function({required bool isNetworkError, String? error})
     onError,
     required void Function(String log) onLog,
   }) {
-    if (request.isForMainFrame == false) {
-      return;
-    }
+    if (request.isForMainFrame == false) return;
 
     final bool code102 = error.description.contains('code=102');
     final bool requestCancelled =
         error.description.contains('-999') &&
         error.type == WebResourceErrorType.CANCELLED;
 
-    if (code102 || requestCancelled) {
-      return;
-    }
+    if (code102 || requestCancelled) return;
 
     final List<String> networkConnectionErros = [
       'net::ERR_INTERNET_DISCONNECTED',
@@ -54,6 +53,12 @@ mixin ErrorCallbacksExtension {
       'onReceivedError isNetworkError: $isNetworkError ${error.type} ${error.description}',
     );
 
+    webViewController.finishTrackPerformance(
+      error:
+          'onReceivedError isNetworkError: $isNetworkError ${error.type} ${error.description}',
+      status: TrackOperationStatus.internalError,
+    );
+
     onError(
       isNetworkError: isNetworkError,
       error:
@@ -64,24 +69,20 @@ mixin ErrorCallbacksExtension {
   void onReceivedHttpError(
     WebResourceRequest request,
     WebResourceResponse errorResponse, {
+    required WebViewWidgetController webViewController,
     required void Function({required bool isNetworkError, String? error})
     onError,
     required void Function(String log) onLog,
     required void Function() processGone,
   }) {
-    if (request.isForMainFrame == false) {
-      return;
-    }
+    if (request.isForMainFrame == false) return;
 
     if (errorResponse.statusCode == null) {
-      onLog('ERROR onReceivedHttpError ${errorResponse.toJson()}');
-      return;
+      return onLog('ERROR onReceivedHttpError ${errorResponse.toJson()}');
     }
 
     final List<int> skipErros = [-999, 102];
-    if (skipErros.contains(errorResponse.statusCode)) {
-      return;
-    }
+    if (skipErros.contains(errorResponse.statusCode)) return;
 
     final int statusCode = errorResponse.statusCode!;
 
@@ -91,30 +92,31 @@ mixin ErrorCallbacksExtension {
 
     onLog('ERROR onReceivedHttpError ${errorResponse.toJson()}');
 
+    webViewController.finishTrackPerformance(
+      error: 'onReceivedHttpError statusCode: $statusCode',
+      status: TrackOperationStatus.internalError,
+    );
+
     if (isRecoverableError) {
-      processGone();
-      return;
+      return processGone();
     }
 
     if (statusCode == 403) {
-      onError(isNetworkError: false, error: 'onReceivedError Forbidden');
-      return;
+      return onError(isNetworkError: false, error: 'onReceivedError Forbidden');
     }
 
     if (statusCode == 404) {
-      onError(
+      return onError(
         isNetworkError: false,
-        error: 'onReceivedError Página não encontrada',
+        error: 'onReceivedHttpError Página não encontrada',
       );
-      return;
     }
 
     if (isServerError) {
-      onError(
+      return onError(
         isNetworkError: false,
-        error: 'onReceivedError Ocorreu um erro no servidor',
+        error: 'onReceivedHttpError Ocorreu um erro no servidor',
       );
-      return;
     }
 
     onError(
@@ -125,18 +127,28 @@ mixin ErrorCallbacksExtension {
 
   void onRenderProcessGone(
     RenderProcessGoneDetail detail, {
+    required WebViewWidgetController webViewController,
     required void Function(String log) onLog,
     required void Function() processGone,
   }) {
     onLog('ERROR onRenderProcessGone $detail');
+    webViewController.finishTrackPerformance(
+      error: 'onRenderProcessGone ${Platform.currentPlatform}',
+      status: TrackOperationStatus.aborted,
+    );
     processGone();
   }
 
   void onWebContentProcessDidTerminate({
+    required WebViewWidgetController webViewController,
     required void Function(String log) onLog,
     required void Function() processGone,
   }) {
     onLog('ERROR onWebContentProcessDidTerminate');
+    webViewController.finishTrackPerformance(
+      error: 'onWebContentProcessDidTerminate ${Platform.currentPlatform}',
+      status: TrackOperationStatus.aborted,
+    );
     processGone();
   }
 }

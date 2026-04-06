@@ -26,12 +26,12 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     try {
       username = await _secureStorageUseCase.get<String>(USERNAME);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
     try {
       password = await _secureStorageUseCase.get<String>(PASSWORD);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
     return {'username': username, 'password': password};
   }
@@ -57,7 +57,7 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     try {
       return await _secureStorageUseCase.get<String>(SESSION_TOKEN);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }
@@ -77,7 +77,7 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     try {
       return await _secureStorageUseCase.get<String>(USER_DATA);
     } catch (error, stackTrace) {
-      Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       return null;
     }
   }

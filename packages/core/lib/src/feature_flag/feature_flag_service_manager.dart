@@ -15,7 +15,13 @@ class FeatureFlagServiceManager implements FeatureFlagService {
     Function(FeatureFlagService service) function,
   ) {
     return Future.wait(
-      _initializedServices.map((service) => function(service)),
+      _initializedServices.map((service) async {
+        try {
+          await function(service);
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+      }),
     );
   }
 
@@ -35,11 +41,7 @@ class FeatureFlagServiceManager implements FeatureFlagService {
         if (!useFallbackService) {
           useFallbackService = true;
         }
-        Log.error(
-          '$runtimeType init ERROR',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: '$runtimeType init ERROR');
       }
     }
 

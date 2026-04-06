@@ -7,12 +7,10 @@ class LogoutDataSourceImpl implements LogoutDataSource {
 
   @override
   Future<void> logout() async {
-    try {
-      final request = HttpRequest(url: EndpointsEnum.logout.endpoint);
+    final request = HttpRequest(
+      url: EndpointsEnum.logout.endpoint,
+    );
 
-      await _http.post(request);
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    await _http.post(request);
   }
 }

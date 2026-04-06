@@ -56,6 +56,54 @@
             android:name="android.adservices.AD_SERVICES_CONFIG"
             android:resource="@xml/gma_ad_services_config"
             tools:replace="android:resource"/>
+        <activity-alias
+            android:name="${applicationId}.AppIcon"
+            android:label="${appName}"
+            android:icon="@mipmap/ic_launcher"
+            android:theme="@style/LaunchTheme"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".MainActivity">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="${applicationId}.AppIconDEV"
+            android:label="${appName}"
+            android:icon="@mipmap/ic_launcher_dev"
+            android:theme="@style/LaunchThemeDEV"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".MainActivity">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
+        <activity-alias
+            android:name="${applicationId}.AppIconSTG"
+            android:label="${appName}"
+            android:icon="@mipmap/ic_launcher_stg"
+            android:theme="@style/LaunchThemeSTG"
+            android:enabled="false"
+            android:exported="true"
+            android:targetActivity=".MainActivity">
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity-alias>
     </application>
     <queries>
         <intent>

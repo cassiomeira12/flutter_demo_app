@@ -1,5 +1,4 @@
 import 'package:clean_code_domain/clean_code_domain.dart';
 
-abstract class WebVisitHistoryService {
-  Future<List<WebVisitHistoryEntity>> list();
-}
+abstract class WebVisitHistoryService
+    implements ListService<WebVisitHistoryEntity> {}

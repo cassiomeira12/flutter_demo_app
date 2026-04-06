@@ -1,17 +1,20 @@
 import 'package:clean_code_infra/src/data_sources/data_sources.dart';
 import 'package:clean_code_infra/src/http/http.dart';
-import 'package:clean_code_infra/src/local_storage/local_storage.dart';
+import 'package:clean_code_infra/src/http/interceptors/interceptors.dart';
 import 'package:core/core.dart';
 
 class InfraModuleBindings implements ModuleBinding {
   @override
   Future<void> injectDependencies() async {
-    AppBinding.put<LocalStorage>(LocalStorageImpl(), permanent: true);
+    AppBinding.put<LocalStorage>(
+      SharedPreferencesLocalStorageImpl(),
+      permanent: true,
+    );
 
     AppBinding.put<HttpClient>(
       HttpClientImpl(
         baseUrl: const String.fromEnvironment('server_url'),
-        interceptors: [],
+        interceptors: [LogInterceptor()],
       ),
       permanent: true,
     );

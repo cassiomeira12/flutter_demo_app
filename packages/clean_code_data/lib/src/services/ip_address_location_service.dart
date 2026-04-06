@@ -19,13 +19,12 @@ class IpAddressLocationServiceImpl implements IpAddressLocationService {
       return model;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     } catch (error, stackTrace) {
-      Log.error('getIpAddress', error: error, stackTrace: stackTrace);
-      throw BaseException(
-        message: 'getIpAddress',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

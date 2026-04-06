@@ -54,55 +54,71 @@ class SplashController extends BaseController {
   }
 
   @override
-  Future<void> onReady() async {
+  void onReady() {
     super.onReady();
-
-    final startFirebaseInitializeTimestamp = DateTime.timestamp();
-    await _firebaseInitializeService.init();
-    final endFirebaseInitializeTimestamp = DateTime.timestamp();
-
-    final startCrashlyticsInitializeTimestamp = DateTime.timestamp();
-    await CrashlyticsServiceManager.instance.init();
-    final endCrashlyticsInitializeTimestamp = DateTime.timestamp();
-
-    final splashTrack = CrashlyticsServiceManager.instance.trackOperation(
+    PerformanceMetricUseCase.call(
       name: 'splash-performance-tracking',
-      operation: 'splash-loading',
-      startTimestamp: startFirebaseInitializeTimestamp,
+      builder: _initializeAppServices,
+    );
+  }
+
+  @override
+  void onClose() {
+    _updateFeatureFlags();
+    super.onClose();
+  }
+
+  Future<void> _initializeAppServices(TrackOperation splashTrack) async {
+    await PerformanceMetricUseCase.call(
+      name: 'splash-firebase-initialize-track',
+      track: splashTrack,
+      builder: (_) => _firebaseInitializeService.init(),
     );
 
-    final firebaseInitializeTrack = splashTrack.startChild(
-      operation: 'splash-firebase-initialize-track',
-      startTimestamp: startFirebaseInitializeTimestamp,
-    );
-    firebaseInitializeTrack.finish(
-      endTimestamp: endFirebaseInitializeTimestamp,
-    );
-
-    final crashlyticsInitializeTrack = splashTrack.startChild(
-      operation: 'splash-crashlytics-initialize-track',
-      startTimestamp: startCrashlyticsInitializeTimestamp,
-    );
-    crashlyticsInitializeTrack.finish(
-      endTimestamp: endCrashlyticsInitializeTimestamp,
+    await PerformanceMetricUseCase.call(
+      name: 'splash-crashlytics-initialize-track',
+      track: splashTrack,
+      builder: (_) => CrashlyticsServiceManager.instance.init(),
     );
 
     await PerformanceMetricUseCase.call(
       name: 'splash-services-initialize',
       track: splashTrack,
-      builder: () => Future.wait([
-        _appSecurityManager.init(),
-        _appsFlyerService.init(),
-        _getDeviceLocaleUseCase.call().then(Get.updateLocale),
-        AnalyticsServiceManager.instance.init(),
-        FeatureFlagServiceManager.instance.init(),
-      ]),
+      builder: (track) {
+        return Future.wait([
+          PerformanceMetricUseCase.call(
+            name: 'splash-services-app-security-manager-initialize',
+            track: track,
+            builder: (_) => _appSecurityManager.init(),
+          ),
+          PerformanceMetricUseCase.call(
+            name: 'splash-services-appsflyer-initialize',
+            track: track,
+            builder: (_) => _appsFlyerService.init(),
+          ),
+          PerformanceMetricUseCase.call(
+            name: 'splash-services-device-locale-initialize',
+            track: track,
+            builder: (_) =>
+                _getDeviceLocaleUseCase.call().then(Get.updateLocale),
+          ),
+          PerformanceMetricUseCase.call(
+            name: 'splash-services-analytics-initialize',
+            track: track,
+            builder: (_) => AnalyticsServiceManager.instance.init(),
+          ),
+          PerformanceMetricUseCase.call(
+            name: 'splash-services-feature-flag-initialize',
+            track: track,
+            builder: (_) => FeatureFlagServiceManager.instance.init(),
+          ),
+        ]);
+      },
     );
 
     if (!Platform.isWeb) {
       final bool introDone = await _checkIntroDone();
       if (!introDone) {
-        splashTrack.finish();
         return AppNavigator.backAllAndToNamed(AppRouter.intro);
       }
     }
@@ -119,7 +135,7 @@ class SplashController extends BaseController {
     final UserEntity? user = await PerformanceMetricUseCase.call<UserEntity?>(
       name: 'splash-get-user-authenticated',
       track: splashTrack,
-      builder: _getUserAuthenticated,
+      builder: (_) => _getUserAuthenticated(),
     );
 
     setUserIdentifier(user?.id, property: user?.toMap());
@@ -127,27 +143,20 @@ class SplashController extends BaseController {
     await PerformanceMetricUseCase.call(
       name: 'splash-check-updated-app',
       track: splashTrack,
-      builder: _checkUpdatedApp,
+      builder: (_) => _checkUpdatedApp(),
     );
 
     if (Platform.isWeb) {
-      splashTrack.finish();
-      AppNavigator.backAllAndToNamed(AppRouter.web);
-      return;
+      return AppNavigator.backAllAndToNamed(AppRouter.web);
     }
 
-    splashTrack.finish();
     _updateUserInstallation();
+
     if (user != null) {
       await _appSecurityManager.checkIfNeedBlockApp();
     }
-    _openNextPage(userAuthenticated: user);
-  }
 
-  @override
-  void onClose() {
-    _updateFeatureFlags();
-    super.onClose();
+    _openNextPage(userAuthenticated: user);
   }
 
   Future<void> _initPushNotification() async {
@@ -174,13 +183,13 @@ class SplashController extends BaseController {
           throwsCrashlytics: false,
         );
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
 
       try {
         await _pushNotificationsService.init();
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
     }
 
@@ -205,7 +214,7 @@ class SplashController extends BaseController {
       try {
         await _onUpdatedAppCallback(currentVersionApp);
       } catch (error, stackTrace) {
-        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+        Log.error(error, stackTrace);
       }
     }
   }
@@ -247,7 +256,7 @@ class SplashController extends BaseController {
         _unsubscribeBlockedTopic();
       }
     } catch (error, stackTrace) {
-      Log.error('_updateFeatureFlags', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
     }
   }
 
@@ -276,11 +285,7 @@ class SplashController extends BaseController {
         ]);
         await _localStorageUseCase.delete(BLOCKED_APP);
       } catch (error, stackTrace) {
-        Log.error(
-          'BlockedApp unsubscribe topic',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace);
       }
     }
   }
@@ -317,12 +322,7 @@ class SplashController extends BaseController {
         }
         return;
       }
-
-      Log.error(
-        'Splash error uploadInstallation',
-        error: error,
-        stackTrace: stackTrace,
-      );
+      Log.error(error, stackTrace);
     }
   }
 

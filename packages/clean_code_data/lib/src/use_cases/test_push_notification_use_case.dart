@@ -1,4 +1,4 @@
-import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:core/core.dart';
 
 class TestPushNotificationUseCaseImpl implements TestPushNotificationUseCase {
   final NotificationService _service;
@@ -8,7 +8,7 @@ class TestPushNotificationUseCaseImpl implements TestPushNotificationUseCase {
   }) : _service = notificationService;
 
   @override
-  Future<void> call({String? title, String? body, String? imageUrl}) {
-    return _service.testPush(title: title, body: body, imageUrl: imageUrl);
+  Future<Result<void>> call(TestPushNotificationDto? param) {
+    return _service.testPush(param);
   }
 }

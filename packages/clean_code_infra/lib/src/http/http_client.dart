@@ -1,5 +1,4 @@
-import 'package:clean_code_data/clean_code_data.dart';
-import 'package:clean_code_infra/src/http/interceptors/interceptors.dart';
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class HttpClientImpl implements HttpClient {
@@ -23,12 +22,11 @@ class HttpClientImpl implements HttpClient {
         baseUrl: _baseUrl,
         connectTimeout: connectTimeout ?? defaultConnectTimeout,
         receiveTimeout: receiveTimeout ?? defaultReceiveTimeout,
-        sendTimeout: sendTimeout ?? defaultSendTimeout,
+        sendTimeout: Platform.isWeb ? null : sendTimeout ?? defaultSendTimeout,
       ),
     );
 
     _dio.interceptors.addAll(interceptors ?? []);
-    _dio.interceptors.add(LogInterceptor());
 
     _dio.addSentry();
   }
@@ -206,15 +204,15 @@ class HttpClientImpl implements HttpClient {
     switch (error.type) {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
-        statusCode = 503;
+        statusCode ??= 503;
       case DioExceptionType.receiveTimeout:
-        statusCode = 504;
+        statusCode ??= 504;
       case DioExceptionType.badCertificate:
       case DioExceptionType.badResponse:
-        statusCode = 400;
+        statusCode ??= 400;
       case DioExceptionType.cancel:
       case DioExceptionType.connectionError:
-        statusCode = 502;
+        statusCode ??= 502;
       case DioExceptionType.unknown:
     }
 

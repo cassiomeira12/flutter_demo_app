@@ -5,8 +5,11 @@ class AnalyticsLifecycleController extends LifecycleController
   @override
   void onInit() {
     super.onInit();
-    appOpenedTagging();
+    appStartedTagging();
   }
+
+  @override
+  void onReady() {}
 
   @override
   void onAppResumed() {

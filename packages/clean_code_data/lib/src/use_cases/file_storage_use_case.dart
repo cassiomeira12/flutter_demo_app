@@ -1,5 +1,4 @@
-import 'package:clean_code_data/src/use_cases/use_cases.dart';
-import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class FileStorageUseCaseImpl implements FileStorageUseCase {
@@ -47,7 +46,8 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
             return file;
           }
           return null;
-        } catch (error) {
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
           return null;
         }
       },
@@ -67,7 +67,8 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
             await file.delete();
           }
           return await file.writeAsBytes(bytes);
-        } catch (error) {
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
           rethrow;
         }
       },
@@ -87,7 +88,8 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
             await file.delete();
           }
           return await file.writeAsString(contents);
-        } catch (error) {
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
           rethrow;
         }
       },

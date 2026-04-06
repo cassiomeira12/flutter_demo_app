@@ -31,7 +31,11 @@ class UserDataSourceImpl
       data: data,
     );
 
-    await mixinUpdate(http: _http, request: request, defaultJsonKeys: []);
+    await mixinUpdate(
+      http: _http,
+      request: request,
+      defaultJsonKeys: [],
+    );
   }
 
   @override
@@ -41,7 +45,11 @@ class UserDataSourceImpl
       data: {'reason': reason},
     );
 
-    await mixinDelete(http: _http, request: request, method: HttpMethod.POST);
+    await mixinDelete(
+      http: _http,
+      request: request,
+      method: HttpMethod.POST,
+    );
   }
 
   @override

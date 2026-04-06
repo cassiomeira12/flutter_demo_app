@@ -69,9 +69,14 @@ class AppInstallationServiceImpl
         platform: deviceInfo.platform,
         ip: null,
       );
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } on HttpException catch (error, stackTrace) {
+      throw ExceptionHelper.call(error, stackTrace: stackTrace);
+    } on BaseException catch (error) {
+      Log.baseException(error);
       rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
