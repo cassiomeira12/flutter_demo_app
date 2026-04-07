@@ -56,7 +56,7 @@ class CheckPointController extends BaseController {
       _checkPointsStore.checkPointDaySelected = result;
       _checkPointsController.getCurrentCheckPoints();
     } catch (error, stackTrace) {
-      Log.error('updateCheckDayPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       rethrow;
     } finally {
       loading.value = false;
@@ -80,7 +80,7 @@ class CheckPointController extends BaseController {
       _checkPointsStore.checkPointDaySelected = result;
       _checkPointsController.getCurrentCheckPoints();
     } catch (error, stackTrace) {
-      Log.error('updateCheckHourPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       rethrow;
     } finally {
       loading.value = false;
@@ -96,7 +96,7 @@ class CheckPointController extends BaseController {
       _checkPointsStore.checkPointDaySelected = result;
       _checkPointsController.getCurrentCheckPoints();
     } catch (error, stackTrace) {
-      Log.error('deleteCheckHourPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       rethrow;
     } finally {
       loading.value = false;
@@ -121,7 +121,7 @@ class CheckPointController extends BaseController {
       _checkPointsStore.checkPointDaySelected = result;
       _checkPointsController.getCurrentCheckPoints();
     } catch (error, stackTrace) {
-      Log.error('registerCustomPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       rethrow;
     } finally {
       loading.value = false;

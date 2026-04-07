@@ -28,7 +28,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('currentPoints', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'currentPoints',
         error: error,
@@ -44,7 +44,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('registerPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'registerPoint',
         error: error,
@@ -66,7 +66,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('totalHours', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'totalHours',
         error: error,
@@ -99,7 +99,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('updateWorkDay', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'updateWorkDay',
         error: error,
@@ -122,7 +122,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('updateHourPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'updateHourPoint',
         error: error,
@@ -144,7 +144,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('deleteHourPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'deleteHourPoint',
         error: error,
@@ -171,7 +171,7 @@ class CheckPointServiceImpl implements CheckPointService {
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } catch (error, stackTrace) {
-      Log.error('registerCustomPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       throw BaseException(
         message: 'registerCustomPoint',
         error: error,
