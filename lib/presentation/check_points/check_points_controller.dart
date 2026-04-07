@@ -47,7 +47,6 @@ class CheckPointsController extends LifecycleController {
   Future<void> getCurrentCheckPoints() async {
     final track = CrashlyticsServiceManager.instance.trackOperation(
       name: 'get-current-point-performance-tracking',
-      operation: 'get-current-check-points',
     );
     try {
       isLoading.value = true;
@@ -73,11 +72,11 @@ class CheckPointsController extends LifecycleController {
       totalBudget.value = budget;
       totalHours.value = results.last;
     } on BaseException catch (error) {
-      track.catchError(error: error);
+      track.setStatus(TrackOperationStatus.internalError);
       errorMessage.value = error.message.tr;
     } catch (error, stackTrace) {
-      Log.error('registerPoint', error: error, stackTrace: stackTrace);
-      track.catchError(error: error);
+      Log.error(error, stackTrace);
+      track.setStatus(TrackOperationStatus.internalError);
       errorMessage.value = error.toString();
     } finally {
       isLoading.value = false;
@@ -88,7 +87,6 @@ class CheckPointsController extends LifecycleController {
   Future<void> registerPoint() async {
     final track = CrashlyticsServiceManager.instance.trackOperation(
       name: 'register-point-performance-tracking',
-      operation: 'register-point',
     );
     try {
       isLoading.value = true;
@@ -100,16 +98,16 @@ class CheckPointsController extends LifecycleController {
       track.finish();
       await getCurrentCheckPoints();
     } on BaseException catch (error) {
-      track.catchError(error: error);
+      track.setStatus(TrackOperationStatus.internalError);
       if (error.message.contains('work_point_already_created')) {
         rethrow;
       }
-      Log.error('registerPoint', error: error);
+      Log.error(error, StackTrace.current);
       errorMessage.value = error.message.tr;
     } catch (error, stackTrace) {
-      Log.error('registerPoint', error: error, stackTrace: stackTrace);
+      Log.error(error, stackTrace);
       errorMessage.value = error.toString();
-      track.catchError(error: error);
+      track.setStatus(TrackOperationStatus.internalError);
     } finally {
       isLoading.value = false;
     }
