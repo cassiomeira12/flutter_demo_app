@@ -1,3 +1,14 @@
+# Work Point v1.0.7 [06-04-2026]
+
+- refactor: remove app-card-widget
+- refactor: update Log.error
+- refactor: remove work-point-uol files
+- refactor: remove operation track name
+- refactor: update app colors
+- refactor: check day point entity extends base entity
+- refactor: update android launcher icons
+- refactor: add trackOperation on catchError
+
 # Work Point v1.0.6 [27-02-2026]
 
 - fix: master updates

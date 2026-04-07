@@ -1,6 +1,7 @@
+import 'package:core/core.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
-class CheckDayPointEntity {
+class CheckDayPointEntity extends BaseEntity {
   final int day;
   final int month;
   final int year;
@@ -29,10 +30,14 @@ class CheckDayPointEntity {
     required this.points,
     required this.hasInconsistency,
     required this.info,
+    required super.objectId,
+    required super.createdAt,
+    required super.updatedAt,
   });
 
   bool get isDayToWork => !(isWeekend || isHoliday || isAllowance || isDayOff);
 
+  @override
   CheckDayPointEntity copyWith({
     int? day,
     int? month,
@@ -47,6 +52,9 @@ class CheckDayPointEntity {
     List<CheckHourPointEntity>? points,
     bool? hasInconsistency,
     String? info,
+    String? objectId,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return CheckDayPointEntity(
       day: day ?? this.day,
@@ -62,9 +70,13 @@ class CheckDayPointEntity {
       points: points ?? this.points,
       hasInconsistency: hasInconsistency ?? this.hasInconsistency,
       info: info ?? this.info,
+      objectId: objectId ?? this.objectId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'day': day,
@@ -80,6 +92,7 @@ class CheckDayPointEntity {
       'points': points,
       'hasInconsistency': hasInconsistency,
       'info': info,
+      ...super.toMap(),
     };
   }
 }

@@ -17,6 +17,9 @@ class CheckDayPointModel extends CheckDayPointEntity {
     required super.points,
     required super.hasInconsistency,
     required super.info,
+    required super.objectId,
+    required super.createdAt,
+    required super.updatedAt,
   });
 
   factory CheckDayPointModel.fromMap(Map<String, dynamic> map) {
@@ -40,6 +43,13 @@ class CheckDayPointModel extends CheckDayPointEntity {
             .toList(),
         hasInconsistency: map['hasInconsistency'] ?? false,
         info: map['info'],
+        objectId: map['objectId'] ?? '',
+        createdAt: map['createdAt'] == null
+            ? null
+            : DateTime.tryParse(map['createdAt']),
+        updatedAt: map['updatedAt'] == null
+            ? null
+            : DateTime.tryParse(map['updatedAt']),
       );
     } catch (error, stacktrace) {
       throw BaseException(
