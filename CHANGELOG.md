@@ -1,3 +1,11 @@
+# Fortress v1.5.0 [31-03-2026]
+
+- refactor: change Log.error
+- refactor: track status function
+- feat: add credentials repository
+- fix: list credentials over list limit
+- feat: master updates
+
 # Fortress v1.4.6 [27-02-2026]
 
 - refactor: update clipboard copy text

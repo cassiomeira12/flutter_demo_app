@@ -1,5 +1,6 @@
-class CredentialEntity {
-  final String objectId;
+import 'package:core/core.dart';
+
+class CredentialEntity extends BaseEntity {
   final String name;
   final String? userName;
   final String? password;
@@ -7,11 +8,9 @@ class CredentialEntity {
   final String? url;
   final String? faviconUrl;
   final String? notes;
-  final String createdAt;
-  final String updatedAt;
 
   CredentialEntity({
-    required this.objectId,
+    required super.objectId,
     required this.name,
     required this.userName,
     required this.password,
@@ -19,10 +18,11 @@ class CredentialEntity {
     required this.url,
     required this.faviconUrl,
     required this.notes,
-    required this.createdAt,
-    required this.updatedAt,
+    required super.createdAt,
+    required super.updatedAt,
   });
 
+  @override
   CredentialEntity copyWith({
     String? objectId,
     String? name,
@@ -32,8 +32,8 @@ class CredentialEntity {
     String? url,
     String? faviconUrl,
     String? notes,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
   }) {
     return CredentialEntity(
       objectId: objectId ?? this.objectId,
@@ -44,14 +44,14 @@ class CredentialEntity {
       url: url ?? this.url,
       faviconUrl: faviconUrl ?? this.faviconUrl,
       notes: notes ?? this.notes,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? super.createdAt,
+      updatedAt: updatedAt ?? super.updatedAt,
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
-      'objectId': objectId,
       'name': name,
       'userName': userName,
       'password': password,
@@ -61,14 +61,10 @@ class CredentialEntity {
       'notes': notes,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      ...super.toMap(),
     };
   }
 
   String get favIconUrlFormatted =>
       faviconUrl ?? 'https://ui-avatars.com/api/?format=png&name=$name';
-
-  @override
-  String toString() {
-    return toMap().toString();
-  }
 }

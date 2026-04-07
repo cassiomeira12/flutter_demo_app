@@ -8,9 +8,9 @@ flutter_native_splash:
   android_gravity: center
   ios_content_mode: center
   web_image_mode: center
-  color: "#ffffff"
+  color: "#FF5722"
   image: "assets/png/AppIconDEV.png"
   android_12:
-    color: "#ffffff"
-    icon_background_color: "#ffffff"
-    icon_background_color_dark: "#ffffff"
+    color: "#FF5722"
+    icon_background_color: "#FF5722"
+    icon_background_color_dark: "#FF5722"

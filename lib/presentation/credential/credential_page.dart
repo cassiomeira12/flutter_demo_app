@@ -54,6 +54,7 @@ class CredentialPage extends AppView<CredentialController> {
                           ),
                           child: ImageWidget(
                             imageUrl: controller.favIconUrl.value,
+                            onError: controller.errorFavIcon,
                           ),
                         );
                       }
@@ -357,7 +358,8 @@ class CredentialPage extends AppView<CredentialController> {
                       controller: controller.notesTextController,
                       maxLines: 7,
                     ),
-                    if (controller.hasCredential)
+                    if (controller.hasCredential &&
+                        controller.updatedAt != null)
                       Container(
                         constraints: const BoxConstraints(
                           maxWidth: ResponsiveSizeHelper.maxWidth,
@@ -373,7 +375,7 @@ class CredentialPage extends AppView<CredentialController> {
                                 style: AppTextStyle.label(context, bold: true),
                                 children: [
                                   TextRichWidget(
-                                    text: controller.updatedAt ?? '',
+                                    text: controller.updatedAt,
                                     style: AppTextStyle.label(context),
                                   ),
                                 ],

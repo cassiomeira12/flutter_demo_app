@@ -1,22 +1,15 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class UpdateCredentialUseCaseImpl implements UpdateCredentialUseCase {
-  final CredentialService _service;
-  final EncryptUserPasswordUseCase _encryptUserPasswordUseCase;
-  final SecurityEncryptUseCase _securityEncryptUseCase;
+  final CredentialRepository _repository;
   final HttpClient http;
 
   UpdateCredentialUseCaseImpl({
-    required CredentialService service,
-    required EncryptUserPasswordUseCase encryptUserPasswordUseCase,
-    required SecurityEncryptUseCase securityEncryptUseCase,
+    required CredentialRepository repository,
     required this.http,
-  }) : _service = service,
-       _encryptUserPasswordUseCase = encryptUserPasswordUseCase,
-       _securityEncryptUseCase = securityEncryptUseCase;
+  }) : _repository = repository;
 
   @override
   Future<CredentialEntity> call(CredentialEntity data) async {
@@ -28,42 +21,12 @@ class UpdateCredentialUseCaseImpl implements UpdateCredentialUseCase {
       faviconUrl: faviconUrl ?? defaultFaviconUrl,
     );
 
-    final String? password = await _encryptUserPasswordUseCase.decrypt();
-    final CredentialEntity encryptedData = await _encryptCredential(
-      dataUpdated,
-      password: password!,
-    );
-    final CredentialEntity updated = await _service.update(
+    final CredentialEntity updated = await _repository.update(
       dataUpdated.objectId,
-      data: encryptedData.toMap(),
+      data: dataUpdated.toMap(),
     );
+
     return dataUpdated.copyWith(updatedAt: updated.updatedAt);
-  }
-
-  Future<CredentialEntity> _encryptCredential(
-    CredentialEntity credential, {
-    required String password,
-  }) async {
-    final Map<String, dynamic> json = credential.toMap();
-
-    final String objectId = json.remove('objectId');
-    final String createdAt = json.remove('createdAt');
-    final String updatedAt = json.remove('updatedAt');
-
-    for (final key in json.keys) {
-      if (json[key] != null) {
-        json[key] = await _securityEncryptUseCase.encrypt(
-          password: password,
-          data: json[key],
-        );
-      }
-    }
-
-    json['objectId'] = objectId;
-    json['createdAt'] = createdAt;
-    json['updatedAt'] = updatedAt;
-
-    return CredentialModel.fromMap(json) as CredentialEntity;
   }
 
   Future<String?> _requestUrlFavicon(String? faviconUrl) async {
