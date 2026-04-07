@@ -36,9 +36,23 @@ class CredentialDataSourceImpl extends BaseCrudDataSourceMixin
   }
 
   @override
-  Future<List<Map<String, dynamic>>> list() async {
+  Future<List<Map<String, dynamic>>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) async {
+    final Map<String, dynamic> parameters = {
+      'limit': limit,
+      'skip': skip,
+      'order': order,
+    };
+
+    if (where != null) parameters['where'] = where;
+
     final request = HttpRequest(
       url: EndpointsEnum.listCredential.endpoint,
+      queryParameters: parameters,
     );
 
     return await mixinList(

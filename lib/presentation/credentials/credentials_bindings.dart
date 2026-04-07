@@ -20,19 +20,24 @@ class CredentialsBindings extends Bindings {
         dataSource: AppBinding.find(),
       ),
     );
-    AppBinding.put<ListCredentialUseCase>(
-      ListCredentialUseCaseImpl(
+    AppBinding.put<CredentialRepository>(
+      CredentialRepositoryImpl(
         service: AppBinding.find(),
+        checkInternetUseCase: AppBinding.find(),
+        localStorageUseCase: AppBinding.find(),
         encryptUserPasswordUseCase: AppBinding.find(),
         securityEncryptUseCase: AppBinding.find(),
+      ),
+    );
+    AppBinding.put<ListCredentialUseCase>(
+      ListCredentialUseCaseImpl(
+        repository: AppBinding.find(),
       ),
     );
 
     AppBinding.put<UpdateCredentialUseCase>(
       UpdateCredentialUseCaseImpl(
-        service: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        securityEncryptUseCase: AppBinding.find(),
+        repository: AppBinding.find(),
         http: AppBinding.find(),
       ),
     );
@@ -42,6 +47,7 @@ class CredentialsBindings extends Bindings {
         credentialsStore: AppBinding.find(),
         listCredentialUseCase: AppBinding.find(),
         updateCredentialUseCase: AppBinding.find(),
+        credentialRepository: AppBinding.find(),
       ),
     );
   }

@@ -9,23 +9,19 @@ class CredentialBindings extends Bindings {
   void dependencies() {
     AppBinding.put<CreateCredentialUseCase>(
       CreateCredentialUseCaseImpl(
-        service: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        securityEncryptUseCase: AppBinding.find(),
+        repository: AppBinding.find(),
         http: AppBinding.find(),
       ),
     );
     AppBinding.put<UpdateCredentialUseCase>(
       UpdateCredentialUseCaseImpl(
-        service: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        securityEncryptUseCase: AppBinding.find(),
+        repository: AppBinding.find(),
         http: AppBinding.find(),
       ),
     );
     AppBinding.put<DeleteCredentialUseCase>(
       DeleteCredentialUseCaseImpl(
-        service: AppBinding.find(),
+        repository: AppBinding.find(),
       ),
     );
 

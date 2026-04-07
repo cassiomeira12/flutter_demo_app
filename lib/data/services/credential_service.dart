@@ -11,11 +11,16 @@ class CredentialServiceImpl extends BaseCrudServiceMixin<CredentialEntity>
   }) : _dataSource = dataSource;
 
   @override
+  CredentialEntity parseMap(Map<String, dynamic> map) {
+    return CredentialModel.fromMap(map);
+  }
+
+  @override
   Future<CredentialEntity> create(Map<String, dynamic> data) {
     return mixinCreate(
       data: data,
       create: _dataSource.create,
-      fromMap: CredentialModel.fromMap,
+      fromMap: parseMap,
     );
   }
 
@@ -28,10 +33,20 @@ class CredentialServiceImpl extends BaseCrudServiceMixin<CredentialEntity>
   }
 
   @override
-  Future<List<CredentialEntity>> list() {
+  Future<List<CredentialEntity>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) {
     return mixinList(
-      list: _dataSource.list,
-      fromMap: CredentialModel.fromMap,
+      list: () => _dataSource.list(
+        limit: limit,
+        skip: skip,
+        order: order,
+        where: where,
+      ),
+      fromMap: parseMap,
     );
   }
 
@@ -44,7 +59,7 @@ class CredentialServiceImpl extends BaseCrudServiceMixin<CredentialEntity>
       objectId: objectId,
       data: data,
       update: _dataSource.update,
-      fromMap: CredentialModel.fromMap,
+      fromMap: parseMap,
     );
   }
 

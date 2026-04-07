@@ -40,9 +40,8 @@ class CredentialController extends BaseController with UrlValidator {
   RxBool showOpenUrl = RxBool(false);
   RxString favIconUrl = RxString('');
   String? get updatedAt {
-    if (hasCredential) {
-      final date = DateHelper.parse(_credentialSelected!.updatedAt);
-      return DateHelper.formatDateWithTime(date);
+    if (hasCredential && _credentialSelected?.updatedAt != null) {
+      return DateHelper.formatDateWithTime(_credentialSelected!.updatedAt!);
     }
     return null;
   }
@@ -100,31 +99,33 @@ class CredentialController extends BaseController with UrlValidator {
       url: url.isEmpty ? null : url,
       faviconUrl: favIconUrl.value,
       notes: notes.isEmpty ? null : notes,
-      createdAt: _credentialsStore.credential.value?.createdAt ?? '',
-      updatedAt: _credentialsStore.credential.value?.updatedAt ?? '',
+      createdAt: _credentialsStore.credential.value?.createdAt,
+      updatedAt: _credentialsStore.credential.value?.updatedAt,
     );
 
-    late String credentialsId;
+    // late String credentialsId;
 
     if (hasCredential) {
-      final updated = await _updateCredentialUseCase.call(tempCredential);
-      final int? index = _credentialsStore.selectedIndex;
-      if (index != null) {
-        _credentialsStore.credentials[index] = updated;
-      }
-      credentialsId = updated.objectId;
+      await _updateCredentialUseCase.call(tempCredential);
+      // final updated = await _updateCredentialUseCase.call(tempCredential);
+      // final int? index = _credentialsStore.selectedIndex;
+      // if (index != null) {
+      //   _credentialsStore.credentials[index] = updated;
+      // }
+      // credentialsId = updated.objectId;
     } else {
-      final created = await _createCredentialUseCase.call(tempCredential);
-      _credentialsStore.credentials.add(created);
-      credentialsId = created.objectId;
+      await _createCredentialUseCase.call(tempCredential);
+      // final created = await _createCredentialUseCase.call(tempCredential);
+      // _credentialsStore.credentials.add(created);
+      // credentialsId = created.objectId;
     }
 
-    _credentialsStore.credentials.sort((a, b) => a.name.compareTo(b.name));
-    final int scrollToIndex = _credentialsStore.credentials.indexWhere(
-      (item) => item.objectId == credentialsId,
-    );
+    // _credentialsStore.credentials.sort((a, b) => a.name.compareTo(b.name));
+    // final int scrollToIndex = _credentialsStore.credentials.indexWhere(
+    //   (item) => item.objectId == credentialsId,
+    // );
 
-    backPage(result: scrollToIndex);
+    backPage(/*result: scrollToIndex*/);
   }
 
   Future<void> removerCredential() async {
@@ -132,10 +133,10 @@ class CredentialController extends BaseController with UrlValidator {
       final credential = _credentialsStore.credential.value!;
       await _deleteCredentialUseCase.call(credential);
 
-      final int? index = _credentialsStore.selectedIndex;
-      if (index != null) {
-        _credentialsStore.credentials.removeAt(index);
-      }
+      // final int? index = _credentialsStore.selectedIndex;
+      // if (index != null) {
+      //   _credentialsStore.credentials.removeAt(index);
+      // }
 
       backPage();
     } catch (error) {
@@ -188,7 +189,9 @@ class CredentialController extends BaseController with UrlValidator {
     final String? error = urlValidator(input);
     showOpenUrl.value = error?.trim().isEmpty ?? true;
     if (error == null && (input?.isNotEmpty ?? false)) {
-      favIconUrl.value = '${Uri.parse(input!).origin}/favicon.ico';
+      favIconUrl.value =
+          _credentialSelected?.faviconUrl ??
+          '${Uri.parse(input!).origin}/favicon.ico';
     }
     return error;
   }
@@ -249,11 +252,7 @@ class CredentialController extends BaseController with UrlValidator {
           credentialNameTextController.text = issuer!;
         }
       } catch (error, stackTrace) {
-        Log.error(
-          'Error decode issuer url: $url',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'Error decode issuer url: $url');
       }
 
       try {
@@ -263,12 +262,32 @@ class CredentialController extends BaseController with UrlValidator {
           userNameTextController.text = username;
         }
       } catch (error, stackTrace) {
-        Log.error(
-          'Error decode issuer url: $url',
-          error: error,
-          stackTrace: stackTrace,
-        );
+        Log.error(error, stackTrace, msg: 'Error decode issuer url: $url');
       }
     }
+  }
+
+  Future<void> errorFavIcon(String url, Object? error) async {
+    try {
+      if (!hasCredential) return;
+
+      CredentialEntity tempCredential = CredentialEntity(
+        objectId: _credentialSelected!.objectId,
+        name: _credentialSelected!.name,
+        userName: _credentialSelected!.userName,
+        password: _credentialSelected!.password,
+        secretKeyOTP: _credentialSelected!.secretKeyOTP,
+        url: _credentialSelected!.url,
+        faviconUrl: null,
+        notes: _credentialSelected!.notes,
+        createdAt: _credentialSelected!.createdAt,
+        updatedAt: _credentialSelected!.updatedAt,
+      );
+
+      tempCredential = await _updateCredentialUseCase.call(tempCredential);
+
+      _credentialsStore.credential.value = tempCredential;
+      _setCredentialData(tempCredential);
+    } catch (_) {}
   }
 }
