@@ -27,8 +27,12 @@ class CheckPointServiceImpl implements CheckPointService {
       return checkPoints;
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } on Exception catch (_) {
-      throw BaseException();
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -38,8 +42,12 @@ class CheckPointServiceImpl implements CheckPointService {
       return await _dataSource.registerPoint();
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } on Exception catch (_) {
-      throw BaseException();
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 
@@ -55,8 +63,12 @@ class CheckPointServiceImpl implements CheckPointService {
       );
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } on Exception catch (_) {
-      throw BaseException();
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
+    } catch (error, stackTrace) {
+      Log.exception(error, stackTrace);
+      throw BaseException(error: error, stackTrace: stackTrace);
     }
   }
 }

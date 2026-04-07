@@ -1,3 +1,13 @@
+# Work Point UOL v1.6.5 [06-04-2026]
+
+- refactor: change catch errors and exceptions
+- refactor: update Log.error
+- refactor: remove app-card-widget
+- refactor: update android icon launcher
+- feat: add login data source test
+- feat: add app themes routes
+- refactor: add trackoperation status, add checkPoint router
+
 # Work Point UOL v1.6.4 [27-02-2026]
 
 - feat: add workpoints module
