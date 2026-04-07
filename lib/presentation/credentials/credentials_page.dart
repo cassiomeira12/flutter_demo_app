@@ -23,15 +23,24 @@ class CredentialsPage extends AppView<CredentialsController> {
           onPressed: () {
             showSearch(
               context: context,
-              delegate: AppBarSearchDelegate<CredentialEntity>(
-                items: controller.credentials,
-                filter: (CredentialEntity item) => item.name,
+              delegate: AppBarSearchDelegate<ValueNotifier<CredentialEntity>>(
+                items: controller.credentials.value,
+                filter: (item) => item.value.name,
                 emptyMessage: 'search_credentials_not_found'.tr,
-                builder: (BuildContext context, CredentialEntity item) {
-                  return CredentialWidget(
-                    credential: item,
-                    onTap: () {
-                      controller.openCredential(item);
+                builder: (context, valueListenable) {
+                  return ValueListenableBuilder<CredentialEntity>(
+                    valueListenable: valueListenable,
+                    builder: (context, credential, child) {
+                      return CredentialWidget(
+                        credential: credential,
+                        onError: (url, error) {
+                          controller.errorFavIcon(credential);
+                        },
+                        onTap: () {
+                          controller.openCredential(credential);
+                          HapticFeedback.lightImpact();
+                        },
+                      );
                     },
                   );
                 },
@@ -50,7 +59,63 @@ class CredentialsPage extends AppView<CredentialsController> {
           ),
         ),
       ],
-      body: ScrollStateWidget<CredentialEntity>(
+      body: ScrollStateNotifierWidget<CredentialEntity>(
+        valueListenable: controller.credentials,
+        errorMessage: controller.errorMessage,
+        isLoading: controller.isLoading,
+        onRefresh: controller.getAllCredentials,
+        emptyMessage: 'empty_credentials_list'.tr,
+        fromMapBuilder: (map) {
+          return CredentialModel.fromMap(map).copyWith();
+        },
+        skeletonSizeItems: 10,
+        toMapBuilder: (item) => item.toMap(),
+        scrollController: (scrollController) {
+          controller.scrollController = scrollController;
+        },
+        builder: (context, index, item) {
+          return CredentialWidget(
+            key: ValueKey('credential_item_index_${index}_key'),
+            credential: item,
+            onError: (url, error) {
+              controller.errorFavIcon(item);
+            },
+            onTap: () {
+              controller.openCredential(item);
+              HapticFeedback.lightImpact();
+            },
+          );
+        },
+      ),
+      // body: Obx(() {
+      //   if (controller.isLoading.value) {
+      //     return const Center(child: ProgressBarWidget());
+      //   }
+      //   return ValueListenableBuilder<List<ValueNotifier<CredentialEntity>>>(
+      //     valueListenable: controller.credentials,
+      //     builder: (context, list, child) {
+      //       return ListView.builder(
+      //         itemCount: list.length,
+      //         itemBuilder: (context, index) {
+      //           return ValueListenableBuilder<CredentialEntity>(
+      //             valueListenable: list.elementAt(index),
+      //             builder: (context, credential, child) {
+      //               return CredentialWidget(
+      //                 key: ValueKey('credential_item_index_${index}_key'),
+      //                 credential: credential,
+      //                 onTap: () {
+      //                   controller.openCredential(credential);
+      //                   HapticFeedback.lightImpact();
+      //                 },
+      //               );
+      //             },
+      //           );
+      //         },
+      //       );
+      //     },
+      //   );
+      // }),
+      /*body: ScrollStateWidget<CredentialEntity>(
         list: controller.credentials,
         errorMessage: controller.errorMessage,
         isLoading: controller.isLoading,
@@ -66,7 +131,7 @@ class CredentialsPage extends AppView<CredentialsController> {
         },
         builder: (context, index, item) {
           return CredentialWidget(
-            key: Key('credential_item_index_${index}_key'),
+            key: ValueKey('credential_item_index_${index}_key'),
             credential: item,
             onTap: () {
               controller.openCredential(item);
@@ -74,7 +139,7 @@ class CredentialsPage extends AppView<CredentialsController> {
             },
           );
         },
-      ),
+      ),*/
       floatingActionButton: FloatingButtonWidget(
         key: const Key('add_new_credential_button_key'),
         icon: const FlutterIcon(Icons.add, color: AppColors.white),

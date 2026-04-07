@@ -3,7 +3,7 @@
 flutter_launcher_icons:
   android: "ic_launcher_stg"
   adaptive_icon_foreground_inset: 16
-  adaptive_icon_background: "#ffffff"
+  adaptive_icon_background: "#FF5722"
   adaptive_icon_foreground: "assets/png/AppIconSTG.png"
   ios: true
   min_sdk_android: 21

@@ -6,11 +6,13 @@ import 'package:flutter_demo_app/presentation/credentials/widgets/otp_widget.dar
 class CredentialWidget extends StatelessWidget {
   final CredentialEntity credential;
   final GestureTapCallback onTap;
+  final void Function(String url, Object? error)? onError;
 
   const CredentialWidget({
     super.key,
     required this.credential,
     required this.onTap,
+    this.onError,
   });
 
   @override
@@ -29,8 +31,7 @@ class CredentialWidget extends StatelessWidget {
         onTap: onTap,
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: ResponsiveSizeHelper.width(12),
-            // vertical: ResponsiveSizeHelper.height(12),
+            horizontal: ResponsiveSizeHelper.spacingDefaultWidth,
           ),
           child: Row(
             children: [
@@ -38,10 +39,11 @@ class CredentialWidget extends StatelessWidget {
                 width: ResponsiveSizeHelper.width(38),
                 height: ResponsiveSizeHelper.width(38),
                 margin: EdgeInsets.only(
-                  right: ResponsiveSizeHelper.width(12),
+                  right: ResponsiveSizeHelper.spacingDefaultWidth,
                 ),
                 child: ImageWidget(
                   imageUrl: credential.favIconUrlFormatted,
+                  onError: onError,
                 ),
               ),
               Expanded(

@@ -102,10 +102,7 @@ class _OtpWidgetState extends State<OtpWidget> {
                 ),
                 SizedBox(
                   width: 80,
-                  child: ProgressBarWidget(
-                    percentage: percentage,
-                    segments: 1,
-                  ),
+                  child: ProgressBarWidget(percentage: percentage),
                 ),
               ],
             ),

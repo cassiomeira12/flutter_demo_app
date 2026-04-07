@@ -26,8 +26,12 @@ class CredentialModel extends CredentialEntity {
         url: map['url'] as String?,
         faviconUrl: map['faviconUrl'] as String?,
         notes: map['notes'] as String?,
-        createdAt: map['createdAt'] ?? '',
-        updatedAt: map['updatedAt'] ?? map['createdAt'] ?? '',
+        createdAt: map['createdAt'] == null
+            ? null
+            : DateTime.parse(map['createdAt']).toLocal(),
+        updatedAt: map['updatedAt'] == null
+            ? null
+            : DateTime.parse(map['updatedAt']).toLocal(),
       );
     } catch (error, stackTrace) {
       throw BaseException(

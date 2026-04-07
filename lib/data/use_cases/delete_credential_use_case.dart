@@ -1,14 +1,14 @@
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class DeleteCredentialUseCaseImpl implements DeleteCredentialUseCase {
-  final CredentialService _service;
+  final CredentialRepository _repository;
 
   DeleteCredentialUseCaseImpl({
-    required CredentialService service,
-  }) : _service = service;
+    required CredentialRepository repository,
+  }) : _repository = repository;
 
   @override
   Future<void> call(CredentialEntity data) {
-    return _service.delete(data.objectId);
+    return _repository.delete(data.objectId);
   }
 }
