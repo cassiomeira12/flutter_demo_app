@@ -33,7 +33,8 @@ enum AppRouter {
   deleteAccountConfirmation('/delete_account/confirmation'),
   deleteAccountFinished('/delete_account/delete_account_finished'),
   purchase('/purchase'),
-  checkPoints('/check_points')
+  checkPoints('/check_points'),
+  checkPoint('/check_point')
   ;
 
   const AppRouter(this._name);

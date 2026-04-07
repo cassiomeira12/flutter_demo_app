@@ -13,43 +13,35 @@ class CheckPointDataSourceImpl implements CheckPointDataSource {
     required int month,
     required int year,
   }) async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.listCurrentPoints.endpoint
-            .replaceFirst('{year}', year.toString())
-            .replaceFirst('{month}', month.toString()),
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.listCurrentPoints.endpoint
+          .replaceFirst('{year}', year.toString())
+          .replaceFirst('{month}', month.toString()),
+    );
 
-      final response = await _http.get<Map<String, dynamic>>(request);
+    final response = await _http.get<Map<String, dynamic>>(request);
 
-      final Map<String, dynamic> json = response.data!;
+    final Map<String, dynamic> json = response.data!;
 
-      return List.from(json['diasLancamento'] ?? []).map((item) {
-        return item as Map<String, dynamic>;
-      }).toList();
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    return List.from(json['diasLancamento'] ?? []).map((item) {
+      return item as Map<String, dynamic>;
+    }).toList();
   }
 
   @override
   Future<void> registerPoint() async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.registerPoint.endpoint,
-        headers: {
-          'Accept': 'application/json, text/plain, */*',
-          'Accept-Language': 'pt-BR',
-          'Accept-Encoding': 'gzip, deflate, br, zstd',
-          'Referer': 'https://app.beefor.io/',
-          'Origin': 'https://app.beefor.io',
-        },
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.registerPoint.endpoint,
+      headers: {
+        'Accept': 'application/json, text/plain, */*',
+        'Accept-Language': 'pt-BR',
+        'Accept-Encoding': 'gzip, deflate, br, zstd',
+        'Referer': 'https://app.beefor.io/',
+        'Origin': 'https://app.beefor.io',
+      },
+    );
 
-      await _http.post(request);
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    await _http.post(request);
   }
 
   @override
@@ -57,20 +49,16 @@ class CheckPointDataSourceImpl implements CheckPointDataSource {
     required int month,
     required int year,
   }) async {
-    try {
-      final request = HttpRequest(
-        url: EndpointsEnum.totalCurrentMonth.endpoint
-            .replaceFirst('{month}', month.toString())
-            .replaceFirst('{year}', year.toString()),
-      );
+    final request = HttpRequest(
+      url: EndpointsEnum.totalCurrentMonth.endpoint
+          .replaceFirst('{month}', month.toString())
+          .replaceFirst('{year}', year.toString()),
+    );
 
-      final response = await _http.get<Map<String, dynamic>>(request);
+    final response = await _http.get<Map<String, dynamic>>(request);
 
-      final Map<String, dynamic> json = response.data!;
+    final Map<String, dynamic> json = response.data!;
 
-      return json['horasTotaisFormatado'];
-    } on HttpException catch (_) {
-      rethrow;
-    }
+    return json['horasTotaisFormatado'];
   }
 }
