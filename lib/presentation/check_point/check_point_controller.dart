@@ -30,6 +30,17 @@ class CheckPointController extends BaseController {
     getCurrentCheckPoints();
   }
 
+  @override
+  void onClose() {
+    checkPoints.close();
+    isLoading.close();
+    errorMessage.close();
+    totalHours.close();
+    totalBudget.close();
+    selectedDate.close();
+    super.onClose();
+  }
+
   Future<void> getCurrentCheckPoints() async {
     isLoading.value = true;
     errorMessage.value = '';

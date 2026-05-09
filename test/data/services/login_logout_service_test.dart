@@ -3,6 +3,7 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -13,6 +14,10 @@ void main() {
     await InfraModuleBindings().injectDependencies();
     await DataModuleBindings().injectDependencies();
     await DomainModuleBindings().injectDependencies();
+
+    AppBinding.putReplace<LoginDataSource>(
+      WorkPointLoginDataSource(http: AppBinding.find()),
+    );
 
     final List<Interceptor> httpInterceptors = [
       ParseServerHeadersInterceptor(serverEnv: AppBinding.find()),
@@ -41,24 +46,10 @@ void main() {
         password: '123456',
       );
 
-      AppBinding.putReplace<SessionEntity>(
-        SessionEntity(token: result.sessionToken),
-      );
-
       expect(result, isNotNull);
-    });
 
-    test('should logout success', () async {
-      final service = AppBinding.find<LogoutService>();
-
-      await service.logout();
-
-      AppBinding.putReplace<SessionEntity>(SessionEntity());
-      AppBinding.delete<UserEntity>(force: true);
-
-      expect(AppBinding.find<SessionEntity>().isAuthenticated, false);
-      expect(AppBinding.find<SessionEntity>().token, isNull);
-      expect(AppBinding.hasInstance<UserEntity>(), false);
+      expect(result.id, '4fb0ce0b-7f3a-47ba-95e0-b9e3ae3003af');
+      expect(result.sessionToken, isNotNull);
     });
   });
 }

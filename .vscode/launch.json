@@ -12,8 +12,8 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.work-point-uol.dev",
-      "options": [".env.work-point-uol.prod", ".env.work-point-uol.dev"]
+      "default": "env.work-point-uol.dev",
+      "options": ["env.work-point-uol.prod", "env.work-point-uol.dev"]
     }
   ],
   "configurations": [

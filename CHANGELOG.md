@@ -1,3 +1,9 @@
+# Work Point UOL v1.7.0 [08-05-2026]
+
+- refactor: update controller
+- refactor: add intro app description
+- refactor: update unit tests
+
 # Work Point UOL v1.6.5 [06-04-2026]
 
 - refactor: change catch errors and exceptions

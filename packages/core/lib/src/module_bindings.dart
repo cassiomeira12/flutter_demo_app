@@ -20,9 +20,7 @@ class CoreModuleBindings implements ModuleBinding {
     );
 
     AppBinding.lazyPut<ChangeLocaleNativeMethod>(
-      () => ChangeLocaleNativeMethod(
-        methodChannel: AppBinding.find(),
-      ),
+      () => ChangeLocaleNativeMethod(methodChannel: AppBinding.find()),
     );
 
     await InfraModuleBindings().injectDependencies();
@@ -86,7 +84,7 @@ class CoreModuleBindings implements ModuleBinding {
         ],
       ),
       // ParseServerHeadersInterceptor(
-      //   environment: AppBinding.find(),
+      //   serverEnv: AppBinding.find(),
       // ),
       // ParseServerAuthTokenInterceptor(),
       // UnauthenticatedInterceptor(
@@ -96,6 +94,7 @@ class CoreModuleBindings implements ModuleBinding {
       // ServerOtpInterceptor(
       //   encryptServerPublicKeyUseCase: AppBinding.find(),
       //   getOtpCodeUseCase: AppBinding.find(),
+      //   securityEnv: AppBinding.find(),
       // ),
     ];
 
