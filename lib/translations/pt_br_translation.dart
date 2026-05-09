@@ -6,6 +6,8 @@ class AppPtBrTranslation extends PtBrTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app':
+            'Um aplicativo simples e eficiente para registrar o ponto de trabalho de forma rápida e segura. Controle entradas, saídas e pausas em tempo real, acompanhe sua jornada e mantenha seu histórico sempre organizado.',
         'remember_my_credentials': 'Salvar minhas credenciais',
         'change_month': 'Alterar mês',
         'holiday': 'Feriado',

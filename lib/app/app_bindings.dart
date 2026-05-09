@@ -26,12 +26,12 @@ class AppBindings extends Bindings {
     await CoreModuleBindings().injectDependencies();
 
     // await FirebaseInitializeModuleBindings().injectDependencies();
+
     if (!kDebugMode) {
-      AnalyticsModuleBindings().injectDependencies();
+      await CrashlyticsModuleBindings().injectDependencies();
+      await AnalyticsModuleBindings().injectDependencies();
+      await FeatureFlagModuleBindings().injectDependencies();
     }
-    // await AppsFlyerModuleBindings().injectDependencies();
-    // await PushNotificationsModuleBindings().injectDependencies();
-    // await PushMessagingModuleBindings().injectDependencies();
 
     AppBinding.replace<LoginDataSource>(
       WorkPointLoginDataSource(http: AppBinding.find()),
@@ -57,8 +57,10 @@ class AppBindings extends Bindings {
     final httpClient = AppBinding.find<HttpClient>();
     httpClient.addAllInterceptors(httpInterceptors);
 
-    DeeplinkModuleBindings().injectDependencies();
-    FeatureFlagModuleBindings().injectDependencies();
+    // await AppsFlyerModuleBindings().injectDependencies();
+    // await PushNotificationsModuleBindings().injectDependencies();
+    // await PushMessagingModuleBindings().injectDependencies();
+    await DeeplinkModuleBindings().injectDependencies();
 
     SplashModuleBindings().injectDependencies();
     WebAppModuleBindings().injectDependencies();
