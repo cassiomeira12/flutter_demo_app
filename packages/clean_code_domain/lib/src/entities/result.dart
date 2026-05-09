@@ -1,6 +1,6 @@
 import 'package:core/core.dart';
 
-class Result<T> {
+abstract class Result<T> {
   const Result();
 }
 

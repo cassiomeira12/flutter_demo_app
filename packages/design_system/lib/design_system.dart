@@ -1,3 +1,4 @@
+export 'example/main.dart';
 export 'src/components/components.dart';
 export 'src/helpers/helpers.dart';
 export 'src/pages/pages.dart';

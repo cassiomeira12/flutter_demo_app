@@ -12,13 +12,13 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.fortress.stg",
+      "default": "env.fortress.stg",
       "options": [
-        ".env.fortress.dev",
-        ".env.fortress.stg",
-        ".env.fortress.stg.ios",
-        ".env.fortress.prod",
-        ".env.fortress.prod.ios"
+        "env.fortress.dev",
+        "env.fortress.stg",
+        "env.fortress.stg.ios",
+        "env.fortress.prod",
+        "env.fortress.prod.ios"
       ]
     }
   ],
@@ -32,7 +32,7 @@
         "--${input:mode}",
         "--web-hostname=localhost",
         "--web-port=1203",
-        "--dart-define-from-file=${input:env}",
+        "--dart-define-from-file=../envs/${input:env}",
         "--web-experimental-hot-reload"
       ]
     },
@@ -47,7 +47,7 @@
         "web-server",
         "--web-hostname=localhost",
         "--web-port=1203",
-        "--dart-define-from-file=${input:env}",
+        "--dart-define-from-file=../envs/${input:env}",
         "--web-experimental-hot-reload"
       ]
     },
@@ -60,7 +60,7 @@
         "--${input:mode}",
         "--web-hostname=localhost",
         "--web-port=1203",
-        "--dart-define-from-file=${input:env}",
+        "--dart-define-from-file=../envs/${input:env}",
         "--web-experimental-hot-reload"
       ]
     },
@@ -70,27 +70,31 @@
       "request": "attach"
     },
     {
-      "name": "File Integration Test",
+      "name": "Run Integration Test",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=../envs/${input:env}"]
+    },
+    {
+      "name": "Run All Integration Tests",
+      "program": "integration_test/runner_test.dart",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "toolArgs": ["--dart-define-from-file=${input:env}", "--coverage"]
+      "toolArgs": ["--dart-define-from-file=../envs/${input:env}"]
     },
     {
-      "name": "Integration All Test",
-      "program": "integration_test",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "debug",
-      "args": ["--dart-define-from-file=${input:env}", "--coverage"]
-    },
-    {
-      "name": "Unit All Test",
+      "name": "Run All Unit Tests",
       "program": "test",
       "request": "launch",
       "type": "dart",
       "flutterMode": "debug",
-      "args": ["--dart-define-from-file=${input:env}", "--coverage"]
+      "args": [
+        "test",
+        "packages",
+        "--dart-define-from-file=../envs/${input:env}",
+        "--coverage"
+      ]
     },
     {
       "name": "Android Logcat",

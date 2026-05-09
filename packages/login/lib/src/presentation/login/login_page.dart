@@ -25,37 +25,27 @@ class LoginPage extends AppView<LoginController> {
                   children: [
                     TextWidget('login'.tr, style: AppTextStyle.title(context)),
                     const SpacerWidget(),
-                    Obx(() {
-                      if (controller.emailTextController.value == null) {
-                        return const SizedBox.shrink();
-                      }
-                      return TextFieldWidget(
-                        key: const Key('username_input_key'),
-                        label: 'username_label'.tr,
-                        hintText: 'username_input_hint'.tr,
-                        controller: controller.emailTextController.value,
-                        validator: controller.emailValidator,
-                        keyboardType: TextInputType.emailAddress,
-                      );
-                    }),
+                    TextFieldWidget(
+                      key: const Key('username_input_key'),
+                      label: 'username_label'.tr,
+                      hintText: 'username_input_hint'.tr,
+                      controller: controller.userNameTextController,
+                      validator: controller.emailValidator,
+                      keyboardType: TextInputType.emailAddress,
+                    ),
                     const SpacerWidget(),
-                    Obx(() {
-                      if (controller.passwordTextController.value == null) {
-                        return const SizedBox.shrink();
-                      }
-                      return TextFieldWidget(
-                        key: const Key('password_input_key'),
-                        label: 'password_label'.tr,
-                        hintText: 'password_input_hint'.tr,
-                        controller: controller.passwordTextController.value,
-                        validator: controller.passwordValidator,
-                        obscureText: true,
-                      );
-                    }),
+                    TextFieldWidget(
+                      key: const Key('password_input_key'),
+                      label: 'password_label'.tr,
+                      hintText: 'password_input_hint'.tr,
+                      controller: controller.passwordTextController,
+                      validator: controller.passwordValidator,
+                      obscureText: true,
+                    ),
                     const SpacerWidget(height: 2),
                     Obx(() {
                       return CheckboxTitleWidget(
-                        key: const Key('remember_checkbox_key'),
+                        customKey: const Key('remember_checkbox_key'),
                         text: 'remember_my_email'.tr,
                         initialValue: controller.rememberMeInitial.value,
                         onChanged: controller.saveRememberEmail,
@@ -88,21 +78,21 @@ class LoginPage extends AppView<LoginController> {
                         if (_formKey.currentState?.validate() ?? false) {
                           FocusManager.instance.primaryFocus?.unfocus();
 
-                          final String? email = controller
-                              .emailTextController
+                          final String username = controller
+                              .userNameTextController
                               .value
-                              ?.text
+                              .text
                               .trim();
-                          final String? password = controller
+                          final String password = controller
                               .passwordTextController
                               .value
-                              ?.text
+                              .text
                               .trim();
 
                           try {
                             await controller.login(
-                              username: email ?? '',
-                              password: password ?? '',
+                              username: username,
+                              password: password,
                             );
                           } on BaseException catch (error) {
                             if (!context.mounted) return;

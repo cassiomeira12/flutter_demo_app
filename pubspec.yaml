@@ -2,7 +2,7 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 1.5.0-dev
+version: 1.7.0-dev
 
 environment:
   sdk: ^3.10.1
@@ -140,22 +140,6 @@ flutter:
     - family: Montserrat Thin
       fonts:
         - asset: assets/fonts/Montserrat-Thin.ttf
-
-# dart run flutter_native_splash:create
-flutter_native_splash:
-  android: false
-  ios: false
-  web: false
-  fullscreen: false
-  android_gravity: center
-  ios_content_mode: center
-  web_image_mode: center
-  color: "#FF5722"
-  image: "assets/png/AppIcon.png"
-  android_12:
-    color: "#FF5722"
-    icon_background_color: "#FF5722"
-    icon_background_color_dark: "#FF5722"
 
 # dart run package_rename
 package_rename_config:

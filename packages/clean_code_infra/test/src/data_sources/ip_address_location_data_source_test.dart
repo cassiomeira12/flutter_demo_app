@@ -1,5 +1,3 @@
-import 'package:clean_code_infra/src/data_sources/data_sources.dart';
-import 'package:clean_code_infra/src/http/http.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -7,23 +5,13 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    AppBinding.put<HttpClient>(
-      HttpClientImpl(
-        baseUrl: 'http://ip-api.com/json',
-      ),
-    );
-
-    AppBinding.put<IpAddressLocationDataSource>(
-      IpAddressLocationDataSourceImpl(
-        http: AppBinding.find(),
-      ),
-    );
+  setUpAll(() async {
+    await DomainModuleBindings().injectDependencies();
+    await InfraModuleBindings().injectDependencies();
   });
 
   tearDownAll(() {
-    AppBinding.delete<IpAddressLocationDataSource>();
-    AppBinding.delete<HttpClient>();
+    AppBinding.deleteAll();
   });
 
   test('auto ip address location success', () async {

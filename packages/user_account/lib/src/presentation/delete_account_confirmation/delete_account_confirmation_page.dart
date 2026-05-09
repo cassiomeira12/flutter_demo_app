@@ -72,32 +72,48 @@ class DeleteAccountConfirmationPage
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                FutureButton(
-                  text: 'finish_my_account'.tr,
-                  expandWidth: true,
-                  backgroundColor: AppColors.statusError,
-                  onPressed: () async {
-                    try {
-                      final captchaAccepted = await Captcha.show(context);
-                      if (captchaAccepted != true) {
-                        return;
+                Obx(() {
+                  if (controller.isLoading) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 5),
+                      child: FittedBox(
+                        fit: BoxFit.fitHeight,
+                        child: CircularLoadingWidget(
+                          color: Theme.of(context).textTheme.labelLarge?.color,
+                        ),
+                      ),
+                    );
+                  }
+                  return PrimaryButton(
+                    key: const Key('finish_my_account_button_key'),
+                    text: 'finish_my_account'.tr,
+                    expandWidth: true,
+                    backgroundColor: AppColors.statusError,
+                    onPressed: () async {
+                      try {
+                        if (kReleaseMode) {
+                          final captchaAccepted = await Captcha.show(context);
+                          if (captchaAccepted != true) {
+                            return;
+                          }
+                        }
+                        if (!context.mounted) return;
+                        final loginValidation =
+                            await PasswordValidationBottomSheet.show(context);
+                        if (loginValidation != true) {
+                          return;
+                        }
+                        await controller.deleteAccount();
+                      } on BaseException catch (error) {
+                        if (!context.mounted) return;
+                        DialogWidget.showError(
+                          context,
+                          message: error.message.tr,
+                        );
                       }
-                      if (!context.mounted) return;
-                      final loginValidation =
-                          await PasswordValidationBottomSheet.show(context);
-                      if (loginValidation != true) {
-                        return;
-                      }
-                      await controller.deleteAccount();
-                    } on BaseException catch (error) {
-                      if (!context.mounted) return;
-                      DialogWidget.showError(
-                        context,
-                        message: error.message.tr,
-                      );
-                    }
-                  },
-                ),
+                    },
+                  );
+                }),
                 const SpacerWidget(),
                 SecondaryButton(
                   text: 'not_delete_my_account'.tr,

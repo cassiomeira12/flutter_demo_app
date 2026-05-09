@@ -1,3 +1,5 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
+
 abstract class BaseUseCaseSync<R> {
   R call();
 }
@@ -14,9 +16,7 @@ abstract class BaseUseCaseAsyncParam<R, P> {
   Future<R> call(P param);
 }
 
-abstract class BaseUseCaseParam {
-  Map<String, dynamic> toMap();
-}
+abstract class BaseUseCaseParam extends ParserToJson {}
 
 abstract class BaseCrudUseCase<R> {
   Future<R> create(BaseUseCaseParam param);

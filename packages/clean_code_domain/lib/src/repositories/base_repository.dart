@@ -5,6 +5,8 @@ abstract class BaseRepository<T> {
 
   Future<void> initLocalDatabase();
 
+  Future<void> dispose();
+
   int Function(T a, T b)? get sort;
 
   Future<T> encrypt(T item) async => item;

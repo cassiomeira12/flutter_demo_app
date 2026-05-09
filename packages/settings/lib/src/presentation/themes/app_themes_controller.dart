@@ -27,6 +27,13 @@ class AppThemesController extends BaseController {
     updateCurrentIcon();
   }
 
+  @override
+  void onClose() {
+    currentAppIcon.close();
+    supportsAlternateIcons.close();
+    super.onClose();
+  }
+
   void updateCurrentIcon() {
     _dynamicIconUseCase.currentIcon().then((result) {
       if (result is Success<String>) {
@@ -35,9 +42,13 @@ class AppThemesController extends BaseController {
     });
   }
 
-  void onChangeTheme(String theme) {
-    clickTagging(component: 'settings_theme_${theme}_selected_key');
-    _themeController.changeTheme(theme);
+  Future<void> onChangeTheme(String theme) async {
+    try {
+      clickTagging(component: 'settings_theme_${theme}_selected_key');
+      await _themeController.changeTheme(theme);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+    }
   }
 
   List<DynamicIcon> iconsAvailable() => _dynamicIconUseCase.iconsAvailable();

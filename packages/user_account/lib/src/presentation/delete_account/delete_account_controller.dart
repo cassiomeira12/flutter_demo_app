@@ -4,8 +4,9 @@ import 'package:user_account/src/presentation/delete_account/delete_account.dart
 class DeleteAccountController extends BaseController {
   final DeleteAccountStore _deleteAccountStore;
 
-  DeleteAccountController({required DeleteAccountStore deleteAccountStore})
-    : _deleteAccountStore = deleteAccountStore;
+  DeleteAccountController({
+    required DeleteAccountStore deleteAccountStore,
+  }) : _deleteAccountStore = deleteAccountStore;
 
   String? get reason => _deleteAccountStore.selectedReason.value;
 

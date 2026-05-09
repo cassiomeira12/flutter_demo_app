@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/mock_method_handler.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  MockMethodHandler.ensureInitializedWithMock();
 
   setUpAll(() async {
     MockMethodHandler.getApplicationDocumentsDirectory();
@@ -21,7 +21,7 @@ void main() {
     final LocalDatabase<String> database = AppBinding.find();
     await database.deleteAll();
     await database.close();
-    AppBinding.delete<LocalDatabase<String>>();
+    AppBinding.deleteAll();
   });
 
   test('should add new value', () async {

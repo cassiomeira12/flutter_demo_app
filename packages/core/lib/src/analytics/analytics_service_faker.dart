@@ -3,22 +3,38 @@ import 'package:dependency/dependency.dart';
 
 class AnalyticsServiceFaker implements AnalyticsService {
   @override
-  Future<void> init() async {
-    Log.success('$runtimeType init', throwsCrashlytics: false);
-  }
+  Future<void> init() async {}
 
   @override
-  Future<void> setUserId(String? userId) async {}
+  Future<void> setUserId(String? userId) async {
+    if (!Log.isIntegrationTest) {
+      Log.info('userId: $userId');
+    }
+  }
 
   @override
   Future<void> setUserProperty({
     required String name,
     required Map<String, dynamic> property,
-  }) async {}
+  }) async {
+    if (!Log.isIntegrationTest) {
+      Log.info(
+        'Event: $name \n'
+        'Parameters: $property',
+      );
+    }
+  }
 
   @override
-  Future<void> logEvent({
-    required String name,
+  Future<void> logEvent(
+    String event, {
     Map<String, dynamic>? parameters,
-  }) async {}
+  }) async {
+    if (!Log.isIntegrationTest) {
+      Log.info(
+        'Event: $event \n'
+        'Parameters: ${jsonEncode(parameters)}',
+      );
+    }
+  }
 }

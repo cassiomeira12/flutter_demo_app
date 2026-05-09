@@ -27,30 +27,35 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
     required String username,
     required String password,
   }) async {
-    final encryptedPassword = _encryptServerUseCase.call(password);
+    try {
+      final encryptedPassword = await _encryptServerUseCase.call(password);
 
-    final Map<String, dynamic> data = {
-      'name': name,
-      'email': email,
-      'username': username,
-      'password': encryptedPassword,
-    };
+      final Map<String, dynamic> data = {
+        'name': name,
+        'email': email,
+        'username': username,
+        'password': encryptedPassword,
+      };
 
-    final user = await _singUpService.create(data);
+      final user = await _singUpService.create(data);
 
-    final String sessionToken = user.sessionToken!;
-    final session = SessionEntity(token: sessionToken);
+      final String sessionToken = user.sessionToken!;
+      final session = SessionEntity(token: sessionToken);
 
-    await AppBinding.replace<SessionEntity>(session);
-    AppBinding.put<UserEntity>(user, permanent: true);
+      await AppBinding.replace<SessionEntity>(session);
+      AppBinding.put<UserEntity>(user, permanent: true);
 
-    await _encryptUserPasswordUseCase.encrypt(password: password);
+      await _encryptUserPasswordUseCase.encrypt(password: password);
 
-    await _authStorageUseCase.saveSessionToken(sessionToken);
-    await _authStorageUseCase.saveUserData(user.toMap());
+      await _authStorageUseCase.saveSessionToken(sessionToken);
+      await _authStorageUseCase.saveUserData(user.toMap());
 
-    await _userService.getUserData();
+      await _userService.getUserData();
 
-    return user as UserModel;
+      return user as UserModel;
+    } catch (error) {
+      await SessionHelper.clear();
+      rethrow;
+    }
   }
 }

@@ -7,7 +7,8 @@ enum HttpMethod {
   PATCH('PATCH'),
   DELETE('DELETE'),
   OPTIONS('OPTIONS'),
-  HEAD('HEAD');
+  HEAD('HEAD')
+  ;
 
   const HttpMethod(this.name);
 

@@ -118,7 +118,7 @@ class WebPage extends AppView<WebController> {
                         ),
                         const SpacerWidget(),
                         TextWidget(
-                          controller.environment.appName,
+                          controller.appName,
                           style: AppTextStyle.subtitle(context),
                         ),
                       ],

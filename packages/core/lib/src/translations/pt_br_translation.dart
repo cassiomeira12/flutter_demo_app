@@ -11,12 +11,17 @@ class PtBrTranslation extends Translations {
         'back_intro': 'Voltar',
         'next_intro': 'Próximo',
         'finish_intro': 'Concluir',
+        // Project App
+        'body_intro_app': 'Descrição do App na intro',
+        // App Tracking Permission
         'title_intro_app_tracking': 'Permitir rastreamento',
         'body_intro_app_tracking':
             'Autorize o App a acompanhar sua atividade online para uma experiência personalizada.',
+        // Push Notifications Permission
         'title_intro_notification': 'Notificações',
         'body_intro_notification':
-            'Ativa as notificações e fique por dentro das notícias que realmente importam',
+            'Ativa as notificações e fique por dentro das notícias que realmente importam.',
+        // Location Permission
         'title_intro_location': 'Localização',
         'body_intro_location':
             'Autorize o App a acompanhar sua localização para uma experiência personalizada.',
@@ -25,6 +30,7 @@ class PtBrTranslation extends Translations {
         'light_theme': 'Claro',
         'dark_theme': 'Escuro',
         // Defaults
+        'error': 'Ocorreu um erro',
         'default_error': 'Ocorreu um erro, tente novamente',
         'internet_error_connection': 'Verifique sua conexão com a internet',
         'invalid_session_token': 'Sua sessão expirou.',
@@ -100,6 +106,7 @@ class PtBrTranslation extends Translations {
         'version': 'Versão',
         'my_data': 'Meus dados',
         'language': 'Idioma',
+        'themes': 'Temas',
         'theme': 'Tema',
         'change_password': 'Alterar senha',
         'about': 'Sobre',
@@ -146,8 +153,12 @@ class PtBrTranslation extends Translations {
         'pt': 'Português',
         'en': 'Inglês',
         // Terms and Policy Privacy
+        'accept_terms_conditions': 'Aceito os ',
         'terms_conditions': 'Termos de uso',
+        'accept_terms_conditions_and': ' e a ',
         'privacy_policy': 'Política de privacidade',
+        'must_accept_terms_conditions_and_privacy_policy':
+            'Você precisa aceitar os termos e a política de privacidade',
         // Permissions
         'allow': 'Permitir',
         'allow_later': 'Agora não',
@@ -265,6 +276,20 @@ class PtBrTranslation extends Translations {
         'launcher_icon': 'Ícone do App',
         'change_launcher_icon': 'Ícone trocado',
         'need_restart_the_app': 'É necessário reiniciar o aplicativo',
+        'device_not_supported':
+            'Seu dispositivo não possui suporte a troca de icones',
+        // Feedback
+        'feedback': 'Faça uma sugestão',
+        'feedback_title': 'Faça sua sugestão ou comentário sobre o app',
+        'feedback_message':
+            'Nos conte como podemos melhorar! Utilize este espaço para enviar sugestões, elogios ou reclamações sobre o funcionamento do aplicativo.',
+        'suggestion': 'Sugestão',
+        'feedback_input_empty_error': 'Digite seu feedback',
+        'feedback_disclaimer':
+            'Obs: Dados como versões do aplicativo e do sistema operacional, modelo do aparelho e rede de conexão serão enviados automaticamente.',
+        'send': 'Enviar',
+        'feedback_sent_success_title': 'Feedback enviado',
+        'feedback_sent_success_message': 'Seu feedback foi enviado com sucesso',
       },
     };
   }

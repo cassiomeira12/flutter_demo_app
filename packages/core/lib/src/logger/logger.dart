@@ -6,7 +6,19 @@ import 'package:core/core.dart' hide Platform;
 import 'package:dependency/dependency.dart';
 
 abstract class Log {
-  static bool get isFlutterTest {
+  static bool get isIntegrationTest {
+    try {
+      const String integrationTest = String.fromEnvironment(
+        'INTEGRATION_TEST_SHOULD_REPORT_RESULTS_TO_NATIVE',
+      );
+      const bool isIntegrationTest = integrationTest == 'false';
+      return isIntegrationTest;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  static bool get isUnitTest {
     try {
       return Platform.environment.containsKey('FLUTTER_TEST');
     } catch (_) {
@@ -16,7 +28,7 @@ abstract class Log {
 
   static final _talker = Talker(
     settings: TalkerSettings(
-      enabled: !isFlutterTest && !kReleaseMode,
+      enabled: !isUnitTest && !kReleaseMode,
       timeFormat: TimeFormat.yearMonthDayAndTime,
       colors: {
         TalkerKey.info: AnsiPen()..cyan(),
@@ -76,8 +88,10 @@ abstract class Log {
   }
 
   static void tracking(String msg) {
-    final String message = '$_getClassNameAndPath \n\n$msg';
-    _talker.warning(message);
+    if (!Log.isIntegrationTest) {
+      final String message = '$_getClassNameAndPath \n\n$msg';
+      _talker.warning(message);
+    }
   }
 
   static void error(
@@ -86,8 +100,9 @@ abstract class Log {
     String? msg,
     bool throwsCrashlytics = true,
   }) {
+    final String functionName = _getClassNameAndPath.split(' ').first;
     _parseThrowsException(
-      msg ?? _getClassNameAndPath.split(' ').first,
+      msg ?? functionName,
       error: error,
       stackTrace: stackTrace,
       throwsCrashlytics: throwsCrashlytics,
@@ -101,8 +116,9 @@ abstract class Log {
     String? msg,
     bool throwsCrashlytics = true,
   }) {
+    final String functionName = _getClassNameAndPath.split(' ').first;
     _parseThrowsException(
-      msg ?? 'Exception',
+      msg ?? 'Exception $functionName',
       error: error,
       stackTrace: stackTrace,
       throwsCrashlytics: throwsCrashlytics,
@@ -115,8 +131,9 @@ abstract class Log {
     String? msg,
     bool throwsCrashlytics = true,
   }) {
+    final String functionName = _getClassNameAndPath.split(' ').first;
     _parseThrowsException(
-      msg ?? 'Exception',
+      msg ?? 'Exception $functionName',
       error: error,
       stackTrace: error.stackTrace,
       throwsCrashlytics: throwsCrashlytics,
@@ -130,8 +147,9 @@ abstract class Log {
     String? msg,
     bool throwsCrashlytics = true,
   }) {
+    final String functionName = _getClassNameAndPath.split(' ').first;
     _parseThrowsException(
-      msg ?? 'Fatal Exception',
+      msg ?? 'Fatal Exception $functionName',
       error: error,
       stackTrace: stackTrace,
       throwsCrashlytics: throwsCrashlytics,

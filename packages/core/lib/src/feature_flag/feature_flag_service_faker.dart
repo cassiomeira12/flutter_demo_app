@@ -2,29 +2,27 @@ import 'package:core/core.dart';
 
 class FeatureFlagServiceFaker implements FeatureFlagService {
   @override
-  Future<void> init() async {
-    Log.success(
-      '$runtimeType init',
-      throwsCrashlytics: false,
-    );
-  }
+  Future<void> init() async {}
 
   @override
-  Future<RemoteFlag?> getFlag(
+  Future<RemoteFlag<T>> getFlag<T>(
     RemoteFlagsEnum flag, {
     bool reload = false,
   }) async {
-    Log.info('getFlag flagh: $flag');
-    return null;
+    return RemoteFlag<T>(isEnabled: false, value: null);
   }
 
   @override
   Future<void> setTraits(DeviceTraits traits) async {
-    Log.info('setTraits traits: ${traits.toMap()}');
+    if (!Log.isIntegrationTest) {
+      Log.info('setTraits traits: ${traits.toMap()}');
+    }
   }
 
   @override
   void setUserId(String? userId) {
-    Log.info('setUserIdentifier userId: $userId');
+    if (!Log.isIntegrationTest) {
+      Log.info('setUserIdentifier userId: $userId');
+    }
   }
 }

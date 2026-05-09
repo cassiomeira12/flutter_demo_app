@@ -7,6 +7,12 @@ class GetRouter implements AppBaseRouter {
   static final instance = GetRouter._();
 
   @override
+  String get currentRoute => Get.currentRoute;
+
+  @override
+  dynamic get arguments => Get.arguments;
+
+  @override
   Future? to(Widget Function() page, {int? id}) async {
     return await Get.to(page, id: id);
   }
@@ -18,7 +24,6 @@ class GetRouter implements AppBaseRouter {
     bool preventDuplicates = true,
     Map<String, dynamic>? arguments,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 1));
     return await Get.toNamed(
       routeName,
       id: id,
@@ -47,7 +52,6 @@ class GetRouter implements AppBaseRouter {
     int? id,
     Map<String, dynamic>? arguments,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 1));
     return await Get.offAllNamed(routeName, id: id, arguments: arguments);
   }
 

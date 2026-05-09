@@ -22,6 +22,7 @@ enum AppRouter {
   webVisitHistory('/web-visit-history'),
   settings('/settings'),
   about('/settings/about'),
+  feedback('/settings/feedback'),
   user('/settings/user'),
   security('/settings/security'),
   themes('/settings/themes'),

@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/mock_method_handler.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  MockMethodHandler.ensureInitializedWithMock();
 
   setUpAll(() async {
     MockMethodHandler.getApplicationDocumentsDirectory();
@@ -22,7 +22,7 @@ void main() {
     await database.deleteAll();
     await database.removeOfflineData();
     await database.removeOfflineDeletedData();
-    AppBinding.delete<OfflineFirstLocalDatabase<String>>();
+    AppBinding.deleteAll();
   });
 
   test('should add values from remote', () async {

@@ -4,16 +4,23 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class WebController extends BaseController {
+  final AppEnvironmentEntity _appEnv;
+  final ServerEnvironmentEntity _serverEnv;
+  final WebAppEnvironmentEntity _webAppEnv;
   final OpenWebUrlUseCase _openWebUrlUseCase;
   final GetDeviceLocaleUseCase _currentDeviceLocaleUseCase;
 
   WebController({
+    required AppEnvironmentEntity appEnv,
+    required ServerEnvironmentEntity serverEnv,
+    required WebAppEnvironmentEntity webAppEnv,
     required OpenWebUrlUseCase openWebUrlUseCase,
     required GetDeviceLocaleUseCase currentDeviceLocaleUseCase,
-  }) : _openWebUrlUseCase = openWebUrlUseCase,
+  }) : _appEnv = appEnv,
+       _serverEnv = serverEnv,
+       _webAppEnv = webAppEnv,
+       _openWebUrlUseCase = openWebUrlUseCase,
        _currentDeviceLocaleUseCase = currentDeviceLocaleUseCase;
-
-  final EnvironmentEntity environment = AppBinding.find<EnvironmentEntity>();
 
   Rxn<UserEntity> user = Rxn();
 
@@ -24,6 +31,8 @@ class WebController extends BaseController {
   GlobalKey aboutKey = GlobalKey();
   GlobalKey contactsKey = GlobalKey();
   ScrollController? scrollController;
+
+  String get appName => _appEnv.appName;
 
   @override
   Future<void> onReady() async {
@@ -105,15 +114,15 @@ class WebController extends BaseController {
 
   void privacyPolicy() {
     clickTagging(component: 'privacy_policy_footer_key');
-    const serverUrl = String.fromEnvironment('server_url');
-    const String url = '$serverUrl/privacy-policy';
+    final serverUrl = _serverEnv.serverUrl;
+    final String url = '$serverUrl/privacy-policy';
     _openWebUrlUseCase.call(url);
   }
 
   void termsConditions() {
     clickTagging(component: 'terms_conditions_footer_key');
-    const serverUrl = String.fromEnvironment('server_url');
-    const String url = '$serverUrl/terms-conditions';
+    final serverUrl = _serverEnv.serverUrl;
+    final String url = '$serverUrl/terms-conditions';
     _openWebUrlUseCase.call(url);
   }
 
@@ -121,62 +130,45 @@ class WebController extends BaseController {
     clickTagging(component: 'help_and_support_footer_key');
   }
 
-  bool get showEmail =>
-      const String.fromEnvironment('web_contact_email').isNotEmpty;
-
-  bool get showInstagramButton =>
-      const String.fromEnvironment('web_contact_instagram').isNotEmpty;
-
-  bool get showFacebookButton =>
-      const String.fromEnvironment('web_contact_facebook').isNotEmpty;
-
-  bool get showWhatsAppButton =>
-      const String.fromEnvironment('web_contact_whatsapp').isNotEmpty;
+  bool get showEmail => _webAppEnv.contactEmail.isNotEmpty;
+  bool get showInstagramButton => _webAppEnv.contactInstagram.isNotEmpty;
+  bool get showFacebookButton => _webAppEnv.contactFacebook.isNotEmpty;
+  bool get showWhatsAppButton => _webAppEnv.contactWhatsApp.isNotEmpty;
 
   void openInstagram() {
     clickTagging(component: 'open_instagram_contacts_key');
-    const link = String.fromEnvironment('web_contact_instagram');
-    _openWebUrlUseCase.call(link);
+    _openWebUrlUseCase.call(_webAppEnv.contactInstagram);
   }
 
   void openFacebook() {
     clickTagging(component: 'open_facebook_contacts_key');
-    const link = String.fromEnvironment('web_contact_facebook');
-    _openWebUrlUseCase.call(link);
+    _openWebUrlUseCase.call(_webAppEnv.contactFacebook);
   }
 
   void openWhatsApp() {
     clickTagging(component: 'open_whatsapp_contacts_key');
-    const link = String.fromEnvironment('web_contact_whatsapp');
-    _openWebUrlUseCase.call(link);
-  }
-
-  Future<bool> _getFeatureFlagValue(RemoteFlagsEnum flag) async {
-    final RemoteFlag? featureFlag = await FeatureFlagServiceManager.instance
-        .getFlag(flag);
-    if (featureFlag?.isEnabled ?? false) {
-      return featureFlag?.value == 'true';
-    }
-    return false;
+    _openWebUrlUseCase.call(_webAppEnv.contactWhatsApp);
   }
 
   Future<void> downloadAndroidApp() async {
     clickTagging(component: 'download_google_store_key');
 
-    final bool downloadFromStore = await _getFeatureFlagValue(
+    final featureFlag = await FeatureFlagServiceManager.instance.getFlag<bool>(
       RemoteFlagsEnum.downloadAndroidStore,
     );
+    final bool downloadFromStore =
+        featureFlag.isEnabled && featureFlag.value == true;
 
     late String url;
 
     if (downloadFromStore) {
-      const androidPackageName = String.fromEnvironment('android_package_name');
+      final androidPackageName = _appEnv.androidPackageName;
       final locale = await _currentDeviceLocaleUseCase.call();
       final currentLanguage = locale.toLanguageTag();
       url =
           'https://play.google.com/store/apps/details?id=$androidPackageName&hl=$currentLanguage';
     } else {
-      const serverUrl = String.fromEnvironment('server_url');
+      final serverUrl = _serverEnv.serverUrl;
       url = '$serverUrl/download_android_app';
     }
 
@@ -186,17 +178,19 @@ class WebController extends BaseController {
   Future<void> downloadAppleApp() async {
     clickTagging(component: 'download_apple_store_key');
 
-    final bool downloadFromStore = await _getFeatureFlagValue(
+    final featureFlag = await FeatureFlagServiceManager.instance.getFlag<bool>(
       RemoteFlagsEnum.downloadAppleStore,
     );
+    final bool downloadFromStore =
+        featureFlag.isEnabled && featureFlag.value == true;
 
     late String url;
 
     if (downloadFromStore) {
-      const appAppleId = String.fromEnvironment('apple_store_app_id');
+      final appAppleId = _appEnv.appleStoreAppId;
       url = 'https://apps.apple.com/br/app/$appAppleId';
     } else {
-      const serverUrl = String.fromEnvironment('server_url');
+      final serverUrl = _serverEnv.serverUrl;
       url = '$serverUrl/download_ios_app';
     }
 

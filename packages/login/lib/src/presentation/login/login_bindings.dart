@@ -7,7 +7,7 @@ class LoginBindings extends Bindings {
   void dependencies() {
     AppBinding.put<LoginController>(
       LoginController(
-        environment: AppBinding.find(),
+        appEnv: AppBinding.find(),
         loginUseCase: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
         authStorageUseCase: AppBinding.find(),

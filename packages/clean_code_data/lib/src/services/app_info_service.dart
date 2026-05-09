@@ -3,7 +3,7 @@ import 'package:dependency/dependency.dart';
 
 class AppInfoServiceImpl implements AppInfoService {
   @override
-  Future<AppInfoModel> getAppInfo() async {
+  Future<AppInfoEntity> getAppInfo() async {
     try {
       final appInfo = await AppInfoData.get();
       final package = appInfo.package;
@@ -17,7 +17,7 @@ class AppInfoServiceImpl implements AppInfoService {
                 .toLowerCase()
           : package.packageName;
 
-      return AppInfoModel(
+      return AppInfoEntity(
         appName: package.appName,
         packageName: packageName,
         buildSignature: package.buildSignature,
@@ -25,6 +25,8 @@ class AppInfoServiceImpl implements AppInfoService {
         version: package.version.toString().split('+').first,
         build: package.buildNumber,
       );
+    } on MissingPluginException {
+      rethrow;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {

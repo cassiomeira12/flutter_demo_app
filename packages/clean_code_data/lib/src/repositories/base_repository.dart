@@ -18,16 +18,16 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
        _localStorage = localStorageUseCase {
     scheduleMicrotask(() async {
       _lastNetworkStatus = await _checkInternetUseCase.call();
-      _internetConnectionStream = _checkInternetUseCase.internetStream
-          .asBroadcastStream();
-      _internetConnectionStream?.listen(_backgroundRemoteSyncData);
+      _internetConnectionSubscription = _checkInternetUseCase.internetStream
+          .asBroadcastStream()
+          .listen(_backgroundRemoteSyncData);
     });
   }
 
   String get lastFetchTimestampKey => 'last_fetch_$_databaseName';
 
   bool _lastNetworkStatus = false;
-  Stream<bool>? _internetConnectionStream;
+  StreamSubscription<bool>? _internetConnectionSubscription;
 
   final OfflineFirstLocalDatabase<Map<String, dynamic>> _localDatabase =
       HiveOfflineFirstLocalDatabase<Map<String, dynamic>>();
@@ -38,15 +38,19 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
   @override
   ValueNotifier<List<ValueNotifier<T>>> get valueListenable => _values;
 
-  void _backgroundRemoteSyncData(bool isConnected) {
+  void _backgroundRemoteSyncData(bool isConnected, {bool autoFetch = true}) {
     _lastNetworkStatus = isConnected;
     if (isConnected) {
-      Log.debug('Background remote sync data');
+      Log.debug('$runtimeType background remote sync data');
       Future.wait([
         _uploadCreatedOfflineData(),
         _uploadUpdatedOfflineData(),
         _uploadDeletedOfflineData(),
-      ]).whenComplete(_backgroundFetchData);
+      ]).whenComplete(() {
+        if (autoFetch) {
+          _backgroundFetchData();
+        }
+      });
     }
   }
 
@@ -176,8 +180,20 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
   }
 
   @override
-  Future<void> initLocalDatabase() {
-    return _localDatabase.init(databaseName: _databaseName);
+  Future<void> initLocalDatabase() async {
+    await _localDatabase.init(databaseName: _databaseName);
+    scheduleMicrotask(
+      () => _backgroundRemoteSyncData(
+        _lastNetworkStatus,
+        autoFetch: false,
+      ),
+    );
+  }
+
+  @override
+  Future<void> dispose() async {
+    await _internetConnectionSubscription?.cancel();
+    await _localDatabase.close();
   }
 
   @override

@@ -26,12 +26,12 @@ class IpAddressLocationModel extends IpAddressLocationEntity {
         regionName: map['regionName'],
         city: map['city'],
         zip: map['zip'],
-        latitude: map['latitude'],
-        longitude: map['longitude'],
+        latitude: map['lat'],
+        longitude: map['lon'],
         timezone: map['timezone'],
         isp: map['isp'],
         org: map['org'],
-        ispOrg: map['as '],
+        ispOrg: map['as'],
         ip: map['query'],
       );
     } catch (error, stacktrace) {

@@ -2,9 +2,13 @@ import 'package:core/core.dart';
 
 class LoginServiceImpl implements LoginService {
   final LoginDataSource _dataSource;
+  final EncryptServerPublicKeyUseCase _encryptServerUseCase;
 
-  LoginServiceImpl({required LoginDataSource loginDataSource})
-    : _dataSource = loginDataSource;
+  LoginServiceImpl({
+    required LoginDataSource loginDataSource,
+    required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
+  }) : _dataSource = loginDataSource,
+       _encryptServerUseCase = encryptServerPublicKeyUseCase;
 
   @override
   Future<UserModel> login({
@@ -12,14 +16,14 @@ class LoginServiceImpl implements LoginService {
     required String password,
   }) async {
     try {
+      final encryptedPassword = await _encryptServerUseCase.call(password);
+
       final Map<String, dynamic> result = await _dataSource.login(
         username: username,
-        password: password,
+        password: encryptedPassword,
       );
 
-      final UserModel user = UserModel.fromMap(result);
-
-      return user;
+      return UserModel.fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {

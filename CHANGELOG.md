@@ -1,3 +1,27 @@
+# Fortress v1.7.0 [08-05-2026]
+
+- refactor: update changelog
+- refactor add intro app description
+- refactor: updates
+- feat: add credentials unit tests
+- feat: add integration test
+- fix: assets values
+- refactor: update validations
+
+# Fortress v1.6.0 [08-05-2026]
+
+- refactor add intro app description
+- refactor: updates
+- feat: add credentials unit tests
+- feat: add integration test
+- fix: assets values
+- refactor: update validations
+
+# Fortress v1.5.1 [12-04-2026]
+
+- fix: assets values
+- refactor: update validations
+
 # Fortress v1.5.0 [31-03-2026]
 
 - refactor: change Log.error

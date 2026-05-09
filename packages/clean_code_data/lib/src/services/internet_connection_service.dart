@@ -5,16 +5,18 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
   late InternetConnection _internetConnection;
   late StreamSubscription<InternetStatus> _internetConnectionSubscription;
 
+  final delayToOverrideCurrentStatus = const Duration(seconds: 1);
+
   InternetConnectionServiceImpl() {
     _internetConnection = InternetConnection.createInstance();
     _internetConnectionSubscription = _internetConnection.onStatusChange.listen(
       _listenChangeStatus,
       onDone: () {
-        _internetConnectionSubscription.pause();
-      },
-      onError: (error, stackTrace) {
         _internetConnectionSubscription.cancel();
-        Log.error(error, stackTrace, msg: 'InternetConnectionSubscription');
+      },
+      onError: (Object error) {
+        _internetConnectionSubscription.cancel();
+        Log.error(error, null, msg: 'InternetConnectionSubscription');
       },
     );
   }
@@ -32,7 +34,7 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
     if (_onListenerChangeTimer?.isActive ?? false) {
       _onListenerChangeTimer?.cancel();
     }
-    _onListenerChangeTimer = Timer(const Duration(seconds: 1), () {
+    _onListenerChangeTimer = Timer(delayToOverrideCurrentStatus, () {
       if (_lastStatus != null && _lastStatus != status) {
         Log.debug('Change internet connection status [${status.name}]');
         for (final streamController in _listenerStreamList) {
@@ -44,14 +46,15 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
   }
 
   void _clearInactiveStreams() {
-    _listenerStreamList.removeWhere((streamController) {
-      return streamController.isPaused || streamController.isClosed;
-    });
+    _listenerStreamList.removeWhere((stream) => stream.isClosed);
   }
 
   @override
   void addStream(StreamController<bool> streamController) {
     _listenerStreamList.add(streamController);
+    if (_lastStatus != null) {
+      streamController.add(_lastStatus == InternetStatus.connected);
+    }
   }
 
   @override
@@ -69,9 +72,8 @@ class InternetConnectionServiceImpl implements InternetConnectionService {
 
   @override
   void dispose() {
-    _clearInactiveStreams();
-    if (_listenerStreamList.isEmpty) {
-      _internetConnectionSubscription.cancel();
-    }
+    _listenerStreamList.forEach((stream) => stream.close());
+    _internetConnectionSubscription.cancel();
+    _onListenerChangeTimer?.cancel();
   }
 }

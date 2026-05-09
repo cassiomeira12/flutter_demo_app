@@ -6,9 +6,8 @@ class LoginUseCaseImpl implements LoginUseCase {
   final UserAuthStorageUseCase _authStorageUseCase;
   final UserService _userService;
   final EncryptUserPasswordUseCase _encryptUserPasswordUseCase;
-  final EncryptServerPublicKeyUseCase _encryptServerUseCase;
   final SecurityEncryptUseCase _securityEncrypterUseCase;
-  final GetDeviceInfoUseCase _getDeviceInfoUseCase;
+  final DeviceInfoEntity _deviceInfo;
   final LocalStorageUseCase _localStorageUseCase;
 
   LoginUseCaseImpl({
@@ -16,17 +15,15 @@ class LoginUseCaseImpl implements LoginUseCase {
     required UserAuthStorageUseCase authStorageUseCase,
     required UserService userService,
     required EncryptUserPasswordUseCase encryptUserPasswordUseCase,
-    required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
     required SecurityEncryptUseCase securityEncrypterUseCase,
-    required GetDeviceInfoUseCase getDeviceInfoUseCase,
+    required DeviceInfoEntity deviceInfoEntity,
     required LocalStorageUseCase localStorageUseCase,
   }) : _loginService = loginService,
        _authStorageUseCase = authStorageUseCase,
        _userService = userService,
        _encryptUserPasswordUseCase = encryptUserPasswordUseCase,
-       _encryptServerUseCase = encryptServerPublicKeyUseCase,
        _securityEncrypterUseCase = securityEncrypterUseCase,
-       _getDeviceInfoUseCase = getDeviceInfoUseCase,
+       _deviceInfo = deviceInfoEntity,
        _localStorageUseCase = localStorageUseCase;
 
   @override
@@ -34,14 +31,10 @@ class LoginUseCaseImpl implements LoginUseCase {
     required String username,
     required String password,
   }) async {
-    final encryptedPassword = await _encryptServerUseCase.call(password);
-
-    final user =
-        await _loginService.login(
-              username: username,
-              password: encryptedPassword,
-            )
-            as UserModel;
+    final user = await _loginService.login(
+      username: username,
+      password: password,
+    );
 
     final String sessionToken = user.sessionToken!;
     final session = SessionEntity(token: sessionToken);
@@ -59,7 +52,7 @@ class LoginUseCaseImpl implements LoginUseCase {
 
       await _savePasswordEncrypted(userId: user.id, password: password);
 
-      return user;
+      return user as UserModel;
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace);
       throw BaseException(error: error, stackTrace: stackTrace);
@@ -70,8 +63,7 @@ class LoginUseCaseImpl implements LoginUseCase {
     required String userId,
     required String password,
   }) async {
-    final deviceInfo = await _getDeviceInfoUseCase.call();
-    final deviceId = deviceInfo.deviceId;
+    final deviceId = _deviceInfo.deviceId;
 
     final String key = '$userId$deviceId';
 

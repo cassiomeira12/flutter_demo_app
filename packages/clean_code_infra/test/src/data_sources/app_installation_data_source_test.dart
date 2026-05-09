@@ -1,4 +1,3 @@
-import 'package:clean_code_infra/src/data_sources/data_sources.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -30,21 +29,17 @@ void main() {
     'ip': 'ip',
   };
 
-  setUpAll(() {
+  setUpAll(() async {
     registerFallbackValue(HttpRequestFake());
 
     AppBinding.put<HttpClient>(HttpClientMock());
 
-    AppBinding.put<AppInstallationDataSource>(
-      AppInstallationDataSourceImpl(
-        http: AppBinding.find(),
-      ),
-    );
+    await DomainModuleBindings().injectDependencies();
+    await InfraModuleBindings().injectDependencies();
   });
 
   tearDownAll(() {
-    AppBinding.delete<AppInstallationDataSource>();
-    AppBinding.delete<HttpClient>();
+    AppBinding.deleteAll();
   });
 
   test('test create app installation', () async {

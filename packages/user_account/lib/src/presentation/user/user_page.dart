@@ -22,7 +22,7 @@ class UserPage extends AppView<UserController> {
                   SizedBox(
                     width: ResponsiveSizeHelper.width(100),
                     height: ResponsiveSizeHelper.width(100),
-                    child: ImageWidget(imageUrl: controller.user.avatarUrl),
+                    child: ImageWidget(imageUrl: controller.avatarUrl),
                   ),
                   const SpacerWidget(),
                   LightButton(text: 'Alterar foto'.tr, onPressed: () {}),
@@ -33,7 +33,7 @@ class UserPage extends AppView<UserController> {
                     hintText: 'Seu nome',
                     enabled: false,
                     controller: TextEditingController(
-                      text: controller.user.name,
+                      text: controller.userName,
                     ),
                     keyboardType: TextInputType.name,
                     prefixIcon: SizedBox(
@@ -51,7 +51,7 @@ class UserPage extends AppView<UserController> {
                     hintText: 'Seu e-mail',
                     enabled: false,
                     controller: TextEditingController(
-                      text: controller.user.email,
+                      text: controller.userEmail,
                     ),
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: SizedBox(

@@ -352,6 +352,8 @@ class WebViewController extends LifecycleController {
     addLog('onClose controller');
     _localStorageUseCase.delete(url);
     _checkInternetUseCase.dispose();
+    errorMessage.close();
+    _logs.close();
     super.onClose();
   }
 }

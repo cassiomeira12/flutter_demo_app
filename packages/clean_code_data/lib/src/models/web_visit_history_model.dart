@@ -45,10 +45,10 @@ class WebVisitHistoryModel extends WebVisitHistoryEntity {
         ispOrg: map['as'] as String?,
         createdAt: map['createdAt'] == null
             ? null
-            : DateTime.parse(map['createdAt']).toLocal(),
+            : DateTime.tryParse(map['createdAt'])?.toLocal(),
         updatedAt: map['updatedAt'] == null
             ? null
-            : DateTime.parse(map['updatedAt']).toLocal(),
+            : DateTime.tryParse(map['updatedAt'])?.toLocal(),
       );
     } catch (error, stacktrace) {
       throw BaseException(

@@ -1,4 +1,6 @@
-class InstallationEntity {
+import 'package:clean_code_domain/clean_code_domain.dart';
+
+class InstallationEntity extends ParserToJson {
   final String? installationId;
   final String appName;
   final String appVersion;
@@ -37,6 +39,7 @@ class InstallationEntity {
     required this.ip,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'installationId': installationId,
@@ -57,11 +60,6 @@ class InstallationEntity {
       'platform': platform,
       'ip': ip,
     };
-  }
-
-  @override
-  String toString() {
-    return toMap().toString();
   }
 
   bool equals(InstallationEntity other) {

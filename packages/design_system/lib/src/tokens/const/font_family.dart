@@ -4,7 +4,8 @@ enum FontFamily {
   light('Montserrat Light'),
   medium('Montserrat Medium'),
   regular('Montserrat Regular'),
-  thin('Montserrat Thin');
+  thin('Montserrat Thin')
+  ;
 
   const FontFamily(this.family);
 

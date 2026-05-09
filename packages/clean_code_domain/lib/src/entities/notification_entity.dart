@@ -1,4 +1,6 @@
-class NotificationEntity {
+import 'package:clean_code_domain/clean_code_domain.dart';
+
+class NotificationEntity extends ParserToJson {
   final String objectId;
   final String title;
   final String body;
@@ -28,6 +30,7 @@ class NotificationEntity {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'objectId': objectId,
@@ -36,10 +39,5 @@ class NotificationEntity {
       'viewed': viewed,
       'imageUrl': imageUrl,
     };
-  }
-
-  @override
-  String toString() {
-    return toMap().toString();
   }
 }

@@ -1,6 +1,9 @@
 import 'package:dependency/dependency.dart';
 
 abstract class AppBaseRouter {
+  String get currentRoute;
+  dynamic get arguments;
+
   Future<dynamic>? to(Widget Function() page, {int? id});
 
   Future<dynamic>? toNamed(

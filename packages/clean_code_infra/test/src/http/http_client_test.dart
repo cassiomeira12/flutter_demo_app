@@ -1,4 +1,3 @@
-import 'package:clean_code_infra/src/http/http.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -6,16 +5,20 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    AppBinding.put<HttpClient>(
-      HttpClientImpl(
-        baseUrl: 'https://fakestoreapi.com',
+  setUpAll(() async {
+    AppBinding.put<ServerEnvironmentEntity>(
+      ServerEnvironmentEntity(
+        serverUrl: 'https://fakestoreapi.com',
       ),
+      permanent: true,
     );
+
+    await DomainModuleBindings().injectDependencies();
+    await InfraModuleBindings().injectDependencies();
   });
 
   tearDownAll(() {
-    AppBinding.delete<HttpClient>();
+    AppBinding.deleteAll();
   });
 
   group('test http client', () {

@@ -1,4 +1,3 @@
-import 'package:clean_code_infra/src/data_sources/data_sources.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,21 +9,17 @@ class HttpRequestFake extends Fake implements HttpRequest {}
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
+  setUpAll(() async {
     registerFallbackValue(HttpRequestFake());
 
     AppBinding.put<HttpClient>(HttpClientMock());
 
-    AppBinding.put<LogoutDataSource>(
-      LogoutDataSourceImpl(
-        http: AppBinding.find(),
-      ),
-    );
+    await DomainModuleBindings().injectDependencies();
+    await InfraModuleBindings().injectDependencies();
   });
 
   tearDownAll(() {
-    AppBinding.delete<LogoutDataSource>();
-    AppBinding.delete<HttpClient>();
+    AppBinding.deleteAll();
   });
 
   test('test logout', () async {

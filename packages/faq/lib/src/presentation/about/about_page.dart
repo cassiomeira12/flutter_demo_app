@@ -56,6 +56,13 @@ class AboutPage extends AppView<AboutController> {
                     icon: const FlutterIcon(Icons.shield),
                     onPressed: controller.privacyPolicy,
                   ),
+                  SecondaryButton(
+                    key: const Key('about_feedback_key'),
+                    text: 'feedback'.tr,
+                    expandWidth: true,
+                    icon: const FlutterIcon(Icons.edit_square),
+                    onPressed: controller.feedback,
+                  ),
                   if (controller.showOpenWebSiteButton && !Platform.isWeb)
                     SecondaryButton(
                       key: const Key('about_open_website_key'),

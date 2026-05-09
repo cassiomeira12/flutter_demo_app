@@ -1,4 +1,6 @@
-abstract class BaseEntity {
+import 'package:clean_code_domain/clean_code_domain.dart';
+
+abstract class BaseEntity extends ParserToJson {
   final String objectId;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -15,6 +17,7 @@ abstract class BaseEntity {
     DateTime? updatedAt,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'objectId': objectId,
@@ -22,7 +25,4 @@ abstract class BaseEntity {
       'updatedAt': updatedAt?.toString(),
     };
   }
-
-  @override
-  String toString() => toMap().toString();
 }

@@ -8,8 +8,6 @@ import 'package:flutter_demo_app/presentation/credentials/credentials.dart';
 class CredentialsBindings extends Bindings {
   @override
   void dependencies() {
-    AppBinding.put<CredentialsStore>(CredentialsStore());
-
     AppBinding.put<CredentialDataSource>(
       CredentialDataSourceImpl(
         http: AppBinding.find(),
@@ -40,6 +38,10 @@ class CredentialsBindings extends Bindings {
         repository: AppBinding.find(),
         http: AppBinding.find(),
       ),
+    );
+
+    AppBinding.put<CredentialsStore>(
+      CredentialsStore(credentialRepository: AppBinding.find()),
     );
 
     AppBinding.put<CredentialsController>(

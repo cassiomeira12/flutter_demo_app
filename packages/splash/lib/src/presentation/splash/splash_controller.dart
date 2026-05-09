@@ -76,6 +76,12 @@ class SplashController extends BaseController {
     );
 
     await PerformanceMetricUseCase.call(
+      name: 'splash-feature-flag-initialize',
+      track: splashTrack,
+      builder: (_) => FeatureFlagServiceManager.instance.init(),
+    );
+
+    await PerformanceMetricUseCase.call(
       name: 'splash-crashlytics-initialize-track',
       track: splashTrack,
       builder: (_) => CrashlyticsServiceManager.instance.init(),
@@ -106,11 +112,6 @@ class SplashController extends BaseController {
             name: 'splash-services-analytics-initialize',
             track: track,
             builder: (_) => AnalyticsServiceManager.instance.init(),
-          ),
-          PerformanceMetricUseCase.call(
-            name: 'splash-services-feature-flag-initialize',
-            track: track,
-            builder: (_) => FeatureFlagServiceManager.instance.init(),
           ),
         ]);
       },
@@ -251,22 +252,17 @@ class SplashController extends BaseController {
       await _featureFlagLifecycleController.uploadDeviceTraits();
       await _featureFlagLifecycleController.updateFeatureFlags();
 
-      final bool blockedApp = await _checkIfAppIsBlocked();
+      final blockingAppFlag = await FeatureFlagServiceManager.instance
+          .getFlag<bool>(RemoteFlagsEnum.blockingApp);
+      final bool blockedApp =
+          blockingAppFlag.isEnabled && blockingAppFlag.value == true;
+
       if (!blockedApp) {
         _unsubscribeBlockedTopic();
       }
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }
-  }
-
-  Future<bool> _checkIfAppIsBlocked() async {
-    final RemoteFlag? blockingAppFlag = await FeatureFlagServiceManager.instance
-        .getFlag(RemoteFlagsEnum.blockingApp);
-    if (blockingAppFlag?.isEnabled ?? false) {
-      return blockingAppFlag?.value == 'true';
-    }
-    return false;
   }
 
   Future<void> _unsubscribeBlockedTopic() async {

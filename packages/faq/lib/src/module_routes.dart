@@ -1,5 +1,5 @@
 import 'package:core/core.dart';
-import 'package:faq/src/presentation/about/about.dart';
+import 'package:faq/src/presentation/presentation.dart';
 
 class FaqModuleRoutes implements ModuleRoutes {
   @override
@@ -8,6 +8,11 @@ class FaqModuleRoutes implements ModuleRoutes {
       name: AppRouter.about.name,
       page: AboutPage.new,
       binding: AboutBindings(),
+    ),
+    AppRouterPage(
+      name: AppRouter.feedback.name,
+      page: FeedbackPage.new,
+      binding: FeedbackBindings(),
     ),
   ];
 }

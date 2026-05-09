@@ -1,6 +1,8 @@
 abstract class OfflineFirstLocalDatabase<T> {
   Future<void> init({required String databaseName});
 
+  Future<void> close();
+
   Future<int> add(T value);
 
   Future<void> addByKey(String key, T value);
