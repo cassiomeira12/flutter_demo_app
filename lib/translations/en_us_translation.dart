@@ -6,6 +6,8 @@ class AppEnUsTranslation extends EnUsTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app':
+            'A simple and efficient app for quickly and securely recording your work hours. Control your clock-ins, clock-outs, and breaks in real time, track your workday, and keep your history always organized.',
         'remember_my_credentials': 'Remember my credentials',
         'change_month': 'Change month',
         'holiday': 'Holiday',

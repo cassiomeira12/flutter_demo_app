@@ -12,13 +12,13 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.work-point.stg",
+      "default": "env.work-point.stg",
       "options": [
-        ".env.work-point.prod",
-        ".env.work-point.dev",
-        ".env.work-point.dev.ios",
-        ".env.work-point.stg",
-        ".env.work-point.stg.ios"
+        "env.work-point.prod",
+        "env.work-point.dev",
+        "env.work-point.dev.ios",
+        "env.work-point.stg",
+        "env.work-point.stg.ios"
       ]
     }
   ],
