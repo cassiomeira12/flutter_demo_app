@@ -12,13 +12,13 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.fortress.stg",
+      "default": "env.fortress.stg",
       "options": [
-        ".env.fortress.dev",
-        ".env.fortress.stg",
-        ".env.fortress.stg.ios",
-        ".env.fortress.prod",
-        ".env.fortress.prod.ios"
+        "env.fortress.dev",
+        "env.fortress.stg",
+        "env.fortress.stg.ios",
+        "env.fortress.prod",
+        "env.fortress.prod.ios"
       ]
     }
   ],

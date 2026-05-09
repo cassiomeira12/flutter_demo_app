@@ -32,10 +32,10 @@ class CredentialController extends BaseController with UrlValidator {
   final urlTextController = TextEditingController();
   final notesTextController = TextEditingController();
 
-  UserEntity get user => AppBinding.find<UserEntity>();
   CredentialEntity? get _credentialSelected =>
       _credentialsStore.credential.value;
   bool get hasCredential => _credentialSelected != null;
+
   RxBool showOtpWidget = RxBool(false);
   RxBool showOpenUrl = RxBool(false);
   RxString favIconUrl = RxString('');
@@ -50,6 +50,15 @@ class CredentialController extends BaseController with UrlValidator {
   void onInit() {
     super.onInit();
     _setCredentialData(_credentialsStore.credential.value);
+  }
+
+  @override
+  void onClose() {
+    showOtpWidget.close();
+    showOpenUrl.close();
+    favIconUrl.close();
+    secretKeyOTPTextController.removeListener(_changeOTPText);
+    super.onClose();
   }
 
   void _setCredentialData(CredentialEntity? credential) {
@@ -67,9 +76,7 @@ class CredentialController extends BaseController with UrlValidator {
       secretKeyOTPTextController.value = TextEditingValue(
         text: credential.secretKeyOTP ?? '',
       );
-      secretKeyOTPTextController.addListener(() {
-        changeSecretKeyOTP(secretKeyOTPTextController.text);
-      });
+      secretKeyOTPTextController.addListener(_changeOTPText);
       urlValidation(credential.url);
       urlTextController.value = TextEditingValue(
         text: credential.url ?? '',
@@ -79,6 +86,8 @@ class CredentialController extends BaseController with UrlValidator {
       );
     }
   }
+
+  void _changeOTPText() => changeSecretKeyOTP(secretKeyOTPTextController.text);
 
   Future<void> saveCredential({
     required String credentialName,
@@ -103,44 +112,23 @@ class CredentialController extends BaseController with UrlValidator {
       updatedAt: _credentialsStore.credential.value?.updatedAt,
     );
 
-    // late String credentialsId;
+    final CredentialEntity credential = hasCredential
+        ? await _updateCredentialUseCase.call(tempCredential)
+        : await _createCredentialUseCase.call(tempCredential);
 
-    if (hasCredential) {
-      await _updateCredentialUseCase.call(tempCredential);
-      // final updated = await _updateCredentialUseCase.call(tempCredential);
-      // final int? index = _credentialsStore.selectedIndex;
-      // if (index != null) {
-      //   _credentialsStore.credentials[index] = updated;
-      // }
-      // credentialsId = updated.objectId;
-    } else {
-      await _createCredentialUseCase.call(tempCredential);
-      // final created = await _createCredentialUseCase.call(tempCredential);
-      // _credentialsStore.credentials.add(created);
-      // credentialsId = created.objectId;
-    }
+    final int scrollToIndex = _credentialsStore.indexOf(credential.objectId);
 
-    // _credentialsStore.credentials.sort((a, b) => a.name.compareTo(b.name));
-    // final int scrollToIndex = _credentialsStore.credentials.indexWhere(
-    //   (item) => item.objectId == credentialsId,
-    // );
-
-    backPage(/*result: scrollToIndex*/);
+    backPage(result: scrollToIndex);
   }
 
   Future<void> removerCredential() async {
     try {
       final credential = _credentialsStore.credential.value!;
       await _deleteCredentialUseCase.call(credential);
-
-      // final int? index = _credentialsStore.selectedIndex;
-      // if (index != null) {
-      //   _credentialsStore.credentials.removeAt(index);
-      // }
-
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+    } finally {
       backPage();
-    } catch (error) {
-      //
     }
   }
 
@@ -202,8 +190,8 @@ class CredentialController extends BaseController with UrlValidator {
 
   int _passwordUsedManyTimes(String password) {
     return _credentialsStore.credentials.fold(0, (value, credential) {
-      if (credential.password == password) {
-        if (_credentialSelected?.objectId == credential.objectId) {
+      if (credential.value.password == password) {
+        if (_credentialSelected?.objectId == credential.value.objectId) {
           return value;
         }
         return value + 1;
@@ -288,6 +276,8 @@ class CredentialController extends BaseController with UrlValidator {
 
       _credentialsStore.credential.value = tempCredential;
       _setCredentialData(tempCredential);
-    } catch (_) {}
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+    }
   }
 }

@@ -6,6 +6,8 @@ class AppPtBrTranslation extends PtBrTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app':
+            'Um gerenciador de senhas seguro e intuitivo para armazenar, organizar e proteger suas credenciais em um só lugar. Salve suas senhas, acesse seus dados com rapidez e mantenha suas contas protegidas com criptografia avançada.',
         'credentials': 'Minhas senhas',
         'empty_credentials_list': 'Você ainda não tem credenciais',
         'credential': 'Senha',

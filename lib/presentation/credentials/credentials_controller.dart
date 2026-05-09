@@ -33,6 +33,14 @@ class CredentialsController extends BaseController {
     getAllCredentials();
   }
 
+  @override
+  void onClose() {
+    credentials.dispose();
+    isLoading.dispose();
+    errorMessage.dispose();
+    super.onClose();
+  }
+
   Future<void> getAllCredentials() async {
     final track = CrashlyticsServiceManager.instance.trackOperation(
       name: 'get-all-credentials-performance-tracking',

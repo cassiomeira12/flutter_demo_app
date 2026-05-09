@@ -8,6 +8,8 @@ abstract class AppAssets {
 
   // Web App
   static const String main = 'assets/png/main.png';
+  static const String feature1 = 'assets/png/feature_1.png';
+  static const String feature2 = 'assets/png/feature_2.png';
 
   static const String appStore = 'assets/png/app_store.png';
   static const String playStore = 'assets/png/play_store.png';
