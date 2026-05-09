@@ -2,28 +2,13 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class AppPermissionsServiceImpl implements AppPermissionsService {
-  PermissionStatus parseStatus(String status) {
-    switch (status) {
-      case 'granted':
-        return PermissionStatus.granted;
-      case 'grantedLimited':
-        return PermissionStatus.limited;
-      case 'denied':
-        return PermissionStatus.denied;
-      case 'deniedForever':
-      default:
-        return PermissionStatus.permanentlyDenied;
-    }
-  }
-
   @override
   Future<PermissionStatus> checkPermission(Permission permission) async {
     try {
       switch (permission) {
         case Permission.location:
-          final locationService = Location();
-          final status = await locationService.hasPermission();
-          return parseStatus(status.name);
+          final status = await Location().hasPermission();
+          return _parseStatus(status.name);
         default:
           return await permission.status;
       }
@@ -59,7 +44,7 @@ class AppPermissionsServiceImpl implements AppPermissionsService {
             }
           }
           final status = await locationService.requestPermission();
-          return parseStatus(status.name);
+          return _parseStatus(status.name);
         case Permission.notification:
           final status = await checkPermission(permission);
           if (status.isPermanentlyDenied && openSettings) {
@@ -81,6 +66,20 @@ class AppPermissionsServiceImpl implements AppPermissionsService {
     } catch (error, stackTrace) {
       Log.exception(error, stackTrace);
       throw BaseException(error: error, stackTrace: stackTrace);
+    }
+  }
+
+  PermissionStatus _parseStatus(String status) {
+    switch (status) {
+      case 'granted':
+        return PermissionStatus.granted;
+      case 'grantedLimited':
+        return PermissionStatus.limited;
+      case 'denied':
+        return PermissionStatus.denied;
+      case 'deniedForever':
+      default:
+        return PermissionStatus.permanentlyDenied;
     }
   }
 }

@@ -1,4 +1,6 @@
-class AppInfoEntity {
+import 'package:clean_code_domain/clean_code_domain.dart';
+
+class AppInfoEntity extends ParserToJson {
   final String appName;
   final String packageName;
   final String buildSignature;
@@ -18,4 +20,16 @@ class AppInfoEntity {
   String get formattedName => '$version ($build)';
 
   String get versionOnly => version.split('-').first;
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'appName': appName,
+      'packageName': packageName,
+      'buildSignature': buildSignature,
+      'installerStore': installerStore,
+      'version': version,
+      'build': build,
+    };
+  }
 }

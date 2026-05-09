@@ -135,12 +135,10 @@ class ScrollStateNotifierWidget<T> extends StatelessWidget {
                 return RefreshIndicator(
                   color: Theme.of(context).primaryColor,
                   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                  onRefresh: () {
-                    return Future.delayed(
-                      const Duration(seconds: 1),
-                      onRefresh,
-                    );
-                  },
+                  onRefresh: () => Future.delayed(
+                    const Duration(milliseconds: 500),
+                    onRefresh,
+                  ),
                   child: ScrollViewWidget(
                     child: (scrollController) {
                       this.scrollController?.call(scrollController);

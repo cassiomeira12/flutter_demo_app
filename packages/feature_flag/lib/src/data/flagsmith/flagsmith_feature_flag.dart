@@ -1,8 +1,9 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/src/data/data.dart';
+import 'package:feature_flag/src/data/mixin/parse_value_mixin.dart';
 
-class FlagsmithFeatureFlag implements FeatureFlagService {
+class FlagsmithFeatureFlag with ParseValueMixin implements FeatureFlagService {
   final String apiKey;
   final String baseURI;
   final String? initialConfigJson;
@@ -60,10 +61,11 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
       for (final param in traits.toMap().entries) {
         _traits[param.key] = Trait(key: param.key, value: param.value);
       }
-      await _client.getFeatureFlags(
+      final list = await _client.getFeatureFlags(
         user: _deviceIdentity,
         traits: _traits.values.toList(),
       );
+      _sendAnalyticsFlags(list);
     } on FlagsmithApiException catch (_) {
       // ignore Api Exceptions
     } catch (_) {
@@ -77,7 +79,7 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
   }
 
   @override
-  Future<RemoteFlag?> getFlag(
+  Future<RemoteFlag<T>> getFlag<T>(
     RemoteFlagsEnum flag, {
     bool reload = false,
   }) async {
@@ -96,14 +98,26 @@ class FlagsmithFeatureFlag implements FeatureFlagService {
           flag.name,
           user: _deviceIdentity,
         );
-        return RemoteFlag(isEnabled: enabled, value: value);
+        return parseValueType<T>(flag: flag, isEnabled: enabled, value: value);
       }
-      return null;
+      return RemoteFlag<T>(isEnabled: false, value: null);
     } on FlagsmithApiException catch (_) {
       // ignore Api Exceptions
-      return null;
+      return RemoteFlag<T>(isEnabled: false, value: null);
     } catch (_) {
       rethrow;
+    }
+  }
+
+  Future<void> _sendAnalyticsFlags(List<Flag> flags) async {
+    for (final flag in flags) {
+      AnalyticsServiceManager.instance.logEvent(
+        'feature_flag_flagsmith',
+        parameters: {
+          flag.feature.name:
+              'enabled: ${flag.enabled} value: ${flag.stateValue}',
+        },
+      );
     }
   }
 }

@@ -63,14 +63,14 @@ class SignUpPage extends AppView<SignUpController> {
                   obscureText: true,
                 ),
                 const SpacerWidget(height: 3),
-                Obx(() {
-                  return Container(
-                    constraints: const BoxConstraints(
-                      maxWidth: ResponsiveSizeHelper.maxWidth,
-                    ),
-                    child: Row(
-                      children: [
-                        CheckboxWidget(
+                Container(
+                  constraints: const BoxConstraints(
+                    maxWidth: ResponsiveSizeHelper.maxWidth,
+                  ),
+                  child: Row(
+                    children: [
+                      Obx(() {
+                        return CheckboxWidget(
                           key: const Key(
                             'accept_terms_and_policy_checkbox_widget_key',
                           ),
@@ -78,34 +78,39 @@ class SignUpPage extends AppView<SignUpController> {
                           onChanged: (value) {
                             controller.privacyAndTerms(value);
                           },
-                        ),
-                        const SpacerWidget(),
-                        Flexible(
-                          child: TextRichWidget(
-                            children: [
-                              const TextRichWidget(text: 'Aceito os '),
-                              TextRichWidget(
-                                key: const Key(
-                                  'terms_conditions_hyperlink_key',
-                                ),
-                                text: 'terms_conditions'.tr.toLowerCase(),
-                                style: AppTextStyle.hyperlink(context),
-                                onTap: controller.termsConditions,
+                        );
+                      }),
+                      const SpacerWidget(),
+                      Flexible(
+                        child: TextRichWidget(
+                          children: [
+                            TextRichWidget(
+                              text: 'accept_terms_conditions'.tr,
+                            ),
+                            TextRichWidget(
+                              key: const Key(
+                                'terms_conditions_hyperlink_key',
                               ),
-                              const TextRichWidget(text: ' e a '),
-                              TextRichWidget(
-                                key: const Key('privacy_policy_hyperlink_key'),
-                                text: 'privacy_policy'.tr.toLowerCase(),
-                                style: AppTextStyle.hyperlink(context),
-                                onTap: controller.privacyPolicy,
-                              ),
-                            ],
-                          ),
+                              text: 'terms_conditions'.tr.toLowerCase(),
+                              style: AppTextStyle.hyperlink(context),
+                              onTap: controller.termsConditions,
+                            ),
+                            TextRichWidget(
+                              text: 'accept_terms_conditions_and'.tr,
+                            ),
+                            TextRichWidget(
+                              key: const Key('privacy_policy_hyperlink_key'),
+                              text: 'privacy_policy'.tr.toLowerCase(),
+                              style: AppTextStyle.hyperlink(context),
+                              onTap: controller.privacyPolicy,
+                            ),
+                            const TextRichWidget(text: '.'),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
-                }),
+                      ),
+                    ],
+                  ),
+                ),
                 const SpacerWidget(height: 3),
                 FutureButton(
                   key: const Key('signup_button_key'),
@@ -116,6 +121,13 @@ class SignUpPage extends AppView<SignUpController> {
                       FocusManager.instance.primaryFocus?.unfocus();
 
                       if (!controller.privacyAndTerms.value) {
+                        DialogWidget.show(
+                          context,
+                          title: '',
+                          message:
+                              'must_accept_terms_conditions_and_privacy_policy'
+                                  .tr,
+                        );
                         return;
                       }
 
@@ -128,7 +140,8 @@ class SignUpPage extends AppView<SignUpController> {
 
                       final name = _nameTextController.value.text.trim();
                       final email = _emailTextController.value.text.trim();
-                      final password = _passwordTextController.text.trim();
+                      final password = _passwordTextController.value.text
+                          .trim();
 
                       try {
                         await controller.signUp(

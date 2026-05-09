@@ -138,7 +138,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     _focusNode.removeListener(_focusListener);
     _controller.removeListener(_onSearchChanged);
     _focusNode.dispose();
-    // _controller.dispose();
+    _controller.dispose();
   }
 
   void _focusListener() {

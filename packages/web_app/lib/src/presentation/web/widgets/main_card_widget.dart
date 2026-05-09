@@ -22,7 +22,7 @@ class MainCardWidget extends AppView<WebController> {
           TextWidget(
             'welcome_app'.tr.replaceFirst(
               '{appName}',
-              controller.environment.appName,
+              controller.appName,
             ),
             textAlign: TextAlign.center,
             style: AppTextStyle.title(context),

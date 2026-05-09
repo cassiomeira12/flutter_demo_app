@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class UserAuthSecureStorageImpl implements UserAuthStorageService {
   final SecureStorageUseCase _secureStorageUseCase;
@@ -11,12 +12,16 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     required String username,
     String? password,
   }) async {
-    await _secureStorageUseCase.set<String>(USERNAME, username);
-    if (password == null) {
-      await _secureStorageUseCase.delete(PASSWORD);
+    try {
+      await _secureStorageUseCase.set<String>(USERNAME, username);
+      if (password == null) {
+        await _secureStorageUseCase.delete(PASSWORD);
+        return;
+      }
+      await _secureStorageUseCase.set<String>(PASSWORD, password);
+    } on MissingPluginException {
       return;
     }
-    await _secureStorageUseCase.set<String>(PASSWORD, password);
   }
 
   @override
@@ -25,11 +30,15 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     String? password;
     try {
       username = await _secureStorageUseCase.get<String>(USERNAME);
+    } on MissingPluginException {
+      //
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }
     try {
       password = await _secureStorageUseCase.get<String>(PASSWORD);
+    } on MissingPluginException {
+      //
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }
@@ -38,24 +47,38 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
 
   @override
   Future<void> clearCredentials() async {
-    await _secureStorageUseCase.delete(USERNAME);
-    await _secureStorageUseCase.delete(PASSWORD);
+    try {
+      await _secureStorageUseCase.delete(USERNAME);
+      await _secureStorageUseCase.delete(PASSWORD);
+    } on MissingPluginException {
+      return;
+    }
   }
 
   @override
   Future<void> saveSessionToken(String token) async {
-    await _secureStorageUseCase.set(SESSION_TOKEN, token);
+    try {
+      await _secureStorageUseCase.set(SESSION_TOKEN, token);
+    } on MissingPluginException {
+      return;
+    }
   }
 
   @override
   Future<void> clearSessionToken() async {
-    await _secureStorageUseCase.delete(SESSION_TOKEN);
+    try {
+      await _secureStorageUseCase.delete(SESSION_TOKEN);
+    } on MissingPluginException {
+      return;
+    }
   }
 
   @override
   Future<String?> getSessionToken() async {
     try {
       return await _secureStorageUseCase.get<String>(SESSION_TOKEN);
+    } on MissingPluginException {
+      return null;
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
       return null;
@@ -64,18 +87,28 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
 
   @override
   Future<void> saveUserData(String data) async {
-    await _secureStorageUseCase.set<String>(USER_DATA, data);
+    try {
+      await _secureStorageUseCase.set<String>(USER_DATA, data);
+    } on MissingPluginException {
+      return;
+    }
   }
 
   @override
   Future<void> clearUserData() async {
-    await _secureStorageUseCase.delete(USER_DATA);
+    try {
+      await _secureStorageUseCase.delete(USER_DATA);
+    } on MissingPluginException {
+      return;
+    }
   }
 
   @override
   Future<String?> getUserData() async {
     try {
       return await _secureStorageUseCase.get<String>(USER_DATA);
+    } on MissingPluginException {
+      return null;
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
       return null;

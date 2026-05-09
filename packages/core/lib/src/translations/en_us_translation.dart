@@ -11,16 +11,22 @@ class EnUsTranslation extends Translations {
         'back_intro': 'Back',
         'next_intro': 'Next',
         'finish_intro': 'Finish',
+        // Project App
+        'body_intro_app': 'App intro description',
+        // App Tracking Permission
         'title_intro_app_tracking': 'Allow tracking',
         'body_intro_app_tracking':
             'Allow the App to track your online activity for a personalized experience.',
+        // Push Notifications Permission
         'title_intro_notification': 'Notifications',
         'body_intro_notification':
-            'Turn on notifications and stay up to date with the news that really matters',
+            'Turn on notifications and stay up to date with the news that really matters.',
+        // Location Permission
         'title_intro_location': 'Location',
         'body_intro_location':
             'Allow the App to track your location for a personalized experience.',
         // Defaults
+        'error': 'An error',
         'default_error': 'An error, try again',
         'internet_error_connection': 'Check your network connection',
         'invalid_session_token': 'Your session has expired.',
@@ -93,6 +99,7 @@ class EnUsTranslation extends Translations {
         'version': 'Version',
         'my_data': 'My data',
         'language': 'Language',
+        'themes': 'Themes',
         'theme': 'Theme',
         'change_password': 'Change password',
         'about': 'About',
@@ -139,8 +146,12 @@ class EnUsTranslation extends Translations {
         'pt': 'Portuguese',
         'en': 'English',
         // Terms and Policy Privacy
-        'terms_conditions': 'Terms condition',
-        'privacy_policy': 'Privacy Policy',
+        'accept_terms_conditions': 'I accept the ',
+        'terms_conditions': 'Terms of use',
+        'accept_terms_conditions_and': ' and the ',
+        'privacy_policy': 'Privacy policy',
+        'must_accept_terms_conditions_and_privacy_policy':
+            'You need to accept the terms and privacy policy',
         // Permissions
         'allow': 'Allow',
         'allow_later': 'Not now',
@@ -259,6 +270,20 @@ class EnUsTranslation extends Translations {
         'launcher_icon': 'App icon',
         'change_launcher_icon': 'App icon changed',
         'need_restart_the_app': 'You need to restart the application',
+        'device_not_supported': 'Your device does not support icon switching.',
+        // Feedback
+        'feedback': 'Make a suggestion',
+        'feedback_title': 'Leave your suggestion or comment about the app',
+        'feedback_message':
+            'Tell us how we can improve! Use this space to send suggestions, compliments, or complaints about how the app works.',
+        'suggestion': 'Suggestion',
+        'feedback_input_empty_error': 'Enter your feedback.',
+        'feedback_disclaimer':
+            'Note: Data such as app and operating system versions, device model, and network connection will be sent automatically.',
+        'send': 'Send',
+        'feedback_sent_success_title': 'Feedback sent',
+        'feedback_sent_success_message':
+            'Your feedback has been successfully sent.',
       },
     };
   }

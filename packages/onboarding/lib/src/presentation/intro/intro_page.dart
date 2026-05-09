@@ -18,13 +18,25 @@ class IntroPage extends AppView<IntroController> {
           },
           children:
               [
-                if (!Platform.isWeb && Platform.isIOS)
-                  AppTrackingPageView(onPermission: controller.setPermission),
-                if (!Platform.isWeb && !Platform.isMacOS)
-                  PushNotificationPageView(
-                    onPermission: controller.setPermission,
-                  ),
-                // LocationPageView(onPermission: controller.setPermission),
+                AppPageView(appName: controller.appName),
+                ...controller.permissions.map<Widget>((permission) {
+                  switch (permission) {
+                    case 'appTrackingTransparency':
+                      return AppTrackingPageView(
+                        onPermission: controller.setPermission,
+                      );
+                    case 'notification':
+                      return PushNotificationPageView(
+                        onPermission: controller.setPermission,
+                      );
+                    case 'location':
+                      return LocationPageView(
+                        onPermission: controller.setPermission,
+                      );
+                    default:
+                      return const SizedBox.shrink();
+                  }
+                }),
               ].map<Widget>((item) {
                 controller.pagesLength += 1;
                 return item;
@@ -33,22 +45,23 @@ class IntroPage extends AppView<IntroController> {
       ),
       bottomWidget: Container(
         padding: EdgeInsets.symmetric(
+          vertical: ResponsiveSizeHelper.width(10),
           horizontal: ResponsiveSizeHelper.width(20),
         ),
-        height: ResponsiveSizeHelper.navigationBarHeight,
         child: SafeArea(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Obx(() {
-                if (controller.indexPage.value > 0) {
-                  return LightButton(
+                return Visibility(
+                  visible: controller.indexPage.value > 0,
+                  child: LightButton(
                     key: const Key('back_intro_button_key'),
                     text: 'back_intro'.tr,
+                    size: ButtonSize.medium,
                     onPressed: controller.previousPage,
-                  );
-                }
-                return const SizedBox.shrink();
+                  ),
+                );
               }),
               Obx(() {
                 if (controller.isLastPage.value) {

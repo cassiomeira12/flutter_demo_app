@@ -5,29 +5,44 @@ class OpenUrlServiceImpl implements OpenUrlService {
   @override
   Future<void> openApp(String url) async {
     try {
-      final uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
-      } else {
-        throw Exception('Could not launch $uri');
-      }
-    } catch (error, stackTrace) {
-      Log.exception(error, stackTrace);
-      throw BaseException(error: error, stackTrace: stackTrace);
+      return await _launch(url);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
     }
   }
 
   @override
   Future<void> openUrl(String url) async {
     try {
+      return await _launch(url, mode: LaunchMode.externalApplication);
+    } on BaseException catch (error) {
+      Log.baseException(error);
+      rethrow;
+    }
+  }
+
+  Future<void> _launch(
+    String url, {
+    LaunchMode mode = LaunchMode.platformDefault,
+  }) async {
+    try {
+      if (url.isEmpty) {
+        throw ArgumentError('URL cannot be empty');
+      }
+
       final uri = Uri.parse(url);
+
+      if (!uri.hasScheme) {
+        throw ArgumentError('URL must have valid scheme: $uri');
+      }
+
       if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
+        await launchUrl(uri, mode: mode);
       } else {
-        throw Exception('Could not launch $uri');
+        throw Exception('Could not launch $url');
       }
     } catch (error, stackTrace) {
-      Log.exception(error, stackTrace);
       throw BaseException(error: error, stackTrace: stackTrace);
     }
   }

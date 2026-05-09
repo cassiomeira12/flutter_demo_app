@@ -13,7 +13,7 @@ class InfraModuleBindings implements ModuleBinding {
 
     AppBinding.put<HttpClient>(
       HttpClientImpl(
-        baseUrl: const String.fromEnvironment('server_url'),
+        serverEnv: AppBinding.find(),
         interceptors: [LogInterceptor()],
       ),
       permanent: true,

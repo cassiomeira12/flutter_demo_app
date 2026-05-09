@@ -5,7 +5,12 @@ class AppBarSearchDelegate<T> extends SearchDelegate<T?> {
   final List<T> _items;
   final String Function(T item) filter;
   final String emptyMessage;
-  final Widget Function(BuildContext context, T item) builder;
+  final Widget Function(
+    BuildContext context,
+    T item,
+    void Function() onCloseCallback,
+  )
+  builder;
 
   AppBarSearchDelegate({
     required List<T> items,
@@ -62,7 +67,11 @@ class AppBarSearchDelegate<T> extends SearchDelegate<T?> {
                     ? ResponsiveSizeHelper.height(200)
                     : 0,
               ),
-              child: builder(context, results[index]),
+              child: builder(
+                context,
+                results[index],
+                () => close(context, null),
+              ),
             );
           },
           separatorBuilder: (context, index) {

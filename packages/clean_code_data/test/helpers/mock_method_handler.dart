@@ -3,6 +3,16 @@ import 'package:dependency/dependency.dart' as path;
 import 'package:flutter_test/flutter_test.dart';
 
 abstract class MockMethodHandler {
+  static void ensureInitialized() {
+    WidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+  }
+
+  static void ensureInitializedWithMock() {
+    TestWidgetsFlutterBinding.ensureInitialized();
+    SharedPreferences.setMockInitialValues({});
+  }
+
   static void getApplicationDocumentsDirectory() {
     const channel = MethodChannel('plugins.flutter.io/path_provider');
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger

@@ -3,9 +3,10 @@ import 'package:dependency/dependency.dart';
 
 class CrashlyticsServiceFaker implements CrashlyticsService {
   @override
-  Future<void> init() async {
-    Log.success('$runtimeType init', throwsCrashlytics: false);
-  }
+  Future<void> init() async {}
+
+  @override
+  Future<void> updateInitSettings() async {}
 
   @override
   void log(
@@ -19,9 +20,7 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     String message, {
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
     CrashlyticsLogType type = CrashlyticsLogType.http,
-  }) {
-    Log.warning(message);
-  }
+  }) {}
 
   @override
   void logUserInteraction(
@@ -29,7 +28,16 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     Map<String, dynamic>? parameters,
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
     CrashlyticsLogType type = CrashlyticsLogType.user,
-  }) {}
+  }) {
+    if (!Log.isIntegrationTest) {
+      Log.info(
+        'Event: $event \n'
+        'Parameters: ${jsonEncode(parameters)} \n'
+        'level: $level \n'
+        'type: $type',
+      );
+    }
+  }
 
   @override
   Future<void> setUserId(String? userId) async {}
@@ -63,6 +71,7 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     String? description,
     DateTime? startTimestamp,
   }) {
+    startTimestamp ??= DateTime.timestamp();
     final String msg =
         '[Start] Tracking Operation \n'
         'name: $name \n'
@@ -72,7 +81,7 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     return FakeTrackOperation(
       name: name,
       description: description,
-      startTimestamp: startTimestamp ?? DateTime.timestamp(),
+      startTimestamp: startTimestamp,
     );
   }
 
@@ -103,6 +112,7 @@ class FakeTrackOperation implements TrackOperation {
     String? description,
     DateTime? startTimestamp,
   }) {
+    startTimestamp ??= DateTime.timestamp();
     final String msg =
         '[Start] Child Tracking Operation \n'
         'parent: $_parentName \n'
@@ -113,7 +123,7 @@ class FakeTrackOperation implements TrackOperation {
     return FakeTrackOperation(
       name: name,
       description: null,
-      startTimestamp: startTimestamp ?? DateTime.timestamp(),
+      startTimestamp: startTimestamp,
       isChild: true,
     );
   }
@@ -134,6 +144,7 @@ class FakeTrackOperation implements TrackOperation {
         '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
         '${isChild ? 'parent:' : 'name:'} $_parentName \n'
         'description: $_description \n'
+        'endAt: $endTime \n'
         'duration: ${seconds.toStringAsFixed(3)} seconds';
     Log.tracking(msg);
   }

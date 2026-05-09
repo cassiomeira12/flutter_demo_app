@@ -1,5 +1,6 @@
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
+import 'package:design_system/src/components/molecules/buttons/base_button.dart';
 
 class SecondaryButton extends StatelessWidget {
   final String? text;
@@ -23,79 +24,46 @@ class SecondaryButton extends StatelessWidget {
     this.size = ButtonSize.large,
   });
 
-  TextSize get fontSize {
-    switch (size) {
-      case ButtonSize.large:
-        return TextSize.font_12;
-      case ButtonSize.medium:
-        return TextSize.font_10;
-      case ButtonSize.small:
-        return TextSize.font_8;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final backgroundColor = this.backgroundColor ?? theme.highlightColor;
     final textColor =
         this.textColor ??
         theme.outlinedButtonTheme.style?.textStyle?.resolve({
           WidgetState.selected,
         })?.color;
 
-    return Container(
-      height: size.height,
-      constraints: const BoxConstraints(
-        maxWidth: ResponsiveSizeHelper.maxWidth,
-      ),
-      child: TextButton(
-        onPressed: onPressed == null
-            ? null
-            : () {
-                onPressed!.call();
-                HapticFeedback.lightImpact();
-              },
-        style: ButtonStyle(
-          backgroundColor: WidgetStateProperty.all(
-            backgroundColor ?? theme.highlightColor,
-          ),
-          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(5),
-              side: BorderSide(
-                color: AppColorScheme.of(
-                  context,
-                ).textColor.withAlpha((255 * .20).toInt()),
-                style: onPressed == null ? BorderStyle.none : BorderStyle.solid,
-              ),
+    return BaseButton(
+      text: text,
+      icon: icon,
+      onPressed: onPressed == null
+          ? null
+          : () {
+              onPressed?.call();
+              HapticFeedback.lightImpact();
+            },
+      buttonStyle: ButtonStyle(
+        backgroundColor: WidgetStateProperty.all(
+          onPressed == null
+              ? backgroundColor.withAlpha((255 * .50).toInt())
+              : backgroundColor,
+        ),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+            side: BorderSide(
+              color: AppColorScheme.of(
+                context,
+              ).textColor.withAlpha((255 * .20).toInt()),
+              style: onPressed == null ? BorderStyle.none : BorderStyle.solid,
             ),
           ),
         ),
-        child: Row(
-          mainAxisSize: expandWidth ? MainAxisSize.max : MainAxisSize.min,
-          mainAxisAlignment: icon == null
-              ? MainAxisAlignment.center
-              : MainAxisAlignment.start,
-          children: [
-            if (icon != null)
-              Padding(padding: const EdgeInsets.only(right: 32), child: icon),
-            Flexible(
-              child: TextWidget(
-                text ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.fade,
-                style: AppTextStyle.button(
-                  context,
-                  fontSize: fontSize,
-                  color: onPressed == null
-                      ? textColor?.withAlpha((255 * .50).toInt())
-                      : textColor,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
+      textColor: textColor,
+      expandWidth: expandWidth,
+      size: size,
     );
   }
 }

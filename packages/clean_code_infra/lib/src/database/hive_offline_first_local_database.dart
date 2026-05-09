@@ -23,6 +23,15 @@ class HiveOfflineFirstLocalDatabase<T>
   }
 
   @override
+  Future<void> close() {
+    return Future.wait([
+      _mainDatabase.close(),
+      _offlineDatabase.close(),
+      _deletedDatabase.close(),
+    ]);
+  }
+
+  @override
   Future<int> add(T value) async {
     return await _offlineDatabase.add(encodeValue<T>(value));
   }

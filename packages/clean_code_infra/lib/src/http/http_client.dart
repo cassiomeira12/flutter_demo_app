@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class HttpClientImpl implements HttpClient {
-  final String _baseUrl;
+  final ServerEnvironmentEntity _serverEnv;
 
   late Dio _dio;
 
@@ -11,24 +11,30 @@ class HttpClientImpl implements HttpClient {
   final defaultSendTimeout = const Duration(seconds: 30);
 
   HttpClientImpl({
-    required String baseUrl,
+    required ServerEnvironmentEntity serverEnv,
     Duration? connectTimeout,
     Duration? receiveTimeout,
     Duration? sendTimeout,
     List<Interceptor>? interceptors,
-  }) : _baseUrl = baseUrl {
-    _dio = Dio(
-      BaseOptions(
-        baseUrl: _baseUrl,
-        connectTimeout: connectTimeout ?? defaultConnectTimeout,
-        receiveTimeout: receiveTimeout ?? defaultReceiveTimeout,
-        sendTimeout: Platform.isWeb ? null : sendTimeout ?? defaultSendTimeout,
-      ),
-    );
+    Dio? dio,
+  }) : _serverEnv = serverEnv {
+    final isInjected = dio != null;
+    _dio = dio ??
+        Dio(
+          BaseOptions(
+            baseUrl: _serverEnv.serverUrl,
+            connectTimeout: connectTimeout ?? defaultConnectTimeout,
+            receiveTimeout: receiveTimeout ?? defaultReceiveTimeout,
+            sendTimeout:
+                Platform.isWeb ? null : sendTimeout ?? defaultSendTimeout,
+          ),
+        );
 
     _dio.interceptors.addAll(interceptors ?? []);
 
-    _dio.addSentry();
+    if (!isInjected) {
+      _dio.addSentry();
+    }
   }
 
   @override
@@ -151,7 +157,7 @@ class HttpClientImpl implements HttpClient {
   }) async {
     final dio = Dio(
       BaseOptions(
-        baseUrl: useDefaultBaseUrl ? _baseUrl : '',
+        baseUrl: useDefaultBaseUrl ? _serverEnv.serverUrl : '',
         connectTimeout: request.timeout ?? defaultConnectTimeout,
         receiveTimeout: request.timeout ?? defaultReceiveTimeout,
       ),

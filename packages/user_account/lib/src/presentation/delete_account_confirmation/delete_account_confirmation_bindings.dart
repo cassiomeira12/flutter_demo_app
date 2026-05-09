@@ -18,6 +18,7 @@ class DeleteAccountConfirmationBindings extends Bindings {
         userAuthStorageUseCase: AppBinding.find(),
         deleteAccountStore: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
+        userEntity: AppBinding.find(),
       ),
     );
   }

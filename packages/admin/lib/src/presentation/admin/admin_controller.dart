@@ -21,7 +21,6 @@ class AdminController extends BaseController {
        //  _pushMessagingService = pushMessagingService,
        _appSecurityManager = appSecurityManager;
 
-  final EnvironmentEntity environment = AppBinding.find<EnvironmentEntity>();
   final UserEntity user = AppBinding.find<UserEntity>();
 
   RxnInt selectedIndex = BaseController.navigatorIndex;

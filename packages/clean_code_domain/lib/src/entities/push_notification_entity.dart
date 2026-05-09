@@ -1,4 +1,6 @@
-class PushNotificationEntity {
+import 'package:clean_code_domain/clean_code_domain.dart';
+
+class PushNotificationEntity extends ParserToJson {
   final String? id;
   final String title;
   final String body;
@@ -49,6 +51,7 @@ class PushNotificationEntity {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -61,10 +64,5 @@ class PushNotificationEntity {
       'androidTag': androidTag,
       'androidSticky': androidSticky,
     };
-  }
-
-  @override
-  String toString() {
-    return toMap().toString();
   }
 }

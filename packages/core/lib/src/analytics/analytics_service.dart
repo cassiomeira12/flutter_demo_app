@@ -8,8 +8,8 @@ abstract class AnalyticsService {
     required Map<String, dynamic> property,
   });
 
-  Future<void> logEvent({
-    required String name,
+  Future<void> logEvent(
+    String event, {
     Map<String, dynamic>? parameters,
   });
 }

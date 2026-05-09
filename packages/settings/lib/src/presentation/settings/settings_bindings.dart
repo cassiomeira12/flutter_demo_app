@@ -13,6 +13,7 @@ class SettingsBindings extends Bindings {
         userAuthStorageUseCase: AppBinding.find(),
         updateUserLocaleUseCase: AppBinding.find(),
         appInfoEntity: AppBinding.find(),
+        userEntity: AppBinding.find(),
         appSecurityManager: AppBinding.find(),
       ),
     );

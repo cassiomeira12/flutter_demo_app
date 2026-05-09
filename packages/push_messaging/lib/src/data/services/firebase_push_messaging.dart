@@ -295,7 +295,7 @@ Future<void> notificationBackgroundHandler(RemoteMessage message) async {
   }
 
   AnalyticsServiceManager.instance.logEvent(
-    name: 'notification_receive_background',
+    'notification_receive_background',
     parameters: {
       'messageId': message.data['notificationId'] ?? message.messageId,
     },

@@ -26,7 +26,7 @@ class CheckPointController extends BaseController {
        _checkPointsController = checkPointsController,
        _checkPointsStore = checkPointsStore;
 
-  RxBool loading = RxBool(false);
+  final RxBool loading = RxBool(false);
 
   CheckDayPointEntity? get checkPointDay {
     return _checkPointsStore.checkPointDaySelected;
@@ -35,6 +35,12 @@ class CheckPointController extends BaseController {
   String get dateFormatted => checkPointDay?.dateFormatted ?? '--/--/--';
 
   List<CheckHourPointEntity> get points => checkPointDay?.points ?? [];
+
+  @override
+  void onClose() {
+    loading.close();
+    super.onClose();
+  }
 
   Future<void> updateCheckDayPoint({
     bool? allowance,

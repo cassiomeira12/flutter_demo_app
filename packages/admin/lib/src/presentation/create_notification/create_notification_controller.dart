@@ -3,12 +3,12 @@ import 'package:admin/src/presentation/users/users.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
-class PushNotificationsController extends BaseController {
+class CreateNotificationController extends BaseController {
   final GetAllUsersUseCase _getAllUsersUseCase;
   final CreateNotificationUseCase _createNotificationUseCase;
   final TestPushNotificationUseCase _testPushNotificationUseCase;
 
-  PushNotificationsController({
+  CreateNotificationController({
     required GetAllUsersUseCase getAllUsersUseCase,
     required CreateNotificationUseCase createNotificationUseCase,
     required TestPushNotificationUseCase testPushNotificationUseCase,

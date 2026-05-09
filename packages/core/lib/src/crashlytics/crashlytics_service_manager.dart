@@ -24,7 +24,10 @@ class CrashlyticsServiceManager
         try {
           await function(service);
         } catch (error, stackTrace) {
-          Log.error(error, stackTrace);
+          final innerError = stackTrace.toString().contains('captureException');
+          if (!innerError) {
+            Log.error(error, stackTrace);
+          }
         }
       }),
     );
@@ -68,6 +71,13 @@ class CrashlyticsServiceManager
     if (_initializedServices.isNotEmpty) {
       _sendFallbackEvents();
     }
+  }
+
+  @override
+  Future<void> updateInitSettings() async {
+    _runServiceFunction(
+      (service) async => service.updateInitSettings(),
+    );
   }
 
   Future<void> _sendFallbackEvents() async {
@@ -243,5 +253,11 @@ class CrashlyticsServiceManager
   @override
   void simulateCrash() {
     _runServiceFunction((service) async => service.simulateCrash());
+  }
+
+  @visibleForTesting
+  void clear() {
+    services.clear();
+    _initializedServices.clear();
   }
 }

@@ -3,7 +3,11 @@ import 'package:dependency/dependency.dart';
 import 'package:login/src/domain/domain.dart';
 
 class SignUpController extends BaseController
-    with EmailValidator, PasswordValidator, ConfirmPasswordValidator {
+    with
+        NameValidator,
+        EmailValidator,
+        PasswordValidator,
+        ConfirmPasswordValidator {
   final CreateUserUseCase _createUserUseCase;
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
   final UploadInstallationAppUseCase _uploadInstallationAppUseCase;
@@ -21,33 +25,33 @@ class SignUpController extends BaseController
 
   final privacyAndTerms = RxBool(false);
 
+  @override
+  void onClose() {
+    privacyAndTerms.close();
+    super.onClose();
+  }
+
   Future<void> signUp({
     required String name,
     required String email,
     required String password,
   }) async {
-    try {
-      clickTagging(component: 'signup_button_key');
+    clickTagging(component: 'signup_button_key');
 
-      final user = await _createUserUseCase.call(
-        name: name,
-        email: email,
-        username: email,
-        password: password,
-      );
+    final user = await _createUserUseCase.call(
+      name: name,
+      email: email,
+      username: email,
+      password: password,
+    );
 
-      _updateUserData(user);
-      _updateUserInstallation();
+    _updateUserData(user);
+    _updateUserInstallation();
 
-      signupTagging();
-      setUserIdentifier(user.id, property: user.toMap());
+    signupTagging();
+    setUserIdentifier(user.id, property: user.toMap());
 
-      AppNavigator.backAndToNamed(AppRouter.home);
-    } catch (error, stackTrace) {
-      Log.error(error, stackTrace);
-      await SessionHelper.clear();
-      rethrow;
-    }
+    AppNavigator.backAndToNamed(AppRouter.home);
   }
 
   Future<void> _updateUserData(UserEntity user) async {
@@ -66,24 +70,17 @@ class SignUpController extends BaseController
     }
   }
 
-  String? nameValidator(String? input) {
-    if (input?.trim().isEmpty ?? true) {
-      return 'name_input_empty_error'.tr;
-    }
-    return null;
-  }
-
   void termsConditions() {
     clickTagging(component: 'terms_conditions_hyperlink_key');
     const serverUrl = String.fromEnvironment('server_url');
-    const String url = '$serverUrl/privacy-policy';
+    const String url = '$serverUrl/terms-conditions';
     _openWebUrlUseCase.call(url);
   }
 
   void privacyPolicy() {
     clickTagging(component: 'privacy_policy_hyperlink_key');
     const serverUrl = String.fromEnvironment('server_url');
-    const String url = '$serverUrl/terms-conditions';
+    const String url = '$serverUrl/privacy-policy';
     _openWebUrlUseCase.call(url);
   }
 }

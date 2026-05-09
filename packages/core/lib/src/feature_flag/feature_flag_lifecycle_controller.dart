@@ -3,15 +3,15 @@ import 'package:dependency/dependency.dart';
 
 class FeatureFlagLifecycleController extends LifecycleController {
   final AppInfoEntity _appInfoEntity;
-  final GetDeviceInfoUseCase _getDeviceInfoUseCase;
+  final DeviceInfoEntity _deviceInfo;
   final LocalStorageUseCase _localStorage;
 
   FeatureFlagLifecycleController({
     required AppInfoEntity appInfoEntity,
-    required GetDeviceInfoUseCase getDeviceInfoUseCase,
+    required DeviceInfoEntity deviceInfoEntity,
     required LocalStorageUseCase localStorageUseCase,
   }) : _appInfoEntity = appInfoEntity,
-       _getDeviceInfoUseCase = getDeviceInfoUseCase,
+       _deviceInfo = deviceInfoEntity,
        _localStorage = localStorageUseCase;
 
   final _updateAppStream = StreamController<bool>.broadcast();
@@ -34,9 +34,9 @@ class FeatureFlagLifecycleController extends LifecycleController {
       onDone: () {
         _updateAppSubscription?.pause();
       },
-      onError: (error, stackTrace) {
+      onError: (Object error) {
         _updateAppSubscription?.cancel();
-        Log.error(error, stackTrace, msg: 'UpdateAppSubscription');
+        Log.error(error, null, msg: 'UpdateAppSubscription');
       },
     );
 
@@ -45,9 +45,9 @@ class FeatureFlagLifecycleController extends LifecycleController {
       onDone: () {
         _updateAppRequiredSubscription?.pause();
       },
-      onError: (error, stackTrace) {
+      onError: (Object error) {
         _updateAppRequiredSubscription?.cancel();
-        Log.error(error, stackTrace, msg: 'UpdateAppRequiredSubscription');
+        Log.error(error, null, msg: 'UpdateAppRequiredSubscription');
       },
     );
 
@@ -56,9 +56,9 @@ class FeatureFlagLifecycleController extends LifecycleController {
       onDone: () {
         _blockingAppSubscription?.pause();
       },
-      onError: (error, stackTrace) {
+      onError: (Object error) {
         _blockingAppSubscription?.cancel();
-        Log.error(error, stackTrace, msg: 'BlockingAppSubscription');
+        Log.error(error, null, msg: 'BlockingAppSubscription');
       },
     );
   }
@@ -68,7 +68,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
 
   @override
   void onAppForeground() {
-    updateFeatureFlags(reload: true);
+    // updateFeatureFlags(reload: true);
   }
 
   @override
@@ -84,14 +84,12 @@ class FeatureFlagLifecycleController extends LifecycleController {
 
   Future<void> uploadDeviceTraits() async {
     try {
-      final DeviceInfoEntity deviceInfo = await _getDeviceInfoUseCase.call();
-
       final deviceTraits = DeviceTraits(
-        brand: deviceInfo.brand,
-        model: deviceInfo.model,
-        osVersion: deviceInfo.osVersion,
-        localeName: deviceInfo.localeName,
-        platform: deviceInfo.platform,
+        brand: _deviceInfo.brand,
+        model: _deviceInfo.model,
+        osVersion: _deviceInfo.osVersion,
+        localeName: _deviceInfo.localeName,
+        platform: _deviceInfo.platform,
         packageName: _appInfoEntity.packageName,
         version: _appInfoEntity.versionOnly,
         build: _appInfoEntity.build,
@@ -101,7 +99,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
             : kProfileMode
             ? 'profile'
             : 'debug',
-        deviceId: deviceInfo.deviceId ?? 'unknown',
+        deviceId: _deviceInfo.deviceId ?? 'unknown',
       );
 
       await FeatureFlagServiceManager.instance.setTraits(deviceTraits);
@@ -140,6 +138,9 @@ class FeatureFlagLifecycleController extends LifecycleController {
               }
             case RemoteFlagsEnum.downloadAppleStore:
             case RemoteFlagsEnum.downloadAndroidStore:
+              break;
+            case RemoteFlagsEnum.sentryConfig:
+              CrashlyticsServiceManager.instance.updateInitSettings();
           }
         }
       });
@@ -147,10 +148,9 @@ class FeatureFlagLifecycleController extends LifecycleController {
   }
 
   Future<bool> _getFeatureFlagValue(RemoteFlagsEnum flag) async {
-    final RemoteFlag? featureFlag = await FeatureFlagServiceManager.instance
-        .getFlag(flag);
-    if (featureFlag?.isEnabled ?? false) {
-      return featureFlag?.value == 'true';
+    final featureFlag = await FeatureFlagServiceManager.instance.getFlag(flag);
+    if (featureFlag.isEnabled) {
+      return featureFlag.value?.toString() == 'true';
     }
     return false;
   }

@@ -5,16 +5,19 @@ class CacheInterceptor extends Interceptor {
   final List<String> _cacheEndpoints;
   final CacheStorageUseCase _cacheStorageUseCase;
   final SecurityEncryptUseCase _securityEncryptUseCase;
+  final SecurityEnvironmentEntity _securityEnv;
 
   CacheInterceptor({
     required List<EndpointsEnum> cacheEndpoints,
     required CacheStorageUseCase cacheStorageUseCase,
     required SecurityEncryptUseCase securityEncryptUseCase,
+    required SecurityEnvironmentEntity securityEnv,
   }) : _cacheEndpoints = cacheEndpoints.map((item) {
          return item.endpointWithoutParams;
        }).toList(),
        _cacheStorageUseCase = cacheStorageUseCase,
-       _securityEncryptUseCase = securityEncryptUseCase;
+       _securityEncryptUseCase = securityEncryptUseCase,
+       _securityEnv = securityEnv;
 
   @override
   Future<void> onResponse(
@@ -25,20 +28,31 @@ class CacheInterceptor extends Interceptor {
     final String? foundEndpoint = _cacheEndpoints.firstWhereOrNull((value) {
       return endpoint.contains(value);
     });
-    if (foundEndpoint != null) {
-      final String hashEndpoint = await _hashRequest(response.requestOptions);
 
-      const String encryptKey = String.fromEnvironment('encrypter_key');
-
-      final String dataEncrypted = await _securityEncryptUseCase.encrypt(
-        password: encryptKey,
-        data: jsonEncode(response.data),
-      );
-
-      await _cacheStorageUseCase.save(hashEndpoint, dataEncrypted);
+    //if (response.statusCode != null && response.statusCode! >= 200 && response.statusCode! < 300)
+    if (foundEndpoint == null || response.data == null) {
+      return super.onResponse(response, handler);
     }
 
-    super.onResponse(response, handler);
+    final int? statusCode = response.statusCode;
+    if (statusCode != null && statusCode >= 200 && statusCode < 300) {
+      scheduleMicrotask(() async {
+        try {
+          final String hashEndpoint = await _hashRequest(
+            response.requestOptions,
+          );
+          final String dataEncrypted = await _securityEncryptUseCase.encrypt(
+            password: _securityEnv.encryptKey,
+            data: jsonEncode(response.data),
+          );
+          await _cacheStorageUseCase.save(hashEndpoint, dataEncrypted);
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+      });
+    }
+
+    return super.onResponse(response, handler);
   }
 
   @override
@@ -57,47 +71,51 @@ class CacheInterceptor extends Interceptor {
       DioExceptionType.unknown,
     ];
 
-    if (networkErrors.contains(err.type)) {
-      final String endpoint = err.requestOptions.path;
-      final String? foundEndpoint = _cacheEndpoints.firstWhereOrNull((value) {
-        return endpoint.contains(value);
-      });
-      if (foundEndpoint != null) {
-        final String hashEndpoint = await _hashRequest(err.requestOptions);
-        final String? bodyEncrypted = await _cacheStorageUseCase.load(
-          hashEndpoint,
-        );
-
-        if (bodyEncrypted != null && bodyEncrypted.isNotEmpty) {
-          const String encryptKey = String.fromEnvironment('encrypter_key');
-
-          final String body = await _securityEncryptUseCase.decrypt(
-            password: encryptKey,
-            data: bodyEncrypted,
-          );
-
-          final dynamic data = jsonDecode(body);
-
-          Log.warning(
-            'Using Cache Data \n'
-            'path: $endpoint \n'
-            'data: $data \n',
-            throwsCrashlytics: false,
-          );
-
-          handler.resolve(
-            Response(
-              data: data,
-              statusCode: 200,
-              requestOptions: err.requestOptions,
-            ),
-          );
-          return;
-        }
-      }
+    if (!networkErrors.contains(err.type)) {
+      return super.onError(err, handler);
     }
 
-    super.onError(err, handler);
+    final String endpoint = err.requestOptions.path;
+    final String? foundEndpoint = _cacheEndpoints.firstWhereOrNull((value) {
+      return endpoint.contains(value);
+    });
+
+    if (foundEndpoint == null) {
+      return super.onError(err, handler);
+    }
+
+    try {
+      final hashEndpoint = await _hashRequest(err.requestOptions);
+      final bodyEncrypted = await _cacheStorageUseCase.load(hashEndpoint);
+
+      if (bodyEncrypted != null && bodyEncrypted.isNotEmpty) {
+        final body = await _securityEncryptUseCase.decrypt(
+          password: _securityEnv.encryptKey,
+          data: bodyEncrypted,
+        );
+
+        final dynamic data = jsonDecode(body);
+
+        Log.warning(
+          'Using Cache Data \n'
+          'path: $endpoint \n'
+          'data: $data \n',
+          throwsCrashlytics: false,
+        );
+
+        return handler.resolve(
+          Response(
+            data: data,
+            statusCode: 200,
+            requestOptions: err.requestOptions,
+          ),
+        );
+      }
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+    }
+
+    return super.onError(err, handler);
   }
 
   Future<String> _hashRequest(RequestOptions request) async {

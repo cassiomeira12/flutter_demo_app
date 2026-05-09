@@ -23,6 +23,10 @@ void main() {
       builder: (_) => ResponsiveSizeHelper.initializeFlutterView(),
     );
 
+    ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+      return ErrorPage(errorDetails: errorDetails);
+    };
+
     runApp(CrashlyticsService.wrapperWidget(const App()));
   });
 }

@@ -18,7 +18,7 @@ mixin FallbackEventsMixin {
 
     for (final map in snapshotLogs) {
       AnalyticsServiceManager.instance.logEvent(
-        name: map['name'],
+        map['event'],
         parameters: map['parameters'],
       );
     }
@@ -36,10 +36,13 @@ mixin FallbackEventsMixin {
   }
 
   void saveLog({
-    required String name,
+    required String event,
     Map<String, dynamic>? parameters,
   }) {
-    return _fallbackLogs.add({'name': name, 'parameters': parameters});
+    return _fallbackLogs.add({
+      'event': event,
+      'parameters': parameters,
+    });
   }
 
   void saveUserId(String? userId) {
@@ -50,6 +53,9 @@ mixin FallbackEventsMixin {
     required String name,
     required Map<String, dynamic> property,
   }) {
-    return _fallbackUserProperty.add({'name': name, 'property': property});
+    return _fallbackUserProperty.add({
+      'name': name,
+      'property': property,
+    });
   }
 }

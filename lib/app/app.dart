@@ -47,16 +47,6 @@ class _AppState extends State<App> {
         AppMemoryObserver(),
         if (!kDebugMode) CrashlyticsObserver(),
       ],
-      builder: (context, child) {
-        ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-          CrashlyticsService.catchFlutterError(errorDetails);
-          return ColoredBox(
-            color: Theme.of(context).colorScheme.error,
-            child: TextWidget(errorDetails.toString()),
-          );
-        };
-        return child ?? const SizedBox.shrink();
-      },
       onUnknownRoute: (settings) {
         return GetPageRoute(
           routeName: AppRouter.unknown.name,

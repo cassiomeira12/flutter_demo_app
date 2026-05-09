@@ -8,7 +8,7 @@ class RecoveryPasswordUseCaseImpl implements RecoveryPasswordUseCase {
   }) : _service = recoveryPasswordService;
 
   @override
-  Future<void> call(String email) async {
-    await _service.recoveryPassword(email);
+  Future<void> call(String email) {
+    return _service.recoveryPassword(email);
   }
 }

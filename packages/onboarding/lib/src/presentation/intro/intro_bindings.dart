@@ -7,6 +7,7 @@ class IntroBindings extends Bindings {
   void dependencies() {
     AppBinding.put<IntroController>(
       IntroController(
+        appEnv: AppBinding.find(),
         requestPermissionUseCase: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
         getAppInfoUseCase: AppBinding.find(),

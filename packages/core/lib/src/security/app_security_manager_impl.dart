@@ -5,8 +5,9 @@ class AppAppSecurityManager extends LifecycleController
     implements AppSecurityManager {
   final LocalStorageUseCase _localStorage;
 
-  AppAppSecurityManager({required LocalStorageUseCase localStorageUseCase})
-    : _localStorage = localStorageUseCase;
+  AppAppSecurityManager({
+    required LocalStorageUseCase localStorageUseCase,
+  }) : _localStorage = localStorageUseCase;
 
   bool _biometricsEnabled = false;
   bool _securityBlocked = false;

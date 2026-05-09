@@ -2,7 +2,8 @@
 
 enum UserPermissionsEnum {
   ADMIN(),
-  USER();
+  USER()
+  ;
 
   const UserPermissionsEnum();
 }

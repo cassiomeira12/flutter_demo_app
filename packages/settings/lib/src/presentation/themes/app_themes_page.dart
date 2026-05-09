@@ -9,7 +9,7 @@ class AppThemesPage extends AppView<AppThemesController> {
   @override
   Widget build(BuildContext context) {
     return ScaffoldWidget(
-      title: 'theme'.tr,
+      title: 'themes'.tr,
       controller: controller,
       body: ScrollViewWidget(
         child: (scrollController) {
@@ -51,38 +51,41 @@ class AppThemesPage extends AppView<AppThemesController> {
                     ) {
                       return Obx(() {
                         return InkWell(
-                          onTap:
-                              controller.supportsAlternateIcons.value &&
-                                  controller.currentAppIcon.value != icon.name
-                              ? () async {
-                                  final result = await controller.setIcon(
-                                    icon.name,
-                                  );
-                                  if (Platform.isAndroid && result is Success) {
-                                    if (!context.mounted) return;
-                                    await DialogWidget.show(
-                                      context,
-                                      title: 'change_launcher_icon'.tr,
-                                      message: 'need_restart_the_app'.tr,
-                                    );
-                                  }
-                                  if (result is Error) {
-                                    if (!context.mounted) return;
-                                    DialogWidget.show(
-                                      context,
-                                      title: 'error'.tr,
-                                      message: result.error.message.tr,
-                                    );
-                                  }
-                                }
-                              : null,
+                          onTap: () async {
+                            if (!controller.supportsAlternateIcons.value) {
+                              DialogWidget.show(
+                                context,
+                                title: '',
+                                message: 'device_not_supported'.tr,
+                              );
+                              return;
+                            }
+                            if (controller.currentAppIcon.value != icon.name) {
+                              final result = await controller.setIcon(
+                                icon.name,
+                              );
+                              if (Platform.isAndroid && result is Success) {
+                                if (!context.mounted) return;
+                                await DialogWidget.show(
+                                  context,
+                                  title: 'change_launcher_icon'.tr,
+                                  message: 'need_restart_the_app'.tr,
+                                );
+                              }
+                              if (result is Error) {
+                                if (!context.mounted) return;
+                                DialogWidget.show(
+                                  context,
+                                  title: 'error'.tr,
+                                  message: result.error.message.tr,
+                                );
+                              }
+                            }
+                          },
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             constraints: BoxConstraints(
-                              maxWidth: ResponsiveSizeHelper.width(
-                                ResponsiveSizeHelper.mediaQuery.size.width /
-                                    4.06,
-                              ),
+                              maxWidth: ResponsiveSizeHelper.width(120),
                             ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),

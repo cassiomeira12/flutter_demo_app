@@ -3,7 +3,7 @@ import 'package:dependency/dependency.dart';
 
 class DeviceInfoServiceImpl implements DeviceInfoService {
   @override
-  Future<DeviceInfoModel> getDeviceInfo() async {
+  Future<DeviceInfoEntity> getDeviceInfo() async {
     try {
       final appInfo = await AppInfoData.get();
 
@@ -44,11 +44,11 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     }
   }
 
-  Future<DeviceInfoModel> _androidDeviceModel(
+  Future<DeviceInfoEntity> _androidDeviceModel(
     Map<String, dynamic> deviceInfoData, {
     required String localeName,
   }) async {
-    return DeviceInfoModel(
+    return DeviceInfoEntity(
       platform: 'android',
       brand: deviceInfoData['brand'] as String,
       isPhysicalDevice: deviceInfoData['isPhysicalDevice'] as bool,
@@ -59,11 +59,11 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     );
   }
 
-  Future<DeviceInfoModel> _iosDeviceModel(
+  Future<DeviceInfoEntity> _iosDeviceModel(
     Map<String, dynamic> deviceInfoData, {
     required String localeName,
   }) async {
-    return DeviceInfoModel(
+    return DeviceInfoEntity(
       platform: 'ios',
       brand: 'Apple',
       isPhysicalDevice: deviceInfoData['isPhysicalDevice'] as bool,
@@ -74,11 +74,11 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     );
   }
 
-  Future<DeviceInfoModel> _macosDeviceModel(
+  Future<DeviceInfoEntity> _macosDeviceModel(
     Map<String, dynamic> deviceInfoData, {
     required String localeName,
   }) async {
-    return DeviceInfoModel(
+    return DeviceInfoEntity(
       platform: 'macos',
       brand: 'Apple',
       isPhysicalDevice: true,
@@ -89,14 +89,14 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     );
   }
 
-  Future<DeviceInfoModel> _webDeviceModel(
+  Future<DeviceInfoEntity> _webDeviceModel(
     Map<String, dynamic> deviceInfoData, {
     required String? browserName,
   }) async {
     final String browserWebId =
         'Browser ${browserName?.capitalizeFirst} ${deviceInfoData['appVersion']}';
     final String deviceId = md5.convert(utf8.encode(browserWebId)).toString();
-    return DeviceInfoModel(
+    return DeviceInfoEntity(
       platform: 'web',
       brand: 'Browser ${browserName?.capitalizeFirst}',
       isPhysicalDevice: false,

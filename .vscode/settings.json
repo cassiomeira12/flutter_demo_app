@@ -1,12 +1,19 @@
 {
+  // -------------------------
   // Git
+  // -------------------------
   "git.ignoreLimitWarning": true,
-  // Editor
+  // -------------------------
+  // Formatting (Dart Formatter)
+  // -------------------------
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
+  "editor.formatOnPaste": true,
   "editor.rulers": [80],
   "editor.tabSize": 2,
-  // Json
+  // -----------------------------------------
+  // JSON / YAML Formatting (Flutter configs)
+  // -----------------------------------------
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
     "editor.tabSize": 2,
@@ -16,67 +23,92 @@
     "editor.formatOnSave": true,
     "editor.formatOnPaste": true,
     "editor.quickSuggestions": {
-      "strings": true
+      "strings": true,
+      "other": true
     }
   },
-  // Dart
+  "[yaml]": {
+    "editor.formatOnSave": true
+  },
+  // -----------------------------------------
+  // Dart/Flutter Extension Quality-of-Life
+  // -----------------------------------------
+  "dart.previewFlutterUiGuides": true,
+  "dart.closingLabels": true,
+  "dart.showTodos": true,
+  "dart.enableSdkFormatter": true,
+  "dart.showInspectorNotificationsForWidgetErrors": true,
   "dart.runPubGetOnPubspecChanges": "never",
   "dart.flutterHotReloadOnSave": "never",
   "dart.hotReloadProgress": "statusBar",
   "dart.debugExternalPackageLibraries": true,
   "dart.debugSdkLibraries": true,
-  "dart.showInspectorNotificationsForWidgetErrors": true,
   "dart.warnWhenEditingFilesOutsideWorkspace": true,
+  // -----------------------------------------
+  // Use Dart-Code formatter for Dart files
+  // -----------------------------------------
   "[dart]": {
+    "editor.defaultFormatter": "Dart-Code.dart-code",
     "editor.formatOnSave": true,
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
     "editor.formatOnType": true,
-    "editor.rulers": [80],
     "editor.selectionHighlight": false,
     "editor.suggest.snippetsPreventQuickSuggestions": false,
     "editor.suggestSelection": "first",
     "editor.tabCompletion": "onlySnippets",
     "editor.wordBasedSuggestions": "off"
   },
+  // -----------------------------------------
+  // Line Length & Visual Guides
+  // -----------------------------------------
+  "dart.lineLength": 80,
+  "editor.wordWrap": "off",
+  // -----------------------------------------
+  // Editor Readability (great for widget trees)
+  // -----------------------------------------
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "editor.guides.indentation": true,
+  "editor.inlineSuggest.enabled": true,
+  "editor.stickyScroll.enabled": true,
+  "workbench.editor.highlightModifiedTabs": true,
+  // -----------------------------------------
+  // Save Actions (Imports / Quick Fixes)
+  // -----------------------------------------
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always",
+    "source.addMissingImports": "always",
+    "source.fixAll": "never"
+  },
+  // -----------------------------------------
+  // Window / Debug UI
+  // -----------------------------------------
+  "window.commandCenter": true,
+  "debug.toolBarLocation": "commandCenter",
+  // -----------------------------------------
   // Explorer
+  // -----------------------------------------
   "explorer.confirmDragAndDrop": true,
   "explorer.confirmDelete": true,
+  // -----------------------------------------
   // Debug
+  // -----------------------------------------
   "debug.allowBreakpointsEverywhere": true,
+  // -----------------------------------------
   // Extensios
+  // -----------------------------------------
   "extensions.ignoreRecommendations": false,
-  // cSpell
-  "cSpell.language": "en,pt_BR",
-  "cSpell.ignorePaths": [
-    "**/step/**",
-    "**/steps/**",
-    "**/*.feature",
-    "**/*_test.dart",
-    "**/*/*.md",
-    "**/*/*.json",
-    "*.yaml",
-    "*.lock",
-    "makefile",
-    "**/*.xml"
-  ],
-  "cSpell.words": [
-    "aptabase",
-    "cupertino",
-    "Deeplink",
-    "deeplinking",
-    "Encrypter",
-    "Flagsmith",
-    "inappwebview",
-    "mocktail",
-    "pinput",
-    "skeletonizer",
-    "TOTP",
-    "OAEP",
-    "validatorless",
-    "crashlytics",
-    "deeplink",
-    "encrypter",
-    "Inspectable"
-  ],
+  // -----------------------------------------
+  // File Cleanliness
+  // -----------------------------------------
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  // -----------------------------------------
+  // Auto Save
+  // -----------------------------------------
+  "files.autoSave": "afterDelay",
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -95,5 +127,56 @@
     "**/tmp/**": true,
     "**/bower_components/**": true,
     "**/dist/**": true
-  }
+  },
+  // -----------------------------------------
+  // cSpell
+  // -----------------------------------------
+  "cSpell.language": "en,pt_BR",
+  "cSpell.ignorePaths": [
+    "**/step/**",
+    "**/steps/**",
+    "**/*.feature",
+    "**/*_test.dart",
+    "**/*/*.md",
+    "**/*/*.json",
+    "*.yaml",
+    "*.lock",
+    "makefile",
+    "**/*.xml",
+    "**/.pub-cache/**"
+  ],
+  "cSpell.words": [
+    "aptabase",
+    "cupertino",
+    "Deeplink",
+    "deeplinking",
+    "Encrypter",
+    "Flagsmith",
+    "inappwebview",
+    "mocktail",
+    "pinput",
+    "skeletonizer",
+    "TOTP",
+    "OAEP",
+    "validatorless",
+    "crashlytics",
+    "deeplink",
+    "encrypter",
+    "Inspectable",
+    "flagsmith",
+    "otpauth",
+    "totp",
+    "Ansi"
+  ],
+  // -----------------------------------------
+  // Gherkin
+  // -----------------------------------------
+  "cucumberautocomplete.syncfeatures": "integration_test/tests/*/*feature",
+  "cucumberautocomplete.strictGherkinCompletion": true,
+  "cucumberautocomplete.strictGherkinValidation": true,
+  "cucumberautocomplete.smartSnippets": true,
+  "cucumberautocomplete.stepsInvariants": true,
+  "cucumberautocomplete.gherkinDefinitionPart": "(Given|When|Then)\\(",
+  "cucumberautocomplete.stepRegExSymbol": "'",
+  "cucumberautocomplete.pureTextSteps": true
 }

@@ -1,3 +1,15 @@
+# Work Point v1.1.0 [08-05-2026]
+
+- refactor: add intro app description
+- fix: remove unecessary code on test
+- feat: add new unit tests
+- refactor: update controllers
+- feat: work point integration test
+
+# Work Point v1.0.8 [12-04-2026]
+
+- fix: master updates
+
 # Work Point v1.0.7 [06-04-2026]
 
 - refactor: remove app-card-widget

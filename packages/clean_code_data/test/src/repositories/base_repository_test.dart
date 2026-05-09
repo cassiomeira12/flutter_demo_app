@@ -59,8 +59,7 @@ class TestEntity extends BaseEntity {
 }
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences.setMockInitialValues({});
+  MockMethodHandler.ensureInitializedWithMock();
 
   final faker = Faker();
   late BaseCrudService<TestEntity> service;
@@ -107,7 +106,7 @@ void main() {
           result.namedArguments[const Symbol('data')];
       return TestEntity(
         objectId: map['objectId'],
-        createdAt: DateTime.parse(map['createdAt']),
+        createdAt: DateTime.tryParse(map['createdAt']),
         updatedAt: DateTime.now().toUtc(),
         name: map['name'],
       );
@@ -147,11 +146,7 @@ void main() {
   tearDownAll(() async {
     final repository = AppBinding.find<BaseRepository<TestEntity>>();
     await repository.deleteLocalDatabase();
-    AppBinding.delete<BaseRepository<TestEntity>>();
-    AppBinding.delete<LocalStorage>();
-    AppBinding.delete<CheckInternetConnectionUseCase>();
-    AppBinding.delete<InternetConnectionService>();
-    AppBinding.delete<BaseCrudService<TestEntity>>();
+    AppBinding.deleteAll();
   });
 
   test('should fetch data', () async {

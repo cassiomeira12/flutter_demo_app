@@ -8,6 +8,7 @@ class SettingsController extends BaseController {
   final UserAuthStorageUseCase _userAuthStorageUseCase;
   final UpdateUserLocaleUseCase _updateUserLocaleUseCase;
   final AppInfoEntity _appInfoEntity;
+  final UserEntity _userEntity;
   final AppSecurityManager _appSecurityManager;
 
   SettingsController({
@@ -17,6 +18,7 @@ class SettingsController extends BaseController {
     required UserAuthStorageUseCase userAuthStorageUseCase,
     required UpdateUserLocaleUseCase updateUserLocaleUseCase,
     required AppInfoEntity appInfoEntity,
+    required UserEntity userEntity,
     required AppSecurityManager appSecurityManager,
   }) : _themeController = themeController,
        _logoutUseCase = logoutUseCase,
@@ -24,10 +26,11 @@ class SettingsController extends BaseController {
        _userAuthStorageUseCase = userAuthStorageUseCase,
        _updateUserLocaleUseCase = updateUserLocaleUseCase,
        _appInfoEntity = appInfoEntity,
+       _userEntity = userEntity,
        _appSecurityManager = appSecurityManager;
 
   AppInfoEntity get appInfo => _appInfoEntity;
-  UserEntity user = AppBinding.find();
+  UserEntity get user => _userEntity;
 
   @override
   String get pageRouteNamed => AppRouter.settings.name;

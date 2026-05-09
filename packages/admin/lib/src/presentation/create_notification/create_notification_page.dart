@@ -2,10 +2,10 @@ import 'package:admin/src/presentation/create_notification/create_notification.d
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
-class PushNotificationsPage extends AppView<PushNotificationsController> {
+class CreateNotificationPage extends AppView<CreateNotificationController> {
   final _formKey = GlobalKey<FormState>();
 
-  PushNotificationsPage({super.key});
+  CreateNotificationPage({super.key});
 
   @override
   Widget build(BuildContext context) {

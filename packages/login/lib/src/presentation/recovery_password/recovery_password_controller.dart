@@ -2,7 +2,7 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:login/src/domain/domain.dart';
 
-class RecoveryPasswordController extends BaseController {
+class RecoveryPasswordController extends BaseController with EmailValidator {
   final RecoveryPasswordUseCase _recoveryPasswordUseCase;
 
   RecoveryPasswordController({
@@ -11,13 +11,6 @@ class RecoveryPasswordController extends BaseController {
 
   Future<void> recoveryPassword({required String email}) async {
     clickTagging(component: 'recovery_password_button_key');
-    await _recoveryPasswordUseCase(email);
-  }
-
-  String? emailValidator(String? input) {
-    if (input?.trim().isEmpty ?? true) {
-      return 'username_input_empty_error'.tr;
-    }
-    return null;
+    await _recoveryPasswordUseCase.call(email);
   }
 }

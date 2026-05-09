@@ -17,7 +17,8 @@ enum IconSize {
   bigger._(48.0),
   large._(32.0),
   medium._(24.0),
-  small._(16.0);
+  small._(16.0)
+  ;
 
   final double _baseValue;
 

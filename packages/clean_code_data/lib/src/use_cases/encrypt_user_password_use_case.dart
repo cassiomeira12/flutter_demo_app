@@ -2,17 +2,17 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
-  final String _encryptKey;
+  final SecurityEnvironmentEntity _securityEnv;
   final SecurityEncryptUseCase _securityEncryptUseCase;
   final LocalStorageUseCase _localStorageUseCase;
   final GetAppInfoUseCase _getAppInfoUseCase;
 
   EncryptUserPasswordUseCaseImpl({
-    required String encryptKey,
+    required SecurityEnvironmentEntity securityEnv,
     required SecurityEncryptUseCase securityEncryptUseCase,
     required LocalStorageUseCase localStorageUseCase,
     required GetAppInfoUseCase getAppInfoUseCase,
-  }) : _encryptKey = encryptKey,
+  }) : _securityEnv = securityEnv,
        _securityEncryptUseCase = securityEncryptUseCase,
        _localStorageUseCase = localStorageUseCase,
        _getAppInfoUseCase = getAppInfoUseCase;
@@ -21,7 +21,8 @@ class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
     final appInfo = await _getAppInfoUseCase.call();
     final String packageName = appInfo.packageName;
     final String platformName = Platform.currentPlatform.name;
-    final String key = '${packageName}_${platformName}_$_encryptKey';
+    final String key =
+        '${packageName}_${platformName}_${_securityEnv.encryptKey}';
     return key;
   }
 
@@ -32,7 +33,7 @@ class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
     final String keyEncrypted = md5.convert(utf8.encode(key)).toString();
 
     final String passwordEncrypted = await _securityEncryptUseCase.encrypt(
-      password: _encryptKey,
+      password: _securityEnv.encryptKey,
       data: password,
     );
 
@@ -52,7 +53,7 @@ class EncryptUserPasswordUseCaseImpl implements EncryptUserPasswordUseCase {
     if (passwordEncrypted == null) return null;
 
     final String password = await _securityEncryptUseCase.decrypt(
-      password: _encryptKey,
+      password: _securityEnv.encryptKey,
       data: passwordEncrypted,
     );
 
