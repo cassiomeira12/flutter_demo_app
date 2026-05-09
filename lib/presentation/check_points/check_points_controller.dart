@@ -35,6 +35,17 @@ class CheckPointsController extends LifecycleController {
   }
 
   @override
+  void onClose() {
+    checkPoints.close();
+    isLoading.close();
+    errorMessage.close();
+    totalHours.close();
+    totalBudget.close();
+    selectedDate.close();
+    super.onClose();
+  }
+
+  @override
   void onAppForeground() {
     final CheckDayPointEntity? checkDay = checkPoints
         .where((workDay) => workDay.today)
@@ -79,8 +90,8 @@ class CheckPointsController extends LifecycleController {
       track.setStatus(TrackOperationStatus.internalError);
       errorMessage.value = error.toString();
     } finally {
-      isLoading.value = false;
       track.finish();
+      isLoading.value = false;
     }
   }
 
@@ -99,6 +110,7 @@ class CheckPointsController extends LifecycleController {
       await getCurrentCheckPoints();
     } on BaseException catch (error) {
       track.setStatus(TrackOperationStatus.internalError);
+      track.finish();
       if (error.message.contains('work_point_already_created')) {
         rethrow;
       }
@@ -108,12 +120,13 @@ class CheckPointsController extends LifecycleController {
       Log.error(error, stackTrace);
       errorMessage.value = error.toString();
       track.setStatus(TrackOperationStatus.internalError);
+      track.finish();
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> changeSelectedDate(DateTime date) async {
+  void changeSelectedDate(DateTime date) {
     selectedDate.value = date;
     getCurrentCheckPoints();
   }

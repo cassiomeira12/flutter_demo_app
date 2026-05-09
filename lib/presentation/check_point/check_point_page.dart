@@ -331,6 +331,7 @@ class CheckPointPage extends AppView<CheckPointController> {
           Form(
             key: formKey,
             child: TextAreaFieldWidget(
+              customKey: const Key('justification_input_key'),
               controller: inputController,
               label: 'justification'.tr,
               hintText: 'justification_hint'.tr,
