@@ -14,6 +14,14 @@ abstract class ListenableBaseController<T> extends BaseController {
     onFetchListData();
   }
 
+  @override
+  void onClose() {
+    list.close();
+    isLoading.close();
+    errorMessage.close();
+    super.onClose();
+  }
+
   Future<void> onFetchListData() async {
     try {
       isLoading.value = true;

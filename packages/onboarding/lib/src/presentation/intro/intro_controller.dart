@@ -2,6 +2,7 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class IntroController extends BaseController {
+  final AppEnvironmentEntity _appEnv;
   final RequestPermissionUseCase _requestPermissionUseCase;
   final LocalStorageUseCase _localStorageUseCase;
   final GetAppInfoUseCase _getAppInfoUseCase;
@@ -14,20 +15,45 @@ class IntroController extends BaseController {
 
   int pagesLength = 0;
   Permission? currentPermission;
+  String get appName => _appEnv.appName;
 
   IntroController({
+    required AppEnvironmentEntity appEnv,
     required RequestPermissionUseCase requestPermissionUseCase,
     required LocalStorageUseCase localStorageUseCase,
     required GetAppInfoUseCase getAppInfoUseCase,
-  }) : _requestPermissionUseCase = requestPermissionUseCase,
+  }) : _appEnv = appEnv,
+       _requestPermissionUseCase = requestPermissionUseCase,
        _localStorageUseCase = localStorageUseCase,
        _getAppInfoUseCase = getAppInfoUseCase;
+
+  List<String> get permissions {
+    final List<String> permissions = List.from(_appEnv.permissions);
+    if (!Platform.isIOS) {
+      permissions.removeWhere((permission) {
+        return permission == 'appTrackingTransparency';
+      });
+    }
+    if (Platform.isMacOS) {
+      permissions.removeWhere((permission) {
+        return permission == 'notification';
+      });
+    }
+    return permissions;
+  }
 
   @override
   void onReady() {
     super.onReady();
     onboardingBeginTagging();
     _checkIfHasNoIntroPages();
+  }
+
+  @override
+  void onClose() {
+    indexPage.close();
+    pageController.dispose();
+    super.onClose();
   }
 
   void _checkIfHasNoIntroPages() {

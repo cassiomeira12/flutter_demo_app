@@ -31,9 +31,11 @@ class UpdateController extends BaseController {
   Future<void> updateNow() async {
     clickTagging(component: 'update_now_button_key');
 
-    final bool downloadFromStore = await _getFeatureFlagValue(
+    final featureFlag = await FeatureFlagServiceManager.instance.getFlag<bool>(
       RemoteFlagsEnum.downloadAndroidStore,
     );
+    final bool downloadFromStore =
+        featureFlag.isEnabled && featureFlag.value == true;
 
     late String url;
 
@@ -66,14 +68,5 @@ class UpdateController extends BaseController {
     }
 
     _openWebUrlUseCase.call(url);
-  }
-
-  Future<bool> _getFeatureFlagValue(RemoteFlagsEnum flag) async {
-    final RemoteFlag? featureFlag = await FeatureFlagServiceManager.instance
-        .getFlag(flag);
-    if (featureFlag?.isEnabled ?? false) {
-      return featureFlag?.value == 'true';
-    }
-    return false;
   }
 }

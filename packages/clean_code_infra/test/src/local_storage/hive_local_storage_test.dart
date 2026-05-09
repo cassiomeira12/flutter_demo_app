@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../helpers/mock_method_handler.dart';
 
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
+  MockMethodHandler.ensureInitializedWithMock();
 
-  setUpAll(() async {
+  setUpAll(() {
     MockMethodHandler.getApplicationDocumentsDirectory();
 
     AppBinding.put<LocalStorage>(HiveLocalStorage());
@@ -15,7 +15,7 @@ void main() {
   tearDownAll(() async {
     final LocalStorage storage = AppBinding.find();
     await storage.clearAll();
-    AppBinding.delete<LocalStorage>();
+    AppBinding.deleteAll();
   });
 
   test('should get a null value', () async {

@@ -55,11 +55,16 @@ class FlatButton extends StatelessWidget {
             if (icon != null)
               Padding(padding: const EdgeInsets.only(right: 32), child: icon),
             Flexible(
-              child: TextWidget(
-                text ?? '',
-                maxLines: 2,
-                overflow: TextOverflow.fade,
-                style: AppTextStyle.button(context),
+              child: Container(
+                margin: EdgeInsets.symmetric(
+                  horizontal: ResponsiveSizeHelper.width(10),
+                ),
+                child: TextWidget(
+                  text ?? '',
+                  maxLines: 2,
+                  overflow: TextOverflow.fade,
+                  style: AppTextStyle.button(context),
+                ),
               ),
             ),
           ],

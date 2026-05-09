@@ -12,7 +12,8 @@ plugins {
 }
 
 val dartEnvironmentVariables = mutableMapOf<String, Any>(
-    "app_name" to "",
+    "app_name" to "flutter demo app",
+    "app_icon_android" to "@mipmap/ic_launcher",
     "android_key_properties" to "key.properties",
     "app_links_scheme" to "https",
     "app_links_host" to "com.app",
@@ -74,8 +75,8 @@ android {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
         }
         
-        manifestPlaceholders["appIcon"] = dartEnvironmentVariables["app_icon_android"] ?: ""
-        manifestPlaceholders["appName"] = dartEnvironmentVariables["app_name"] ?: ""
+        manifestPlaceholders["appIcon"] = dartEnvironmentVariables["app_icon_android"] as String
+        manifestPlaceholders["appName"] = dartEnvironmentVariables["app_name"] as String
         manifestPlaceholders["enableImpeller"] = dartEnvironmentVariables["enable_impeller"] ?: "true"
 
         resValue("string", "app_links_scheme", dartEnvironmentVariables["app_links_scheme"] as String)

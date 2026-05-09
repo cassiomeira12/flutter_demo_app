@@ -25,6 +25,12 @@ class BlockingController extends BaseController {
     _subscribePushNotification();
   }
 
+  @override
+  void onClose() {
+    pushSubscribed.close();
+    super.onClose();
+  }
+
   Future<void> _subscribePushNotification() async {
     try {
       final permission = await _checkPermissionUseCase.call(

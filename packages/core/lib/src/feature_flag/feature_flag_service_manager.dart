@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class FeatureFlagServiceManager implements FeatureFlagService {
   FeatureFlagServiceManager._();
@@ -59,11 +60,11 @@ class FeatureFlagServiceManager implements FeatureFlagService {
   }
 
   @override
-  Future<RemoteFlag?> getFlag(
+  Future<RemoteFlag<T>> getFlag<T>(
     RemoteFlagsEnum flag, {
     bool reload = false,
   }) async {
-    return await _initializedServices.first.getFlag(flag, reload: reload);
+    return await _initializedServices.first.getFlag<T>(flag, reload: reload);
   }
 
   @override
@@ -76,5 +77,11 @@ class FeatureFlagServiceManager implements FeatureFlagService {
     _runServiceFunction(
       (service) async => service.setUserId(userId),
     );
+  }
+
+  @visibleForTesting
+  void clear() {
+    services.clear();
+    _initializedServices.clear();
   }
 }

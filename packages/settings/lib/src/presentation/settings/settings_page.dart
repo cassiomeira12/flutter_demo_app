@@ -93,8 +93,8 @@ class SettingsPage extends AppView<SettingsController> {
                     },
                   ),
                   SecondaryButton(
-                    key: const Key('settings_theme_key'),
-                    text: 'theme'.tr,
+                    key: const Key('settings_themes_key'),
+                    text: 'themes'.tr,
                     expandWidth: true,
                     icon: const FlutterIcon(BoxIcons.bx_brightness),
                     onPressed: controller.themes,

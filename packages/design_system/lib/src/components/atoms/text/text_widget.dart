@@ -19,13 +19,18 @@ class TextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      text,
-      key: key,
-      style: style ?? AppTextStyle.message(context),
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
+    return Container(
+      constraints: const BoxConstraints(
+        maxWidth: ResponsiveSizeHelper.maxWidth,
+      ),
+      child: Text(
+        text,
+        key: key,
+        style: style ?? AppTextStyle.message(context),
+        textAlign: textAlign,
+        maxLines: maxLines,
+        overflow: overflow,
+      ),
     );
   }
 }

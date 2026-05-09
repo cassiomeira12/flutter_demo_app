@@ -1,6 +1,6 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 
-class UserEntity {
+class UserEntity extends ParserToJson {
   final String id;
   final String username;
   final String name;
@@ -49,6 +49,7 @@ class UserEntity {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'objectId': id,

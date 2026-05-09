@@ -1,8 +1,12 @@
+import 'dart:developer';
+
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 abstract class CrashlyticsService {
   Future<void> init();
+
+  Future<void> updateInitSettings();
 
   Future<void> setUserId(String? userId);
 
@@ -71,7 +75,12 @@ abstract class CrashlyticsService {
   }
 
   static void catchFlutterError(FlutterErrorDetails details) {
-    catchException(details.exception, details.stack ?? StackTrace.current);
+    Log.fatalException(
+      details.exception,
+      details.stack ?? StackTrace.current,
+      msg: 'Flutter Error',
+    );
+    debugger();
   }
 
   static bool catchException(Object error, StackTrace stackTrace) {
@@ -79,9 +88,10 @@ abstract class CrashlyticsService {
     final bool disposeError = error.toString().contains('dispose');
     if (memoryError || disposeError) {
       Log.fatalException(error, stackTrace, msg: 'Potential Memory Leak');
-      return true;
+    } else {
+      Log.fatalException(error, stackTrace, msg: 'Unexpected Error');
     }
-    Log.fatalException(error, stackTrace, msg: 'Unexpected Error');
+    debugger();
     return true;
   }
 }

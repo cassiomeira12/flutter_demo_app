@@ -4,12 +4,15 @@ import 'package:dependency/dependency.dart';
 class ServerOtpInterceptor extends Interceptor {
   final GetOtpCodeUseCase _getOtpCodeUseCase;
   final EncryptServerPublicKeyUseCase _encryptServerUseCase;
+  final SecurityEnvironmentEntity _securityEnv;
 
   ServerOtpInterceptor({
     required GetOtpCodeUseCase getOtpCodeUseCase,
     required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
+    required SecurityEnvironmentEntity securityEnv,
   }) : _getOtpCodeUseCase = getOtpCodeUseCase,
-       _encryptServerUseCase = encryptServerPublicKeyUseCase;
+       _encryptServerUseCase = encryptServerPublicKeyUseCase,
+       _securityEnv = securityEnv;
 
   @override
   Future<void> onRequest(
@@ -22,7 +25,7 @@ class ServerOtpInterceptor extends Interceptor {
       options.headers.addAll({'Hash-Token-Code': encryptedCode});
     }
 
-    super.onRequest(options, handler);
+    return super.onRequest(options, handler);
   }
 
   @override
@@ -46,21 +49,20 @@ class ServerOtpInterceptor extends Interceptor {
       );
       await Future.delayed(const Duration(seconds: 1));
       try {
-        Log.debug('Refreshing token...');
+        Log.warning('Refreshing token...', throwsCrashlytics: false);
         final response = await _getRetryRequest(err);
         return handler.resolve(response);
       } catch (_) {
-        super.onError(err, handler);
+        return super.onError(err, handler);
       }
     }
 
-    super.onError(err, handler);
+    return super.onError(err, handler);
   }
 
   Future<String?> _generateEncryptedHashTokenCode() async {
     try {
-      const String secretOTP = String.fromEnvironment('server_secret_otp');
-      final String code = _getOtpCodeUseCase.call(secret: secretOTP);
+      final code = _getOtpCodeUseCase.call(secret: _securityEnv.secretOTP);
       final String encryptedCode = await _encryptServerUseCase.call(code);
 
       if (code == encryptedCode) {

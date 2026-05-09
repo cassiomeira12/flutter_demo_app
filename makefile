@@ -67,12 +67,91 @@ icons:
 	@git restore ios/Runner.xcodeproj/project.pbxproj
 	@git restore android/app/src/main/res/mipmap-anydpi-v26/*
 
+.PHONY: open-worktree
+open-worktree:
+	@echo ""; \
+	envsBranch=$$(git worktree list | sed -E 's/.*\[(.*)\].*/\1/'); \
+	envFoldersWorktree=$$(git worktree list | sed -E 's|^(.*/)?([^[:space:]]+)[[:space:]].*|\2|'); \
+	i=1; for option in $${envFoldersWorktree}; do \
+		branch=$$(echo $${envsBranch} | cut -d ' ' -f $$i); \
+		echo "$$i) $$option [$$branch]"; \
+		i=$$((i + 1)); \
+	done; \
+	echo ""; \
+	read -p "Enter the worktree name to open: " worktree_name; \
+	echo ""; \
+	if [ -z "$$worktree_name" ]; then \
+		echo "Error: No worktree was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envFoldersWorktree} | cut -d ' ' -f $$worktree_name); \
+		currentFolder=$(shell basename "$$PWD"); \
+		if [ "$$CHOICE_SELECTED" == "$$currentFolder" ]; then \
+			echo "You are on $$CHOICE_SELECTED!!\n" && exit 0; \
+		fi; \
+		code ../$$CHOICE_SELECTED; \
+	fi;
+
+.PHONY: worktree
+worktree:
+	@echo ""; \
+	envsBranch=$$(git branch -r | grep -v 'origin/developments/' | sed 's/origin\///'); \
+	i=1; for option in $${envsBranch}; do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done; \
+	echo ""; \
+	read -p "Enter the number of the branch: " branch_choice; \
+	echo ""; \
+	if [ -z "$$branch_choice" ]; then \
+		echo "Error: No env was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$branch_choice); \
+		FOLDER=$$(echo $$CHOICE_SELECTED | sed 's/^[^/]*\///'); \
+		git worktree add ../$$FOLDER $$CHOICE_SELECTED; \
+		cp android/key.properties ../$$FOLDER/android/key.properties; \
+		cp -r android/key_properties ../$$FOLDER/android/key_properties; \
+		cp -r android/app/Firebase ../$$FOLDER/android/app/Firebase; \
+		cp -r macos/Firebase ../$$FOLDER/macos/Firebase; \
+		cp -r ios/Firebase ../$$FOLDER/ios/Firebase; \
+		code ../$$FOLDER; \
+	fi;
+
+.PHONY: remove-worktree
+remove-worktree:
+	@echo ""; \
+	envsBranch=$$(git worktree list | sed -E 's/.*\[(.*)\].*/\1/' | tail -n +2 | sed 's/.*\///'); \
+	i=1; for option in $${envsBranch}; do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done; \
+	echo ""; \
+	read -p "Enter the worktree name to delete: " worktree_name; \
+	echo ""; \
+	if [ -z "$$worktree_name" ]; then \
+		echo "Error: No worktree was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$worktree_name); \
+		git worktree remove $$CHOICE_SELECTED; \
+	fi;
+
 .PHONY: rebase
 rebase:
-	@echo ""
-	@read -p "Enter the branch to rebase: " branch_selected; \
-	echo "git rebase $${branch_selected}"; \
-	git rebase $${branch_selected}
+	@echo ""; \
+	envsBranch=$$(git branch -r | sed 's/origin\///'); \
+	i=1; for option in $${envsBranch}; do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done; \
+	echo ""; \
+	read -p "Enter the branch to rebase: " branch_selected; \
+	echo ""; \
+	if [ -z "$$branch_selected" ]; then \
+		echo "Error: No branch was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$branch_selected); \
+		echo "git rebase $${CHOICE_SELECTED} --reapply-cherry-picks \n"; \
+		git rebase origin/$${CHOICE_SELECTED} --reapply-cherry-picks; \
+	fi;
 
 .PHONY: push
 push:
@@ -82,61 +161,82 @@ push:
 .PHONY: logs
 logs:
 	@echo ""
-	@read -p "Enter the project name: " project_name
-	@echo ""
-	@echo "----------------------------------------------"
-	@echo ""
-	@echo "# $${project_name} v${BUILD_NAME} [$(shell date '+%d-%m-%Y')]"
-	@echo ""
-	@git log -n ${GIT_COMMITS_COUNT} --pretty=format:"- %s"
-	@echo ""
-	@echo "----------------------------------------------"
-	@echo ""
-	@echo "Git message | [${CURRENT_GIT_BRANCH}] refactor: update changelog"
-	@echo ""
+	@read -p "Enter the project name: " project_name; \
+	echo ""; \
+	currentBuildName=$$(echo "${CURRENT_GIT_BRANCH}" | sed -E 's#^(developments|releases)/##'); \
+	projectTitle=$$(echo "# $${project_name} v${BUILD_NAME} [$(shell date '+%d-%m-%Y')]"); \
+	commitsLogs=$$(git log -n ${GIT_COMMITS_COUNT} --pretty=format:"- %s" --grep="^\[$${currentBuildName}\]"); \
+	echo "----------------------------------------------"; \
+	echo "\n$${projectTitle}\n\n$${commitsLogs}\n"; \
+	echo "----------------------------------------------"; \
+	echo ""; \
+	echo "Git message | [${CURRENT_GIT_BRANCH}] refactor: update changelog"; \
+	echo ""; \
 
 .PHONY: delete-branch
 delete-branch:
-	@echo ""
-	@read -p "Enter the branch to delete: " branch_selected; \
+	@echo ""; \
+	envsBranch=$$(git branch -r | sed 's/origin\///'); \
+	i=1; for option in $${envsBranch}; do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done; \
 	echo ""; \
-	read -p "Delete local branch? [y/n]: " delete_local; \
+	read -p "Enter the branch to delete: " branch_selected; \
 	echo ""; \
-	if [[ $$delete_local == "y" ]]; then \
-		git branch --delete --force $${branch_selected}; \
-	fi; \
-	echo ""; \
-	read -p "Delete remote branch? [y/n]: " delete_remote; \
-	echo ""; \
-	if [[ $$delete_remote == "y" ]]; then \
-		git push origin --delete $${branch_selected}; \
-	fi; \
-	echo ""; \
+	if [ -z "$$branch_selected" ]; then \
+		echo "Error: No branch was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$branch_selected); \
+		read -p "Delete local branch? [y/n]: " delete_local; \
+		echo ""; \
+		if [[ $$delete_local == "y" ]]; then \
+			git branch --delete --force $${CHOICE_SELECTED}; \
+			echo ""; \
+		fi; \
+		read -p "Delete remote branch? [y/n]: " delete_remote; \
+		echo ""; \
+		if [[ $$delete_remote == "y" ]]; then \
+			git push origin --delete $${CHOICE_SELECTED}; \
+			echo ""; \
+		fi; \
+	fi;
 
 .PHONY: merge
 merge:
-	@echo ""
-	@read -p "Enter the branch to merge: " branch_selected; \
+	@echo ""; \
+	envsBranch=$$(git branch -r | sed 's/origin\///'); \
+	i=1; for option in $${envsBranch}; do \
+		echo "$$i) $$option"; \
+		i=$$((i + 1)); \
+	done; \
 	echo ""; \
-	echo "Git Merge [$${branch_selected}] -> [${CURRENT_GIT_BRANCH}]"; \
+	read -p "Enter the branch to merge into: " branch_selected; \
 	echo ""; \
-	read -p "Enter the project name: " project_name; \
-	echo ""; \
-	echo "Project Name [$${project_name}]"; \
-	echo ""; \
-	buildMode="release"; \
-	if [[ ${CURRENT_GIT_BRANCH} == "master" ]]; then \
-		buildMode="${CURRENT_GIT_BRANCH}"; \
-		project_name="flutter demo app"; \
-	fi; \
-	echo ""; \
-	git merge --squash $${branch_selected} --strategy-option theirs; \
-	echo ""; \
-	echo "-------------------"; \
-	currentVersion=$$(grep 'version: ' pubspec.yaml); \
-	currentBuildName=$$(echo "$${currentVersion}" | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\-.*/\1/'); \
-	echo "Git merge message | $${buildMode}: $${project_name} v$${currentBuildName}"; \
-	echo "-------------------"; \
+	if [ -z "$$branch_selected" ]; then \
+		echo "Error: No branch was selected."; \
+	else \
+		CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$branch_selected); \
+		echo "Git Merge [$${CHOICE_SELECTED}] -> [${CURRENT_GIT_BRANCH}]"; \
+		echo ""; \
+		read -p "Enter the project name: " project_name; \
+		echo ""; \
+		echo "Project Name [$${project_name}]"; \
+		echo ""; \
+		buildMode="release"; \
+		if [[ ${CURRENT_GIT_BRANCH} == "master" ]]; then \
+			buildMode="${CURRENT_GIT_BRANCH}"; \
+			project_name="flutter demo app"; \
+		fi; \
+		echo ""; \
+		git merge --squash $${CHOICE_SELECTED} --strategy-option theirs; \
+		echo ""; \
+		echo "\n-------------------"; \
+		currentVersion=$$(grep 'version: ' pubspec.yaml); \
+		currentBuildName=$$(echo "$${currentVersion}" | sed -E 's/version: ([0-9]+\.[0-9]+\.[0-9]+)\-.*/\1/'); \
+		echo "Git merge message | $${buildMode}: $${project_name} v$${currentBuildName}"; \
+		echo "-------------------\n"; \
+	fi;
 
 .PHONY: recreate-branch
 recreate-branch:
@@ -206,9 +306,9 @@ pubget:
 
 choice-env:
 	@echo ""
-	@echo "Please choose an env:"
-	@currentBuildName=$$(echo "${CURRENT_GIT_BRANCH}" | sed -E 's#^(developments|releases)/##'); \
-	envsBranchFilter=".env.$${currentBuildName}."; \
+	@echo "Please choose an env:"; \
+	currentBuildName=$$(echo "${CURRENT_GIT_BRANCH}" | sed -E 's#^(developments|releases)/##'); \
+	envsBranchFilter="../envs/env.$${currentBuildName}."; \
 	envsBranch=$$(ls $${envsBranchFilter}*); \
 	i=1; for option in $${envsBranch}; do \
 		echo "$$i) $$option"; \
@@ -261,6 +361,11 @@ choice-platform:
 		echo "$$CHOICE_SELECTED" > .platform_selected; \
 	fi;
 
+.PHONY: analyze
+analyze:
+	@echo ""; \
+	flutter analyze --no-pub || exit 1; \
+
 .PHONY: test
 test:
 	@echo ""
@@ -269,7 +374,38 @@ test:
 		$(MAKE) choice-env; \
 	fi; \
 	ENV=$$(cat .env_selected); \
-	time flutter test --dart-define-from-file=$$ENV --coverage --no-pub -r github test packages || exit 1; \
+	time flutter test --dart-define-from-file=$$ENV --coverage --no-pub -r github test packages | sed "s|$(PWD)/||" || exit 1; \
+	rm -rf .env_selected; \
+
+.PHONY: test-file
+test-file:
+	@echo ""
+	@echo "Run flutter test in file"; \
+	if [[ ! (-f .env_selected) ]]; then \
+		$(MAKE) choice-env; \
+	fi; \
+	ENV=$$(cat .env_selected); \
+	if [[ (-f .test_file_path) ]]; then \
+		FILE_PATH=$$(cat .test_file_path); \
+		echo "Cache file path: [$$FILE_PATH] \n"; \
+	fi; \
+	read -p "Enter the path file or ENTER to use cache: " path_file; \
+	if [[ $$path_file == "" ]]; then \
+		path_file=$$(cat .test_file_path); \
+	fi; \
+	echo $$path_file > .test_file_path; \
+	flutter test $$path_file --dart-define-from-file=$$ENV --no-pub -r github | sed "s|$(PWD)/||" || exit 1; \
+	rm -rf .env_selected; \
+
+.PHONY: integration-test
+integration-test:
+	@echo ""
+	@echo "Run flutter integration test"; \
+	if [[ ! (-f .env_selected) ]]; then \
+		$(MAKE) choice-env; \
+	fi; \
+	ENV=$$(cat .env_selected); \
+	flutter test integration_test/runner_test.dart --dart-define-from-file=$$ENV --no-pub -r github; \
 	rm -rf .env_selected; \
 
 .PHONY: build
@@ -278,18 +414,18 @@ build:
 	@if [ -f .platform_selected ]; then \
 		PLATFORM=$$(cat .platform_selected); \
 		rm -rf .platform_selected; \
-		"$(MAKE)" choice-env; \
+		$(MAKE) choice-env; \
 		if [[ $$PLATFORM == "android" ]]; then \
-			"$(MAKE)" build-android; \
+			$(MAKE) build-android; \
 		fi; \
 		if [[ $$PLATFORM == "ios" ]]; then \
-			"$(MAKE)" build-ios; \
+			$(MAKE) build-ios; \
 		fi; \
 		if [[ $$PLATFORM == "macos" ]]; then \
-			"$(MAKE)" build-macos; \
+			$(MAKE) build-macos; \
 		fi; \
 		if [[ $$PLATFORM == "web" ]]; then \
-			"$(MAKE)" build-web; \
+			$(MAKE) build-web; \
 		fi; \
 	fi; \
 
@@ -332,9 +468,10 @@ build-android:
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android"; \
-	"$(MAKE)" clean; \
-	"$(MAKE)" test; \
-	flutter build apk $$ARGS --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
+	$(MAKE) clean; \
+	$(MAKE) analyze || exit 1; \
+	$(MAKE) test || exit 1; \
+	flutter build apk $$ARGS --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER || exit 1; \
 	if [ -d "build/app/outputs/flutter-apk" ]; then \
 		cp -r build/app/outputs/flutter-apk/*.apk releases/$$ENV_APP_NAME/$$BUILD_FOLDER/Android/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.apk; \
 	fi; \
@@ -358,7 +495,7 @@ build-android:
 		echo "$$BUILD_FOLDER" > .version_selected; \
 		echo "Android" > .platform_selected; \
 		echo "$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.apk" > .app_selected; \
-		"$(MAKE)" install-android; \
+		$(MAKE) install-android; \
 	else \
 		open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 	fi; \
@@ -402,12 +539,13 @@ build-ios:
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS"; \
-	"$(MAKE)" clean; \
-	"$(MAKE)" test; \
+	$(MAKE) clean; \
+	$(MAKE) analyze || exit 1; \
+	$(MAKE) test || exit 1; \
 	if [[ $$APPLE_DEVELOPMENT_TEAM ]]; then \
-		flutter build ipa $$ARGS --export-method ad-hoc --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
+		flutter build ipa $$ARGS --export-method ad-hoc --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER || exit 1; \
 	else \
-		flutter build ipa $$ARGS --export-method ad-hoc --no-codesign --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER; \
+		flutter build ipa $$ARGS --export-method ad-hoc --no-codesign --build-name=$$BUILD_NAME_FULL --build-number=$$BUILD_NUMBER || exit 1; \
 	fi; \
 	if [ -d "build/ios/archive" ]; then \
 		cp -r build/ios/archive/*.xcarchive releases/$$ENV_APP_NAME/$$BUILD_FOLDER/iOS/$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.xcarchive; \
@@ -437,7 +575,7 @@ build-ios:
 		echo "$$BUILD_FOLDER" > .version_selected; \
 		echo "iOS" > .platform_selected; \
 		echo "$${ENV_APP_NAME}_v$$BUILD_NAME_FULL+$$BUILD_NUMBER.ipa" > .app_selected; \
-		"$(MAKE)" install-ios; \
+		$(MAKE) install-ios; \
 	else \
 		open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
 	fi; \
@@ -481,9 +619,10 @@ build-macos:
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER/macOS"; \
-	"$(MAKE)" clean; \
-	"$(MAKE)" test; \
-	flutter build macos $$ARGS --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+	$(MAKE) clean; \
+	$(MAKE) analyze || exit 1; \
+	$(MAKE) test || exit 1; \
+	flutter build macos $$ARGS --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER || exit 1; \
 	if [ -d "build/macos/Build/Products/Release" ]; then \
 		cp -r build/macos/Build/Products/Release/*.app releases/$$ENV_APP_NAME/$$BUILD_FOLDER/macOS/$${ENV_APP_NAME}_v${BUILD_NAME}+$$BUILD_NUMBER.app; \
 	fi; \
@@ -528,9 +667,10 @@ build-web:
 	echo "Base HREF: $${BASE_HREF}"; \
 	echo "Apple Team: $${APPLE_DEVELOPMENT_TEAM}"; \
 	mkdir -p "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"; \
-	"$(MAKE)" clean; \
-	"$(MAKE)" test; \
-	flutter build web $$ARGS --wasm --base-href $${BASE_HREF} --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER; \
+	$(MAKE) clean; \
+	$(MAKE) analyze || exit 1; \
+	$(MAKE) test || exit 1; \
+	flutter build web $$ARGS --wasm --base-href $${BASE_HREF} --build-name=${BUILD_NAME} --build-number=$$BUILD_NUMBER || exit 1; \
 	if [ -d "build/web" ]; then \
 		cp -r build/web/ releases/$$ENV_APP_NAME/$$BUILD_FOLDER/web/; \
 		zip -r releases/$$ENV_APP_NAME/$$BUILD_FOLDER/web.zip releases/$$ENV_APP_NAME/$$BUILD_FOLDER/web; \
@@ -555,7 +695,7 @@ install:
 	else \
 		CHOICE_SELECTED=$$(echo $${projects} | cut -d ' ' -f $$project_choice); \
 		echo "$$CHOICE_SELECTED" > .project_selected; \
-		"$(MAKE)" install-version; \
+		$(MAKE) install-version; \
 	fi;
 
 .PHONY: install-version
@@ -579,7 +719,7 @@ install-version:
 	else \
 		CHOICE_SELECTED=$$(echo $${versions} | cut -d ' ' -f $$version_choice); \
 		echo "$$CHOICE_SELECTED" > .version_selected; \
-		"$(MAKE)" install-platform; \
+		$(MAKE) install-platform; \
 	fi;
 
 .PHONY: install-platform
@@ -605,7 +745,7 @@ install-platform:
 	else \
 		CHOICE_SELECTED=$$(echo $${platforms} | cut -d ' ' -f $$platform_choice); \
 		echo "$$CHOICE_SELECTED" > .platform_selected; \
-		"$(MAKE)" install-app; \
+		$(MAKE) install-app; \
 	fi;
 
 .PHONY: install-app
@@ -634,10 +774,10 @@ install-app:
 		CHOICE_SELECTED=$$(echo $${apps} | cut -d ' ' -f $$app_choice); \
 		echo "$$CHOICE_SELECTED" > .app_selected; \
 		if [[ $$PLATFORM == "iOS" ]]; then \
-			"$(MAKE)" install-ios; \
+			$(MAKE) install-ios; \
 		fi; \
 		if [[ $$PLATFORM == "Android" ]]; then \
-			"$(MAKE)" install-android; \
+			$(MAKE) install-android; \
 		fi; \
 	fi;
 
@@ -717,3 +857,20 @@ install-ios:
 	rm -rf .version_selected; \
 	rm -rf .platform_selected; \
 	rm -rf .app_selected; \
+
+.PHONY: upload-firebase
+upload-firebase:
+	@echo "Uploading App Firebase Distribution"; \
+	commitsCount=$$(git rev-list --count HEAD ^develop); \
+	commitsLogs=$$(git log -n $$commitsCount --pretty=format:"- %s"); \
+	developerName=$$(git config --global user.name); \
+	echo "RELEASE CANDIDATE - [$$commitsCount] $$developerName \n\n$$commitsLogs" > release-notes.txt; \
+	APP_NAME=$$(cat .build_chosen_app); \
+	filePath=$$(cat .build_app_path); \
+	firebaseAppId=$$(firebase apps:list --project app-base-conteudo $$platform | grep -i "$$APP_NAME" | awk -F '│' '{print $$3}' | tr -d '[:space:]'); \
+	appID=$$(echo $$firebaseAppId | sed 's/\x1b\[[0-9;]*m//g'); \
+	firebase appdistribution:distribute "$$filePath"  \
+    --app $$appID  \
+		--release-notes-file release-notes.txt \
+		--groups "l-dev-pd-apps"; \
+	rm .build_app_path release-notes.txt; \

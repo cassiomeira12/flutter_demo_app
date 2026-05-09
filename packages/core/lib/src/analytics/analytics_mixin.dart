@@ -125,18 +125,12 @@ mixin AnalyticsMixin {
   }
 
   static void eventTagging(String event, {Map<String, dynamic>? parameters}) {
-    Log.debug(
-      'Event: $event \n'
-      'Page: ${parameters?['screen_class']} \n'
-      'Parameters: $parameters',
-      throwsCrashlytics: false,
-    );
     CrashlyticsServiceManager.instance.logUserInteraction(
       event,
       parameters: parameters,
     );
     AnalyticsServiceManager.instance.logEvent(
-      name: event,
+      event,
       parameters: parameters,
     );
   }

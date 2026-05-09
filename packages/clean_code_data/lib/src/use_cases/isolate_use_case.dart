@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 
 class IsolateUseCase {
   static Future<T> isolate<T>({required Future<T> Function() builder}) async {
-    if (false && !kIsWeb) {
+    if (!kIsWeb) {
       return await Isolate.run<T>(() async {
         return await builder.call();
       });

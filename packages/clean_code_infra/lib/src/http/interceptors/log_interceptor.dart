@@ -29,6 +29,15 @@ class LogInterceptor extends Interceptor {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
+    Log.warning(
+      'Response ERROR ${err.requestOptions.method} \n'
+      'path: ${err.requestOptions.uri} \n'
+      'status code: ${err.response?.statusCode} \n'
+      'body: ${err.response} \n'
+      'type: ${err.type}',
+      throwsCrashlytics: false,
+    );
+
     CrashlyticsServiceManager.instance.logHttp(
       'Response ERROR ${err.requestOptions.method} \n'
       'path: ${err.requestOptions.uri} \n'

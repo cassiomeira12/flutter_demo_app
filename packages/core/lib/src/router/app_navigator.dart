@@ -1,13 +1,17 @@
 import 'package:core/core.dart';
+import 'package:core/src/router/app_base_router.dart';
+import 'package:core/src/router/get_router.dart';
 import 'package:dependency/dependency.dart';
 
 abstract class AppNavigator {
+  static final AppBaseRouter _router = GetRouter.instance;
+
   static Map<int, Routing> nestedRouting = {};
 
   static String get currentRoute {
     final nestedId = BaseController.navigatorIndex.value;
     final navigatorRoute = AppRoutes.navigatorRoute();
-    final currentRouteFromGet = Get.currentRoute;
+    final currentRouteFromGet = _router.currentRoute;
     if (navigatorRoute?.name == currentRouteFromGet) {
       final currentNestedRoute =
           nestedRouting[nestedId]?.current ?? Navigator.defaultRouteName;
@@ -21,7 +25,7 @@ abstract class AppNavigator {
   static dynamic get arguments {
     final nestedId = BaseController.navigatorIndex.value;
     final navigatorRoute = AppRoutes.navigatorRoute();
-    final currentRouteFromGet = Get.currentRoute;
+    final currentRouteFromGet = _router.currentRoute;
     if (navigatorRoute?.name == currentRouteFromGet) {
       final currentNestedRoute =
           nestedRouting[nestedId]?.current ?? Navigator.defaultRouteName;
@@ -29,11 +33,11 @@ abstract class AppNavigator {
         return nestedRouting[nestedId]?.args;
       }
     }
-    return Get.arguments ?? nestedRouting[nestedId]?.args;
+    return _router.arguments ?? nestedRouting[nestedId]?.args;
   }
 
   static Future<dynamic>? to(Widget Function() page) {
-    return Get.to(page);
+    return _router.to(page);
   }
 
   static Future<dynamic>? toNamed(
@@ -43,7 +47,7 @@ abstract class AppNavigator {
     final nestedId = BaseController.navigatorIndex.value;
     final nextRoute = AppRoutes.findByRoute(appRouter.name, nestedId: nestedId);
     final isNestedNavigation = nestedId == nextRoute?.nestedKey;
-    return Get.toNamed(
+    return _router.toNamed(
       appRouter.name,
       id: isNestedNavigation ? nextRoute?.nestedKey : null,
       preventDuplicates: false,
@@ -53,11 +57,10 @@ abstract class AppNavigator {
 
   static Future<void> back({dynamic result}) async {
     final nestedId = BaseController.navigatorIndex.value;
-    final currentRouteGet = Get.currentRoute;
+    final currentRouteGet = _router.currentRoute;
     final navigatorRoute = AppRoutes.navigatorRoute();
     final isNestedNavigation = currentRouteGet == navigatorRoute?.name;
-    Get.back(result: result, id: isNestedNavigation ? nestedId : null);
-    await Future.delayed(const Duration(milliseconds: 100));
+    _router.back(result: result, id: isNestedNavigation ? nestedId : null);
   }
 
   static Future<dynamic>? backAndToNamed<T>(
@@ -65,10 +68,10 @@ abstract class AppNavigator {
     Map<String, dynamic>? arguments,
   }) async {
     final nestedId = BaseController.navigatorIndex.value;
-    final currentRouteGet = Get.currentRoute;
+    final currentRouteGet = _router.currentRoute;
     final navigatorRoute = AppRoutes.navigatorRoute();
     final isNestedNavigation = currentRouteGet == navigatorRoute?.name;
-    Get.offAndToNamed(
+    _router.backAndToNamed(
       appRouter.name,
       id: isNestedNavigation ? nestedId : null,
       arguments: arguments,
@@ -91,7 +94,7 @@ abstract class AppNavigator {
   }) async {
     final nestedId = BaseController.navigatorIndex.value;
     final nextRoute = AppRoutes.findByRoute(appRouter.name, nestedId: nestedId);
-    return Get.offAllNamed(
+    return _router.backAllAndToNamed(
       appRouter.name,
       id: nextRoute?.nestedKey,
       arguments: arguments,

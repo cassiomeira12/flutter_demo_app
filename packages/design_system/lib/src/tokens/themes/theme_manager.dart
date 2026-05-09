@@ -12,6 +12,8 @@ class ThemeManager {
 
   late ThemeMode themeMode;
 
+  bool _initialized = false;
+
   static Color get primaryEnvColor {
     const String defaultColor = '#FFFFFF';
     const primary = String.fromEnvironment(
@@ -25,6 +27,8 @@ class ThemeManager {
     LightColorScheme? lightColorScheme,
     DarkColorScheme? darkColorScheme,
   }) {
+    if (_initialized) return;
+    _initialized = true;
     themeMode = ThemeMode.system;
     _light = ThemeScheme(
       colorScheme: lightColorScheme ?? LightColorScheme(color: primaryEnvColor),

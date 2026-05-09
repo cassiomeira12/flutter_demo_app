@@ -69,6 +69,8 @@ class AppInstallationServiceImpl
         platform: deviceInfo.platform,
         ip: null,
       );
+    } on MissingPluginException {
+      rethrow;
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {

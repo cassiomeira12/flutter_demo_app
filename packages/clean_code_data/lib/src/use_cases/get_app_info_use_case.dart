@@ -7,8 +7,7 @@ class GetAppInfoUseCaseImpl implements GetAppInfoUseCase {
     : _service = appInfoService;
 
   @override
-  Future<AppInfoModel> call() async {
-    final appInfo = await _service.getAppInfo();
-    return appInfo as AppInfoModel;
+  Future<AppInfoEntity> call() {
+    return _service.getAppInfo();
   }
 }

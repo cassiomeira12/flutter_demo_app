@@ -7,6 +7,9 @@ class WebBindings extends Bindings {
   void dependencies() {
     AppBinding.put<WebController>(
       WebController(
+        appEnv: AppBinding.find(),
+        serverEnv: AppBinding.find(),
+        webAppEnv: AppBinding.find(),
         openWebUrlUseCase: AppBinding.find(),
         currentDeviceLocaleUseCase: AppBinding.find(),
       ),

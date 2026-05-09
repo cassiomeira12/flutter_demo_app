@@ -12,7 +12,7 @@ class FooterWidget extends AppView<WebController> {
       color: Theme.of(context).primaryColor,
       padding: EdgeInsets.symmetric(
         horizontal: ResponsiveSizeHelper.width(30),
-        vertical: ResponsiveSizeHelper.height(100),
+        vertical: ResponsiveSizeHelper.height(40),
       ),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
@@ -26,7 +26,7 @@ class FooterWidget extends AppView<WebController> {
                 style: AppTextStyle.message(context, color: AppColors.white),
               ),
               TextRichWidget(
-                text: '${controller.environment.appName}. ',
+                text: '${controller.appName}. ',
                 style: AppTextStyle.message(
                   context,
                   bold: true,

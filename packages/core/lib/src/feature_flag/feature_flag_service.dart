@@ -7,5 +7,8 @@ abstract class FeatureFlagService {
 
   Future<void> setTraits(DeviceTraits traits);
 
-  Future<RemoteFlag?> getFlag(RemoteFlagsEnum flag, {bool reload = false});
+  Future<RemoteFlag<T>> getFlag<T>(
+    RemoteFlagsEnum flag, {
+    bool reload = false,
+  });
 }

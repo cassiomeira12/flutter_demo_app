@@ -11,7 +11,7 @@ void main() {
   });
 
   tearDownAll(() {
-    AppBinding.delete<LocalStorage>();
+    AppBinding.deleteAll();
   });
 
   test('test get data', () async {

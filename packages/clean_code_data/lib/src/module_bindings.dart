@@ -51,20 +51,6 @@ class DataModuleBindings implements ModuleBinding {
       ),
     );
 
-    await AppBinding.putAsync<ThemeController>(() async {
-      return AppThemeController.init(
-        localStorageUseCase: AppBinding.find(),
-        setThemData: (theme) {
-          Get.changeTheme(theme);
-          Get.forceAppUpdate();
-        },
-        setThemMode: (mode) {
-          Get.changeThemeMode(mode);
-          Get.forceAppUpdate();
-        },
-      );
-    }, permanent: true);
-
     AppBinding.lazyPut<FileStorageUseCase>(() => FileStorageUseCaseImpl());
     AppBinding.lazyPut<SecureStorageUseCase>(() => SecureStorageUseCaseImpl());
 
@@ -90,19 +76,13 @@ class DataModuleBindings implements ModuleBinding {
       () => GetAppInfoUseCaseImpl(appInfoService: AppBinding.find()),
     );
 
-    await AppBinding.find<GetAppInfoUseCase>().call().then((appInfo) {
-      AppBinding.lazyPut<AppInfoEntity>(() => appInfo);
-    });
-
     AppBinding.lazyPut<ClipboardUseCase>(() => ClipboardUseCaseImpl());
 
     AppBinding.lazyPut<RsaEncryptUseCase>(() => RsaEncryptUseCaseImpl());
 
     AppBinding.lazyPut<EncryptServerPublicKeyUseCase>(
       () => EncryptServerPublicKeyUseCaseImpl(
-        serverRSAPublicKeyBase64: const String.fromEnvironment(
-          'serverRSAPublicKeyBase64',
-        ),
+        securityEnv: AppBinding.find(),
         rsaEncrypterUseCase: AppBinding.find(),
       ),
     );
@@ -113,7 +93,7 @@ class DataModuleBindings implements ModuleBinding {
 
     AppBinding.lazyPut<EncryptUserPasswordUseCase>(
       () => EncryptUserPasswordUseCaseImpl(
-        encryptKey: const String.fromEnvironment('encrypter_key'),
+        securityEnv: AppBinding.find(),
         getAppInfoUseCase: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
         securityEncryptUseCase: AppBinding.find(),
@@ -257,7 +237,10 @@ class DataModuleBindings implements ModuleBinding {
     );
 
     AppBinding.lazyPut<LoginService>(
-      () => LoginServiceImpl(loginDataSource: AppBinding.find()),
+      () => LoginServiceImpl(
+        loginDataSource: AppBinding.find(),
+        encryptServerPublicKeyUseCase: AppBinding.find(),
+      ),
     );
     AppBinding.lazyPut<LoginUseCase>(
       () => LoginUseCaseImpl(
@@ -265,8 +248,7 @@ class DataModuleBindings implements ModuleBinding {
         authStorageUseCase: AppBinding.find(),
         userService: AppBinding.find(),
         encryptUserPasswordUseCase: AppBinding.find(),
-        encryptServerPublicKeyUseCase: AppBinding.find(),
-        getDeviceInfoUseCase: AppBinding.find(),
+        deviceInfoEntity: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
         securityEncrypterUseCase: AppBinding.find(),
       ),

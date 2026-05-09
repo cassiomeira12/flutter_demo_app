@@ -1,7 +1,8 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:feature_flag/src/data/mixin/parse_value_mixin.dart';
 
-class GrowthBookFeatureFlag implements FeatureFlagService {
+class GrowthBookFeatureFlag with ParseValueMixin implements FeatureFlagService {
   final String _apiKey;
   final String _hostUrl;
 
@@ -44,14 +45,15 @@ class GrowthBookFeatureFlag implements FeatureFlagService {
   }
 
   @override
-  Future<RemoteFlag?> getFlag(
+  Future<RemoteFlag<T>> getFlag<T>(
     RemoteFlagsEnum flag, {
     bool reload = false,
   }) async {
     final feature = _sdk?.feature(flag.name);
-    return RemoteFlag(
+    return parseValueType<T>(
+      flag: flag,
       isEnabled: feature?.on ?? false,
-      value: '${feature?.value}',
+      value: feature?.value,
     );
   }
 

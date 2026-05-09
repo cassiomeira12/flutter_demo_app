@@ -1,6 +1,6 @@
-class RemoteFlag {
+class RemoteFlag<T> {
   final bool isEnabled;
-  final String? value;
+  final T? value;
 
   RemoteFlag({
     required this.isEnabled,

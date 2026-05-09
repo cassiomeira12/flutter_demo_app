@@ -3,6 +3,9 @@ abstract class AppAssets {
   static const String logo = 'assets/png/AppIcon.png';
   static const String branding = 'assets/png/branding.png';
 
+  // Web App
+  static const String main = 'assets/png/main.png';
+
   static const String appStore = 'assets/png/app_store.png';
   static const String playStore = 'assets/png/play_store.png';
 

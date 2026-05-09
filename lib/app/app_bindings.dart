@@ -20,22 +20,20 @@ import 'package:webview/webview.dart';
 class AppBindings extends Bindings {
   @override
   Future<void> dependencies() async {
-    if (!kDebugMode) {
-      CrashlyticsModuleBindings().injectDependencies();
-    }
-
     await CoreModuleBindings().injectDependencies();
 
     // await FirebaseInitializeModuleBindings().injectDependencies();
+
     if (!kDebugMode) {
-      AnalyticsModuleBindings().injectDependencies();
+      await CrashlyticsModuleBindings().injectDependencies();
+      await AnalyticsModuleBindings().injectDependencies();
+      await FeatureFlagModuleBindings().injectDependencies();
     }
+
     // await AppsFlyerModuleBindings().injectDependencies();
     // await PushNotificationsModuleBindings().injectDependencies();
     // await PushMessagingModuleBindings().injectDependencies();
-
-    DeeplinkModuleBindings().injectDependencies();
-    FeatureFlagModuleBindings().injectDependencies();
+    await DeeplinkModuleBindings().injectDependencies();
 
     SplashModuleBindings().injectDependencies();
     WebAppModuleBindings().injectDependencies();

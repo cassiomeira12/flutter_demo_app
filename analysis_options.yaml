@@ -25,6 +25,7 @@ analyzer:
     unused_import: error
     discarded_futures: ignore
     prefer_foreach: ignore
+    unintended_html_in_doc_comment: ignore
 
 linter:
   rules:

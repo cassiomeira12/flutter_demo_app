@@ -43,8 +43,8 @@ class AptabaseAnalytics implements AnalyticsService {
   }
 
   @override
-  Future<void> logEvent({
-    required String name,
+  Future<void> logEvent(
+    String name, {
     Map<String, dynamic>? parameters,
   }) async {
     if (kIsWeb) {

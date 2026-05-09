@@ -3,7 +3,7 @@ import 'package:dependency/dependency.dart';
 
 class LoginController extends BaseController
     with EmailValidator, PasswordValidator {
-  final EnvironmentEntity _environment;
+  final AppEnvironmentEntity _appEnv;
   final LoginUseCase _loginUseCase;
   final LocalStorageUseCase _localStorageUseCase;
   final UserAuthStorageUseCase _authStorageUseCase;
@@ -13,7 +13,7 @@ class LoginController extends BaseController
   final FeatureFlagLifecycleController _featureFlagLifecycleController;
 
   LoginController({
-    required EnvironmentEntity environment,
+    required AppEnvironmentEntity appEnv,
     required LoginUseCase loginUseCase,
     required LocalStorageUseCase localStorageUseCase,
     required UserAuthStorageUseCase authStorageUseCase,
@@ -21,7 +21,7 @@ class LoginController extends BaseController
     required UploadInstallationAppUseCase uploadInstallationAppUseCase,
     required AppInfoEntity appInfoEntity,
     required FeatureFlagLifecycleController featureFlagLifecycleController,
-  }) : _environment = environment,
+  }) : _appEnv = appEnv,
        _loginUseCase = loginUseCase,
        _localStorageUseCase = localStorageUseCase,
        _authStorageUseCase = authStorageUseCase,
@@ -30,13 +30,13 @@ class LoginController extends BaseController
        _appInfoEntity = appInfoEntity,
        _featureFlagLifecycleController = featureFlagLifecycleController;
 
-  final emailTextController = Rxn<TextEditingController>();
-  final passwordTextController = Rxn<TextEditingController>();
+  final userNameTextController = TextEditingController();
+  final passwordTextController = TextEditingController();
   final rememberMeInitial = RxBool(false);
 
   AppInfoEntity get appInfo => _appInfoEntity;
 
-  String get appName => _environment.appName;
+  String get appName => _appEnv.appName;
 
   @override
   void onInit() {
@@ -133,8 +133,8 @@ class LoginController extends BaseController
       final String? password = credentials['password'];
 
       rememberMeInitial.value = rememberMe ?? false;
-      emailTextController.value = TextEditingController(text: username);
-      passwordTextController.value = TextEditingController(text: password);
+      userNameTextController.value = TextEditingValue(text: username ?? '');
+      passwordTextController.value = TextEditingValue(text: password ?? '');
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }
@@ -175,6 +175,7 @@ class LoginController extends BaseController
         context,
         title: 'invalid_session_token'.tr,
         message: 'login_again'.tr,
+        duration: const Duration(seconds: 5),
       );
     }
   }

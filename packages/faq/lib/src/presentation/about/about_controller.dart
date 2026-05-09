@@ -43,4 +43,9 @@ class AboutController extends BaseController {
     const String webAppUrl = String.fromEnvironment('web_app_url');
     _openWebUrlUseCase.call(webAppUrl);
   }
+
+  void feedback() {
+    clickTagging(component: 'about_feedback_key');
+    AppNavigator.toNamed(AppRouter.feedback);
+  }
 }

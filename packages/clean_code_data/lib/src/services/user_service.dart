@@ -10,10 +10,7 @@ class UserServiceImpl implements UserService {
   Future<UserModel> getUserData() async {
     try {
       final Map<String, dynamic> result = await _dataSource.getUserData();
-
-      final UserModel user = UserModel.fromMap(result);
-
-      return user;
+      return UserModel.fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {
@@ -74,15 +71,12 @@ class UserServiceImpl implements UserService {
     required String newPassword,
   }) async {
     try {
-      final Map<String, dynamic> result = await _dataSource.changePassword(
+      final result = await _dataSource.changePassword(
         username: username,
         currentPassword: currentPassword,
         newPassword: newPassword,
       );
-
-      final UserModel user = UserModel.fromMap(result);
-
-      return user;
+      return UserModel.fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {

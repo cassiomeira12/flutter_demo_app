@@ -39,6 +39,15 @@ class SecurityController extends LifecycleController {
   }
 
   @override
+  void onClose() {
+    isLoading.close();
+    hasSupportedBiometrics.close();
+    biometric.close();
+    blurProtect.close();
+    super.onClose();
+  }
+
+  @override
   void onAppForeground() {
     super.onAppForeground();
     _asyncUnlockApp();

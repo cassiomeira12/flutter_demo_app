@@ -5,12 +5,14 @@ class LightButton extends StatelessWidget {
   final String text;
   final VoidCallback? onPressed;
   final AppTextStyle? textStyle;
+  final ButtonSize size;
 
   const LightButton({
     super.key,
     required this.text,
     this.onPressed,
     this.textStyle,
+    this.size = ButtonSize.large,
   });
 
   @override
@@ -19,6 +21,7 @@ class LightButton extends StatelessWidget {
     final textColor = theme.textTheme.bodyMedium?.color;
 
     return Container(
+      height: size.height,
       constraints: const BoxConstraints(
         maxWidth: ResponsiveSizeHelper.maxWidth,
       ),
@@ -46,16 +49,21 @@ class LightButton extends StatelessWidget {
             ),
           ),
         ),
-        child: TextWidget(
-          text,
-          style:
-              textStyle ??
-              AppTextStyle.button(
-                context,
-                color: onPressed == null
-                    ? textColor?.withAlpha((255 * .50).toInt())
-                    : textColor,
-              ),
+        child: Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: ResponsiveSizeHelper.width(10),
+          ),
+          child: TextWidget(
+            text,
+            style:
+                textStyle ??
+                AppTextStyle.button(
+                  context,
+                  color: onPressed == null
+                      ? textColor?.withAlpha((255 * .50).toInt())
+                      : textColor,
+                ),
+          ),
         ),
       ),
     );

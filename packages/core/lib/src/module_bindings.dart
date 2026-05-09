@@ -21,9 +21,31 @@ class CoreModuleBindings implements ModuleBinding {
       ),
     );
 
+    await DomainModuleBindings().injectDependencies();
     await InfraModuleBindings().injectDependencies();
     await DataModuleBindings().injectDependencies();
-    await DomainModuleBindings().injectDependencies();
+
+    await AppBinding.find<GetDeviceInfoUseCase>().call().then((deviceInfo) {
+      AppBinding.lazyPut<DeviceInfoEntity>(() => deviceInfo);
+    });
+
+    await AppBinding.find<GetAppInfoUseCase>().call().then((appInfo) {
+      AppBinding.lazyPut<AppInfoEntity>(() => appInfo);
+    });
+
+    await AppBinding.putAsync<ThemeController>(() async {
+      return AppThemeController.init(
+        localStorageUseCase: AppBinding.find(),
+        setThemData: (theme) {
+          Get.changeTheme(theme);
+          Get.forceAppUpdate();
+        },
+        setThemMode: (mode) {
+          Get.changeThemeMode(mode);
+          Get.forceAppUpdate();
+        },
+      );
+    }, permanent: true);
 
     AppBinding.put<AnalyticsLifecycleController>(
       AnalyticsLifecycleController(),
@@ -33,7 +55,7 @@ class CoreModuleBindings implements ModuleBinding {
     AppBinding.put<FeatureFlagLifecycleController>(
       FeatureFlagLifecycleController(
         appInfoEntity: AppBinding.find(),
-        getDeviceInfoUseCase: AppBinding.find(),
+        deviceInfoEntity: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
       ),
       permanent: true,
@@ -49,6 +71,7 @@ class CoreModuleBindings implements ModuleBinding {
       CacheInterceptor(
         cacheStorageUseCase: AppBinding.find(),
         securityEncryptUseCase: AppBinding.find(),
+        securityEnv: AppBinding.find(),
         cacheEndpoints: [
           EndpointsEnum.userData,
           EndpointsEnum.listNotification,
@@ -57,7 +80,7 @@ class CoreModuleBindings implements ModuleBinding {
         ],
       ),
       ParseServerHeadersInterceptor(
-        environment: AppBinding.find(),
+        serverEnv: AppBinding.find(),
       ),
       ParseServerAuthTokenInterceptor(),
       UnauthenticatedInterceptor(
@@ -67,6 +90,7 @@ class CoreModuleBindings implements ModuleBinding {
       ServerOtpInterceptor(
         encryptServerPublicKeyUseCase: AppBinding.find(),
         getOtpCodeUseCase: AppBinding.find(),
+        securityEnv: AppBinding.find(),
       ),
     ];
 

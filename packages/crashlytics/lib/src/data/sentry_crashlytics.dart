@@ -8,14 +8,15 @@ class SentryCrashlytics implements CrashlyticsService {
 
   SentryUser? _user;
 
-  @override
-  Future<void> init() async {
+  Map<String, dynamic> _initialConfig = {};
+
+  Future<void> _initializeSentryWithConfig(Map<String, dynamic> config) async {
     await SentryFlutter.init(
       (options) {
-        options.dsn = apiUrl;
         options.debug = !kReleaseMode;
-        options.sampleRate = 1.0;
-        options.tracesSampleRate = 1.0;
+        options.dsn = config['sentry_dsn'] ?? apiUrl;
+        options.sampleRate = config['sampleRate'] ?? 1.0;
+        options.tracesSampleRate = config['tracesSampleRate'] ?? 1.0;
         options.anrEnabled = true;
         options.sendDefaultPii = true;
         options.attachScreenshot = true;
@@ -25,6 +26,42 @@ class SentryCrashlytics implements CrashlyticsService {
         options.enableTimeToFullDisplayTracing = true;
       },
     );
+  }
+
+  @override
+  Future<void> init() async {
+    _initialConfig = await _getStringConfig();
+    await _initializeSentryWithConfig(_initialConfig);
+  }
+
+  @override
+  Future<void> updateInitSettings() async {
+    final updatedConfig = await _getStringConfig();
+    bool restartSentry = false;
+    for (final entry in _initialConfig.entries) {
+      if (updatedConfig[entry.key] != _initialConfig[entry.key]) {
+        restartSentry = true;
+        break;
+      }
+    }
+    if (restartSentry) {
+      _initialConfig = updatedConfig;
+      await _initializeSentryWithConfig(_initialConfig);
+    }
+  }
+
+  Future<Map<String, dynamic>> _getStringConfig() async {
+    final flag = await FeatureFlagServiceManager.instance
+        .getFlag<Map<String, dynamic>>(RemoteFlagsEnum.sentryConfig);
+    final Map<String, dynamic> config = {
+      'sentry_dsn': apiUrl,
+      'sampleRate': 1.0,
+      'tracesSampleRate': 1.0,
+    };
+    if (flag.value != null) {
+      config.addAll(flag.value!);
+    }
+    return config;
   }
 
   @override
@@ -173,7 +210,8 @@ class SentryCrashlytics implements CrashlyticsService {
   @override
   void simulateCrash() {
     Sentry.captureException(
-      SentryException(value: null, type: null),
+      'Simulate Crash',
+      stackTrace: StackTrace.current,
       message: SentryMessage('Simulate Crash'),
     );
   }

@@ -10,13 +10,8 @@ class IpAddressLocationServiceImpl implements IpAddressLocationService {
   @override
   Future<IpAddressLocationEntity> getIpAddress({String? ip}) async {
     try {
-      final Map<String, dynamic> result = await _dataSource.getIpAddress(
-        ip: ip,
-      );
-
-      final model = IpAddressLocationModel.fromMap(result);
-
-      return model;
+      final result = await _dataSource.getIpAddress(ip: ip);
+      return IpAddressLocationModel.fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {

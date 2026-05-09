@@ -34,6 +34,13 @@
         "name": "download_apple_store"
       },
       "feature_state_value": "false"
+    },
+    {
+      "enabled": true,
+      "feature": {
+        "name": "sentry_config"
+      },
+      "feature_state_value": "{\n      \"sentry_dsn\": \"https://b00af0fad8a92851306fac89dae7d61b@sentry.cms-server.linkpc.net:3008/1\",\n      \"sampleRate\": 1.0,\n      \"tracesSampleRate\": 1.0\n    }"
     }
   ]
 }

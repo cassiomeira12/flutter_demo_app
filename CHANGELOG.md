@@ -1,3 +1,68 @@
+# Master v1.4.0 [09-05-2026]
+
+- fix: find envs
+- refactor: remove delay
+- refactor: add --reapply-cherry-picks on rebase
+- refactor: update translates
+- refactor: add expire time on invalid session dialog
+- fix: app theme icon size
+- fix: other fixes
+- feat: add and update unit tests
+- fix: memory leak
+- feat: add get it dependency
+- feat: add new command
+- fix: unit tests
+- fix: open-worktree function
+- feat: add open-worktree make file function
+- refactor: disable logs when is integrationTest
+- refactor: update files
+- refactor: update admin package
+- refactor: update user_account package
+- feat: add design system example
+- refactor: add secretOTP on security env
+- feat: new packages unit tests
+- feat: update opencode agents and commands
+- refactor: update vscode extensions and launch
+- refactor entity and models
+- refactor: integration tests gherkin steps
+- feat: add models unit tests
+- project documentation
+- init setup opencode
+- update README project and design system buttons
+- refactor onboarding intro module
+- feat: add permissions env
+- feat: add intro integration tests
+- update integration test features
+- fix: integration delete account tests
+- fix: integration tests fixes
+- feat: integration tests
+- refactor: update vscode settings
+- refactor: initialize crashlytics services
+- refactor: update analytics
+- refactor: signup page and widget test
+- refactor: always enable crashlytics module
+- feat: add and update new unit tests
+- refactor: use cases and services
+- feat: setup environments from app
+- feat: add test-file function
+- feat: add upload-firebase make file function
+- update feature flag services
+- refactor: update make file
+- feat: enable user feedback offline-first with repository
+- feat: add feedback module
+- refactor: update make file, fix: webApp footer, add nameValidator
+- refactor: inject deviceInfoEntity on bindings
+- fix: other fixes
+- refactor: update logs
+- remove isolate from encrypt use cases
+- refactor: update unit tests
+- refactor: update make file functions
+- feat: add git worktree functions
+- dart fix
+- fix: add default values for android params
+- refactor: update error page and log catch exceptions
+- feat: add flutter native splash
+
 # Master v1.3.0 [31-03-2026]
 
 - refactor: update crashlytics logs

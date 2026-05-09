@@ -43,13 +43,13 @@ class RefreshTokenInterceptor extends Interceptor {
             return handler.resolve(response);
           } catch (error, stackTrace) {
             Log.error(error, stackTrace);
-            super.onError(err, handler);
+            return super.onError(err, handler);
           }
         }
       }
     }
 
-    super.onError(err, handler);
+    return super.onError(err, handler);
   }
 
   Future<void> _replaceEntityBindings({

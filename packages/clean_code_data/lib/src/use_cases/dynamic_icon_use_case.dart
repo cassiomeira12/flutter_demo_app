@@ -10,6 +10,8 @@ class DynamicIconUseCaseImpl implements DynamicIconUseCase {
     try {
       final isSupported = await FlutterDynamicLauncherIcon.isSupported;
       return Success(isSupported);
+    } on MissingPluginException catch (error, stackTrace) {
+      return Error(BaseException(error: error, stackTrace: stackTrace));
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
       return Error(BaseException(error: error, stackTrace: stackTrace));
@@ -87,12 +89,17 @@ class DynamicIconUseCaseImpl implements DynamicIconUseCase {
 
   @override
   List<DynamicIcon> iconsAvailable() {
-    return _iconsAvailable.split(',').map((icon) {
-      return DynamicIcon(
-        name: icon.trim(),
-        defaultIcon: icon.trim() == _defaultIcon,
-        path: 'assets/png/${icon.trim()}.png',
-      );
-    }).toList();
+    try {
+      return _iconsAvailable.split(',').map((icon) {
+        return DynamicIcon(
+          name: icon.trim(),
+          defaultIcon: icon.trim() == _defaultIcon,
+          path: 'assets/png/${icon.trim()}.png',
+        );
+      }).toList();
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+      return [];
+    }
   }
 }

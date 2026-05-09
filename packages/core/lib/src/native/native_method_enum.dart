@@ -1,5 +1,6 @@
 enum NativeMethodEnum {
-  changeLocale('changeLocale');
+  changeLocale('changeLocale')
+  ;
 
   final String name;
 

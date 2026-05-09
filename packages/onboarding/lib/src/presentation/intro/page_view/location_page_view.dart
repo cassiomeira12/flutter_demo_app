@@ -21,20 +21,55 @@ class _LocationPageViewState extends State<LocationPageView> {
   Widget build(BuildContext context) {
     return ScaffoldWidget(
       controller: null,
-      body: Container(
-        padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextWidget('Localização', style: AppTextStyle.subtitle(context)),
-              const SpacerWidget(height: 2),
-              const TextWidget(
-                'Autorize o App a acompanhar sua localização para uma experiência personalizada.',
-                textAlign: TextAlign.center,
+      body: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Expanded(
+              flex: 9,
+              child: Container(
+                padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
+                color: Theme.of(context).primaryColor,
+                child: Center(
+                  child: Icon(
+                    Icons.location_on,
+                    size: ResponsiveSizeHelper.width(100),
+                    color: Colors.white,
+                  ),
+                ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Container(
+                padding: EdgeInsets.all(ResponsiveSizeHelper.width(20)),
+                child: Column(
+                  children: [
+                    TextWidget(
+                      'title_intro_location'.tr,
+                      style: AppTextStyle.subtitle(
+                        context,
+                        fontSize: TextSize.font_20,
+                      ),
+                    ),
+                    const SpacerWidget(height: 2),
+                    Flexible(
+                      child: TextWidget(
+                        'body_intro_location'.tr,
+                        textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.message(
+                          context,
+                          fontSize: TextSize.font_14,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

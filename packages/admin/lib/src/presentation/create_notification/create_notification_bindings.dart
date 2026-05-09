@@ -2,7 +2,7 @@ import 'package:admin/src/presentation/create_notification/create_notification.d
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
-class PushNotificationsBindings extends Bindings {
+class CreateNotificationBindings extends Bindings {
   @override
   void dependencies() {
     // AppBinding.lazyPut<UsersDataSource>(
@@ -23,8 +23,8 @@ class PushNotificationsBindings extends Bindings {
       TestPushNotificationUseCaseImpl(notificationService: AppBinding.find()),
     );
 
-    AppBinding.put<PushNotificationsController>(
-      PushNotificationsController(
+    AppBinding.put<CreateNotificationController>(
+      CreateNotificationController(
         getAllUsersUseCase: AppBinding.find(),
         createNotificationUseCase: AppBinding.find(),
         testPushNotificationUseCase: AppBinding.find(),

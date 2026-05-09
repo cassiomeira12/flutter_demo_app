@@ -68,7 +68,6 @@ class AnalyticsServiceManager
 
   @override
   Future<void> setUserId(String? userId) async {
-    Log.info('userId: $userId');
     if (_initializedServices.isEmpty) {
       return saveUserId(userId);
     }
@@ -80,10 +79,6 @@ class AnalyticsServiceManager
     required String name,
     required Map<String, dynamic> property,
   }) async {
-    Log.info(
-      'Event: $name \n'
-      'Parameters: $property',
-    );
     if (_initializedServices.isEmpty) {
       return saveUserProperty(name: name, property: property);
     }
@@ -93,15 +88,15 @@ class AnalyticsServiceManager
   }
 
   @override
-  Future<void> logEvent({
-    required String name,
+  Future<void> logEvent(
+    String event, {
     Map<String, dynamic>? parameters,
   }) async {
     if (_initializedServices.isEmpty) {
-      return saveLog(name: name, parameters: parameters);
+      return saveLog(event: event, parameters: parameters);
     }
     await _runServiceFunction((service) {
-      return service.logEvent(name: name, parameters: parameters);
+      return service.logEvent(event, parameters: parameters);
     });
   }
 }

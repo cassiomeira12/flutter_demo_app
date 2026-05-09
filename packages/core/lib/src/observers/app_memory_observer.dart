@@ -8,7 +8,9 @@ class AppMemoryObserver extends NavigatorObserver {
     final double memoryUsed = ProcessInfo.currentRss / 1024 / 1024;
     final String message =
         'Current memory usage: ${memoryUsed.toStringAsFixed(2)}MB / ${maxMemory.toStringAsFixed(2)}MB';
-    Log.info(message);
+    if (!Log.isIntegrationTest) {
+      Log.info(message);
+    }
   }
 
   @override

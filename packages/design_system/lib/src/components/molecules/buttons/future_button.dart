@@ -31,11 +31,11 @@ class _FutureButtonState extends State<FutureButton> {
   TextSize get fontSize {
     switch (widget.size) {
       case ButtonSize.large:
-        return TextSize.font_12;
+        return TextSize.font_14;
       case ButtonSize.medium:
-        return TextSize.font_10;
+        return TextSize.font_12;
       case ButtonSize.small:
-        return TextSize.font_8;
+        return TextSize.font_10;
     }
   }
 
@@ -62,13 +62,14 @@ class _FutureButtonState extends State<FutureButton> {
         onPressed: widget.onPressed != null
             ? () async {
                 if (widget.onValidation != null) {
+                  HapticFeedback.lightImpact();
                   final bool validated = await widget.onValidation!.call();
                   if (!validated || !mounted) return;
                 }
                 if (!loading) {
                   setState(() => loading = true);
                   try {
-                    HapticFeedback.mediumImpact();
+                    HapticFeedback.lightImpact();
                     await widget.onPressed?.call();
                   } finally {
                     if (mounted) {
@@ -117,16 +118,21 @@ class _FutureButtonState extends State<FutureButton> {
               )
             else
               Flexible(
-                child: TextWidget(
-                  widget.text,
-                  maxLines: 2,
-                  overflow: TextOverflow.fade,
-                  style: AppTextStyle.button(
-                    context,
-                    fontSize: fontSize,
-                    color: widget.onPressed == null
-                        ? textColor?.withAlpha((255 * .50).toInt())
-                        : textColor,
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: ResponsiveSizeHelper.width(10),
+                  ),
+                  child: TextWidget(
+                    widget.text,
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                    style: AppTextStyle.button(
+                      context,
+                      fontSize: fontSize,
+                      color: widget.onPressed == null
+                          ? textColor?.withAlpha((255 * .50).toInt())
+                          : textColor,
+                    ),
                   ),
                 ),
               ),
