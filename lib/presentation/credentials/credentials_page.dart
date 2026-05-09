@@ -27,7 +27,7 @@ class CredentialsPage extends AppView<CredentialsController> {
                 items: controller.credentials.value,
                 filter: (item) => item.value.name,
                 emptyMessage: 'search_credentials_not_found'.tr,
-                builder: (context, valueListenable) {
+                builder: (context, valueListenable, onCloseCallback) {
                   return ValueListenableBuilder<CredentialEntity>(
                     valueListenable: valueListenable,
                     builder: (context, credential, child) {
@@ -36,9 +36,10 @@ class CredentialsPage extends AppView<CredentialsController> {
                         onError: (url, error) {
                           controller.errorFavIcon(credential);
                         },
-                        onTap: () {
-                          controller.openCredential(credential);
+                        onTap: () async {
                           HapticFeedback.lightImpact();
+                          await controller.openCredential(credential);
+                          onCloseCallback.call();
                         },
                       );
                     },
@@ -81,65 +82,12 @@ class CredentialsPage extends AppView<CredentialsController> {
               controller.errorFavIcon(item);
             },
             onTap: () {
-              controller.openCredential(item);
               HapticFeedback.lightImpact();
+              controller.openCredential(item);
             },
           );
         },
       ),
-      // body: Obx(() {
-      //   if (controller.isLoading.value) {
-      //     return const Center(child: ProgressBarWidget());
-      //   }
-      //   return ValueListenableBuilder<List<ValueNotifier<CredentialEntity>>>(
-      //     valueListenable: controller.credentials,
-      //     builder: (context, list, child) {
-      //       return ListView.builder(
-      //         itemCount: list.length,
-      //         itemBuilder: (context, index) {
-      //           return ValueListenableBuilder<CredentialEntity>(
-      //             valueListenable: list.elementAt(index),
-      //             builder: (context, credential, child) {
-      //               return CredentialWidget(
-      //                 key: ValueKey('credential_item_index_${index}_key'),
-      //                 credential: credential,
-      //                 onTap: () {
-      //                   controller.openCredential(credential);
-      //                   HapticFeedback.lightImpact();
-      //                 },
-      //               );
-      //             },
-      //           );
-      //         },
-      //       );
-      //     },
-      //   );
-      // }),
-      /*body: ScrollStateWidget<CredentialEntity>(
-        list: controller.credentials,
-        errorMessage: controller.errorMessage,
-        isLoading: controller.isLoading,
-        onRefresh: controller.getAllCredentials,
-        emptyMessage: 'empty_credentials_list'.tr,
-        fromMapBuilder: (map) {
-          return CredentialModel.fromMap(map).copyWith();
-        },
-        skeletonSizeItems: 10,
-        toMapBuilder: (item) => item.toMap(),
-        scrollController: (scrollController) {
-          controller.scrollController = scrollController;
-        },
-        builder: (context, index, item) {
-          return CredentialWidget(
-            key: ValueKey('credential_item_index_${index}_key'),
-            credential: item,
-            onTap: () {
-              controller.openCredential(item);
-              HapticFeedback.lightImpact();
-            },
-          );
-        },
-      ),*/
       floatingActionButton: FloatingButtonWidget(
         key: const Key('add_new_credential_button_key'),
         icon: const FlutterIcon(Icons.add, color: AppColors.white),

@@ -6,6 +6,8 @@ class AppEnUsTranslation extends EnUsTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app':
+            'A secure and intuitive password manager to store, organize, and protect your credentials in one place. Save your passwords, access your data quickly, and keep your accounts protected with advanced encryption.',
         'credentials': 'My passwords',
         'empty_credentials_list': '''You don't have credentials yet''',
         'credential': 'Password',

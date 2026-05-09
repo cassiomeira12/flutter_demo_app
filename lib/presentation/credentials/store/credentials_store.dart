@@ -2,12 +2,19 @@ import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class CredentialsStore {
-  Rxn<CredentialEntity> credential = Rxn();
-  RxList<CredentialEntity> credentials = RxList.empty();
+  final CredentialRepository _repository;
 
-  int? get selectedIndex {
-    return credentials.indexWhere((item) {
-      return credential.value?.name == item.name;
+  CredentialsStore({
+    required CredentialRepository credentialRepository,
+  }) : _repository = credentialRepository;
+
+  Rxn<CredentialEntity> credential = Rxn();
+
+  List<ValueNotifier> get credentials => _repository.valueListenable.value;
+
+  int indexOf(String objectId) {
+    return _repository.valueListenable.value.indexWhere((item) {
+      return credential.value?.objectId == item.value.objectId;
     });
   }
 }
