@@ -1,16 +1,30 @@
 import 'package:core/core.dart';
+import 'package:flutter_demo_app/presentation/presentation.dart';
 
 class WorkPointOnClickedNotificationCallback
-    implements OnClickedNotificationCallback {
+    extends OnClickedNotificationCallbackBase {
   @override
   Future<void> onClicked(Map<String, dynamic> map) async {
-    Log.success('$runtimeType \n $map');
-
     final String? action = map['data']['action'];
 
-    switch (action) {
-      case 'test_push_notification':
-      case null:
+    if (action == 'register-work-point') {
+      int tentativas = 10;
+      while (!AppNavigator.currentRoute.contains(AppRouter.checkPoint.name)) {
+        if (tentativas < 0) {
+          return;
+        }
+        await Future.delayed(const Duration(seconds: 1));
+        tentativas--;
+      }
+      try {
+        await Future.delayed(const Duration(seconds: 1));
+        await AppBinding.find<CheckPointController>().registerPoint();
+      } catch (error, stackTrace) {
+        Log.error(error.toString(), error: error, stackTrace: stackTrace);
+      }
+      return;
     }
+
+    return super.onClicked(map);
   }
 }
