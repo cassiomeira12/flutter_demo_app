@@ -7,6 +7,7 @@ import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
 import 'package:firebase_initialize/firebase_initialize.dart';
+import 'package:flutter_demo_app/core/core.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -25,6 +26,10 @@ class AppBindings extends Bindings {
   @override
   Future<void> dependencies() async {
     await CoreModuleBindings().injectDependencies();
+
+    await AppBinding.replace<OnClickedNotificationCallback>(
+      WorkPointOnClickedNotificationCallback(),
+    );
 
     await FirebaseInitializeModuleBindings().injectDependencies();
 
