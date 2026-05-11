@@ -30,6 +30,9 @@ void main() {
         locale: 'en',
         sessionToken: 'fallback_token',
         pushTopics: [],
+        phoneNumber: '+5577999999999',
+        phoneVerified: true,
+        sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
       ),
     );
   });
@@ -55,6 +58,9 @@ void main() {
       locale: 'en',
       sessionToken: 'test_token',
       pushTopics: [],
+      phoneNumber: '+5577999999999',
+      phoneVerified: true,
+      sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
     );
 
     controller = UsersController(
@@ -82,6 +88,12 @@ void main() {
               locale: 'en',
               sessionToken: 'token_1',
               pushTopics: [],
+              phoneNumber: '+5577999999999',
+              phoneVerified: true,
+              sosConfig: SosConfigEntity(
+                onlyPolice: false,
+                onlySafetyContacts: true,
+              ),
             ),
             UserEntity(
               id: 'user_2',
@@ -95,6 +107,12 @@ void main() {
               locale: 'en',
               sessionToken: 'token_2',
               pushTopics: [],
+              phoneNumber: '+5577999999999',
+              phoneVerified: true,
+              sosConfig: SosConfigEntity(
+                onlyPolice: false,
+                onlySafetyContacts: true,
+              ),
             ),
           ];
 
@@ -215,6 +233,12 @@ void main() {
           locale: 'en',
           sessionToken: 'another_token',
           pushTopics: [],
+          phoneNumber: '+5577999999999',
+          phoneVerified: true,
+          sosConfig: SosConfigEntity(
+            onlyPolice: false,
+            onlySafetyContacts: true,
+          ),
         );
 
         // act

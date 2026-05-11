@@ -21,8 +21,8 @@ class WhatsAppServiceImpl implements WhatsAppService {
       );
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }

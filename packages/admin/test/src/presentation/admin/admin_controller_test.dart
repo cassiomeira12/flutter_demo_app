@@ -36,6 +36,9 @@ void main() {
       locale: 'en',
       sessionToken: 'test_token',
       pushTopics: [],
+      phoneNumber: '+5577999999999',
+      phoneVerified: true,
+      sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
     );
 
     AppBinding.put<UserEntity>(userEntity);

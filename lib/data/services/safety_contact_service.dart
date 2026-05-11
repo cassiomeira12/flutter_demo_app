@@ -29,8 +29,8 @@ class SafetyContactServiceImpl implements SafetyContactService {
       return safetyContact;
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }
@@ -47,8 +47,8 @@ class SafetyContactServiceImpl implements SafetyContactService {
       return safetyContacts;
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }

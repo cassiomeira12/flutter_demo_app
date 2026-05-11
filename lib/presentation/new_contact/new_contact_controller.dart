@@ -54,10 +54,10 @@ class NewContactController extends BaseController {
   Future<LocalContactEntity> getLocalContact() async {
     clickTagging(component: 'search_contacts_list_key');
 
-    PermissionStatus? hasContactsPermission = await _checkPermissionUseCase
+    final PermissionStatus hasContactsPermission = await _checkPermissionUseCase
         .call(Permission.contacts);
 
-    if (!hasContactsPermission.isGranted) {
+    if (hasContactsPermission == PermissionStatus.granted) {
       // hasContactsPermission = await AppNavigator.to(
       //   () => const PermissionRequestWidget(
       //     permission: Permission.contacts,

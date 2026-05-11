@@ -6,6 +6,8 @@ class AppPtBrTranslation extends PtBrTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app':
+            'Uma ferramenta para ajudar no combate à violência contra a mulher.',
       },
     };
   }

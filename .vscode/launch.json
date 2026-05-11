@@ -12,8 +12,8 @@
       "id": "env",
       "type": "pickString",
       "description": "Escolha o Environment a ser executado",
-      "default": ".env.sos.stg",
-      "options": [".env.sos.dev", ".env.sos.stg", ".env.sos.prod"]
+      "default": "env.sos.stg",
+      "options": ["env.sos.dev", "env.sos.stg", "env.sos.prod"]
     }
   ],
   "configurations": [

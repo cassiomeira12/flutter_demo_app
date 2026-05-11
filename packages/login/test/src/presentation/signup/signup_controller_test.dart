@@ -36,6 +36,9 @@ void main() {
     locale: 'en-US',
     sessionToken: 'token123',
     pushTopics: [],
+    phoneNumber: '+5577999999999',
+    phoneVerified: true,
+    sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
   );
 
   final testInstallation = InstallationEntity(

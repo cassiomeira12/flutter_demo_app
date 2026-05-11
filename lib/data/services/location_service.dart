@@ -18,8 +18,8 @@ class LocationServiceImpl implements LocationService {
           date: DateTime.now(),
         );
       });
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       rethrow;
     }
   }
@@ -37,8 +37,8 @@ class LocationServiceImpl implements LocationService {
           date: DateTime.now(),
         );
       });
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       rethrow;
     }
   }

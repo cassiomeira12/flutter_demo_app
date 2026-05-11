@@ -6,6 +6,7 @@ class AppEnUsTranslation extends EnUsTranslation {
     return {
       localeName: {
         ...super.keys[localeName]!,
+        'body_intro_app': 'A tool to help combat violence against women.',
       },
     };
   }

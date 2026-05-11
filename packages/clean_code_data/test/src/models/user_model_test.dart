@@ -18,6 +18,9 @@ void main() {
         locale: 'en_US',
         sessionToken: 'token-123',
         pushTopics: ['news', 'updates'],
+        phoneNumber: '+5577999999999',
+        phoneVerified: true,
+        sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
       );
 
       expect(model.id, 'user-123');

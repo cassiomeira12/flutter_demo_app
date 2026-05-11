@@ -81,6 +81,7 @@ class UserEntity extends ParserToJson {
     return SosChoiceEnum.SAFETY_CONTACTS_ONLY;
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'objectId': id,

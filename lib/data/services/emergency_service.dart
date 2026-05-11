@@ -15,8 +15,8 @@ class EmergencyServiceImpl implements EmergencyService {
       return await _dataSource.isAvailable();
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }
@@ -37,8 +37,8 @@ class EmergencyServiceImpl implements EmergencyService {
       );
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }
@@ -55,8 +55,8 @@ class EmergencyServiceImpl implements EmergencyService {
       return occurrencies;
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }
@@ -77,8 +77,8 @@ class EmergencyServiceImpl implements EmergencyService {
       return user;
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
-    } catch (error, stacktrace) {
-      Log.error(error.toString(), error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       throw BaseException();
     }
   }

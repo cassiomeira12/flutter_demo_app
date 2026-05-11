@@ -73,10 +73,10 @@ class EmergencyController extends BaseController {
       rethrow;
     }
 
-    PermissionStatus? hasLocationPermission = await _checkPermissionUseCase
+    final PermissionStatus hasLocationPermission = await _checkPermissionUseCase
         .call(Permission.location);
 
-    if (!hasLocationPermission.isGranted) {
+    if (hasLocationPermission == PermissionStatus.granted) {
       // hasLocationPermission = await AppNavigator.to(
       //   () => const PermissionRequestWidget(
       //     permission: Permission.location,
@@ -132,7 +132,7 @@ class EmergencyController extends BaseController {
       _cancelSendingSOS = true;
       _resetStatusMessage();
       animationController.value?.stop();
-      return _sendingSOS && true;
+      return _sendingSOS;
     }
     return false;
   }

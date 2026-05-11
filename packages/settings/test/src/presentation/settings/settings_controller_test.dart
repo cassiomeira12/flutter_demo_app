@@ -69,6 +69,9 @@ void main() {
       locale: 'en',
       sessionToken: 'session-token-123',
       pushTopics: [],
+      phoneNumber: '+5577999999999',
+      phoneVerified: true,
+      sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
     );
 
     when(() => mockThemeController.currentThemeData).thenReturn('light');

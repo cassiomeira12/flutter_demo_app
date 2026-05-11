@@ -105,7 +105,7 @@ class PhoneNumberPage extends AppView<PhoneNumberController> {
                           FocusManager.instance.primaryFocus?.unfocus();
 
                           try {
-                            if (controller.typeCode.value == false) {
+                            if (!controller.typeCode.value) {
                               await controller.sendWhatsAppCode(
                                 phoneNumber: controller.phoneNumber,
                               );

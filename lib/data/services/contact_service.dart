@@ -21,8 +21,8 @@ class ContactServiceImpl implements ContactService {
       );
     } on BaseException {
       rethrow;
-    } catch (error, stacktrace) {
-      Log.error('Unexpected Exception', error: error, stackTrace: stacktrace);
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
       rethrow;
     }
   }

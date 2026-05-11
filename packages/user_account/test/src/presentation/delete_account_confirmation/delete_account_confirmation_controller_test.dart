@@ -39,6 +39,9 @@ void main() {
       locale: 'en',
       sessionToken: 'test-token',
       pushTopics: <String>[],
+      phoneNumber: '+5577999999999',
+      phoneVerified: true,
+      sosConfig: SosConfigEntity(onlyPolice: false, onlySafetyContacts: true),
     );
     AppBinding.put<UserEntity>(mockUser);
     AppBinding.testMode(true);
