@@ -22,7 +22,7 @@ class OccurrenceModel extends OccurrenceEntity {
     } catch (error, stacktrace) {
       throw BaseException(
         error: error,
-        stacktrace: stacktrace,
+        stackTrace: stacktrace,
         complement: 'Json Data: $map',
       );
     }

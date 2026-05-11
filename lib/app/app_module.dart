@@ -58,7 +58,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.emergency.name,
         bottomItem: NavigatorBottom(
-          title: 'emergency'.tr,
+          title: 'emergency',
           selectedIcon: const FlutterIcon(
             Icons.home,
             size: IconSize.medium,
@@ -68,7 +68,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.contacts.name,
         bottomItem: NavigatorBottom(
-          title: 'contacts'.tr,
+          title: 'contacts',
           selectedIcon: const FlutterIcon(
             Icons.contact_phone_rounded,
             size: IconSize.medium,

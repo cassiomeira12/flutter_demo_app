@@ -174,8 +174,8 @@ flutter_native_splash:
 # dart run package_rename
 package_rename_config:
   macos:
-    copyright_notice: Copyright ©️ 2026 Flutter Demo App. All rights reserved.
+    copyright_notice: Copyright ©️ 2026 SOS. All rights reserved.
   web:
-    app_name: Flutter Demo App
-    short_app_name: Flutter Demo App
-    description: A new Flutter project.
+    app_name: SOS Vida
+    short_app_name: SOS Vida
+    description: Uma ferramenta para ajudar no combate à violência contra a mulher

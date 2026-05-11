@@ -1,11 +1,11 @@
 {
-  "name": "Flutter Demo App",
-  "short_name": "Flutter Demo App",
+  "name": "SOS Vida",
+  "short_name": "SOS Vida",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#ffffff",
-  "description": "A new Flutter project.",
+  "background_color": "#97231A",
+  "theme_color": "#97231A",
+  "description": "Uma ferramenta para ajudar no combate à violência contra a mulher",
   "orientation": "portrait-primary",
   "prefer_related_applications": false,
   "icons": [

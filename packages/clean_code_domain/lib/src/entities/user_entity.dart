@@ -12,11 +12,11 @@ class UserEntity extends ParserToJson {
   final String? locale;
   final String? sessionToken;
   final List<String> pushTopics;
-
-  String get firstName => name.split(' ').first;
   final String phoneNumber;
   final bool? phoneVerified;
   final SosConfigEntity sosConfig;
+
+  String get firstName => name.split(' ').first;
 
   UserEntity({
     required this.id,

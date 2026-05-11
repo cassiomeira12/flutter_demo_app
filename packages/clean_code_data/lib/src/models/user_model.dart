@@ -48,9 +48,9 @@ class UserModel extends UserEntity {
         locale: map['locale'],
         sessionToken: map['sessionToken'] ?? map['token'],
         pushTopics: List.from(map['pushTopics'] ?? []),
-        phoneNumber: map['phoneNumber'] as String,
+        phoneNumber: map['phoneNumber'] ?? '',
         phoneVerified: map['phoneVerified'] as bool?,
-        sosConfig: SosConfigModel.fromMap(map['sosConfig']),
+        sosConfig: SosConfigModel.fromMap(map['sosConfig'] ?? {}),
       );
     } catch (error, stacktrace) {
       throw BaseException(
