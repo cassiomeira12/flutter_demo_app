@@ -1,4 +1,5 @@
-import 'package:clean_code_infra/src/http/http.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/infra/infra.dart';
@@ -7,16 +8,10 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  setUpAll(() {
-    const String serverUrl = String.fromEnvironment('server_url');
+  setUpAll(() async {
+    await InfraModuleBindings().injectDependencies();
 
-    AppBinding.put<HttpClient>(
-      HttpClientImpl(
-        baseUrl: serverUrl,
-      ),
-    );
-
-    AppBinding.put<LoginDataSource>(
+    await AppBinding.replace<LoginDataSource>(
       WorkPointLoginDataSource(
         http: AppBinding.find(),
       ),
@@ -24,8 +19,7 @@ void main() {
   });
 
   tearDownAll(() {
-    AppBinding.delete<LoginDataSource>();
-    AppBinding.delete<HttpClient>();
+    AppBinding.deleteAll();
   });
 
   test('should login success', () async {

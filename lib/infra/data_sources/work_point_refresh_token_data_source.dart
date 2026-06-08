@@ -1,14 +1,12 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
 
 class WorkPointRefreshTokenDataSource implements RefreshTokenDataSource {
   final LoginDataSource _loginDataSource;
 
-  WorkPointRefreshTokenDataSource({
-    required LoginDataSource loginDataSource,
-  }) : _loginDataSource = loginDataSource;
+  WorkPointRefreshTokenDataSource({required this._loginDataSource});
 
   @override
-  Future<Map<String, dynamic>> refresh() async {
-    return await _loginDataSource.login(username: '', password: '');
+  Future<Map<String, dynamic>> refresh() {
+    return _loginDataSource.login(username: '', password: '');
   }
 }

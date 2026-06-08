@@ -1,12 +1,15 @@
 import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
 import 'package:app_purchase/app_purchase.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
 import 'package:flutter_demo_app/data/data.dart';
+import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
@@ -33,23 +36,25 @@ class AppBindings extends Bindings {
       await FeatureFlagModuleBindings().injectDependencies();
     }
 
-    AppBinding.replace<LoginDataSource>(
+    await AppBinding.replace<LoginDataSource>(
       WorkPointLoginDataSource(http: AppBinding.find()),
     );
-    AppBinding.replace<RefreshTokenDataSource>(
+    await AppBinding.replace<RefreshTokenDataSource>(
       WorkPointRefreshTokenDataSource(loginDataSource: AppBinding.find()),
     );
-    AppBinding.replace<LogoutDataSource>(WorkPointLogoutDataSource());
-    AppBinding.replace<UpdateUserDataUseCase>(WorkPointUpdateUserDataUseCase());
-    AppBinding.replace<ListUserInstallationsUseCase>(
+    await AppBinding.replace<LogoutDataSource>(WorkPointLogoutDataSource());
+    await AppBinding.replace<UpdateUserDataUseCase>(
+      WorkPointUpdateUserDataUseCase(),
+    );
+    await AppBinding.replace<ListUserInstallationsUseCase>(
       WorkPointListUserInstallationUseCase(),
     );
-    AppBinding.replace<UploadInstallationAppUseCase>(
+    await AppBinding.replace<UploadInstallationAppUseCase>(
       WorkPointUploadInstallationUseCase(
-        service: AppBinding.find(),
+        appInstallationService: AppBinding.find(),
       ),
     );
-    AppBinding.replace<UserService>(WorkPointUserService());
+    await AppBinding.replace<UserService>(WorkPointUserService());
 
     final List<Interceptor> httpInterceptors = [
       WorkPointAuthTokenInterceptor(),
