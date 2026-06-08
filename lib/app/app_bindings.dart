@@ -9,6 +9,7 @@ import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
 import 'package:flutter_demo_app/data/data.dart';
+import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:flutter_demo_app/infra/infra.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';

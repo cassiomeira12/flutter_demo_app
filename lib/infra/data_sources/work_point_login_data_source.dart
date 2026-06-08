@@ -1,9 +1,9 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
 
 class WorkPointLoginDataSource implements LoginDataSource {
   final HttpClient _http;
 
-  WorkPointLoginDataSource({required HttpClient http}) : _http = http;
+  WorkPointLoginDataSource({required this._http});
 
   @override
   Future<Map<String, dynamic>> login({

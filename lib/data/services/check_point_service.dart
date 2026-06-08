@@ -3,11 +3,9 @@ import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class CheckPointServiceImpl implements CheckPointService {
-  final CheckPointDataSource _dataSource;
+  final CheckPointDataSource _checkPointDataSource;
 
-  CheckPointServiceImpl({
-    required CheckPointDataSource checkPointDataSource,
-  }) : _dataSource = checkPointDataSource;
+  CheckPointServiceImpl({required this._checkPointDataSource});
 
   @override
   Future<List<CheckDayPointEntity>> currentPoints({
@@ -15,10 +13,11 @@ class CheckPointServiceImpl implements CheckPointService {
     required int year,
   }) async {
     try {
-      final List<Map<String, dynamic>> result = await _dataSource.currentPoints(
-        month: month,
-        year: year,
-      );
+      final List<Map<String, dynamic>> result = await _checkPointDataSource
+          .currentPoints(
+            month: month,
+            year: year,
+          );
 
       final List<CheckDayPointModel> checkPoints = result.map((json) {
         return CheckDayPointModel.fromMap(json);
@@ -39,7 +38,7 @@ class CheckPointServiceImpl implements CheckPointService {
   @override
   Future<void> registerPoint() async {
     try {
-      return await _dataSource.registerPoint();
+      return await _checkPointDataSource.registerPoint();
     } on HttpException catch (error) {
       throw ExceptionHelper.call(error);
     } on BaseException catch (error) {
@@ -57,7 +56,7 @@ class CheckPointServiceImpl implements CheckPointService {
     required int year,
   }) async {
     try {
-      return await _dataSource.totalHours(
+      return await _checkPointDataSource.totalHours(
         month: month,
         year: year,
       );

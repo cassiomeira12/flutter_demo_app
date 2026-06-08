@@ -5,15 +5,13 @@ import 'package:flutter_demo_app/domain/domain.dart';
 class CheckPointController extends BaseController {
   final GetCurrentPointsUseCase _getCurrentPointsUseCase;
   final RegisterPointUseCase _registerPointUseCase;
-  final GetTotalHoursAppUseCase _getTotalHoursAppUseCase;
+  final GetTotalHoursAppUseCase _getTotalHoursUseCase;
 
   CheckPointController({
-    required GetCurrentPointsUseCase getCurrentPointsUseCase,
-    required RegisterPointUseCase registerPointUseCase,
-    required GetTotalHoursAppUseCase getTotalHoursUseCase,
-  }) : _getCurrentPointsUseCase = getCurrentPointsUseCase,
-       _registerPointUseCase = registerPointUseCase,
-       _getTotalHoursAppUseCase = getTotalHoursUseCase;
+    required this._getCurrentPointsUseCase,
+    required this._registerPointUseCase,
+    required this._getTotalHoursUseCase,
+  });
 
   RxList<CheckDayPointEntity> checkPoints = RxList.empty();
   RxBool isLoading = RxBool(true);
@@ -52,7 +50,7 @@ class CheckPointController extends BaseController {
 
       final List<dynamic> results = await Future.wait([
         _getCurrentPointsUseCase.call(month: month, year: year),
-        _getTotalHoursAppUseCase.call(month: month, year: year),
+        _getTotalHoursUseCase.call(month: month, year: year),
       ], eagerError: true);
 
       checkPoints.value = results.first as List<CheckDayPointEntity>;

@@ -1,3 +1,10 @@
+# Work-point-uol v1.7.1 [08-06-2026]
+
+- refactor: move use cases from data to domain layer
+- refactor: migrate usecase from data to domain
+- fix: login data source unit test
+- fix: add await on replace bindings
+
 # Work Point UOL v1.7.0 [08-05-2026]
 
 - refactor: update controller
