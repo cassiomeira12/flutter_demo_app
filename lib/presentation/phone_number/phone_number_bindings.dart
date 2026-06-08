@@ -12,7 +12,9 @@ class PhoneNumberBindings extends Bindings {
       WhatsAppDataSourceImpl(http: AppBinding.find()),
     );
     AppBinding.put<WhatsAppService>(
-      WhatsAppServiceImpl(dataSource: AppBinding.find()),
+      WhatsAppServiceImpl(
+        whatsAppDataSource: AppBinding.find(),
+      ),
     );
     AppBinding.put<SendWhatsAppCodeUseCase>(
       SendWhatsAppCodeUseCaseImpl(

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class SafetyContactWidget extends StatefulWidget {
@@ -35,7 +36,7 @@ class _SafetyContactWidgetState extends State<SafetyContactWidget> {
           width: ResponsiveSizeHelper.width(40),
           height: ResponsiveSizeHelper.width(40),
           child: const FlutterIcon(
-            BoxIcons.bx_user,
+            Icons.person,
             size: IconSize.medium,
           ),
         ),
@@ -71,7 +72,7 @@ class _SafetyContactWidgetState extends State<SafetyContactWidget> {
                     'remove_safety_contact_${widget.safetyContactEntity.phoneNumber}_key',
                   ),
                   icon: const FlutterIcon(
-                    BoxIcons.bx_trash,
+                    Icons.delete,
                     color: AppColors.statusWarning,
                   ),
                   onPressed: () async {

@@ -7,12 +7,9 @@
 commit_msg_file="$1"
 commit_msg=$(head -1 "$commit_msg_file")
 
-# Allow merge commits, fixup/squash commits, and release commits
+# Allow merge commits and fixup/squash commits
 case "$commit_msg" in
   Merge\ *|fixup\ *|fixup!*|squash\ *|squash!*|amend\ *|amend!*)
-    exit 0
-    ;;
-  release:*)
     exit 0
     ;;
 esac

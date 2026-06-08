@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
@@ -8,12 +9,10 @@ class NewContactController extends BaseController {
   final GetLocalContactUseCase _getLocalContactUseCase;
 
   NewContactController({
-    required CreateSafetyContactUseCase createSafetyContactUseCase,
-    required CheckPermissionUseCase checkPermissionUseCase,
-    required GetLocalContactUseCase getLocalContactUseCase,
-  }) : _createSafetyContactUseCase = createSafetyContactUseCase,
-       _checkPermissionUseCase = checkPermissionUseCase,
-       _getLocalContactUseCase = getLocalContactUseCase;
+    required this._createSafetyContactUseCase,
+    required this._checkPermissionUseCase,
+    required this._getLocalContactUseCase,
+  });
 
   final nameTextController = TextEditingController();
   final intialPhoneNumber = RxString('');

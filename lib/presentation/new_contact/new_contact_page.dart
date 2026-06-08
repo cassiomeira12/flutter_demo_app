@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/presentation/new_contact/new_contact_controller.dart';
 
 class NewContactPage extends AppView<NewContactController> {

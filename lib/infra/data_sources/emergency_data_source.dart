@@ -1,12 +1,11 @@
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:core/core.dart';
 import 'package:flutter_demo_app/data/data.dart';
 
 class EmergencyDataSourceImpl implements EmergencyDataSource {
   final HttpClient _http;
 
-  EmergencyDataSourceImpl({
-    required HttpClient http,
-  }) : _http = http;
+  EmergencyDataSourceImpl({required this._http});
 
   @override
   Future<bool> isAvailable() async {

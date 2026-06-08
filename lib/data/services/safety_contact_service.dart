@@ -3,11 +3,9 @@ import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class SafetyContactServiceImpl implements SafetyContactService {
-  final SafetyContactDataSource _dataSource;
+  final SafetyContactDataSource _safetyContactDataSource;
 
-  SafetyContactServiceImpl({
-    required SafetyContactDataSource dataSource,
-  }) : _dataSource = dataSource;
+  SafetyContactServiceImpl({required this._safetyContactDataSource});
 
   @override
   Future<SafetyContactModel> create({
@@ -16,7 +14,7 @@ class SafetyContactServiceImpl implements SafetyContactService {
     required bool sendMessage,
   }) async {
     try {
-      final Map<String, dynamic> result = await _dataSource.create(
+      final Map<String, dynamic> result = await _safetyContactDataSource.create(
         name: name,
         phoneNumber: phoneNumber,
         sendMessage: sendMessage,
@@ -38,7 +36,8 @@ class SafetyContactServiceImpl implements SafetyContactService {
   @override
   Future<List<SafetyContactModel>> list(int page) async {
     try {
-      final List<Map<String, dynamic>> result = await _dataSource.list(page);
+      final List<Map<String, dynamic>> result = await _safetyContactDataSource
+          .list(page);
 
       final List<SafetyContactModel> safetyContacts = result.map((item) {
         return SafetyContactModel.fromMap(item);
@@ -55,6 +54,6 @@ class SafetyContactServiceImpl implements SafetyContactService {
 
   @override
   Future<bool> delete(String objectId) {
-    return _dataSource.delete(objectId);
+    return _safetyContactDataSource.delete(objectId);
   }
 }

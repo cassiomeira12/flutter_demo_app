@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:flutter_demo_app/presentation/emergency_history/emergency_history.dart';
 

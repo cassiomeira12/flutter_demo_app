@@ -15,7 +15,7 @@ class EmergencyBindings extends Bindings {
     );
     AppBinding.put<EmergencyService>(
       EmergencyServiceImpl(
-        dataSource: AppBinding.find(),
+        emergencyDataSource: AppBinding.find(),
       ),
     );
     AppBinding.put<CheckWhatsAppServerUseCase>(

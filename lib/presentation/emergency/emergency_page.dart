@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/presentation/emergency/emergency.dart';
 import 'package:flutter_demo_app/presentation/emergency/widgets/ripple/ripple_animation.dart';
 import 'package:flutter_demo_app/presentation/emergency/widgets/server_status_widget.dart';

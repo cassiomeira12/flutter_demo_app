@@ -298,33 +298,22 @@ merge:
 .PHONY: recreate-branch
 recreate-branch:
 	@echo ""; \
-	envsBranch=$$(git branch -r | sed 's/origin\///'); \
-	i=1; for option in $${envsBranch}; do \
-		echo "$$i) $$option"; \
-		i=$$((i + 1)); \
-	done; \
-	echo ""; \
 	read -p "Enter the branch to recreate: " branch_selected; \
 	echo ""; \
 	if [ -z "$$branch_selected" ]; then \
 		echo "Error: No branch was selected."; \
 		exit 1; \
 	fi; \
-	CHOICE_SELECTED=$$(echo $${envsBranch} | cut -d ' ' -f $$branch_selected); \
 	currentBranch=$$(git rev-parse --abbrev-ref HEAD); \
-	if [ "$$CHOICE_SELECTED" = "$$currentBranch" ]; then \
-		echo "Error: Cannot recreate the current branch. Switch branches first."; \
-		exit 1; \
-	fi; \
-	echo "Deleting branch $$CHOICE_SELECTED"; \
-	git push origin --delete $$CHOICE_SELECTED || true; \
-	git branch $$CHOICE_SELECTED -D || true; \
+	echo "Deleting branch $$branch_selected"; \
+	git push origin --delete $$branch_selected || true; \
+	git branch $$branch_selected -D || true; \
 	echo ""; \
-	echo "Recreate branch $$CHOICE_SELECTED"; \
+	echo "Recreate branch $$branch_selected"; \
 	git checkout $(CURRENT_GIT_BRANCH) 2>/dev/null || git checkout $$currentBranch; \
-	git branch $$CHOICE_SELECTED; \
-	git checkout $$CHOICE_SELECTED; \
-	git push --set-upstream origin $$CHOICE_SELECTED; \
+	git branch $$branch_selected; \
+	git checkout $$branch_selected; \
+	git push --set-upstream origin $$branch_selected; \
 	git checkout $$currentBranch;
 
 .PHONY: tag
@@ -991,7 +980,7 @@ release-version:
 	new_version="$$major.$$minor.$$patch"; \
 	new_version_dev="$${new_version}-dev"; \
 	echo ""; \
-	echo "  New version     : $$new_version"; \
+	echo "  New version     : $$new_version_dev"; \
 	\
 	sed -i '' -E "s/^(version: ).*/\\1$$new_version_dev/" pubspec.yaml; \
 	echo ""; \
@@ -1024,9 +1013,9 @@ release-version:
 	echo "  ✅ CHANGELOG.md updated"; \
 	echo ""; \
 	echo "=============================================="; \
-	echo "  Release $$new_version ready!"; \
+	echo "  Release $$new_version_dev ready!"; \
 	echo "=============================================="; \
 	echo ""; \
 	echo "  Git commit suggestion: \n"; \
-	echo "  [$$project_name] chore: bump version to $$new_version"; \
+	echo "  [$$project_name] chore: bump version to $$new_version_dev"; \
 	echo "";

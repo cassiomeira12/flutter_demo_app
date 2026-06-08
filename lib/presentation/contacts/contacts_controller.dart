@@ -7,10 +7,9 @@ class ContactsController extends BaseController {
   final DeleteSafetyContactUseCase _deleteSafetyContactUseCase;
 
   ContactsController({
-    required ListSafetyContactUseCase listSafetyContactUseCase,
-    required DeleteSafetyContactUseCase deleteSafetyContactUseCase,
-  }) : _listSafetyContactUseCase = listSafetyContactUseCase,
-       _deleteSafetyContactUseCase = deleteSafetyContactUseCase;
+    required this._listSafetyContactUseCase,
+    required this._deleteSafetyContactUseCase,
+  });
 
   RxList<SafetyContactEntity> list = RxList.empty();
   RxBool isLoading = RxBool(true);

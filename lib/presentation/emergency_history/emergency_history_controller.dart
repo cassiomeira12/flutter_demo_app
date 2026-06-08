@@ -5,9 +5,7 @@ import 'package:flutter_demo_app/domain/domain.dart';
 class EmergencyHistoryController extends BaseController {
   final ListUserOccurrenciesUseCase _listUserOccurrenciesUseCase;
 
-  EmergencyHistoryController({
-    required ListUserOccurrenciesUseCase listUserOccurrenciesUseCase,
-  }) : _listUserOccurrenciesUseCase = listUserOccurrenciesUseCase;
+  EmergencyHistoryController({required this._listUserOccurrenciesUseCase});
 
   RxList<OccurrenceEntity> occurrencies = RxList.empty();
   RxBool isLoading = RxBool(true);

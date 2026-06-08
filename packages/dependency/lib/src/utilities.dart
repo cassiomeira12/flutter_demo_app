@@ -1,3 +1,4 @@
+export 'package:flutter_contacts/flutter_contacts.dart';
 export 'package:flutter_dynamic_launcher_icon/flutter_dynamic_launcher_icon.dart';
 export 'package:flutter_native_splash/flutter_native_splash.dart';
 export 'package:in_app_review/in_app_review.dart';

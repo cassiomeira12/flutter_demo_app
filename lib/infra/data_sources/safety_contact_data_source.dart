@@ -1,12 +1,11 @@
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:core/core.dart';
 import 'package:flutter_demo_app/data/data.dart';
 
 class SafetyContactDataSourceImpl implements SafetyContactDataSource {
   final HttpClient _http;
 
-  SafetyContactDataSourceImpl({
-    required HttpClient http,
-  }) : _http = http;
+  SafetyContactDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> create({

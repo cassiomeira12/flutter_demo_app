@@ -53,6 +53,7 @@ class AppBindings extends Bindings {
     UserAccountModuleBindings().injectDependencies();
     SecurityModuleBindings().injectDependencies();
     WebViewModuleBindings().injectDependencies();
+    AppPurchaseModuleBindings().injectDependencies();
 
     AppBinding.lazyPut<LocationService>(() => LocationServiceImpl());
     AppBinding.lazyPut<GetCurrentLocationUseCase>(

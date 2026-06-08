@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class EmergencyController extends BaseController {
@@ -12,18 +14,11 @@ class EmergencyController extends BaseController {
   //final ITrackLocationUseCase _trackLocationUseCase;
 
   EmergencyController({
-    required CheckWhatsAppServerUseCase checkWhatsAppServerUseCase,
-    required SendSosUseCase sendSosUseCase,
-    required CheckPermissionUseCase checkPermissionUseCase,
-    //required IRequestPermissionUseCase requestPermissionUseCase,
-    required GetCurrentLocationUseCase getCurrentLocationUseCase,
-    //required ITrackLocationUseCase trackLocationUseCase,
-  }) : _checkWhatsAppServerUseCase = checkWhatsAppServerUseCase,
-       _sendSosUseCase = sendSosUseCase,
-       _checkPermissionUseCase = checkPermissionUseCase,
-       //_requestPermissionUseCase = requestPermissionUseCase,
-       _getCurrentLocationUseCase = getCurrentLocationUseCase;
-  //_trackLocationUseCase = trackLocationUseCase;
+    required this._checkWhatsAppServerUseCase,
+    required this._sendSosUseCase,
+    required this._checkPermissionUseCase,
+    required this._getCurrentLocationUseCase,
+  });
 
   Rx<Color> sosStatusColor = Rx<Color>(const Color(0xFFF35E27));
   RxString sosStatusMessage = 'emergency_sos_message'.tr.obs;

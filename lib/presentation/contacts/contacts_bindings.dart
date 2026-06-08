@@ -12,7 +12,9 @@ class ContactsBindings extends Bindings {
       SafetyContactDataSourceImpl(http: AppBinding.find()),
     );
     AppBinding.put<SafetyContactService>(
-      SafetyContactServiceImpl(dataSource: AppBinding.find()),
+      SafetyContactServiceImpl(
+        safetyContactDataSource: AppBinding.find(),
+      ),
     );
     AppBinding.put<ListSafetyContactUseCase>(
       ListSafetyContactUseCaseImpl(

@@ -27,6 +27,12 @@ void main() {
       locale: 'en',
       sessionToken: 'test_token_123',
       pushTopics: <String>[],
+      phoneNumber: '',
+      phoneVerified: true,
+      sosConfig: SosConfigEntity(
+        onlyPolice: false,
+        onlySafetyContacts: false,
+      ),
     );
   });
 
@@ -145,6 +151,12 @@ void main() {
         locale: 'en',
         sessionToken: 'test_token_123',
         pushTopics: <String>[],
+        phoneNumber: '',
+        phoneVerified: true,
+        sosConfig: SosConfigEntity(
+          onlyPolice: false,
+          onlySafetyContacts: false,
+        ),
       );
     });
 
@@ -213,6 +225,12 @@ void main() {
         locale: 'en',
         sessionToken: 'test_token_123',
         pushTopics: <String>[],
+        phoneNumber: '',
+        phoneVerified: true,
+        sosConfig: SosConfigEntity(
+          onlyPolice: false,
+          onlySafetyContacts: false,
+        ),
       );
 
       AppBinding.put<SessionEntity>(sessionEntity);
@@ -293,6 +311,12 @@ void main() {
         locale: 'en',
         sessionToken: 'test_token_123',
         pushTopics: <String>[],
+        phoneNumber: '',
+        phoneVerified: true,
+        sosConfig: SosConfigEntity(
+          onlyPolice: false,
+          onlySafetyContacts: false,
+        ),
       );
 
       AppBinding.put<SessionEntity>(sessionEntity);

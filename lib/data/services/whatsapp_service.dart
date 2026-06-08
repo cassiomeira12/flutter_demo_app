@@ -3,11 +3,9 @@ import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class WhatsAppServiceImpl implements WhatsAppService {
-  final WhatsAppDataSource _dataSource;
+  final WhatsAppDataSource _whatsAppDataSource;
 
-  WhatsAppServiceImpl({
-    required WhatsAppDataSource dataSource,
-  }) : _dataSource = dataSource;
+  WhatsAppServiceImpl({required this._whatsAppDataSource});
 
   @override
   Future<void> sendWhatsAppCode({
@@ -15,7 +13,7 @@ class WhatsAppServiceImpl implements WhatsAppService {
     required String code,
   }) async {
     try {
-      return await _dataSource.sendWhatsAppCode(
+      return await _whatsAppDataSource.sendWhatsAppCode(
         phoneNumber: phoneNumber,
         code: code,
       );

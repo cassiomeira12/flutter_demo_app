@@ -97,6 +97,7 @@ dependencies:
   in_app_review: 2.0.12
   string_normalizer: 0.4.0
   app_settings: 7.0.0
+  flutter_contacts: 1.1.9+2
 
   # Widget
   otp: 3.2.0

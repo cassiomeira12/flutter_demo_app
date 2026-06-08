@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
@@ -8,12 +9,10 @@ class PhoneNumberController extends BaseController {
   final LogoutUseCase _logoutUseCase;
 
   PhoneNumberController({
-    required SendWhatsAppCodeUseCase sendWhatsAppCodeUseCase,
-    required UpdateUserDataUseCase updateUserDataUseCase,
-    required LogoutUseCase logoutUseCase,
-  }) : _sendWhatsAppCodeUseCase = sendWhatsAppCodeUseCase,
-       _updateUserDataUseCase = updateUserDataUseCase,
-       _logoutUseCase = logoutUseCase;
+    required this._sendWhatsAppCodeUseCase,
+    required this._updateUserDataUseCase,
+    required this._logoutUseCase,
+  });
 
   final phoneControler = MaskedTextController(mask: '(00) 0 0000-0000');
 
