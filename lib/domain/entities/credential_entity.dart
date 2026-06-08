@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 
 class CredentialEntity extends BaseEntity {
   final String name;

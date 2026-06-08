@@ -1,5 +1,6 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class OtpWidget extends StatefulWidget {
   final bool initialShow;
@@ -11,10 +12,9 @@ class OtpWidget extends StatefulWidget {
     super.key,
     this.initialShow = false,
     required this.secretKeyOTP,
-    required GetOtpCodeUseCase getOtpCodeUseCase,
-    required ClipboardUseCase clipboardUeCase,
-  }) : _getOtpCodeUseCase = getOtpCodeUseCase,
-       _clipboardUseCase = clipboardUeCase;
+    required this._getOtpCodeUseCase,
+    required this._clipboardUseCase,
+  });
 
   @override
   State<OtpWidget> createState() => _OtpWidgetState();
@@ -65,9 +65,7 @@ class _OtpWidgetState extends State<OtpWidget> {
       stream: _clock(),
       builder: (context, AsyncSnapshot<int> snapshot) {
         final double percentage = (((snapshot.data ?? 0) % 30) / 30) * 100;
-        final String code = widget._getOtpCodeUseCase.call(
-          secret: widget.secretKeyOTP,
-        );
+        final String code = widget._getOtpCodeUseCase.call(widget.secretKeyOTP);
         return InkWell(
           onTap: () {
             widget._clipboardUseCase.copy(code, autoClear: true).then((_) {

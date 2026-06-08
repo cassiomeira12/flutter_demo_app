@@ -23,6 +23,7 @@ class CredentialsBindings extends Bindings {
         service: AppBinding.find(),
         checkInternetUseCase: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
+        localDatabase: AppBinding.find(),
         encryptUserPasswordUseCase: AppBinding.find(),
         securityEncryptUseCase: AppBinding.find(),
       ),

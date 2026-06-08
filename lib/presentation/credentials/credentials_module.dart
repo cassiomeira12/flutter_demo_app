@@ -1,8 +1,9 @@
 import 'package:core/core.dart';
-import 'package:flutter_demo_app/presentation/credentials/credentials.dart';
+import 'package:flutter_demo_app/presentation/presentation.dart';
 
-abstract class CredentialsModule {
-  static List<AppRouterPage> pages = [
+class CredentialsModule implements ModuleRoutes {
+  @override
+  List<AppRouterPage> get pages => [
     AppRouterPage(
       name: AppRouter.credentials.name,
       page: CredentialsPage.new,

@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:flutter_demo_app/presentation/credentials/credentials.dart';
 
@@ -12,18 +14,13 @@ class CredentialController extends BaseController with UrlValidator {
   final ClipboardUseCase _clipboardUseCase;
 
   CredentialController({
-    required CreateCredentialUseCase createCredentialUseCase,
-    required UpdateCredentialUseCase updateCredentialUseCase,
-    required DeleteCredentialUseCase deleteCredentialUseCase,
-    required CredentialsStore credentialsStore,
-    required OpenWebUrlUseCase openWebUrlUseCase,
-    required ClipboardUseCase clipboardUseCase,
-  }) : _createCredentialUseCase = createCredentialUseCase,
-       _updateCredentialUseCase = updateCredentialUseCase,
-       _deleteCredentialUseCase = deleteCredentialUseCase,
-       _credentialsStore = credentialsStore,
-       _openWebUrlUseCase = openWebUrlUseCase,
-       _clipboardUseCase = clipboardUseCase;
+    required this._createCredentialUseCase,
+    required this._updateCredentialUseCase,
+    required this._deleteCredentialUseCase,
+    required this._credentialsStore,
+    required this._openWebUrlUseCase,
+    required this._clipboardUseCase,
+  });
 
   final credentialNameTextController = TextEditingController();
   final userNameTextController = TextEditingController();

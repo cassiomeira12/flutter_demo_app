@@ -1,3 +1,12 @@
+# Fortress v1.7.1 [08-06-2026]
+
+- refactor: convert static module classes to instance-based ModuleRoutes
+- refactor: clean up constructor syntax and private field usage
+- refactor: migrate usecases implementation from data to domain
+- fix: update imports
+- fix: dart fixes
+- fix: remove duplicated assets
+
 # Fortress v1.7.0 [08-05-2026]
 
 - refactor: update changelog
