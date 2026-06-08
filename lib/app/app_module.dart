@@ -52,7 +52,20 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.webview.name,
         arguments: {
-          'url': 'https://uol.com.br/esporte/futebol/times/flamengo/',
+          'url': 'https://uol.com.br',
+        },
+        bottomItem: NavigatorBottom(
+          title: 'UOL',
+          selectedIcon: const FlutterIcon(
+            Icons.home,
+            size: IconSize.medium,
+          ),
+        ),
+      ),
+      NavigatorItem(
+        routeName: AppRouter.webview.name,
+        arguments: {
+          'url': 'https://uol.com.br/esporte/futebol/times/flamengo',
         },
         bottomItem: NavigatorBottom(
           title: 'Times',
@@ -65,7 +78,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.webview.name,
         arguments: {
-          'url': 'https://uol.com.br/esporte/futebol/central-de-jogos/',
+          'url': 'https://uol.com.br/esporte/futebol/central-de-jogos',
         },
         bottomItem: NavigatorBottom(
           title: 'Jogos',
@@ -78,7 +91,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.webview.name,
         arguments: {
-          'url': 'https://uol.com.br/esporte/futebol/campeonatos/',
+          'url': 'https://uol.com.br/esporte/futebol/campeonatos',
         },
         bottomItem: NavigatorBottom(
           title: 'Campeonatos',
@@ -91,7 +104,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.webview.name,
         arguments: {
-          'url': 'https://uol.com.br/flash/esporte/',
+          'url': 'https://uol.com.br/flash',
         },
         bottomItem: NavigatorBottom(
           title: 'Flash',
@@ -104,7 +117,7 @@ abstract class AppModule {
       NavigatorItem(
         routeName: AppRouter.webview.name,
         arguments: {
-          'url': 'https://uol.com.br/',
+          'url': 'https://uol.com.br',
         },
         bottomItem: NavigatorBottom(
           title: 'UOL',
