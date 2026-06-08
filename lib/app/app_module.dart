@@ -4,6 +4,7 @@ import 'package:app_purchase/app_purchase.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/presentation/initial_bindings_page.dart';
 import 'package:flutter_demo_app/presentation/presentation.dart';
 import 'package:force_update/force_update.dart';
@@ -43,9 +44,10 @@ abstract class AppModule {
     ...UserAccountModuleRoutes().pages,
     ...SecurityModuleRoutes().pages,
     ...WebViewModuleRoutes().pages,
-    ...CredentialsModule.pages,
-    ...CredentialModule.pages,
-    ...CameraScannerModule.routes,
+    ...AppPurchaseModuleRoutes().pages,
+    ...CredentialsModule().pages,
+    ...CredentialModule().pages,
+    ...CameraScannerModule().pages,
   ];
 
   static void setupHomePages() {

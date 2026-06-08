@@ -7,20 +7,17 @@ class CredentialsController extends BaseController {
   final CredentialsStore _credentialsStore;
   final ListCredentialUseCase _listCredentialUseCase;
   final UpdateCredentialUseCase _updateCredentialUseCase;
-  final CredentialRepository _repository;
+  final CredentialRepository _credentialRepository;
 
   CredentialsController({
-    required CredentialsStore credentialsStore,
-    required ListCredentialUseCase listCredentialUseCase,
-    required UpdateCredentialUseCase updateCredentialUseCase,
-    required CredentialRepository credentialRepository,
-  }) : _credentialsStore = credentialsStore,
-       _listCredentialUseCase = listCredentialUseCase,
-       _updateCredentialUseCase = updateCredentialUseCase,
-       _repository = credentialRepository;
+    required this._credentialsStore,
+    required this._listCredentialUseCase,
+    required this._updateCredentialUseCase,
+    required this._credentialRepository,
+  });
 
   ValueNotifier<List<ValueNotifier<CredentialEntity>>> get credentials =>
-      _repository.valueListenable;
+      _credentialRepository.valueListenable;
   ValueNotifier<bool> isLoading = ValueNotifier<bool>(true);
   ValueNotifier<String> errorMessage = ValueNotifier<String>('');
 
@@ -29,7 +26,7 @@ class CredentialsController extends BaseController {
   @override
   Future<void> onReady() async {
     super.onReady();
-    await _repository.initLocalDatabase();
+    await _credentialRepository.initLocalDatabase();
     getAllCredentials();
   }
 

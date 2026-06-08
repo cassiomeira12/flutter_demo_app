@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/presentation/credential/credential.dart';
 import 'package:flutter_demo_app/presentation/credentials/widgets/otp_widget.dart';
 
@@ -235,7 +236,7 @@ class CredentialPage extends AppView<CredentialController> {
                                         .secretKeyOTPTextController
                                         .text,
                                     getOtpCodeUseCase: AppBinding.find(),
-                                    clipboardUeCase: AppBinding.find(),
+                                    clipboardUseCase: AppBinding.find(),
                                   ),
                                 ),
                               );

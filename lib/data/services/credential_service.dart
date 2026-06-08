@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
@@ -7,8 +7,8 @@ class CredentialServiceImpl extends BaseCrudServiceMixin<CredentialEntity>
   final CredentialDataSource _dataSource;
 
   CredentialServiceImpl({
-    required CredentialDataSource dataSource,
-  }) : _dataSource = dataSource;
+    required this._dataSource,
+  });
 
   @override
   CredentialEntity parseMap(Map<String, dynamic> map) {

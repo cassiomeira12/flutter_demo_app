@@ -1,4 +1,5 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_demo_app/data/data.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
@@ -13,10 +14,10 @@ class CredentialRepositoryImpl extends BaseRepositoryImpl<CredentialEntity>
     required CredentialService super.service,
     required super.checkInternetUseCase,
     required super.localStorageUseCase,
-    required EncryptUserPasswordUseCase encryptUserPasswordUseCase,
-    required SecurityEncryptUseCase securityEncryptUseCase,
-  }) : _encryptUserPasswordUseCase = encryptUserPasswordUseCase,
-       _securityEncryptUseCase = securityEncryptUseCase;
+    required super.localDatabase,
+    required this._encryptUserPasswordUseCase,
+    required this._securityEncryptUseCase,
+  });
 
   String? _encrypterKeyPassword;
 

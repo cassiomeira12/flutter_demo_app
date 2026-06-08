@@ -2,9 +2,6 @@ abstract class AppAssets {
   // PNG
   static const String logo = 'assets/png/AppIcon.png';
   static const String branding = 'assets/png/branding.png';
-  static const String main = 'assets/png/main.png';
-  static const String feature1 = 'assets/png/feature_1.png';
-  static const String feature2 = 'assets/png/feature_2.png';
 
   // Web App
   static const String main = 'assets/png/main.png';
