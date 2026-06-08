@@ -13,18 +13,13 @@ class CheckPointController extends BaseController {
   final CheckPointsStore _checkPointsStore;
 
   CheckPointController({
-    required UpdateWorkDayUseCase updateWorkDayUseCase,
-    required UpdateHourPointUseCase updateHourPointUseCase,
-    required DeleteHourPointUseCase deleteHourPointUseCase,
-    required RegisterCustomPointUseCase registerCustomPointUseCase,
-    required CheckPointsController checkPointsController,
-    required CheckPointsStore checkPointsStore,
-  }) : _updateWorkDayUseCase = updateWorkDayUseCase,
-       _updateHourPointUseCase = updateHourPointUseCase,
-       _deleteHourPointUseCase = deleteHourPointUseCase,
-       _registerCustomPointUseCase = registerCustomPointUseCase,
-       _checkPointsController = checkPointsController,
-       _checkPointsStore = checkPointsStore;
+    required this._updateWorkDayUseCase,
+    required this._updateHourPointUseCase,
+    required this._deleteHourPointUseCase,
+    required this._registerCustomPointUseCase,
+    required this._checkPointsController,
+    required this._checkPointsStore,
+  });
 
   final RxBool loading = RxBool(false);
 
@@ -97,7 +92,7 @@ class CheckPointController extends BaseController {
     loading.value = true;
     try {
       final CheckDayPointEntity result = await _deleteHourPointUseCase.call(
-        checkHourPoint: checkHour,
+        checkHour,
       );
       _checkPointsStore.checkPointDaySelected = result;
       _checkPointsController.getCurrentCheckPoints();

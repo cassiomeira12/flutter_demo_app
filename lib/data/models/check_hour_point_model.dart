@@ -5,7 +5,7 @@ class CheckHourPointModel extends CheckHourPointEntity {
   CheckHourPointModel({
     required super.objectId,
     required super.manual,
-    required super.valor,
+    required super.value,
   });
 
   factory CheckHourPointModel.fromMap(Map<String, dynamic> map) {
@@ -13,7 +13,7 @@ class CheckHourPointModel extends CheckHourPointEntity {
       return CheckHourPointModel(
         objectId: map['objectId'] as String,
         manual: map['manual'] as bool,
-        valor: map['time'] as String?,
+        value: map['time'] as String?,
       );
     } catch (error, stacktrace) {
       throw BaseException(

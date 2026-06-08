@@ -407,7 +407,7 @@ void main() {
     final checkHourPoint = CheckHourPointEntity(
       objectId: 'hour-point-id',
       manual: false,
-      valor: null,
+      value: null,
     );
     const time = '09:30';
 
@@ -436,7 +436,7 @@ void main() {
         // Assert
         expect(result, isA<CheckDayPointEntity>());
         expect(result.points.length, 1);
-        expect(result.points.first.valor, time);
+        expect(result.points.first.value, time);
       });
 
       test('deve chamar dataSource com objectId correto', () async {
@@ -508,7 +508,7 @@ void main() {
     final checkHourPoint = CheckHourPointEntity(
       objectId: 'hour-point-id',
       manual: true,
-      valor: '09:30',
+      value: '09:30',
     );
 
     group('Sucesso', () {
@@ -632,7 +632,7 @@ void main() {
         expect(result, isA<CheckDayPointEntity>());
         expect(result.day, day);
         expect(result.points.length, 1);
-        expect(result.points.first.valor, time);
+        expect(result.points.first.value, time);
       });
 
       test('deve passar parâmetros corretos para dataSource', () async {

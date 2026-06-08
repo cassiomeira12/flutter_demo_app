@@ -55,7 +55,7 @@ void main() {
       ),
     );
     registerFallbackValue(
-      CheckHourPointEntity(objectId: 'fallback', manual: false, valor: '08:00'),
+      CheckHourPointEntity(objectId: 'fallback', manual: false, value: '08:00'),
     );
   });
 
@@ -113,7 +113,7 @@ void main() {
     return CheckHourPointEntity(
       objectId: 'hour-point-1',
       manual: false,
-      valor: '08:00',
+      value: '08:00',
     );
   }
 
@@ -272,7 +272,7 @@ void main() {
               CheckHourPointEntity(
                 objectId: 'hour-point-1',
                 manual: false,
-                valor: '09:30',
+                value: '09:30',
               ),
             ],
           );
@@ -335,7 +335,7 @@ void main() {
               CheckHourPointEntity(
                 objectId: 'hour-point-1',
                 manual: false,
-                valor: '08:05',
+                value: '08:05',
               ),
             ],
           );
@@ -431,9 +431,7 @@ void main() {
           ).thenReturn(mockCheckDayPoint);
 
           when(
-            () => mockDeleteHourPointUseCase.call(
-              checkHourPoint: any(named: 'checkHourPoint'),
-            ),
+            () => mockDeleteHourPointUseCase.call(any()),
           ).thenAnswer((_) async => updatedCheckDayPoint);
 
           when(
@@ -451,9 +449,7 @@ void main() {
           // Assert
           expect(controller.loading.value, false);
           verify(
-            () => mockDeleteHourPointUseCase.call(
-              checkHourPoint: mockCheckHourPoint,
-            ),
+            () => mockDeleteHourPointUseCase.call(any()),
           ).called(1);
           verify(
             () => mockCheckPointsStore.checkPointDaySelected =
@@ -481,9 +477,7 @@ void main() {
           ).thenReturn(mockCheckDayPoint);
 
           when(
-            () => mockDeleteHourPointUseCase.call(
-              checkHourPoint: any(named: 'checkHourPoint'),
-            ),
+            () => mockDeleteHourPointUseCase.call(any()),
           ).thenThrow(Exception('Erro ao deletar ponto'));
 
           // Act & Assert
@@ -509,7 +503,7 @@ void main() {
               CheckHourPointEntity(
                 objectId: 'new-point',
                 manual: true,
-                valor: '10:30',
+                value: '10:30',
               ),
             ],
           );
@@ -569,7 +563,7 @@ void main() {
               CheckHourPointEntity(
                 objectId: 'new-point',
                 manual: true,
-                valor: '08:00',
+                value: '08:00',
               ),
             ],
           );
@@ -710,7 +704,7 @@ void main() {
         CheckHourPointEntity(
           objectId: 'hour-point-2',
           manual: false,
-          valor: '17:00',
+          value: '17:00',
         ),
       ];
       final mockCheckDayPoint = createMockCheckDayPoint(points: mockPoints);

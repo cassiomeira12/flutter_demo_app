@@ -47,6 +47,7 @@ abstract class AppModule {
     ...UserAccountModuleRoutes().pages,
     ...SecurityModuleRoutes().pages,
     ...WebViewModuleRoutes().pages,
+    ...AppPurchaseModuleRoutes().pages,
     ...CheckPointsModule().pages,
   ];
 
