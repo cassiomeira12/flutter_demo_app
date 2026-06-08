@@ -2,7 +2,14 @@
 
 export 'dart:async';
 export 'dart:convert';
-export 'dart:io' hide Cookie, HeaderValue, Platform, X509Certificate;
+export 'dart:io'
+    hide
+        Cookie,
+        HeaderValue,
+        HttpClient,
+        HttpRequest,
+        Platform,
+        X509Certificate;
 export 'dart:math';
 export 'dart:typed_data';
 

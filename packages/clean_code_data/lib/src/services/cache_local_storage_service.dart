@@ -3,9 +3,7 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 class CacheLocalStorageServiceImpl implements CacheStorageService {
   final LocalStorageUseCase _localStorageUseCase;
 
-  CacheLocalStorageServiceImpl({
-    required LocalStorageUseCase localStorageUseCase,
-  }) : _localStorageUseCase = localStorageUseCase;
+  CacheLocalStorageServiceImpl({required this._localStorageUseCase});
 
   @override
   Future<String?> load(String key) {

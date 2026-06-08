@@ -1,8 +1,10 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class SplashController extends BaseController {
-  final GetUserDataUseCase _getUserDataUseCase;
+  final GetUserLocalDataUseCase _getUserDataUseCase;
   final LocalStorageUseCase _localStorageUseCase;
   final SessionEntity _sessionEntity;
   final AppInfoEntity _appInfoEntity;
@@ -18,34 +20,21 @@ class SplashController extends BaseController {
   final FeatureFlagLifecycleController _featureFlagLifecycleController;
 
   SplashController({
-    required GetUserDataUseCase getUserDataUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required SessionEntity sessionEntity,
-    required AppInfoEntity appInfoEntity,
-    required CheckPermissionUseCase checkPermissionUseCase,
-    required PushMessagingService pushMessagingService,
-    required PushNotificationsService pushNotificationsService,
-    required GetDeviceLocaleUseCase getDeviceLocaleUseCase,
-    required FirebaseInitializeService firebaseInitializeService,
-    required AppsFlyerService appsFlyerService,
-    required AppSecurityManager appSecurityManager,
-    required GetInstallationAppUseCase getInstallationAppUseCase,
-    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
-    required FeatureFlagLifecycleController featureFlagLifecycleController,
-  }) : _getUserDataUseCase = getUserDataUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _sessionEntity = sessionEntity,
-       _appInfoEntity = appInfoEntity,
-       _checkPermissionUseCase = checkPermissionUseCase,
-       _pushMessagingService = pushMessagingService,
-       _pushNotificationsService = pushNotificationsService,
-       _getDeviceLocaleUseCase = getDeviceLocaleUseCase,
-       _firebaseInitializeService = firebaseInitializeService,
-       _appsFlyerService = appsFlyerService,
-       _appSecurityManager = appSecurityManager,
-       _getInstallationAppUseCase = getInstallationAppUseCase,
-       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
-       _featureFlagLifecycleController = featureFlagLifecycleController;
+    required this._getUserDataUseCase,
+    required this._localStorageUseCase,
+    required this._sessionEntity,
+    required this._appInfoEntity,
+    required this._checkPermissionUseCase,
+    required this._pushMessagingService,
+    required this._pushNotificationsService,
+    required this._getDeviceLocaleUseCase,
+    required this._firebaseInitializeService,
+    required this._appsFlyerService,
+    required this._appSecurityManager,
+    required this._getInstallationAppUseCase,
+    required this._uploadInstallationAppUseCase,
+    required this._featureFlagLifecycleController,
+  });
 
   @override
   void onInit() {

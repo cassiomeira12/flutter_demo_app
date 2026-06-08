@@ -1,10 +1,13 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer' as developer;
+
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:webview/src/domain/domain.dart';
 import 'package:webview/src/presentation/presentation.dart';
-import 'package:webview/src/presentation/widgets/web_view/webview_widget.dart';
+import 'package:webview/src/presentation/webview/widgets/webview_widget.dart';
 
 class WebViewPage extends StatefulWidget
     implements NavigatorIndexListenerCallback, TapCurrentIndexCallback {
@@ -75,9 +78,9 @@ class _WebViewPageState extends State<WebViewPage>
     if (arguments is Map<String, dynamic>) {
       url = widget.url ?? arguments['url'] ?? '';
     }
-    controller.url = url;
+    controller.initialUrl = url;
     if (url.isEmpty) {
-      controller.errorMessage.value = 'Url empty';
+      controller.errorMessage = 'Url empty';
       controller.setError(true);
     }
   }
@@ -88,6 +91,7 @@ class _WebViewPageState extends State<WebViewPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    developer.log('WebViewPage ${widget.globalKeyHash}', name: 'Rebuild');
     return ScaffoldWidget(
       title: widget.hasTitle ? '' : null,
       controller: controller,
@@ -106,63 +110,64 @@ class _WebViewPageState extends State<WebViewPage>
           ValueListenableBuilder<bool>(
             valueListenable: controller.showWebView,
             builder: (BuildContext context, bool showWebView, child) {
-              if (showWebView) {
-                return WebViewWidget(
-                  globalKeyHash: widget.globalKeyHash,
-                  initialUrl: url,
-                  replaceUrl: (url) {
-                    final Uri uri = Uri.parse(url);
-                    final newUri = Uri(
-                      scheme: uri.scheme,
-                      host: uri.host,
-                      path: uri.path.endsWith('/') ? uri.path : '${uri.path}/',
-                      queryParameters: {
-                        ...uri.queryParameters,
-                        ...widget.urlParams,
-                      },
-                    );
-                    return newUri.toString();
-                  },
-                  userAgent: Platform.isMacOS ? macOSUserAgent : null,
-                  initialScrollX: controller.scrollX,
-                  initialScrollY: controller.scrollY,
-                  secondsToStartWebViewReload:
-                      controller.secondsToStartWebViewReload,
-                  click: controller.openLink,
-                  loading: controller.setLoading,
-                  onCreateController: controller.setWebViewController,
-                  onError: ({required bool isNetworkError, String? error}) {
-                    controller.errorMessage.value =
-                        error ?? 'Sem mensagem de erro';
-                    controller.isNetworkError = isNetworkError;
-                    controller.setError(true);
-                    if (!isNetworkError) {
-                      Log.error('WebView Error: $error', StackTrace.current);
-                    }
-                  },
-                  onSaveScroll: controller.updateScrollPosition,
-                  processGone: () {
-                    if (controller.canTryReloadAgain) {
-                      SnackBarWidget.show(
-                        context,
-                        title: 'slow_network_title'.tr,
-                        message: '${'try_again'.tr}...',
-                        backgroundColor: SemanticColors.warning300,
-                        duration: const Duration(seconds: 3),
-                      );
-                      controller.addLog('Conexão lenta, mostrar toast');
-                    }
-                    controller.setProcessGone(true);
-                  },
-                  onLog: controller.addLog,
-                  openExternalLink: controller.openExternalLink,
-                  checkInternet: controller.checkInternetConnection,
-                  noInternetConnectionCallback:
-                      controller.noInternetConnectionCallback,
-                );
-              }
-              return const SizedBox.shrink();
+              return showWebView ? child! : const SizedBox.shrink();
             },
+            child: WebViewWidget(
+              globalKeyHash: widget.globalKeyHash,
+              initialUrl: url,
+              replaceUrl: (url) {
+                final Uri uri = Uri.parse(url);
+                final newUri = Uri(
+                  scheme: uri.scheme,
+                  host: uri.host,
+                  path: uri.path,
+                  queryParameters: {
+                    ...uri.queryParameters,
+                    ...widget.urlParams,
+                  },
+                );
+                return newUri.toString();
+              },
+              userAgent: Platform.isMacOS ? macOSUserAgent : null,
+              initialScrollX: controller.scrollX,
+              initialScrollY: controller.scrollY,
+              secondsToStartWebViewReload:
+                  controller.secondsToStartWebViewReload,
+              click: controller.openLink,
+              loading: controller.setLoading,
+              onCreateController: controller.setWebViewController,
+              onError: ({required bool isNetworkError, String? error}) {
+                controller.errorMessage = error ?? 'Sem mensagem de erro';
+                controller.isNetworkError = isNetworkError;
+                controller.setError(true);
+                if (!isNetworkError) {
+                  Log.error('WebView Error: $error', StackTrace.current);
+                }
+              },
+              onSaveScroll: controller.updateScrollPosition,
+              processGone: () {
+                if (controller.canTryReloadAgain) {
+                  // SnackBarWidget.show(
+                  //   context,
+                  //   title: 'slow_network_title'.tr,
+                  //   message: '${'try_again'.tr}...',
+                  //   backgroundColor: SemanticColors.warning300,
+                  //   duration: const Duration(seconds: 3),
+                  // );
+                  controller.addLog('Conexão lenta, mostrar toast');
+                }
+                controller.setProcessGone(true);
+              },
+              onLog: controller.addLog,
+              openExternalLink: controller.openExternalLink,
+              checkInternet: controller.checkInternetConnection,
+              noInternetConnectionCallback:
+                  controller.showDialogNoInternetConnected,
+              customNavigatorCallback:
+                  AppBinding.hasInstance<CustomNavigatorCallback>()
+                  ? AppBinding.find<CustomNavigatorCallback>()
+                  : null,
+            ),
           ),
           ValueListenableBuilder<bool>(
             valueListenable: controller.isLoadingValue,
@@ -190,18 +195,18 @@ class _WebViewPageState extends State<WebViewPage>
           ValueListenableBuilder<bool>(
             valueListenable: controller.hasErrorValue,
             builder: (BuildContext context, bool hasError, child) {
-              if (controller.hasError) {
+              if (hasError) {
                 if (controller.isNetworkError == true) {
                   return ErrorPage(
                     icon: Icons.wifi_off,
                     title: 'error_webview_no_network_title'.tr,
                     message: 'error_webview_no_network_message'.tr,
-                    errorMessage: controller.errorMessage.value,
+                    errorMessage: controller.errorMessage,
                     onTryAgain: controller.tryAgain,
                   );
                 }
                 return ErrorPage(
-                  errorMessage: controller.errorMessage.value,
+                  errorMessage: controller.errorMessage,
                   onTryAgain: controller.tryAgain,
                 );
               }
@@ -250,10 +255,15 @@ class _WebViewPageState extends State<WebViewPage>
                       vertical: ResponsiveSizeHelper.spacingDefaultHeight,
                     ),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         FutureButton(
                           text: 'Compartilhar',
                           onPressed: controller.shareLogs,
+                        ),
+                        SecondaryButton(
+                          text: 'Limpar',
+                          onPressed: controller.clearLogs,
                         ),
                       ],
                     ),

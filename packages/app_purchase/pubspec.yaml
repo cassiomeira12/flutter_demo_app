@@ -1,0 +1,33 @@
+name: app_purchase
+description: "A new Flutter package project."
+version: 0.0.1
+homepage:
+publish_to: "none"
+resolution: workspace
+
+environment:
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  core:
+    path: ../core
+  dependency:
+    path: ../dependency
+  design_system:
+    path: ../design_system
+
+  clean_code_domain:
+    path: ../clean_code_domain
+
+  in_app_purchase: 3.2.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: false

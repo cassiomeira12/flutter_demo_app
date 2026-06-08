@@ -1,0 +1,51 @@
+#!/bin/sh
+#
+# commit-msg hook
+# Validates commit messages follow: [<branch-suffix>] <type>: <description>
+#
+
+commit_msg_file="$1"
+commit_msg=$(head -1 "$commit_msg_file")
+
+# Allow merge commits, fixup/squash commits, and release commits
+case "$commit_msg" in
+  Merge\ *|fixup\ *|fixup!*|squash\ *|squash!*|amend\ *|amend!*)
+    exit 0
+    ;;
+  release:*)
+    exit 0
+    ;;
+esac
+
+# Get current branch
+branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+if [ -z "$branch" ]; then
+  # Detached HEAD — skip validation
+  exit 0
+fi
+
+# Extract suffix: last segment after /
+suffix=$(echo "$branch" | sed 's|.*/||')
+
+# Validate format: [<suffix>] type: description
+expected_pattern="^\[$suffix\] (feat|fix|docs|style|refactor|test|chore|perf|ci): .+"
+
+if ! echo "$commit_msg" | grep -qE "$expected_pattern"; then
+  echo ""
+  echo "ERROR: Invalid commit message format."
+  echo ""
+  echo "  Branch:     $branch"
+  echo "  Expected:   [$suffix] <type>: <description>"
+  echo "  Got:        $commit_msg"
+  echo ""
+  echo "  Types: feat, fix, docs, style, refactor, test, chore, perf, ci"
+  echo ""
+  echo "  Examples:"
+  echo "    [$suffix] feat: add login screen"
+  echo "    [$suffix] fix: resolve crash on startup"
+  echo "    [$suffix] chore: bump dependencies"
+  echo ""
+  exit 1
+fi
+
+exit 0

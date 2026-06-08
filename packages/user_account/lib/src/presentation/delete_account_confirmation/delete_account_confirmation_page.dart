@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:user_account/src/presentation/delete_account_confirmation/delete_account_confirmation.dart';
 
 class DeleteAccountConfirmationPage
@@ -72,19 +73,25 @@ class DeleteAccountConfirmationPage
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Obx(() {
-                  if (controller.isLoading) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: FittedBox(
-                        fit: BoxFit.fitHeight,
-                        child: CircularLoadingWidget(
-                          color: Theme.of(context).textTheme.labelLarge?.color,
+                ValueListenableBuilder(
+                  valueListenable: controller.isLoading,
+                  builder: (context, value, child) {
+                    if (value) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: FittedBox(
+                          fit: BoxFit.fitHeight,
+                          child: CircularLoadingWidget(
+                            color: Theme.of(
+                              context,
+                            ).textTheme.labelLarge?.color,
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                  return PrimaryButton(
+                      );
+                    }
+                    return child!;
+                  },
+                  child: PrimaryButton(
                     key: const Key('finish_my_account_button_key'),
                     text: 'finish_my_account'.tr,
                     expandWidth: true,
@@ -112,8 +119,8 @@ class DeleteAccountConfirmationPage
                         );
                       }
                     },
-                  );
-                }),
+                  ),
+                ),
                 const SpacerWidget(),
                 SecondaryButton(
                   text: 'not_delete_my_account'.tr,

@@ -1,10 +1,11 @@
 import 'package:admin/src/data/data.dart';
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:dependency/dependency.dart';
 
 class UsersDataSourceImpl with ListDataSourceMixin implements UsersDataSource {
   final HttpClient _http;
 
-  UsersDataSourceImpl({required HttpClient http}) : _http = http;
+  UsersDataSourceImpl({required this._http});
 
   @override
   Future<List<Map<String, dynamic>>> list({

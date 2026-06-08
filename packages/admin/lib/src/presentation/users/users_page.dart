@@ -1,7 +1,8 @@
 import 'package:admin/src/presentation/users/users.dart';
 import 'package:admin/src/presentation/users/widgets/user_widget.dart';
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class UsersPage extends AppView<UsersController> {
   const UsersPage({super.key});

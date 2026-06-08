@@ -1,5 +1,6 @@
-import 'package:core/core.dart' hide ThemeController;
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:settings/src/presentation/themes/app_themes_controller.dart';
 import 'package:settings/src/presentation/themes/widgets/widgets.dart';
 
@@ -27,7 +28,7 @@ class AppThemesPage extends AppView<AppThemesController> {
                     key: const Key('settings_theme_key'),
                     text: 'theme'.tr,
                     expandWidth: true,
-                    icon: const FlutterIcon(BoxIcons.bx_brightness),
+                    icon: const FlutterIcon(Icons.brightness_5),
                     onPressed: () {
                       BottomSheetWidget.show(
                         context: context,

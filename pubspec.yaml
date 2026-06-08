@@ -2,11 +2,11 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 1.4.0-dev
+version: 2.0.0-dev
 
 environment:
-  sdk: ^3.10.1
-  flutter: ">=3.38.3"
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 workspace:
   - packages/core
@@ -18,6 +18,7 @@ workspace:
   - packages/appsflyer
   - packages/firebase_initialize
   - packages/analytics
+  - packages/app_purchase
   - packages/crashlytics
   - packages/deeplink
   - packages/feature_flag
@@ -49,11 +50,22 @@ dependencies:
     path: packages/core
   dependency:
     path: packages/dependency
+  design_system:
+    path: packages/design_system
+
+  clean_code_data:
+    path: packages/clean_code_data
+  clean_code_domain:
+    path: packages/clean_code_domain
+  clean_code_infra:
+    path: packages/clean_code_infra
 
   # appsflyer:
   #   path: packages/appsflyer
   # firebase_initialize:
   #   path: packages/firebase_initialize
+  app_purchase:
+    path: packages/app_purchase
   analytics:
     path: packages/analytics
   crashlytics:
@@ -102,16 +114,18 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: 6.0.0
-  very_good_analysis: 10.0.0
+  very_good_analysis: 10.2.0
   flutter_launcher_icons: 0.14.4 # flutter pub run flutter_launcher_icons:main -f flutter_launcher_icons*
   package_rename: 1.10.1
   faker: 2.2.0
-  mocktail: 1.0.4
-  build_runner: 2.10.4 # dart run build_runner build
-  bdd_widget_test: 2.1.3
+  mocktail: 1.0.5
+  build_runner: 2.15.0 # dart run build_runner build
+  bdd_widget_test: 2.1.4
 
 flutter:
   uses-material-design: true
+  config:
+    enable-swift-package-manager: false
 
   assets:
     - assets/fonts/

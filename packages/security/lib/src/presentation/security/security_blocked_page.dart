@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:security/src/presentation/security/security.dart';
 
 class SecurityBlockedPage extends AppView<SecurityController> {
@@ -14,7 +14,7 @@ class SecurityBlockedPage extends AppView<SecurityController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const FlutterIcon(BoxIcons.bxs_lock, size: IconSize.medium),
+            const FlutterIcon(Icons.lock, size: IconSize.medium),
             const SpacerWidget(),
             TextWidget(
               'blocked_app'.tr,

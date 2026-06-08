@@ -64,7 +64,7 @@ class _AutoCompleteFieldWidgetState<T extends Object>
   bool acceptListener = false;
   bool initialized = false;
 
-  Timer? _debounce;
+  Timer? _multipleIgnoreCallsTimer;
 
   final int _delayTime = 2000;
 
@@ -223,8 +223,10 @@ class _AutoCompleteFieldWidgetState<T extends Object>
                           _showSuggestions = false;
                           _loadingList = true;
                         });
-                        if (_debounce?.isActive ?? false) _debounce?.cancel();
-                        _debounce = Timer(
+                        if (_multipleIgnoreCallsTimer?.isActive ?? false) {
+                          _multipleIgnoreCallsTimer?.cancel();
+                        }
+                        _multipleIgnoreCallsTimer = Timer(
                           Duration(milliseconds: _delayTime),
                           () {
                             if (!mounted) return;

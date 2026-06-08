@@ -1,5 +1,4 @@
 import 'package:core/core.dart';
-import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class TestDependency {
@@ -9,11 +8,11 @@ class TestDependency {
 
 void main() {
   setUp(() {
-    Get.reset();
+    AppBinding.reset();
   });
 
   tearDown(() {
-    Get.reset();
+    AppBinding.reset();
   });
 
   group('AppBinding.hasInstance - Sucesso', () {

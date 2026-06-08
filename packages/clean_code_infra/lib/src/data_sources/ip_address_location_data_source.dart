@@ -5,7 +5,7 @@ class IpAddressLocationDataSourceImpl
     implements IpAddressLocationDataSource {
   final HttpClient _http;
 
-  IpAddressLocationDataSourceImpl({required HttpClient http}) : _http = http;
+  IpAddressLocationDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> getIpAddress({String? ip}) async {

@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class SettingsController extends BaseController {
   final ThemeController _themeController;
@@ -12,22 +14,15 @@ class SettingsController extends BaseController {
   final AppSecurityManager _appSecurityManager;
 
   SettingsController({
-    required ThemeController themeController,
-    required LogoutUseCase logoutUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required UserAuthStorageUseCase userAuthStorageUseCase,
-    required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required AppInfoEntity appInfoEntity,
-    required UserEntity userEntity,
-    required AppSecurityManager appSecurityManager,
-  }) : _themeController = themeController,
-       _logoutUseCase = logoutUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _userAuthStorageUseCase = userAuthStorageUseCase,
-       _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _appInfoEntity = appInfoEntity,
-       _userEntity = userEntity,
-       _appSecurityManager = appSecurityManager;
+    required this._themeController,
+    required this._logoutUseCase,
+    required this._localStorageUseCase,
+    required this._userAuthStorageUseCase,
+    required this._updateUserLocaleUseCase,
+    required this._appInfoEntity,
+    required this._userEntity,
+    required this._appSecurityManager,
+  });
 
   AppInfoEntity get appInfo => _appInfoEntity;
   UserEntity get user => _userEntity;

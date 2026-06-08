@@ -1,6 +1,8 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:settings/src/domain/domain.dart';
 import 'package:settings/src/presentation/themes/app_themes_controller.dart';
 
 class MockThemeController extends Mock implements ThemeController {}
@@ -13,7 +15,7 @@ void main() {
   late AppThemesController controller;
 
   setUpAll(() {
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue('default_icon');
   });
 
@@ -30,7 +32,7 @@ void main() {
   });
 
   tearDown(() {
-    Get.reset();
+    AppBinding.reset();
   });
 
   group('AppThemesController - Propriedades', () {
@@ -197,17 +199,17 @@ void main() {
   group('AppThemesController - iconsAvailable', () {
     test('deve retornar lista de ícones disponíveis', () {
       final icons = [
-        DynamicIcon(
+        DynamicIconEntity(
           name: 'default',
           defaultIcon: true,
           path: 'assets/icons/default.png',
         ),
-        DynamicIcon(
+        DynamicIconEntity(
           name: 'blue',
           defaultIcon: false,
           path: 'assets/icons/blue.png',
         ),
-        DynamicIcon(
+        DynamicIconEntity(
           name: 'red',
           defaultIcon: false,
           path: 'assets/icons/red.png',

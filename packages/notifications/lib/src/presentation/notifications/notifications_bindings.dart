@@ -1,16 +1,21 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:notifications/src/domain/domain.dart';
 import 'package:notifications/src/presentation/notifications/notifications.dart';
 
 class NotificationsBindings extends Bindings {
   @override
   void dependencies() {
     AppBinding.put<ListUserNotificationsUseCase>(
-      ListUserNotificationsUseCaseImpl(notificationService: AppBinding.find()),
+      ListUserNotificationsUseCaseImpl(
+        notificationService: AppBinding.find(),
+      ),
     );
 
     AppBinding.put<ReadNotificationUseCase>(
-      ReadNotificationUseCaseImpl(notificationService: AppBinding.find()),
+      ReadNotificationUseCaseImpl(
+        notificationService: AppBinding.find(),
+      ),
     );
 
     AppBinding.put<NotificationsController>(

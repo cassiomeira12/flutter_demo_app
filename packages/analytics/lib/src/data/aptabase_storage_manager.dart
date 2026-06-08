@@ -1,8 +1,8 @@
-import 'package:core/core.dart';
+import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:dependency/dependency.dart';
 
 class AptabaseStorageManager implements StorageManager {
-  final LocalDatabase<String> _localDatabase = HiveLocalDatabase<String>();
+  final _localDatabase = HiveLocalDatabase<String>();
 
   @override
   Future<void> init() async {

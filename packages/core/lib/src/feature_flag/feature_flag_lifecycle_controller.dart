@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -7,11 +8,10 @@ class FeatureFlagLifecycleController extends LifecycleController {
   final LocalStorageUseCase _localStorage;
 
   FeatureFlagLifecycleController({
-    required AppInfoEntity appInfoEntity,
+    required this._appInfoEntity,
     required DeviceInfoEntity deviceInfoEntity,
     required LocalStorageUseCase localStorageUseCase,
-  }) : _appInfoEntity = appInfoEntity,
-       _deviceInfo = deviceInfoEntity,
+  }) : _deviceInfo = deviceInfoEntity,
        _localStorage = localStorageUseCase;
 
   final _updateAppStream = StreamController<bool>.broadcast();
@@ -30,7 +30,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
   void onInit() {
     super.onInit();
     _updateAppSubscription = updateAppStream.listen(
-      _listenUpdateApp,
+      _onUpdatedAppChanged,
       onDone: () {
         _updateAppSubscription?.pause();
       },
@@ -41,7 +41,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
     );
 
     _updateAppRequiredSubscription = updateAppRequiredStream.listen(
-      _listenAppRequired,
+      _onUpdatedRequiredChanged,
       onDone: () {
         _updateAppRequiredSubscription?.pause();
       },
@@ -52,7 +52,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
     );
 
     _blockingAppSubscription = blockingAppStream.listen(
-      _listenBlockingApp,
+      _onBlockingAppChanged,
       onDone: () {
         _blockingAppSubscription?.pause();
       },
@@ -155,7 +155,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
     return false;
   }
 
-  Future<void> _listenUpdateApp(bool updateApp) async {
+  Future<void> _onUpdatedAppChanged(bool updateApp) async {
     if (Platform.isWeb) return;
 
     if (updateApp) {
@@ -177,7 +177,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
     }
   }
 
-  void _listenAppRequired(bool updateRequired) {
+  void _onUpdatedRequiredChanged(bool updateRequired) {
     if (Platform.isWeb) return;
 
     if (updateRequired) {
@@ -191,7 +191,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
     }
   }
 
-  void _listenBlockingApp(bool blockingApp) {
+  void _onBlockingAppChanged(bool blockingApp) {
     if (blockingApp) {
       if (AppNavigator.currentRoute != AppRouter.blocking.name) {
         AppNavigator.backAllAndToNamed(AppRouter.blocking);

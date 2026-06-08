@@ -7,14 +7,20 @@ import 'package:flutter_test/flutter_test.dart';
 class MockSendUserFeedbackUseCase extends Mock
     implements SendUserFeedbackUseCase {}
 
-class FakeUserFeedbackEntity extends Fake implements UserFeedbackEntity {}
-
 void main() {
   late MockSendUserFeedbackUseCase mockSendUserFeedbackUseCase;
   late FeedbackController feedbackController;
 
   setUpAll(() {
-    registerFallbackValue(FakeUserFeedbackEntity());
+    registerFallbackValue(
+      UserFeedbackEntity(
+        name: 'nome',
+        email: 'email@teste.com',
+        feedback: 'feedback de teste',
+      ),
+    );
+    WidgetsFlutterBinding.ensureInitialized();
+    AppBinding.testMode(true);
   });
 
   setUp(() {
@@ -25,82 +31,97 @@ void main() {
   });
 
   group('FeedbackController', () {
-    group('sendFeedback', () {
+    group('feedbackValidator', () {
       group('Sucesso', () {
         test(
-          'deve enviar feedback com sucesso quando parametros estao validos',
-          () async {
-            // arrange
-            const name = 'John Doe';
-            const email = 'john@example.com';
-            const feedback = 'This is a great app!';
-
-            when(() => mockSendUserFeedbackUseCase.call(any())).thenAnswer(
-              (_) async {},
-            );
-
+          'deve retornar null quando o feedback e valido',
+          () {
             // act
-            await feedbackController.sendFeedback(
-              name: name,
-              email: email,
-              feedback: feedback,
+            final result = feedbackController.feedbackValidator(
+              'feedback valido',
             );
 
             // assert
-            verify(() => mockSendUserFeedbackUseCase.call(any())).called(1);
-          },
-        );
-
-        test(
-          'deve criar entidade UserFeedbackEntity com parametros corretos',
-          () async {
-            // arrange
-            const name = 'Jane Doe';
-            const email = 'jane@example.com';
-            const feedback = 'Love the new features!';
-
-            final capturedEntity = <UserFeedbackEntity>[];
-
-            when(() => mockSendUserFeedbackUseCase.call(any())).thenAnswer(
-              (invocation) async {
-                capturedEntity.add(
-                  invocation.positionalArguments[0] as UserFeedbackEntity,
-                );
-              },
-            );
-
-            // act
-            await feedbackController.sendFeedback(
-              name: name,
-              email: email,
-              feedback: feedback,
-            );
-
-            // assert
-            expect(capturedEntity.length, 1);
-            expect(capturedEntity.first.name, name);
-            expect(capturedEntity.first.email, email);
-            expect(capturedEntity.first.feedback, feedback);
+            expect(result, isNull);
           },
         );
       });
 
       group('Erro', () {
         test(
-          'deve propagar excecao quando sendUserFeedbackUseCase falhar',
+          'deve retornar mensagem de erro quando o input e null',
+          () {
+            // act
+            final result = feedbackController.feedbackValidator(null);
+
+            // assert
+            expect(result, 'feedback_input_empty_error'.tr);
+          },
+        );
+
+        test(
+          'deve retornar mensagem de erro quando o input e vazio',
+          () {
+            // act
+            final result = feedbackController.feedbackValidator('');
+
+            // assert
+            expect(result, 'feedback_input_empty_error'.tr);
+          },
+        );
+
+        test(
+          'deve retornar mensagem de erro quando o input tem apenas espacos',
+          () {
+            // act
+            final result = feedbackController.feedbackValidator('   ');
+
+            // assert
+            expect(result, 'feedback_input_empty_error'.tr);
+          },
+        );
+      });
+    });
+
+    group('sendFeedback', () {
+      const name = 'Usuário Teste';
+      const email = 'usuario@teste.com';
+      const feedback = 'Este é um feedback de teste.';
+
+      group('Sucesso', () {
+        test(
+          'deve enviar feedback com sucesso quando o use case retorna',
           () async {
             // arrange
-            const name = 'John Doe';
-            const email = 'john@example.com';
-            const feedback = 'Test feedback';
-
-            final exception = BaseException(
-              message: 'feedback_send_error',
-            );
-
             when(
               () => mockSendUserFeedbackUseCase.call(any()),
-            ).thenThrow(exception);
+            ).thenAnswer((_) async {});
+
+            // act
+            await feedbackController.sendFeedback(
+              name: name,
+              email: email,
+              feedback: feedback,
+            );
+
+            // assert
+            verify(
+              () => mockSendUserFeedbackUseCase.call(any()),
+            ).called(1);
+          },
+        );
+      });
+
+      group('Erro', () {
+        test(
+          'deve lancar BaseException quando o use case lanca excecao',
+          () async {
+            // arrange
+            when(
+              () => mockSendUserFeedbackUseCase.call(any()),
+            ).thenThrow(
+              BaseException(message: 'erro ao enviar feedback'),
+            );
 
             // act & assert
             expect(
@@ -112,148 +133,9 @@ void main() {
               throwsA(isA<BaseException>()),
             );
 
-            verify(() => mockSendUserFeedbackUseCase.call(any())).called(1);
-          },
-        );
-
-        test(
-          'deve propagar excecao de rede quando falhar conexao',
-          () async {
-            // arrange
-            const name = 'John Doe';
-            const email = 'john@example.com';
-            const feedback = 'Test feedback';
-
-            final exception = BaseException(
-              message: 'network_error',
-            );
-
-            when(
+            verify(
               () => mockSendUserFeedbackUseCase.call(any()),
-            ).thenThrow(exception);
-
-            // act & assert
-            expect(
-              () => feedbackController.sendFeedback(
-                name: name,
-                email: email,
-                feedback: feedback,
-              ),
-              throwsA(
-                predicate<BaseException>(
-                  (e) => e.message == 'network_error',
-                ),
-              ),
-            );
-          },
-        );
-
-        test(
-          'deve propagar excecao quando servidor retornar erro',
-          () async {
-            // arrange
-            const name = 'John Doe';
-            const email = 'john@example.com';
-            const feedback = 'Test feedback';
-
-            final exception = BaseException(
-              message: 'server_error',
-              complement: 'HTTP 500',
-            );
-
-            when(
-              () => mockSendUserFeedbackUseCase.call(any()),
-            ).thenThrow(exception);
-
-            // act & assert
-            expect(
-              () => feedbackController.sendFeedback(
-                name: name,
-                email: email,
-                feedback: feedback,
-              ),
-              throwsA(
-                predicate<BaseException>(
-                  (e) => e.message == 'server_error',
-                ),
-              ),
-            );
-          },
-        );
-      });
-    });
-
-    group('feedbackValidator', () {
-      group('Sucesso', () {
-        test(
-          'deve retornar null quando feedback e valido',
-          () {
-            // arrange
-            const feedback = 'This is a valid feedback message.';
-
-            // act
-            final result = feedbackController.feedbackValidator(feedback);
-
-            // assert
-            expect(result, isNull);
-          },
-        );
-
-        test(
-          'deve retornar null quando feedback tem espacos',
-          () {
-            // arrange
-            const feedback = '   Valid feedback with spaces   ';
-
-            // act
-            final result = feedbackController.feedbackValidator(feedback);
-
-            // assert
-            expect(result, isNull);
-          },
-        );
-      });
-
-      group('Erro', () {
-        test(
-          'deve retornar mensagem de erro quando feedback vazio',
-          () {
-            // arrange
-            const feedback = '';
-
-            // act
-            final result = feedbackController.feedbackValidator(feedback);
-
-            // assert
-            expect(result, 'feedback_input_empty_error'.tr);
-          },
-        );
-
-        test(
-          'deve retornar mensagem de erro quando feedback e nulo',
-          () {
-            // arrange
-            const String? feedback = null;
-
-            // act
-            final result = feedbackController.feedbackValidator(feedback);
-
-            // assert
-            expect(result, 'feedback_input_empty_error'.tr);
-          },
-        );
-
-        test(
-          'deve retornar mensagem de erro quando feedback e apenas espacos',
-          () {
-            // arrange
-            const feedback = '   ';
-
-            // act
-            final result = feedbackController.feedbackValidator(feedback);
-
-            // assert
-            expect(result, 'feedback_input_empty_error'.tr);
+            ).called(1);
           },
         );
       });

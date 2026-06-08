@@ -6,7 +6,7 @@ import 'package:dependency/dependency.dart';
 abstract class AppNavigator {
   static final AppBaseRouter _router = GetRouter.instance;
 
-  static Map<int, Routing> nestedRouting = {};
+  static final Map<int, Routing> nestedRouting = {};
 
   static String get currentRoute {
     final nestedId = BaseController.navigatorIndex.value;
@@ -60,10 +60,13 @@ abstract class AppNavigator {
     final currentRouteGet = _router.currentRoute;
     final navigatorRoute = AppRoutes.navigatorRoute();
     final isNestedNavigation = currentRouteGet == navigatorRoute?.name;
-    _router.back(result: result, id: isNestedNavigation ? nestedId : null);
+    return _router.back(
+      result: result,
+      id: isNestedNavigation ? nestedId : null,
+    );
   }
 
-  static Future<dynamic>? backAndToNamed<T>(
+  static Future<dynamic>? backAndToNamed(
     AppRouter appRouter, {
     Map<String, dynamic>? arguments,
   }) async {
@@ -71,7 +74,7 @@ abstract class AppNavigator {
     final currentRouteGet = _router.currentRoute;
     final navigatorRoute = AppRoutes.navigatorRoute();
     final isNestedNavigation = currentRouteGet == navigatorRoute?.name;
-    _router.backAndToNamed(
+    return _router.backAndToNamed(
       appRouter.name,
       id: isNestedNavigation ? nestedId : null,
       arguments: arguments,
@@ -88,7 +91,7 @@ abstract class AppNavigator {
     }
   }
 
-  static Future<dynamic>? backAllAndToNamed<T>(
+  static Future<dynamic>? backAllAndToNamed(
     AppRouter appRouter, {
     Map<String, dynamic>? arguments,
   }) async {

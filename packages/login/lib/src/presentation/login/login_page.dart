@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:login/src/presentation/login/login.dart';
 
 class LoginPage extends AppView<LoginController> {
@@ -43,14 +44,17 @@ class LoginPage extends AppView<LoginController> {
                       obscureText: true,
                     ),
                     const SpacerWidget(height: 2),
-                    Obx(() {
-                      return CheckboxTitleWidget(
-                        customKey: const Key('remember_checkbox_key'),
-                        text: 'remember_my_email'.tr,
-                        initialValue: controller.rememberMeInitial.value,
-                        onChanged: controller.saveRememberEmail,
-                      );
-                    }),
+                    ValueListenableBuilder<bool>(
+                      valueListenable: controller.rememberMeInitial,
+                      builder: (context, value, child) {
+                        return CheckboxTitleWidget(
+                          customKey: const Key('remember_checkbox_key'),
+                          text: 'remember_my_email'.tr,
+                          initialValue: value,
+                          onChanged: controller.saveRememberEmail,
+                        );
+                      },
+                    ),
                     const SpacerWidget(),
                     Container(
                       constraints: const BoxConstraints(

@@ -6,9 +6,7 @@ class AptabaseAnalytics implements AnalyticsService {
   final String _apiKey;
   final String _apiUrl;
 
-  AptabaseAnalytics({required String apiKey, required String apiUrl})
-    : _apiKey = apiKey,
-      _apiUrl = apiUrl;
+  AptabaseAnalytics({required this._apiKey, required this._apiUrl});
 
   @override
   Future<void> init() async {

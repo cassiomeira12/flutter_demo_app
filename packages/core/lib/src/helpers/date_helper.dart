@@ -1,6 +1,6 @@
 import 'package:dependency/dependency.dart';
 
-class DateHelper {
+abstract class DateHelper {
   static DateTime parse(String date) {
     return DateTime.parse(date).toLocal();
   }

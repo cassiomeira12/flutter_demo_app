@@ -1,5 +1,6 @@
 import 'package:admin/src/presentation/admin_user_details/admin_user_details.dart';
 import 'package:admin/src/presentation/users/users.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +15,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {

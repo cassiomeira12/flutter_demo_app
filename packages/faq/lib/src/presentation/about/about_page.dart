@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:faq/src/presentation/about/about.dart';
 
 class AboutPage extends AppView<AboutController> {

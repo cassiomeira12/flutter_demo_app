@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -15,6 +17,7 @@ class FlutterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('FlutterIcon', name: 'Rebuild');
     return Icon(
       icon,
       size: size.value,

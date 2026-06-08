@@ -1,5 +1,6 @@
 // ignore_for_file: join_return_with_assignment
 
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -11,18 +12,14 @@ class WebController extends BaseController {
   final GetDeviceLocaleUseCase _currentDeviceLocaleUseCase;
 
   WebController({
-    required AppEnvironmentEntity appEnv,
-    required ServerEnvironmentEntity serverEnv,
-    required WebAppEnvironmentEntity webAppEnv,
-    required OpenWebUrlUseCase openWebUrlUseCase,
-    required GetDeviceLocaleUseCase currentDeviceLocaleUseCase,
-  }) : _appEnv = appEnv,
-       _serverEnv = serverEnv,
-       _webAppEnv = webAppEnv,
-       _openWebUrlUseCase = openWebUrlUseCase,
-       _currentDeviceLocaleUseCase = currentDeviceLocaleUseCase;
+    required this._appEnv,
+    required this._serverEnv,
+    required this._webAppEnv,
+    required this._openWebUrlUseCase,
+    required this._currentDeviceLocaleUseCase,
+  });
 
-  Rxn<UserEntity> user = Rxn();
+  final user = ValueNotifier<UserEntity?>(null);
 
   GlobalKey mainKey = GlobalKey();
   GlobalKey featuresKey = GlobalKey();
@@ -40,6 +37,12 @@ class WebController extends BaseController {
     if (AppBinding.hasInstance<UserEntity>()) {
       user.value = AppBinding.find<UserEntity>();
     }
+  }
+
+  @override
+  void onClose() {
+    user.dispose();
+    super.onClose();
   }
 
   void _closeDrawer(BuildContext context) {

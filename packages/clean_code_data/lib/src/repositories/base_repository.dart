@@ -1,36 +1,33 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
-  final String _databaseName;
+  final String _localDatabaseName;
   final BaseCrudService<T> _service;
   final CheckInternetConnectionUseCase _checkInternetUseCase;
-  final LocalStorageUseCase _localStorage;
+  final LocalStorageUseCase _localStorageUseCase;
+  final OfflineFirstLocalDatabase<Map<String, dynamic>> _localDatabase;
 
   BaseRepositoryImpl({
-    required String localDatabaseName,
-    required BaseCrudService<T> service,
-    required CheckInternetConnectionUseCase checkInternetUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-  }) : _databaseName = localDatabaseName,
-       _service = service,
-       _checkInternetUseCase = checkInternetUseCase,
-       _localStorage = localStorageUseCase {
+    required this._localDatabaseName,
+    required this._service,
+    required this._checkInternetUseCase,
+    required this._localStorageUseCase,
+    required this._localDatabase,
+  }) {
     scheduleMicrotask(() async {
       _lastNetworkStatus = await _checkInternetUseCase.call();
       _internetConnectionSubscription = _checkInternetUseCase.internetStream
-          .asBroadcastStream()
           .listen(_backgroundRemoteSyncData);
     });
   }
 
-  String get lastFetchTimestampKey => 'last_fetch_$_databaseName';
+  String get lastFetchTimestampKey => 'last_fetch_$_localDatabaseName';
 
   bool _lastNetworkStatus = false;
   StreamSubscription<bool>? _internetConnectionSubscription;
-
-  final OfflineFirstLocalDatabase<Map<String, dynamic>> _localDatabase =
-      HiveOfflineFirstLocalDatabase<Map<String, dynamic>>();
 
   final ValueNotifier<List<ValueNotifier<T>>> _values =
       ValueNotifier<List<ValueNotifier<T>>>(List.empty(growable: true));
@@ -181,7 +178,7 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
 
   @override
   Future<void> initLocalDatabase() async {
-    await _localDatabase.init(databaseName: _databaseName);
+    await _localDatabase.init(databaseName: _localDatabaseName);
     scheduleMicrotask(
       () => _backgroundRemoteSyncData(
         _lastNetworkStatus,
@@ -278,7 +275,7 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
       await _localDatabase.deleteAll();
       await _localDatabase.removeOfflineData();
       await _localDatabase.removeOfflineDeletedData();
-      await _localStorage.delete(lastFetchTimestampKey);
+      await _localStorageUseCase.delete(lastFetchTimestampKey);
     } catch (error, stackTrace) {
       Log.error(error, stackTrace, msg: '$runtimeType deleteLocalDatabase');
     }
@@ -322,7 +319,9 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
   }
 
   Future<List<T>> _fetchLatestRemoteData() async {
-    final lastFetch = await _localStorage.get<String>(lastFetchTimestampKey);
+    final lastFetch = await _localStorageUseCase.get<String>(
+      lastFetchTimestampKey,
+    );
     final lastFetchTimestamp = DateTime.tryParse(lastFetch ?? '');
 
     final List<T> resultsEncrypted = await _fetchRemote(
@@ -333,7 +332,10 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
       await _localDatabase.addByKey(item.objectId, item.toMap());
     }
 
-    _localStorage.set(lastFetchTimestampKey, DateTime.timestamp().toString());
+    _localStorageUseCase.set(
+      lastFetchTimestampKey,
+      DateTime.timestamp().toString(),
+    );
 
     return resultsEncrypted;
   }

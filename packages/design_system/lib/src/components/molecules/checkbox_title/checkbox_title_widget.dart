@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -27,6 +29,7 @@ class CheckboxTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('CheckBoxTitleWidget $text', name: 'Rebuild');
     return Container(
       constraints: const BoxConstraints(
         maxWidth: ResponsiveSizeHelper.maxWidth,

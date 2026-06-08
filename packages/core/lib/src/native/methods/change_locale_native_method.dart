@@ -4,8 +4,7 @@ import 'package:dependency/dependency.dart';
 class ChangeLocaleNativeMethod {
   final MethodChannel _methodChannel;
 
-  const ChangeLocaleNativeMethod({required MethodChannel methodChannel})
-    : _methodChannel = methodChannel;
+  const ChangeLocaleNativeMethod({required this._methodChannel});
 
   Future<void> call(Locale locale) async {
     try {

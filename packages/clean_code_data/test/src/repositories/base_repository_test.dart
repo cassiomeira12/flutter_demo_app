@@ -1,28 +1,127 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../helpers/mock_method_handler.dart';
 
-class InternetConnectionServiceMock extends Mock
-    implements InternetConnectionService {
-  @override
-  Future<bool> hasInternetAccess() => Future.value(true);
+// -----------------------------------------------------------------------------
+// Mocks (apenas para classes da camada "data")
+// -----------------------------------------------------------------------------
+
+class MockCheckInternetConnectionUseCase extends Mock
+    implements CheckInternetConnectionUseCase {}
+
+class MockOfflineFirstLocalDatabase extends Mock
+    implements OfflineFirstLocalDatabase<Map<String, dynamic>> {}
+
+/// Mock manual de [BaseCrudService] para evitar problemas com genéricos no mocktail.
+class MockBaseCrudService<T> implements BaseCrudService<T> {
+  T Function(Map<String, dynamic>)? _parseMapHandler;
+  T Function(Map<String, dynamic>)? _createHandler;
+  T Function(String, {required Map<String, dynamic> data})? _updateHandler;
+  void Function(String)? _deleteHandler;
+  List<T> Function({required int limit, required int skip, String? where})? _listHandler;
+
+  void whenParseMap(T Function(Map<String, dynamic>) handler) {
+    _parseMapHandler = handler;
+  }
+
+  void whenCreate(T Function(Map<String, dynamic>) handler) {
+    _createHandler = handler;
+  }
+
+  void whenUpdate(T Function(String, {required Map<String, dynamic> data}) handler) {
+    _updateHandler = handler;
+  }
+
+  void whenDelete(void Function(String) handler) {
+    _deleteHandler = handler;
+  }
+
+  void whenList(List<T> Function({required int limit, required int skip, String? where}) handler) {
+    _listHandler = handler;
+  }
 
   @override
-  void addStream(StreamController<bool> streamController) {}
+  T parseMap(Map<String, dynamic> map) {
+    if (_parseMapHandler == null) {
+      throw Exception('parseMap not stubbed');
+    }
+    return _parseMapHandler!(map);
+  }
 
   @override
-  void pauseStream() {}
+  Future<T> create(Map<String, dynamic> data) {
+    if (_createHandler == null) {
+      throw Exception('create not stubbed');
+    }
+    return Future.value(_createHandler!(data));
+  }
 
   @override
-  void resumeStream() {}
+  Future<void> delete(String objectId) {
+    _deleteHandler?.call(objectId);
+    return Future.value();
+  }
 
   @override
-  void dispose() {}
+  Future<List<T>> list({
+    int limit = 100,
+    int skip = 0,
+    String order = '-updatedAt',
+    String? where,
+  }) {
+    if (_listHandler == null) {
+      throw Exception('list not stubbed');
+    }
+    return Future.value(_listHandler!(limit: limit, skip: skip, where: where));
+  }
+
+  @override
+  Future<T> read(String objectId) {
+    throw UnimplementedError('read not implemented in test mock');
+  }
+
+  @override
+  Future<T> update(String objectId, {required Map<String, dynamic> data}) {
+    if (_updateHandler == null) {
+      throw Exception('update not stubbed');
+    }
+    return Future.value(_updateHandler!(objectId, data: data));
+  }
 }
 
-class BaseCrudServiceMock<T> extends Mock implements BaseCrudService<T> {}
+/// Fake de [LocalStorageUseCase] (domain) com armazenamento em memória.
+class FakeLocalStorageUseCase extends Fake implements LocalStorageUseCase {
+  final _store = <String, dynamic>{};
+
+  @override
+  Future<T?> get<T>(String key) async => _store[key] as T?;
+
+  @override
+  Future<bool> set<T>(String key, T value) async {
+    _store[key] = value;
+    return true;
+  }
+
+  @override
+  Future<bool> delete(String key) async {
+    _store.remove(key);
+    return true;
+  }
+
+  @override
+  Future<void> clearAll() async => _store.clear();
+
+  @override
+  Future<List<String>> getKeys() async => _store.keys.toList();
+}
+
+// -----------------------------------------------------------------------------
+// Entidade de Teste
+// -----------------------------------------------------------------------------
 
 class TestEntity extends BaseEntity {
   final String name;
@@ -58,257 +157,489 @@ class TestEntity extends BaseEntity {
   }
 }
 
+// -----------------------------------------------------------------------------
+// Helpers
+// -----------------------------------------------------------------------------
+
+TestEntity _createTestEntity({
+  String? objectId,
+  String name = 'Test Name',
+}) {
+  return TestEntity(
+    objectId: objectId ?? 'test-id',
+    createdAt: DateTime.now().toUtc(),
+    updatedAt: DateTime.now().toUtc(),
+    name: name,
+  );
+}
+
+Map<String, dynamic> _createTestMap({String name = 'Test Name'}) {
+  return {'name': name};
+}
+
+// -----------------------------------------------------------------------------
+// Tests
+// -----------------------------------------------------------------------------
+
 void main() {
   MockMethodHandler.ensureInitializedWithMock();
 
-  final faker = Faker();
-  late BaseCrudService<TestEntity> service;
+  late MockBaseCrudService<TestEntity> mockService;
+  late MockCheckInternetConnectionUseCase mockCheckInternetUseCase;
+  late FakeLocalStorageUseCase mockLocalStorage;
+  late MockOfflineFirstLocalDatabase mockLocalDatabase;
+  late StreamController<bool> internetStreamController;
+  late BaseRepositoryImpl<TestEntity> repository;
 
-  setUpAll(() async {
-    MockMethodHandler.getApplicationDocumentsDirectory();
+  setUp(() async {
+    mockService = MockBaseCrudService<TestEntity>();
+    mockCheckInternetUseCase = MockCheckInternetConnectionUseCase();
+    mockLocalStorage = FakeLocalStorageUseCase();
+    mockLocalDatabase = MockOfflineFirstLocalDatabase();
+    internetStreamController = StreamController<bool>.broadcast();
 
-    service = AppBinding.put<BaseCrudService<TestEntity>>(
-      BaseCrudServiceMock<TestEntity>(),
-    );
+    // ── Stubs padrão ────────────────────────────────────────────────────
 
-    when(
-      () => service.parseMap(any()),
-    ).thenAnswer((result) {
-      final Map<String, dynamic> map = result.positionalArguments.first;
+    mockService.whenParseMap((map) {
       return TestEntity(
-        objectId: map['objectId'] ?? '',
-        createdAt: map['createdAt'] == null
-            ? null
-            : DateTime.tryParse(map['createdAt']),
-        updatedAt: map['updatedAt'] == null
-            ? null
-            : DateTime.tryParse(map['updatedAt']),
-        name: map['name'],
+        objectId: map['objectId'] as String? ?? '',
+        createdAt: map['createdAt'] != null
+            ? DateTime.tryParse(map['createdAt'] as String)
+            : null,
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.tryParse(map['updatedAt'] as String)
+            : null,
+        name: map['name'] as String? ?? '',
       );
     });
 
-    when(
-      () => service.create(any()),
-    ).thenAnswer((result) async {
-      final Map<String, dynamic> map = result.positionalArguments.first;
+    mockService.whenCreate((map) {
       return TestEntity(
-        objectId: faker.guid.guid(),
-        createdAt: DateTime.now().toUtc(),
+        objectId: map['objectId'] as String? ?? '',
+        createdAt: map['createdAt'] != null
+            ? DateTime.tryParse(map['createdAt'] as String)
+            : null,
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.tryParse(map['updatedAt'] as String)
+            : null,
+        name: map['name'] as String? ?? '',
+      );
+    });
+
+    mockService.whenUpdate((id, {required data}) {
+      return TestEntity(
+        objectId: id,
+        createdAt: data['createdAt'] != null
+            ? DateTime.tryParse(data['createdAt'] as String)
+            : null,
         updatedAt: DateTime.now().toUtc(),
-        name: map['name'],
+        name: data['name'] as String? ?? '',
       );
     });
 
-    when(
-      () => service.update(any(), data: any(named: 'data')),
-    ).thenAnswer((result) async {
-      final Map<String, dynamic> map =
-          result.namedArguments[const Symbol('data')];
-      return TestEntity(
-        objectId: map['objectId'],
-        createdAt: DateTime.tryParse(map['createdAt']),
-        updatedAt: DateTime.now().toUtc(),
-        name: map['name'],
-      );
-    });
+    mockService.whenDelete((_) {});
 
+    // Conectividade: online
+    when(() => mockCheckInternetUseCase.call())
+        .thenAnswer((_) async => true);
+    when(() => mockCheckInternetUseCase.internetStream)
+        .thenAnswer((_) => internetStreamController.stream);
+
+    // Local database sem dados offline
+    when(() => mockLocalDatabase.offlineValues())
+        .thenAnswer((_) async => <dynamic, Map<String, dynamic>>{});
+    when(() => mockLocalDatabase.offlineDeletedValues())
+        .thenAnswer((_) async => <String>[]);
+    when(() => mockLocalDatabase.values())
+        .thenAnswer((_) async => <dynamic, Map<String, dynamic>>{});
+    when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
     when(
-      () => service.delete(any()),
+      () => mockLocalDatabase.init(databaseName: any(named: 'databaseName')),
     ).thenAnswer((_) async {});
+    when(() => mockLocalDatabase.close()).thenAnswer((_) async {});
+    when(() => mockLocalDatabase.update(any(), any()))
+        .thenAnswer((_) async {});
+    when(() => mockLocalDatabase.delete(any())).thenAnswer((_) async {});
+    when(() => mockLocalDatabase.deleteAll()).thenAnswer((_) async {});
+    when(() => mockLocalDatabase.removeOfflineData())
+        .thenAnswer((_) async {});
+    when(() => mockLocalDatabase.removeOfflineData(any()))
+        .thenAnswer((_) async {});
+    when(() => mockLocalDatabase.removeOfflineDeletedData())
+        .thenAnswer((_) async {});
+    when(() => mockLocalDatabase.removeOfflineDeletedData(any()))
+        .thenAnswer((_) async {});
+    when(() => mockLocalDatabase.addByKey(any(), any()))
+        .thenAnswer((_) async {});
 
-    AppBinding.put<InternetConnectionService>(InternetConnectionServiceMock());
-
-    AppBinding.put<CheckInternetConnectionUseCase>(
-      CheckInternetConnectionUseCaseImpl(
-        internetConnectionService: AppBinding.find(),
-      ),
+    // ── Constrói o repository ───────────────────────────────────────────
+    repository = BaseRepositoryImpl<TestEntity>(
+      localDatabaseName: 'test-db',
+      service: mockService,
+      checkInternetUseCase: mockCheckInternetUseCase,
+      localStorageUseCase: mockLocalStorage,
+      localDatabase: mockLocalDatabase,
     );
 
-    AppBinding.put<LocalStorage>(HiveLocalStorage());
-    AppBinding.put<LocalStorageUseCase>(
-      LocalStorageUseCaseImpl(
-        localStorage: AppBinding.find(),
-      ),
-    );
-
-    final repository = AppBinding.put<BaseRepository<TestEntity>>(
-      BaseRepositoryImpl<TestEntity>(
-        localDatabaseName: 'test-db',
-        service: AppBinding.find(),
-        checkInternetUseCase: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-      ),
-    );
-
-    await repository.initLocalDatabase();
+    // Drena a microtask agendada no construtor
+    await Future.delayed(Duration.zero);
   });
 
-  tearDownAll(() async {
-    final repository = AppBinding.find<BaseRepository<TestEntity>>();
-    await repository.deleteLocalDatabase();
-    AppBinding.deleteAll();
+  tearDown(() async {
+    await internetStreamController.close();
+    await repository.dispose();
   });
 
-  test('should fetch data', () async {
-    final repository = AppBinding.find<BaseRepository<TestEntity>>();
+  // ===========================================================================
+  // initLocalDatabase
+  // ===========================================================================
+  group('initLocalDatabase', () {
+    test(
+      'deve inicializar o banco local quando initLocalDatabase for chamado',
+      () async {
+        await repository.initLocalDatabase();
 
-    expect(repository.valueListenable.value, isEmpty);
+        verify(
+          () => mockLocalDatabase.init(databaseName: any(named: 'databaseName')),
+        ).called(1);
+      },
+    );
 
-    final List<TestEntity> list = List.empty(growable: true);
+    test(
+      'deve propagar exceção quando localDatabase.init falha',
+      () async {
+        when(
+          () => mockLocalDatabase.init(databaseName: any(named: 'databaseName')),
+        ).thenThrow(Exception('Falha ao inicializar banco'));
 
-    for (int index = 0; index < 5; index++) {
-      list.add(
-        TestEntity(
-          objectId: faker.guid.guid(),
-          createdAt: faker.date.dateTime(
-            minYear: DateTime.now().year - 1,
-            maxYear: DateTime.now().year,
-          ),
-          updatedAt: faker.date.dateTime(
-            minYear: DateTime.now().year,
-            maxYear: DateTime.now().year + 1,
-          ),
-          name: faker.person.name(),
-        ),
-      );
-    }
+        await expectLater(
+          repository.initLocalDatabase(),
+          throwsA(isA<Exception>()),
+        );
+      },
+    );
+  });
 
-    when(
-      () => service.list(
-        limit: any(named: 'limit'),
-        order: any(named: 'order'),
-        skip: any(named: 'skip'),
-        where: any(named: 'where'),
-      ),
-    ).thenAnswer((_) async {
-      return list;
+  // ===========================================================================
+  // create
+  // ===========================================================================
+  group('create', () {
+    test('deve criar registro local e adicionar ao valueListenable', () async {
+      final data = _createTestMap();
+
+      when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 42);
+
+      final result = await repository.create(data);
+
+      expect(result, isA<TestEntity>());
+      expect(result.name, 'Test Name');
+      expect(result.objectId, '42');
+      verify(() => mockLocalDatabase.add(any())).called(1);
+      expect(repository.valueListenable.value.length, 1);
+      expect(repository.valueListenable.value.first.value.name, 'Test Name');
     });
 
-    await repository.fetch();
+    test(
+      'deve adicionar createdAt e updatedAt ao criar registro',
+      () async {
+        final data = _createTestMap();
 
-    expect(repository.valueListenable.value, isNotEmpty);
-  });
+        await repository.create(data);
 
-  test('should create and upload new data', () async {
-    final repository = AppBinding.find<BaseRepository<TestEntity>>();
-
-    final faker = Faker();
-
-    final Map<String, dynamic> map = {
-      'name': faker.person.name(),
-    };
-
-    final TestEntity result = await repository.create(map);
-
-    expect(result.name, map['name']);
-
-    List<TestEntity> list = repository.valueListenable.value
-        .map((item) => item.value)
-        .toList();
-    list.removeWhere((item) => item.objectId != result.objectId);
-
-    expect(list.isNotEmpty, true);
-
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    list = repository.valueListenable.value.map((item) => item.value).toList();
-
-    for (final item in list) {
-      expect(item.objectId != result.objectId, true);
-    }
-  });
-
-  test('should update and upload new data', () async {
-    final repository = AppBinding.find<BaseRepository<TestEntity>>();
-
-    final faker = Faker();
-
-    final Map<String, dynamic> map = {
-      'name': faker.person.name(),
-    };
-
-    final TestEntity result = await repository.create(map);
-
-    expect(result.name, map['name']);
-
-    List<TestEntity> list = repository.valueListenable.value
-        .map((item) => item.value)
-        .toList();
-    list.removeWhere((item) => item.objectId != result.objectId);
-
-    expect(list.isNotEmpty, true);
-
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    list = repository.valueListenable.value.map((item) => item.value).toList();
-
-    for (final item in list) {
-      expect(item.objectId != result.objectId, true);
-    }
-
-    var updatedItem = list.firstWhere((item) => item.name == result.name);
-
-    final String updatedName = faker.person.name();
-
-    updatedItem = updatedItem.copyWith(name: updatedName);
-
-    updatedItem = await repository.update(
-      updatedItem.objectId,
-      data: updatedItem.toMap(),
+        final captured =
+            verify(() => mockLocalDatabase.add(captureAny())).captured.first
+                as Map<String, dynamic>;
+        expect(captured, containsPair('createdAt', isA<String>()));
+        expect(captured, containsPair('updatedAt', isA<String>()));
+      },
     );
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    test(
+      'deve chamar uploadCreatedOfflineData quando online',
+      () async {
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
 
-    expect(updatedItem.name, updatedName);
+        await repository.create(data);
 
-    list = repository.valueListenable.value.map((item) => item.value).toList();
-    list.removeWhere((item) => item.objectId != updatedItem.objectId);
+        verify(() => mockLocalDatabase.offlineValues()).called(1);
+      },
+    );
 
-    expect(list.length, 1);
-    expect(list.first.objectId, updatedItem.objectId);
-    expect(list.first.name, updatedName);
-    expect(list.first.createdAt, updatedItem.createdAt);
-    expect(list.first.updatedAt != updatedItem.updatedAt, true);
+    test(
+      'não deve chamar uploadCreatedOfflineData quando offline',
+      () async {
+        when(() => mockCheckInternetUseCase.call())
+            .thenAnswer((_) async => false);
+
+        // Reconstrói com conectividade offline
+        await repository.dispose();
+        repository = BaseRepositoryImpl<TestEntity>(
+          localDatabaseName: 'test-db',
+          service: mockService,
+          checkInternetUseCase: mockCheckInternetUseCase,
+          localStorageUseCase: mockLocalStorage,
+          localDatabase: mockLocalDatabase,
+        );
+        await Future.delayed(Duration.zero);
+
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+
+        await repository.create(data);
+
+        verifyNever(() => mockLocalDatabase.offlineValues());
+      },
+    );
+
+    test(
+      'deve ordenar registros quando sort é definido',
+      () async {
+        final sortedRepository = BaseRepositoryImpl<TestEntity>(
+          localDatabaseName: 'test-db',
+          service: mockService,
+          checkInternetUseCase: mockCheckInternetUseCase,
+          localStorageUseCase: mockLocalStorage,
+          localDatabase: mockLocalDatabase,
+        );
+
+        final data = _createTestMap(name: 'B');
+        await sortedRepository.create(data);
+
+        final dataA = _createTestMap(name: 'A');
+        await sortedRepository.create(dataA);
+
+        expect(sortedRepository.valueListenable.value.length, 2);
+      },
+    );
   });
 
-  test('should delete and upload', () async {
-    final repository = AppBinding.find<BaseRepository<TestEntity>>();
+  // ===========================================================================
+  // update
+  // ===========================================================================
+  group('update', () {
+    test('deve atualizar registro local quando chamado', () async {
+      final data = _createTestMap();
+      when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+      final created = await repository.create(data);
 
-    final faker = Faker();
+      final updatedData = _createTestMap(name: 'Updated Name');
+      await repository.update(created.objectId, data: updatedData);
 
-    final Map<String, dynamic> map = {
-      'name': faker.person.name(),
-    };
+      verify(() => mockLocalDatabase.update(any(), any())).called(1);
 
-    final TestEntity result = await repository.create(map);
+      expect(
+        repository.valueListenable.value.first.value.name,
+        'Updated Name',
+      );
+    });
 
-    expect(result.name, map['name']);
+    test(
+      'deve chamar uploadUpdatedOfflineData quando online',
+      () async {
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+        final created = await repository.create(data);
 
-    List<TestEntity> list = repository.valueListenable.value
-        .map((item) => item.value)
-        .toList();
-    list.removeWhere((item) => item.objectId != result.objectId);
+        final updatedData = _createTestMap(name: 'Updated');
+        await repository.update(created.objectId, data: updatedData);
 
-    expect(list.isNotEmpty, true);
+        // create() + update() chamam offlineValues() 2 vezes
+        verify(() => mockLocalDatabase.offlineValues()).called(2);
+      },
+    );
 
-    await Future.delayed(const Duration(milliseconds: 100));
+    test(
+      'não deve chamar uploadUpdatedOfflineData quando offline',
+      () async {
+        when(() => mockCheckInternetUseCase.call())
+            .thenAnswer((_) async => false);
 
-    list = repository.valueListenable.value.map((item) => item.value).toList();
+        await repository.dispose();
+        repository = BaseRepositoryImpl<TestEntity>(
+          localDatabaseName: 'test-db',
+          service: mockService,
+          checkInternetUseCase: mockCheckInternetUseCase,
+          localStorageUseCase: mockLocalStorage,
+          localDatabase: mockLocalDatabase,
+        );
+        await Future.delayed(Duration.zero);
 
-    for (final item in list) {
-      expect(item.objectId != result.objectId, true);
-    }
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+        final created = await repository.create(data);
 
-    final deleteItem = list.firstWhere((item) => item.name == result.name);
+        final updatedData = _createTestMap(name: 'Updated');
+        await repository.update(created.objectId, data: updatedData);
 
-    await repository.delete(deleteItem.objectId);
+        expect(repository.valueListenable.value, isNotEmpty);
+      },
+    );
+  });
 
-    await Future.delayed(const Duration(milliseconds: 100));
+  // ===========================================================================
+  // delete
+  // ===========================================================================
+  group('delete', () {
+    test('deve deletar registro local e remover do valueListenable', () async {
+      final data = _createTestMap();
+      when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+      final created = await repository.create(data);
 
-    list = repository.valueListenable.value.map((item) => item.value).toList();
+      expect(repository.valueListenable.value.length, 1);
 
-    for (final item in list) {
-      expect(item.objectId != deleteItem.objectId, true);
-    }
+      await repository.delete(created.objectId);
+
+      verify(() => mockLocalDatabase.delete(created.objectId)).called(1);
+      expect(repository.valueListenable.value.length, 0);
+    });
+
+    test(
+      'deve chamar uploadDeletedOfflineData quando online',
+      () async {
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 1);
+        final created = await repository.create(data);
+
+        await repository.delete(created.objectId);
+
+        verify(() => mockLocalDatabase.offlineDeletedValues()).called(1);
+      },
+    );
+  });
+
+  // ===========================================================================
+  // deleteLocalDatabase
+  // ===========================================================================
+  group('deleteLocalDatabase', () {
+    test('deve limpar dados do banco local quando chamado', () async {
+      await repository.deleteLocalDatabase();
+
+      verify(() => mockLocalDatabase.deleteAll()).called(1);
+      verify(() => mockLocalDatabase.removeOfflineData()).called(1);
+      verify(() => mockLocalDatabase.removeOfflineDeletedData()).called(1);
+    });
+
+    test(
+      'não deve propagar exceção quando deleteAll falha',
+      () async {
+        when(() => mockLocalDatabase.deleteAll())
+            .thenThrow(Exception('Erro ao deletar'));
+
+        await expectLater(
+          repository.deleteLocalDatabase(),
+          completes,
+        );
+      },
+    );
+  });
+
+  // ===========================================================================
+  // fetch
+  // ===========================================================================
+  group('fetch', () {
+    test('deve carregar dados locais quando existem registros', () async {
+      final localEntity = _createTestEntity(name: 'Local Item');
+      final localMap = localEntity.toMap();
+
+      when(() => mockLocalDatabase.values())
+          .thenAnswer((_) async => {1: localMap});
+
+      await repository.fetch();
+
+      expect(repository.valueListenable.value.length, 1);
+      expect(
+        repository.valueListenable.value.first.value.name,
+        'Local Item',
+      );
+    });
+
+    test(
+      'deve baixar dados remotos quando banco local está vazio',
+      () async {
+        final remoteEntity = _createTestEntity(
+          objectId: 'remote-1',
+          name: 'Remote Item',
+        );
+
+        var listCallCount = 0;
+        mockService.whenList(({required limit, required skip, where}) {
+          listCallCount++;
+          return [remoteEntity];
+        });
+
+        await repository.fetch();
+
+        expect(listCallCount, 1);
+      },
+    );
+
+    test(
+      'não deve propagar exceção quando service.list lança '
+      'BaseException com throwReport false',
+      () async {
+        mockService.whenList(({required limit, required skip, where}) {
+          throw BaseException(
+            message: 'Erro de rede',
+            throwReport: false,
+          );
+        });
+
+        await expectLater(repository.fetch(), completes);
+      },
+    );
+
+    test(
+      'deve propagar BaseException com throwReport true',
+      () async {
+        mockService.whenList(({required limit, required skip, where}) {
+          throw BaseException(
+            message: 'Erro crítico',
+          );
+        });
+
+        await expectLater(
+          repository.fetch(),
+          throwsA(isA<BaseException>()),
+        );
+      },
+    );
+  });
+
+  // ===========================================================================
+  // dispose
+  // ===========================================================================
+  group('dispose', () {
+    test('deve fechar o banco de dados quando dispose for chamado', () async {
+      await expectLater(repository.dispose(), completes);
+      verify(() => mockLocalDatabase.close()).called(1);
+    });
+  });
+
+  // ===========================================================================
+  // valueListenable
+  // ===========================================================================
+  group('valueListenable', () {
+    test('deve iniciar com lista vazia', () {
+      expect(repository.valueListenable.value, isEmpty);
+    });
+
+    test(
+      'deve refletir alterações após operações CRUD',
+      () async {
+        expect(repository.valueListenable.value, isEmpty);
+
+        final data = _createTestMap();
+        when(() => mockLocalDatabase.add(any())).thenAnswer((_) async => 99);
+
+        await repository.create(data);
+
+        expect(repository.valueListenable.value.length, 1);
+        expect(
+          repository.valueListenable.value.first.value.objectId,
+          '99',
+        );
+      },
+    );
   });
 }

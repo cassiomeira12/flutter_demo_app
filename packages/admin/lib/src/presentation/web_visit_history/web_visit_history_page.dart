@@ -1,7 +1,9 @@
+import 'package:admin/src/data/data.dart';
+import 'package:admin/src/domain/domain.dart';
 import 'package:admin/src/presentation/web_visit_history/web_visit_history.dart';
 import 'package:admin/src/presentation/web_visit_history/widgets/widgets.dart';
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class WebVisitHistoryPage extends AppView<WebVisitHistoryController> {
   const WebVisitHistoryPage({super.key});

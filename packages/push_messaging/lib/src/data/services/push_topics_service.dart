@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 import 'package:push_messaging/src/data/data.dart';
 import 'package:push_messaging/src/domain/domain.dart';
 

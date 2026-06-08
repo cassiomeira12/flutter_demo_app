@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:settings/src/presentation/settings/settings.dart';
 import 'package:settings/src/presentation/settings/widgets/widgets.dart';
 
@@ -59,7 +60,7 @@ class SettingsPage extends AppView<SettingsController> {
                       key: const Key('settings_my_user_data_key'),
                       text: 'my_data'.tr,
                       expandWidth: true,
-                      icon: const FlutterIcon(BoxIcons.bx_user),
+                      icon: const FlutterIcon(Icons.person),
                       onPressed: controller.userData,
                     ),
                   if (AppRoutes.exist(AppRouter.security))
@@ -67,7 +68,7 @@ class SettingsPage extends AppView<SettingsController> {
                       key: const Key('settings_security_key'),
                       text: 'security'.tr,
                       expandWidth: true,
-                      icon: const FlutterIcon(BoxIcons.bx_building),
+                      icon: const FlutterIcon(Icons.security),
                       onPressed: controller.security,
                     ),
                   if (AppRoutes.exist(AppRouter.notificationsSettings))
@@ -75,14 +76,14 @@ class SettingsPage extends AppView<SettingsController> {
                       key: const Key('settings_notifications_key'),
                       text: 'notifications'.tr,
                       expandWidth: true,
-                      icon: const FlutterIcon(BoxIcons.bxs_bell_ring),
+                      icon: const FlutterIcon(Icons.notifications_active),
                       onPressed: controller.notificationSettings,
                     ),
                   SecondaryButton(
                     key: const Key('settings_language_key'),
                     text: 'language'.tr,
                     expandWidth: true,
-                    icon: const FlutterIcon(BoxIcons.bx_help_circle),
+                    icon: const FlutterIcon(Icons.help),
                     onPressed: () {
                       BottomSheetWidget.show(
                         context: context,
@@ -96,7 +97,7 @@ class SettingsPage extends AppView<SettingsController> {
                     key: const Key('settings_themes_key'),
                     text: 'themes'.tr,
                     expandWidth: true,
-                    icon: const FlutterIcon(BoxIcons.bx_brightness),
+                    icon: const FlutterIcon(Icons.brightness_5),
                     onPressed: controller.themes,
                   ),
                   if (AppRoutes.exist(AppRouter.about))
@@ -104,14 +105,14 @@ class SettingsPage extends AppView<SettingsController> {
                       key: const Key('settings_about_key'),
                       text: 'about'.tr,
                       expandWidth: true,
-                      icon: const FlutterIcon(BoxIcons.bx_info_circle),
+                      icon: const FlutterIcon(Icons.info),
                       onPressed: controller.about,
                     ),
                   SecondaryButton(
                     key: const Key('settings_clear_cache_key'),
                     text: 'clear_local_cache'.tr,
                     expandWidth: true,
-                    icon: const FlutterIcon(BoxIcons.bx_trash),
+                    icon: const FlutterIcon(Icons.delete),
                     onPressed: () {
                       BottomSheetWidget.show(
                         context: context,
@@ -126,7 +127,7 @@ class SettingsPage extends AppView<SettingsController> {
                       text: 'Debug crash',
                       expandWidth: true,
                       icon: const FlutterIcon(
-                        BoxIcons.bx_bug,
+                        Icons.bug_report,
                         color: Colors.black87,
                       ),
                       textColor: Colors.black87,

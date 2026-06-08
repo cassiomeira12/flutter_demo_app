@@ -7,4 +7,3 @@ export 'src/models/models.dart';
 export 'src/module_bindings.dart';
 export 'src/repositories/repositories.dart';
 export 'src/services/services.dart';
-export 'src/use_cases/use_cases.dart';

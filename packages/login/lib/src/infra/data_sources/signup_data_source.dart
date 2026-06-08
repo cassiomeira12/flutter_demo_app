@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:login/src/data/data.dart';
 
 class SignupDataSourceImpl
@@ -6,7 +6,7 @@ class SignupDataSourceImpl
     implements SignupDataSource {
   final HttpClient _http;
 
-  SignupDataSourceImpl({required HttpClient http}) : _http = http;
+  SignupDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> create(Map<String, dynamic> data) {

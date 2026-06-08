@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 // import 'package:web/web.dart' as web;
@@ -5,9 +6,7 @@ import 'package:dependency/dependency.dart';
 class WebPushNotification implements PushNotificationsService {
   final RequestPermissionUseCase _requestPermissionUseCase;
 
-  WebPushNotification({
-    required RequestPermissionUseCase requestPermissionUseCase,
-  }) : _requestPermissionUseCase = requestPermissionUseCase;
+  WebPushNotification({required this._requestPermissionUseCase});
 
   @override
   Future<void> init() async {

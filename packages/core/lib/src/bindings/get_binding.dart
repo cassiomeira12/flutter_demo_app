@@ -7,32 +7,40 @@ class GetBinding implements AppBaseBinding {
   static final instance = GetBinding._();
 
   @override
-  bool hasInstance<T>({String? tag}) {
+  bool hasInstance<T extends Object>({String? tag}) {
     return Get.isRegistered<T>(tag: tag);
   }
 
   @override
-  T find<T>({String? tag}) {
+  T find<T extends Object>({String? tag}) {
     return Get.find<T>(tag: tag);
   }
 
   @override
-  T put<T>(T dependency, {String? tag, bool permanent = false}) {
+  T put<T extends Object>(T dependency, {String? tag, bool permanent = false}) {
     return Get.put<T>(dependency, tag: tag, permanent: permanent);
   }
 
   @override
-  void create<T>(T Function() builder, {String? tag, bool permanent = false}) {
-    Get.create<T>(builder, tag: tag, permanent: permanent);
+  void create<T extends Object>(
+    T Function() builder, {
+    String? tag,
+    bool permanent = false,
+  }) {
+    return Get.create<T>(builder, tag: tag, permanent: permanent);
   }
 
   @override
-  void lazyPut<T>(T Function() builder, {String? tag, bool fenix = true}) {
-    Get.lazyPut<T>(builder, tag: tag, fenix: fenix);
+  void lazyPut<T extends Object>(
+    T Function() builder, {
+    String? tag,
+    bool fenix = true,
+  }) {
+    return Get.lazyPut<T>(builder, tag: tag, fenix: fenix);
   }
 
   @override
-  Future<T> putAsync<T>(
+  Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
     bool permanent = false,
@@ -41,18 +49,31 @@ class GetBinding implements AppBaseBinding {
   }
 
   @override
-  Future<bool> delete<T>({String? tag, bool force = false}) {
+  Future<bool> delete<T extends Object>({String? tag, bool force = false}) {
     return Get.delete<T>(tag: tag, force: force);
   }
 
   @override
-  Future<void> replace<T>(T dependency, {String? tag}) async {
-    Get.replace<T>(dependency, tag: tag);
-    await Future.delayed(const Duration(milliseconds: 100));
+  Future<void> replace<T extends Object>(T dependency, {String? tag}) async {
+    final info = GetInstance().getInstanceInfo<T>(tag: tag);
+    final permanent = info.isPermanent ?? false;
+    await delete<T>(tag: tag, force: permanent);
+    put<T>(dependency, tag: tag, permanent: permanent);
   }
 
   @override
   Future<void> deleteAll({bool force = false}) {
     return Get.deleteAll(force: force);
+  }
+
+  @override
+  void reset() {
+    return Get.reset();
+  }
+
+  @override
+  @visibleForTesting
+  void testMode(bool isTest) {
+    Get.testMode = true;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -26,7 +28,7 @@ class FutureButton extends StatefulWidget {
 }
 
 class _FutureButtonState extends State<FutureButton> {
-  bool loading = false;
+  final loading = ValueNotifier<bool>(false);
 
   TextSize get fontSize {
     switch (widget.size) {
@@ -52,7 +54,7 @@ class _FutureButtonState extends State<FutureButton> {
         theme.textButtonTheme.style?.textStyle?.resolve({
           WidgetState.selected,
         })?.color;
-
+    developer.log('FutureButton ${widget.text}', name: 'Rebuild');
     return Container(
       height: widget.size.height,
       constraints: const BoxConstraints(
@@ -66,14 +68,14 @@ class _FutureButtonState extends State<FutureButton> {
                   final bool validated = await widget.onValidation!.call();
                   if (!validated || !mounted) return;
                 }
-                if (!loading) {
-                  setState(() => loading = true);
+                if (!loading.value) {
+                  loading.value = true;
                   try {
                     HapticFeedback.lightImpact();
                     await widget.onPressed?.call();
                   } finally {
                     if (mounted) {
-                      setState(() => loading = false);
+                      loading.value = false;
                     }
                   }
                 }
@@ -106,18 +108,23 @@ class _FutureButtonState extends State<FutureButton> {
               : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (loading)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
-                child: FittedBox(
-                  fit: BoxFit.fitHeight,
-                  child: CircularLoadingWidget(
-                    color: theme.textTheme.labelLarge?.color,
-                  ),
-                ),
-              )
-            else
-              Flexible(
+            ValueListenableBuilder(
+              valueListenable: loading,
+              builder: (context, value, child) {
+                if (value) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: FittedBox(
+                      fit: BoxFit.fitHeight,
+                      child: CircularLoadingWidget(
+                        color: theme.textTheme.labelLarge?.color,
+                      ),
+                    ),
+                  );
+                }
+                return child!;
+              },
+              child: Flexible(
                 child: Container(
                   margin: EdgeInsets.symmetric(
                     horizontal: ResponsiveSizeHelper.width(10),
@@ -136,6 +143,7 @@ class _FutureButtonState extends State<FutureButton> {
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),

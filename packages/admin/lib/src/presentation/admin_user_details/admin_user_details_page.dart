@@ -1,6 +1,6 @@
 import 'package:admin/src/presentation/admin_user_details/admin_user_details.dart';
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AdminUserDetailsPage extends AppView<AdminUserDetailsController> {
   const AdminUserDetailsPage({super.key});
@@ -38,7 +38,7 @@ class AdminUserDetailsPage extends AppView<AdminUserDetailsController> {
                     keyboardType: TextInputType.name,
                     prefixIcon: SizedBox(
                       width: ResponsiveSizeHelper.width(35),
-                      child: const FlutterIcon(BoxIcons.bx_user),
+                      child: const FlutterIcon(Icons.person),
                     ),
                   ),
                   const SpacerWidget(),
@@ -53,7 +53,7 @@ class AdminUserDetailsPage extends AppView<AdminUserDetailsController> {
                     keyboardType: TextInputType.emailAddress,
                     prefixIcon: SizedBox(
                       width: ResponsiveSizeHelper.width(35),
-                      child: const FlutterIcon(BoxIcons.bx_mail_send),
+                      child: const FlutterIcon(Icons.email),
                     ),
                   ),
                   const SpacerWidget(height: 2),

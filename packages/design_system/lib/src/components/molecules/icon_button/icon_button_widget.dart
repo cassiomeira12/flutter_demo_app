@@ -1,9 +1,10 @@
-import 'package:core/core.dart';
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:flutter/material.dart';
 
 class IconButtonWidget extends StatelessWidget {
-  final FlutterIcon icon;
+  final Widget icon;
   final VoidCallback onPressed;
   final FocusNode? focusNode;
   final double? splashRadius;
@@ -18,6 +19,7 @@ class IconButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('IconButtonWidget', name: 'Rebuild');
     return IconButton(
       icon: icon,
       focusNode: focusNode,

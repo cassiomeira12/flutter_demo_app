@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -6,6 +8,7 @@ class SkeletonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('SkeletonWidget', name: 'Rebuild');
     return LayoutBuilder(
       builder: (context, constraints) {
         final theme = Theme.of(context);

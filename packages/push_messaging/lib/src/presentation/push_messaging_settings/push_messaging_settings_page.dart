@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:push_messaging/src/presentation/push_messaging_settings/push_messaging_settings.dart';
 
 class PushMessagingSettingsPage
@@ -24,46 +25,49 @@ class PushMessagingSettingsPage
                     color: Theme.of(context).highlightColor,
                     child: Padding(
                       padding: ResponsiveSizeHelper.cardPadding,
-                      child: Obx(() {
-                        return SwitchTitleWidget(
-                          key: const Key('notifications_switch_key'),
-                          text: 'allow_push_notifications'.tr,
-                          initialValue: controller.notificationsEnabled.value,
-                          onChanged: (enabled) async {
-                            try {
-                              final bool? enabledResult = await controller
-                                  .toggleNotification(enabled);
-                              if (enabledResult == null) {
+                      child: ValueListenableBuilder(
+                        valueListenable: controller.notificationsEnabled,
+                        builder: (context, value, child) {
+                          return SwitchTitleWidget(
+                            key: const Key('notifications_switch_key'),
+                            text: 'allow_push_notifications'.tr,
+                            initialValue: value,
+                            onChanged: (enabled) async {
+                              try {
+                                final bool? enabledResult = await controller
+                                    .toggleNotification(enabled);
+                                if (enabledResult == null) {
+                                  if (!context.mounted) return;
+
+                                  DialogWidget.show(
+                                    context,
+                                    title: 'no_push_permissions'.tr,
+                                    message:
+                                        'you_need_enabled_push_permissions'.tr,
+                                  );
+                                  return;
+                                }
                                 if (!context.mounted) return;
 
                                 DialogWidget.show(
                                   context,
-                                  title: 'no_push_permissions'.tr,
-                                  message:
-                                      'you_need_enabled_push_permissions'.tr,
+                                  title:
+                                      '${'notification'.tr} ${enabledResult ? 'push_enabled'.tr : 'push_disabled'.tr}',
+                                  message: enabledResult
+                                      ? 'you_will_receive_notifications'.tr
+                                      : 'push_notifications_disabled'.tr,
                                 );
-                                return;
+                              } catch (error) {
+                                if (!context.mounted) return;
+                                DialogWidget.showError(
+                                  context,
+                                  message: error.toString().tr,
+                                );
                               }
-                              if (!context.mounted) return;
-
-                              DialogWidget.show(
-                                context,
-                                title:
-                                    '${'notification'.tr} ${enabledResult ? 'push_enabled'.tr : 'push_disabled'.tr}',
-                                message: enabledResult
-                                    ? 'you_will_receive_notifications'.tr
-                                    : 'push_notifications_disabled'.tr,
-                              );
-                            } catch (error) {
-                              if (!context.mounted) return;
-                              DialogWidget.showError(
-                                context,
-                                message: error.toString().tr,
-                              );
-                            }
-                          },
-                        );
-                      }),
+                            },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   ColoredBox(
@@ -93,42 +97,45 @@ class PushMessagingSettingsPage
                                   ),
                                 ),
                                 const SpacerWidget(),
-                                Obx(() {
-                                  return FutureButton(
-                                    key: const Key(
-                                      'test_push_notification_key',
-                                    ),
-                                    text: 'send_push_test'.tr,
-                                    size: ButtonSize.medium,
-                                    onPressed:
-                                        controller.notificationsEnabled.value
-                                        ? () async {
-                                            final result = await controller
-                                                .testPush();
+                                ValueListenableBuilder(
+                                  valueListenable:
+                                      controller.notificationsEnabled,
+                                  builder: (context, value, child) {
+                                    return FutureButton(
+                                      key: const Key(
+                                        'test_push_notification_key',
+                                      ),
+                                      text: 'send_push_test'.tr,
+                                      size: ButtonSize.medium,
+                                      onPressed: value
+                                          ? () async {
+                                              final result = await controller
+                                                  .testPush();
 
-                                            if (!context.mounted) return;
+                                              if (!context.mounted) return;
 
-                                            if (result is Error) {
-                                              DialogWidget.showError(
-                                                context,
-                                                message:
-                                                    result.error.message.tr,
-                                              );
-                                            } else {
-                                              DialogWidget.show(
-                                                context,
-                                                title:
-                                                    'test_push_send_success_title'
-                                                        .tr,
-                                                message:
-                                                    'test_push_send_success_message'
-                                                        .tr,
-                                              );
+                                              if (result is Error) {
+                                                DialogWidget.showError(
+                                                  context,
+                                                  message:
+                                                      result.error.message.tr,
+                                                );
+                                              } else {
+                                                DialogWidget.show(
+                                                  context,
+                                                  title:
+                                                      'test_push_send_success_title'
+                                                          .tr,
+                                                  message:
+                                                      'test_push_send_success_message'
+                                                          .tr,
+                                                );
+                                              }
                                             }
-                                          }
-                                        : null,
-                                  );
-                                }),
+                                          : null,
+                                    );
+                                  },
+                                ),
                               ],
                             ),
                             const SpacerWidget(),
@@ -138,48 +145,64 @@ class PushMessagingSettingsPage
                     ),
                   ),
                   if (!kReleaseMode)
-                    InkWell(
-                      onTap: () async {
-                        controller.copyToken();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            backgroundColor: Theme.of(context).primaryColor,
-                            content: const TextWidget('Push token copiado!'),
-                          ),
-                        );
+                    ValueListenableBuilder(
+                      valueListenable: controller.notificationsEnabled,
+                      builder: (context, enabled, child) {
+                        if (enabled) return child!;
+                        return const SizedBox.shrink();
                       },
-                      child: ColoredBox(
-                        color: StaticColors.debug,
-                        child: Padding(
-                          padding: ResponsiveSizeHelper.cardPadding,
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              maxWidth: ResponsiveSizeHelper.maxWidth,
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                TextWidget(
-                                  'Push Token',
-                                  style: AppTextStyle.subtitle(
+                      child: ValueListenableBuilder(
+                        valueListenable: controller.pushToken,
+                        builder: (context, token, child) {
+                          if (token == null) return SizedBox.fromSize();
+                          return InkWell(
+                            onTap: () async {
+                              controller.copyToken();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  backgroundColor: Theme.of(
                                     context,
-                                    color: Colors.black87,
+                                  ).primaryColor,
+                                  content: const TextWidget(
+                                    'Push token copiado!',
                                   ),
                                 ),
-                                const SpacerWidget(),
-                                Obx(() {
-                                  return TextWidget(
-                                    controller.pushToken.value,
-                                    style: AppTextStyle.footnote(
-                                      context,
-                                      color: Colors.black87,
-                                    ),
-                                  );
-                                }),
-                              ],
+                              );
+                            },
+                            child: ColoredBox(
+                              color: StaticColors.debug,
+                              child: Padding(
+                                padding: ResponsiveSizeHelper.cardPadding,
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    maxWidth: ResponsiveSizeHelper.maxWidth,
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      TextWidget(
+                                        'Push Token',
+                                        style: AppTextStyle.subtitle(
+                                          context,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                      const SpacerWidget(),
+                                      TextWidget(
+                                        token,
+                                        style: AppTextStyle.footnote(
+                                          context,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
                     ),
                 ],

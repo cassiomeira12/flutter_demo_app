@@ -16,7 +16,7 @@ class SignUpBindings extends Bindings {
     );
     AppBinding.put<CreateUserUseCase>(
       CreateUserUseCaseImpl(
-        signupService: AppBinding.find(),
+        singUpService: AppBinding.find(),
         authStorageUseCase: AppBinding.find(),
         userService: AppBinding.find(),
         encryptUserPasswordUseCase: AppBinding.find(),

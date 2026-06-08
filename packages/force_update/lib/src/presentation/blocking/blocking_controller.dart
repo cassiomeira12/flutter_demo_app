@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -8,16 +9,13 @@ class BlockingController extends BaseController {
   final PushMessagingService _pushMessagingService;
 
   BlockingController({
-    required LocalStorageUseCase localStorageUseCase,
-    required AppInfoEntity appInfoEntity,
-    required CheckPermissionUseCase checkPermissionUseCase,
-    required PushMessagingService pushMessagingService,
-  }) : _localStorageUseCase = localStorageUseCase,
-       _appInfoEntity = appInfoEntity,
-       _checkPermissionUseCase = checkPermissionUseCase,
-       _pushMessagingService = pushMessagingService;
+    required this._localStorageUseCase,
+    required this._appInfoEntity,
+    required this._checkPermissionUseCase,
+    required this._pushMessagingService,
+  });
 
-  final RxBool pushSubscribed = RxBool(false);
+  final pushSubscribed = ValueNotifier<bool>(false);
 
   @override
   void onReady() {
@@ -27,7 +25,7 @@ class BlockingController extends BaseController {
 
   @override
   void onClose() {
-    pushSubscribed.close();
+    pushSubscribed.dispose();
     super.onClose();
   }
 

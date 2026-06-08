@@ -1,6 +1,8 @@
 # Documentação da Estrutura do Projeto
 
-## Visão Geral doWorkspace
+**Veja também**: [Visão Geral](overview.md) | [Arquitetura](architecture/architecture-diagrams.md) | [Glossário](glossary.md)
+
+## Visão Geral do Workspace
 
 Este projeto utiliza uma estrutura de monorepo com Flutter Workspace, contendo o app principal e 28 pacotes compartilhados.
 
@@ -83,6 +85,7 @@ graph TD
     features --> settings
     features --> faq
     features --> user_account
+    features --> app_purchase
     features --> web_app
     features --> webview
 ```
@@ -133,6 +136,7 @@ graph TD
 | `settings`     | Configurações           | settings, themes                       |
 | `faq`          | FAQ e Feedback          | about, feedback                        |
 | `user_account` | Gerenciamento de conta  | user, change_password, delete_account  |
+| `app_purchase` | Compras in-app          | purchase                               |
 | `web_app`      | Apps externos           | web                                    |
 | `webview`      | WebView                 | webview                                |
 
@@ -169,6 +173,7 @@ graph LR
     dependency --> core
     design_system --> core
     design_system --> dependency
+    design_system --> clean_code_domain
 
     clean_code_data --> clean_code_domain
     clean_code_data --> core
@@ -181,6 +186,7 @@ graph LR
     clean_code_infra --> core
     clean_code_infra --> dependency
 
+    core --> clean_code_data
     core --> clean_code_domain
     core --> clean_code_infra
     core --> dependency
@@ -192,4 +198,4 @@ graph LR
 - **Total de pacotes**: 28 + app principal
 - **Estrutura**: Workspace Flutter com monorepo
 - **Arquitetura**: Clean Architecture (data, domain, infra, presentation)
-- **Pattern**: GetX para gerenciamentode estado e rotas
+- **Pattern**: GetX para gerenciamento de estado e rotas

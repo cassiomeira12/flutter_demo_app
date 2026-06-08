@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -10,16 +11,12 @@ class LocalPushNotifications implements PushNotificationsService {
   final OnClickedNotificationCallback _onClickedNotificationCallback;
 
   LocalPushNotifications({
-    required String appName,
-    required String androidNotificationChannel,
-    required String androidNotificationIcon,
-    required RequestPermissionUseCase requestPermissionUseCase,
-    required OnClickedNotificationCallback onClickedNotificationCallback,
-  }) : _appName = appName,
-       _androidNotificationChannel = androidNotificationChannel,
-       _androidNotificationIcon = androidNotificationIcon,
-       _requestPermissionUseCase = requestPermissionUseCase,
-       _onClickedNotificationCallback = onClickedNotificationCallback;
+    required this._appName,
+    required this._androidNotificationChannel,
+    required this._androidNotificationIcon,
+    required this._requestPermissionUseCase,
+    required this._onClickedNotificationCallback,
+  });
 
   final _notification = FlutterLocalNotificationsPlugin();
 
@@ -49,7 +46,7 @@ class LocalPushNotifications implements PushNotificationsService {
     }
 
     await _notification.initialize(
-      settings,
+      settings: settings,
       onDidReceiveNotificationResponse: (notification) async {
         Log.info(
           'id: ${notification.id} \n'
@@ -136,10 +133,10 @@ class LocalPushNotifications implements PushNotificationsService {
     if (!_initialized) return;
 
     await _notification.show(
-      id,
-      title,
-      body,
-      await _createDetails(
+      id: id,
+      title: title,
+      body: body,
+      notificationDetails: await _createDetails(
         channelId: androidChannelId,
         priority: androidPriority,
         visibility: androidVisibility,

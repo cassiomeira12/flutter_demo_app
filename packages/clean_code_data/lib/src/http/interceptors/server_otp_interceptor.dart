@@ -1,18 +1,18 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class ServerOtpInterceptor extends Interceptor {
   final GetOtpCodeUseCase _getOtpCodeUseCase;
-  final EncryptServerPublicKeyUseCase _encryptServerUseCase;
+  final EncryptServerPublicKeyUseCase _encryptServerPublicKeyUseCase;
   final SecurityEnvironmentEntity _securityEnv;
 
   ServerOtpInterceptor({
-    required GetOtpCodeUseCase getOtpCodeUseCase,
-    required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
-    required SecurityEnvironmentEntity securityEnv,
-  }) : _getOtpCodeUseCase = getOtpCodeUseCase,
-       _encryptServerUseCase = encryptServerPublicKeyUseCase,
-       _securityEnv = securityEnv;
+    required this._getOtpCodeUseCase,
+    required this._encryptServerPublicKeyUseCase,
+    required this._securityEnv,
+  });
 
   @override
   Future<void> onRequest(
@@ -62,8 +62,10 @@ class ServerOtpInterceptor extends Interceptor {
 
   Future<String?> _generateEncryptedHashTokenCode() async {
     try {
-      final code = _getOtpCodeUseCase.call(secret: _securityEnv.secretOTP);
-      final String encryptedCode = await _encryptServerUseCase.call(code);
+      final code = _getOtpCodeUseCase.call(_securityEnv.secretOTP);
+      final String encryptedCode = await _encryptServerPublicKeyUseCase.call(
+        code,
+      );
 
       if (code == encryptedCode) {
         throw BaseException(message: 'Hash-Token-Code is equals encryptedCode');

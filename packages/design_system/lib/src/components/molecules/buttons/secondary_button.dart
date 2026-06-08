@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 import 'package:design_system/src/components/molecules/buttons/base_button.dart';
@@ -33,15 +35,15 @@ class SecondaryButton extends StatelessWidget {
         theme.outlinedButtonTheme.style?.textStyle?.resolve({
           WidgetState.selected,
         })?.color;
-
+    developer.log('SecondaryButton $text', name: 'Rebuild');
     return BaseButton(
       text: text,
       icon: icon,
       onPressed: onPressed == null
           ? null
           : () {
-              onPressed?.call();
               HapticFeedback.lightImpact();
+              onPressed?.call();
             },
       buttonStyle: ButtonStyle(
         backgroundColor: WidgetStateProperty.all(

@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:web_app/src/presentation/web/web.dart';
 import 'package:web_app/src/presentation/web/widgets/widgets.dart';
 
@@ -186,23 +186,24 @@ class WebPage extends AppView<WebController> {
                               ),
                             ),
                           ),
-                          Obx(() {
-                            if (controller.user.value != null) {
-                              return InkWell(
-                                child: SizedBox(
-                                  width: ResponsiveSizeHelper.width(35),
-                                  height: ResponsiveSizeHelper.width(35),
-                                  child: ImageWidget(
-                                    imageUrl:
-                                        controller.user.value?.avatarUrl ?? '',
+                          ValueListenableBuilder(
+                            valueListenable: controller.user,
+                            builder: (context, user, child) {
+                              if (user != null) {
+                                return InkWell(
+                                  child: SizedBox(
+                                    width: ResponsiveSizeHelper.width(35),
+                                    height: ResponsiveSizeHelper.width(35),
+                                    child: ImageWidget(
+                                      imageUrl: user.avatarUrl,
+                                    ),
                                   ),
-                                ),
-                                onTap: () => controller.login(
-                                  context,
-                                  component: 'login_app_bar_logged_key',
-                                ),
-                              );
-                            } else {
+                                  onTap: () => controller.login(
+                                    context,
+                                    component: 'login_app_bar_logged_key',
+                                  ),
+                                );
+                              }
                               return PrimaryButton(
                                 key: const Key('login_app_bar_key'),
                                 text: 'login'.tr,
@@ -212,8 +213,8 @@ class WebPage extends AppView<WebController> {
                                   component: 'login_app_bar_key',
                                 ),
                               );
-                            }
-                          }),
+                            },
+                          ),
                         ],
                       ),
                     ),

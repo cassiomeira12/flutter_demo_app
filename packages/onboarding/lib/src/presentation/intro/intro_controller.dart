@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -7,25 +8,22 @@ class IntroController extends BaseController {
   final LocalStorageUseCase _localStorageUseCase;
   final GetAppInfoUseCase _getAppInfoUseCase;
 
-  final PageController pageController = PageController();
-  final RxInt indexPage = RxInt(0);
-  RxBool get isLastPage {
-    return RxBool(indexPage.value == pagesLength - 1);
+  IntroController({
+    required this._appEnv,
+    required this._requestPermissionUseCase,
+    required this._localStorageUseCase,
+    required this._getAppInfoUseCase,
+  }) {
+    isLastPage.value = indexPage.value == permissions.length;
+    indexPage.addListener(_updateCurrentIndex);
   }
 
-  int pagesLength = 0;
+  final PageController pageController = PageController();
+  final indexPage = ValueNotifier<int>(0);
+  final isLastPage = ValueNotifier<bool>(false);
+
   Permission? currentPermission;
   String get appName => _appEnv.appName;
-
-  IntroController({
-    required AppEnvironmentEntity appEnv,
-    required RequestPermissionUseCase requestPermissionUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required GetAppInfoUseCase getAppInfoUseCase,
-  }) : _appEnv = appEnv,
-       _requestPermissionUseCase = requestPermissionUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _getAppInfoUseCase = getAppInfoUseCase;
 
   List<String> get permissions {
     final List<String> permissions = List.from(_appEnv.permissions);
@@ -46,21 +44,19 @@ class IntroController extends BaseController {
   void onReady() {
     super.onReady();
     onboardingBeginTagging();
-    _checkIfHasNoIntroPages();
   }
 
   @override
   void onClose() {
-    indexPage.close();
+    indexPage.removeListener(_updateCurrentIndex);
+    indexPage.dispose();
+    isLastPage.dispose();
     pageController.dispose();
     super.onClose();
   }
 
-  void _checkIfHasNoIntroPages() {
-    if (pagesLength == 0) {
-      _finishIntroPages();
-      return;
-    }
+  void _updateCurrentIndex() {
+    isLastPage.value = indexPage.value == permissions.length;
   }
 
   void setPermission(Permission permission) {
@@ -68,6 +64,7 @@ class IntroController extends BaseController {
   }
 
   void previousPage() {
+    currentPermission = null;
     pageController.previousPage(
       duration: const Duration(milliseconds: 350),
       curve: Curves.easeIn,

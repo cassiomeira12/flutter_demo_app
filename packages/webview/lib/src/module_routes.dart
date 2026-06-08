@@ -7,6 +7,7 @@ class WebViewModuleRoutes implements ModuleRoutes {
   List<AppRouterPage> get pages => [
     AppRouterPage(
       name: AppRouter.webview.name,
+      binding: WebViewBindings(),
       page: () => WebViewPage(
         urlParams: const {
           'uol_app': 'placaruol',
@@ -17,34 +18,34 @@ class WebViewModuleRoutes implements ModuleRoutes {
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/times\/.*$',
+              r'^https:\/\/(www\.)?uol\.com\.br\/esporte\/futebol\/times([\/?].*)?$',
             ),
             expiredTime: const Duration(minutes: 5),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/esporte\/futebol\/central-de-jogos\/.*$',
+              r'^https:\/\/(www\.)?uol\.com\.br\/esporte\/futebol\/central-de-jogos([\/?].*)?$',
             ),
             expiredTime: const Duration(minutes: 5),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
-              r'^https:\/\/placar\.uol\.com\.br\/esporte\/futebol\/.*$',
+              r'^https:\/\/placar\.uol\.com\.br\/esporte\/futebol([\/?].*)?$',
             ),
             expiredTime: const Duration(seconds: 1),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
             pattern: RegExp(
-              r'^https:\/\/www\.uol\.com\.br\/flash\/esporte\/.*$',
+              r'^https:\/\/(www\.)?uol\.com\.br\/flash([\/?].*)?$',
             ),
             expiredTime: const Duration(minutes: 10),
           ),
           ReloadExpiredUrlEntity(
             enable: true,
-            pattern: RegExp(r'^https:\/\/www\.uol\.com\.br\/?$'),
+            pattern: RegExp(r'^https:\/\/(www\.)?uol\.com\.br([\/?].*)?$'),
             expiredTime: const Duration(minutes: 30),
           ),
         ],

@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:settings/src/presentation/settings/settings_controller.dart';
 
@@ -33,7 +35,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeUserEntity());
     registerFallbackValue(const Locale('en', 'US'));
   });

@@ -1,3 +1,4 @@
+import 'package:admin/src/domain/domain.dart';
 import 'package:admin/src/presentation/web_visit_history/web_visit_history_controller.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
@@ -16,7 +17,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {

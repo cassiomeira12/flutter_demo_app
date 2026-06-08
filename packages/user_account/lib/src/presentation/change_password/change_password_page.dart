@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:user_account/src/presentation/change_password/change_password.dart';
 
 class ChangePasswordPage extends AppView<ChangePasswordController> {

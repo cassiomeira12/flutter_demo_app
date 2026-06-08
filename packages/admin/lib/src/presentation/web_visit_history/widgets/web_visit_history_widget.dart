@@ -1,5 +1,7 @@
+import 'package:admin/src/domain/domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class WebVisitHistoryWidget extends StatelessWidget {
   final WebVisitHistoryEntity webVisitHistoryEntity;

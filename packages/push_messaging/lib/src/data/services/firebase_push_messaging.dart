@@ -1,6 +1,7 @@
 // ignore_for_file: unreachable_from_main
 
 import 'package:analytics/analytics.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:dependency/dependency.dart';
@@ -13,22 +14,17 @@ class FirebasePushMessaging implements PushMessagingService {
   final RequestPermissionUseCase _requestPermissionUseCase;
   final OnClickedNotificationCallback _onClickedNotificationCallback;
   final OnReceivedNotificationCallback _onReceivedNotificationCallback;
-  final PushTopicsService _pushTopicsService;
+  final PushTopicsService _pushTopicService;
   final String _vapidKeyMessagingWeb;
 
   FirebasePushMessaging({
-    required CheckPermissionUseCase checkPermissionUseCase,
-    required RequestPermissionUseCase requestPermissionUseCase,
-    required OnClickedNotificationCallback onClickedNotificationCallback,
-    required OnReceivedNotificationCallback onReceivedNotificationCallback,
-    required PushTopicsService pushTopicService,
-    required String vapidKeyMessagingWeb,
-  }) : _checkPermissionUseCase = checkPermissionUseCase,
-       _requestPermissionUseCase = requestPermissionUseCase,
-       _onClickedNotificationCallback = onClickedNotificationCallback,
-       _onReceivedNotificationCallback = onReceivedNotificationCallback,
-       _pushTopicsService = pushTopicService,
-       _vapidKeyMessagingWeb = vapidKeyMessagingWeb;
+    required this._checkPermissionUseCase,
+    required this._requestPermissionUseCase,
+    required this._onClickedNotificationCallback,
+    required this._onReceivedNotificationCallback,
+    required this._pushTopicService,
+    required this._vapidKeyMessagingWeb,
+  });
 
   bool _initialized = false;
 
@@ -253,25 +249,25 @@ class FirebasePushMessaging implements PushMessagingService {
   @override
   Future<void> subscribeTopic(List<String> topics) async {
     Log.debug('Push Messaging Subscribe Topics $topics');
-    await _pushTopicsService.subscribeTopic(topics);
+    await _pushTopicService.subscribeTopic(topics);
   }
 
   @override
   Future<void> unsubscribeTopic(List<String> topics) async {
     Log.debug('Push Messaging Unsubscribe Topics $topics');
-    await _pushTopicsService.unsubscribeTopic(topics);
+    await _pushTopicService.unsubscribeTopic(topics);
   }
 
   @override
   Future<void> subscribeUserTopic(String topic) async {
     Log.debug('Push Messaging Subscribe User Topic [$topic]');
-    await _pushTopicsService.subscribeUserTopic(topic);
+    await _pushTopicService.subscribeUserTopic(topic);
   }
 
   @override
   Future<void> unsubscribeUserTopic(String topic) async {
     Log.debug('Push Messaging Unsubscribe User Topic [$topic]');
-    await _pushTopicsService.subscribeUserTopic(topic);
+    await _pushTopicService.subscribeUserTopic(topic);
   }
 }
 

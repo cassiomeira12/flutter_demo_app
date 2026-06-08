@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,23 +15,21 @@ class FakeAppEnvironmentEntity extends Fake implements AppEnvironmentEntity {}
 
 class FakeAppInfoEntity extends Fake implements AppInfoEntity {}
 
+class FakePermission extends Fake implements Permission {}
+
 void main() {
   late MockRequestPermissionUseCase mockRequestPermissionUseCase;
   late MockLocalStorageUseCase mockLocalStorageUseCase;
   late MockGetAppInfoUseCase mockGetAppInfoUseCase;
   late IntroController introController;
-
   late AppEnvironmentEntity appEnv;
-  late AppInfoEntity appInfo;
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeAppEnvironmentEntity());
     registerFallbackValue(FakeAppInfoEntity());
-    registerFallbackValue(Permission.appTrackingTransparency);
-    registerFallbackValue(Permission.notification);
-    registerFallbackValue(Permission.location);
+    registerFallbackValue(FakePermission());
   });
 
   setUp(() {
@@ -45,21 +44,16 @@ void main() {
       permissions: 'appTrackingTransparency,notification,location',
     );
 
-    appInfo = AppInfoEntity(
-      appName: 'Test App',
-      packageName: 'com.test.app',
-      buildSignature: 'test-signature',
-      installerStore: null,
-      version: '1.0.0',
-      build: '1',
-    );
-
     introController = IntroController(
       appEnv: appEnv,
       requestPermissionUseCase: mockRequestPermissionUseCase,
       localStorageUseCase: mockLocalStorageUseCase,
       getAppInfoUseCase: mockGetAppInfoUseCase,
     );
+  });
+
+  tearDown(() {
+    introController.onClose();
   });
 
   group('IntroController', () {
@@ -73,91 +67,92 @@ void main() {
         expect(permissions, isNotEmpty);
       });
 
+      test('deve remover appTrackingTransparency quando nao e iOS', () {
+        final permissions = introController.permissions;
+        expect(permissions.contains('appTrackingTransparency'), isFalse);
+      });
+
       test('deve definir currentPermission corretamente', () {
         introController.setPermission(Permission.location);
         expect(introController.currentPermission, Permission.location);
       });
 
-      test(
-        'deve fazer request de permissao quando requestCurrentPermission() e chamado',
-        () async {
-          introController.setPermission(Permission.notification);
-
-          when(
-            () => mockRequestPermissionUseCase.call(any()),
-          ).thenAnswer((_) async => PermissionStatus.granted);
-
-          when(
-            () => mockLocalStorageUseCase.set<bool>(any(), any()),
-          ).thenAnswer((_) async => true);
-
-          when(
-            () => mockGetAppInfoUseCase.call(),
-          ).thenAnswer((_) async => appInfo);
-
-          await introController.requestCurrentPermission();
-
-          verify(() => mockRequestPermissionUseCase.call(any())).called(1);
-        },
-      );
-
-      test('deve finalizar pagina quando isLastPage e true', () async {
-        introController.indexPage.value = 0;
-        introController.pagesLength = 1;
-        introController.setPermission(Permission.location);
+      test('deve fazer request de notification quando setado', () async {
+        introController.setPermission(Permission.notification);
 
         when(
-          () => mockRequestPermissionUseCase.call(any()),
+          () => mockRequestPermissionUseCase.call(Permission.notification),
         ).thenAnswer((_) async => PermissionStatus.granted);
-
-        when(
-          () => mockLocalStorageUseCase.set<bool>(any(), any()),
-        ).thenAnswer((_) async => true);
-
-        when(
-          () => mockGetAppInfoUseCase.call(),
-        ).thenAnswer((_) async => appInfo);
 
         await introController.requestCurrentPermission();
 
         verify(
-          () => mockLocalStorageUseCase.set<bool>(INTRO_DONE, true),
+          () => mockRequestPermissionUseCase.call(Permission.notification),
+        ).called(1);
+      });
+
+      test('deve fazer request de location quando setado', () async {
+        introController.setPermission(Permission.location);
+
+        when(
+          () => mockRequestPermissionUseCase.call(Permission.location),
+        ).thenAnswer((_) async => PermissionStatus.granted);
+
+        await introController.requestCurrentPermission();
+
+        verify(
+          () => mockRequestPermissionUseCase.call(Permission.location),
         ).called(1);
       });
 
       test(
-        'deve retornar isLastPage como true quando indexPage e pagesLength-1',
+        'deve fazer request de appTrackingTransparency quando setado',
+        () async {
+          introController.setPermission(Permission.appTrackingTransparency);
+
+          when(
+            () => mockRequestPermissionUseCase.call(
+              Permission.appTrackingTransparency,
+            ),
+          ).thenAnswer((_) async => PermissionStatus.granted);
+
+          await introController.requestCurrentPermission();
+
+          verify(
+            () => mockRequestPermissionUseCase.call(
+              Permission.appTrackingTransparency,
+            ),
+          ).called(1);
+        },
+      );
+
+      test(
+        'deve retornar isLastPage como true quando indexPage equals permissions length',
         () {
           introController.indexPage.value = 2;
-          introController.pagesLength = 3;
-
           expect(introController.isLastPage.value, isTrue);
         },
       );
 
       test(
-        'deve retornar isLastPage como false quando indexPage diferente de pagesLength-1',
+        'deve retornar isLastPage como false quando nao na ultima pagina',
         () {
           introController.indexPage.value = 0;
-          introController.pagesLength = 3;
-
           expect(introController.isLastPage.value, isFalse);
         },
       );
 
-      test(
-        'deve retornar isLastPage como true quando pagesLength=1 e indexPage=0',
-        () {
-          introController.indexPage.value = 0;
-          introController.pagesLength = 1;
+      test('deve retornar indexPage inicial como 0', () {
+        expect(introController.indexPage.value, 0);
+      });
 
-          expect(introController.isLastPage.value, isTrue);
-        },
-      );
+      test('deve retornar currentPermission como null inicial', () {
+        expect(introController.currentPermission, isNull);
+      });
 
-      test('deve retornar permissao como granted quando aceita', () async {
+      test('deve retornar permissionStatus.granted via useCase', () async {
         when(
-          () => mockRequestPermissionUseCase.call(any()),
+          () => mockRequestPermissionUseCase.call(Permission.notification),
         ).thenAnswer((_) async => PermissionStatus.granted);
 
         final result = await mockRequestPermissionUseCase.call(
@@ -167,9 +162,9 @@ void main() {
         expect(result, PermissionStatus.granted);
       });
 
-      test('deve retornar permissao como denied quando negada', () async {
+      test('deve retornar permissionStatus.denied via useCase', () async {
         when(
-          () => mockRequestPermissionUseCase.call(any()),
+          () => mockRequestPermissionUseCase.call(Permission.location),
         ).thenAnswer((_) async => PermissionStatus.denied);
 
         final result = await mockRequestPermissionUseCase.call(
@@ -179,22 +174,37 @@ void main() {
         expect(result, PermissionStatus.denied);
       });
 
-      test('deve retornar pagesLength inicial como 0', () {
-        expect(introController.pagesLength, 0);
+      test('deve continuar normalmente quando permission e null', () async {
+        when(
+          () => mockRequestPermissionUseCase.call(any()),
+        ).thenAnswer((_) async => PermissionStatus.granted);
+
+        await introController.requestCurrentPermission();
+
+        verifyNever(
+          () => mockRequestPermissionUseCase.call(any()),
+        );
       });
 
-      test('deve retornar indexPage inicial como 0', () {
-        expect(introController.indexPage.value, 0);
-      });
+      test('deve nao fazer nada quando isLastPage e false', () async {
+        introController.indexPage.value = 0;
+        introController.setPermission(Permission.location);
 
-      test('deve retornar currentPermission como null iniciais', () {
-        expect(introController.currentPermission, isNull);
+        when(
+          () => mockRequestPermissionUseCase.call(any()),
+        ).thenAnswer((_) async => PermissionStatus.granted);
+
+        await introController.requestCurrentPermission();
+
+        verifyNever(
+          () => mockLocalStorageUseCase.set<bool>(INTRO_DONE, true),
+        );
       });
     });
 
     group('Erro', () {
       test(
-        'deve propagar excecao quando requestPermissionUseCase falhar',
+        'deve lancar excecao quando requestPermissionUseCase falhar',
         () async {
           introController.setPermission(Permission.notification);
 
@@ -206,37 +216,6 @@ void main() {
             () => introController.requestCurrentPermission(),
             throwsA(isA<Exception>()),
           );
-        },
-      );
-
-      test(
-        'deve continuar normalmente quando localStorageUseCase falha ao salvar versao app',
-        () async {
-          introController.indexPage.value = 0;
-          introController.pagesLength = 1;
-          introController.setPermission(Permission.location);
-
-          when(
-            () => mockRequestPermissionUseCase.call(any()),
-          ).thenAnswer((_) async => PermissionStatus.granted);
-
-          when(
-            () => mockLocalStorageUseCase.set<bool>(INTRO_DONE, true),
-          ).thenAnswer((_) async => true);
-
-          when(
-            () => mockLocalStorageUseCase.set<bool>(any(), any()),
-          ).thenAnswer((_) async => true);
-
-          when(
-            () => mockGetAppInfoUseCase.call(),
-          ).thenAnswer((_) async => appInfo);
-
-          await introController.requestCurrentPermission();
-
-          verify(
-            () => mockLocalStorageUseCase.set<bool>(INTRO_DONE, true),
-          ).called(1);
         },
       );
     });

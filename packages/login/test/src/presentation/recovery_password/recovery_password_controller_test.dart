@@ -13,7 +13,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {

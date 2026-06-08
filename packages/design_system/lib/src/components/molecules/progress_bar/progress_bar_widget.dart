@@ -1,5 +1,7 @@
-import 'package:core/core.dart';
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class ProgressBarWidget extends StatelessWidget {
   final int currentIndex;
@@ -16,6 +18,7 @@ class ProgressBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('ProgressBarWidget $percentage%', name: 'Rebuild');
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(

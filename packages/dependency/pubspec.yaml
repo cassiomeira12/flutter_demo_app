@@ -6,8 +6,8 @@ publish_to: "none"
 resolution: workspace
 
 environment:
-  sdk: ^3.10.1
-  flutter: ">=3.38.3"
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
@@ -25,15 +25,15 @@ dependencies:
   get_it: 9.2.1
 
   # Http
-  dio: 5.9.0
+  dio: 5.9.2
   cached_network_image: 3.4.1
 
   # Logger
-  talker: 5.1.9
+  talker: 5.1.17
 
   # Local Storage
-  shared_preferences: 2.5.4
-  flutter_secure_storage: 10.0.0
+  shared_preferences: 2.5.5
+  flutter_secure_storage: 10.3.1
 
   # Storage
   path: 1.9.1
@@ -44,48 +44,39 @@ dependencies:
   hive_flutter: 1.1.0
 
   # Fonts
-  google_fonts: 6.3.3
+  # google_fonts: 8.1.0
 
   # Icons
-  cupertino_icons: 1.0.8
-  icons_plus: 5.0.0
+  cupertino_icons: 1.0.9
 
   # SVG
-  flutter_svg: 2.2.3
-
-  # Firebase
-  # firebase_core: 4.2.1
+  flutter_svg: 2.3.0
 
   # Analytics
   aptabase_flutter: 0.4.1
-  # firebase_analytics: 12.0.4
 
   # Crashlytics
-  sentry_flutter: 9.9.1
-  sentry_dio: 9.9.1
+  sentry_flutter: 9.21.0 # must update pod install
+  sentry_dio: 9.21.0 # must update pod install
 
   # Deeplink
-  app_links: 6.4.1
+  app_links: 7.1.1
 
   # Feature Flag
   flagsmith: 6.1.0
-  growthbook_sdk_flutter: 4.1.1
-
-  # Push Messaging Notifications
-  # firebase_messaging: 16.0.4
 
   # Permissions
-  permission_handler: 12.0.1
+  permission_handler: 12.0.3
   location: 8.0.1
 
   # Camera
   camerawesome: 2.5.0
-  mobile_scanner: 7.1.4
+  mobile_scanner: 7.2.0
 
   # Security Encrypt
   crypto: 3.0.7
   # encrypt: 5.0.3
-  local_auth: 3.0.0
+  local_auth: 3.0.1
 
   # Device Info
   android_id: 0.5.1
@@ -95,32 +86,32 @@ dependencies:
   in_app_purchase: 3.2.3
 
   # Utilities
-  share_plus: 12.0.1
-  dart_either: 2.0.0
+  share_plus: 12.0.2
+  # dart_either: 2.0.0
   validatorless: 1.2.5
-  flutter_native_splash: 2.4.7
+  flutter_native_splash: 2.4.8
   url_launcher: 6.3.2
-  flutter_contacts: 1.1.9+2
-  internet_connection_checker_plus: 2.9.1+2
-  synchronized: 3.4.0
+  internet_connection_checker_plus: 3.0.1
+  synchronized: 3.4.1
   flutter_dynamic_launcher_icon: 0.0.2
-  in_app_review: 2.0.11
+  in_app_review: 2.0.12
   string_normalizer: 0.4.0
   app_settings: 7.0.0
 
   # Widget
   otp: 3.2.0
-  pinput: 6.0.1
-  skeletonizer: 2.1.2
+  pinput: 6.0.2
+  skeletonizer: 2.1.3
   local_captcha: 1.0.5
   introduction_screen: 4.0.0
   flutter_inappwebview: 6.1.5
   intl_phone_field: 3.2.0
   flutter_masked_text3: 0.9.4
+  flutter_custom_month_picker: 0.1.3
 
   # Dev Dependencies
   faker: 2.2.0
-  mocktail: 1.0.4
+  mocktail: 1.0.5
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:login/src/presentation/recovery_password/recovery_password.dart';
 
 class RecoveryPasswordPage extends AppView<RecoveryPasswordController> {

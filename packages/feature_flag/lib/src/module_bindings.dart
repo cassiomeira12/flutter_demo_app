@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:design_system/design_system.dart';
 import 'package:feature_flag/src/data/data.dart';
 
 class FeatureFlagModuleBindings implements ModuleBinding {

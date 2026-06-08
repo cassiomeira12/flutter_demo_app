@@ -1,11 +1,10 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class UserController extends BaseController {
   final UserEntity _user;
 
-  UserController({
-    required UserEntity user,
-  }) : _user = user;
+  UserController({required this._user});
 
   String get avatarUrl => _user.avatarUrl;
   String get userName => _user.name;

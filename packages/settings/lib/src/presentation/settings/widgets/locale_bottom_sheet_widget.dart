@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class LocaleBottomSheetWidget extends StatelessWidget {
   final Function(Locale locale) onChangeLocale;
@@ -25,8 +26,8 @@ class LocaleBottomSheetWidget extends StatelessWidget {
               expandWidth: true,
               icon: FlutterIcon(
                 Get.locale == locale
-                    ? BoxIcons.bx_radio_circle_marked
-                    : BoxIcons.bx_radio_circle,
+                    ? Icons.radio_button_on
+                    : Icons.radio_button_off,
                 color: Get.locale == locale
                     ? theme.primaryColor
                     : theme.iconTheme.color,

@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/app/app_module.dart';
 import 'package:flutter_demo_app/translations/translation.dart';
 

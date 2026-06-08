@@ -8,7 +8,9 @@ class HomeBindings extends Bindings {
     // AppBinding.put<NotificationsStore>(NotificationsStore());
 
     AppBinding.put<HomeController>(
-      HomeController(checkInternetUseCase: AppBinding.find()),
+      HomeController(
+        checkInternetUseCase: AppBinding.find(),
+      ),
     );
   }
 }

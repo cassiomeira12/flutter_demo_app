@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:splash/src/presentation/splash/splash.dart';
 
 class SplashPage extends AppView<SplashController> {

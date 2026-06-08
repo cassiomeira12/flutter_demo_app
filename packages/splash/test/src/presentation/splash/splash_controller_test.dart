@@ -1,9 +1,10 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:splash/src/presentation/splash/splash_controller.dart';
 
-class MockGetUserDataUseCase extends Mock implements GetUserDataUseCase {}
+class MockGetUserDataUseCase extends Mock implements GetUserLocalDataUseCase {}
 
 class MockLocalStorageUseCase extends Mock implements LocalStorageUseCase {}
 
@@ -61,7 +62,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeUserEntity());
     registerFallbackValue(FakeInstallationEntity());
     registerFallbackValue(const Locale('en'));
@@ -106,7 +107,7 @@ void main() {
   });
 
   tearDown(() {
-    Get.reset();
+    AppBinding.reset();
     BaseController.SPLASH_ALREADY_EXECUTED = false;
   });
 

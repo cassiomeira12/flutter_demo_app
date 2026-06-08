@@ -15,6 +15,9 @@ abstract class AppAssets {
 
   // SVG
   static const String bell = 'assets/svg/bell.svg';
+  static const String facebook = 'assets/svg/facebook.svg';
+  static const String instagram = 'assets/svg/instagram.svg';
+  static const String whatsapp = 'assets/svg/whatsapp.svg';
 
   // JPEG
   static const String intro1 = 'assets/jpeg/intro_1.jpg';

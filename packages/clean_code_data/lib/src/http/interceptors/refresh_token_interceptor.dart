@@ -1,12 +1,12 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class RefreshTokenInterceptor extends Interceptor {
   final UserAuthStorageUseCase _userAuthStorageUseCase;
 
-  RefreshTokenInterceptor({
-    required UserAuthStorageUseCase userAuthStorageUseCase,
-  }) : _userAuthStorageUseCase = userAuthStorageUseCase;
+  RefreshTokenInterceptor({required this._userAuthStorageUseCase});
 
   @override
   Future<void> onError(
@@ -60,7 +60,7 @@ class RefreshTokenInterceptor extends Interceptor {
     await AppBinding.replace<UserEntity>(user);
 
     await _userAuthStorageUseCase.saveSessionToken(session.token!);
-    await _userAuthStorageUseCase.saveUserData(user.toMap());
+    await _userAuthStorageUseCase.saveUserData(user);
   }
 
   Future<Map<String, dynamic>> _refreshToken() async {

@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:security/src/domain/domain.dart';
@@ -10,22 +11,18 @@ class SecurityController extends LifecycleController {
   final AppSecurityManager _appSecurityManager;
 
   SecurityController({
-    required LocalStorageUseCase localStorageUseCase,
-    required CheckBiometricsUseCase checkBiometricsUseCase,
-    required AuthenticateBiometricUseCase authenticateBiometricUseCase,
-    required LogoutUseCase logoutUseCase,
-    required AppSecurityManager appSecurityManager,
-  }) : _localStorageUseCase = localStorageUseCase,
-       _checkBiometricsUseCase = checkBiometricsUseCase,
-       _authenticateBiometricUseCase = authenticateBiometricUseCase,
-       _logoutUseCase = logoutUseCase,
-       _appSecurityManager = appSecurityManager;
+    required this._localStorageUseCase,
+    required this._checkBiometricsUseCase,
+    required this._authenticateBiometricUseCase,
+    required this._logoutUseCase,
+    required this._appSecurityManager,
+  });
 
-  final RxBool isLoading = RxBool(true);
-  final RxBool hasSupportedBiometrics = RxBool(false);
-  final RxBool biometric = RxBool(false);
+  final isLoading = ValueNotifier<bool>(true);
+  final hasSupportedBiometrics = ValueNotifier<bool>(false);
+  final biometric = ValueNotifier<bool>(false);
 
-  final RxBool blurProtect = RxBool(false);
+  final blurProtect = ValueNotifier<bool>(false);
 
   @override
   void onReady() {
@@ -40,10 +37,10 @@ class SecurityController extends LifecycleController {
 
   @override
   void onClose() {
-    isLoading.close();
-    hasSupportedBiometrics.close();
-    biometric.close();
-    blurProtect.close();
+    isLoading.dispose();
+    hasSupportedBiometrics.dispose();
+    biometric.dispose();
+    blurProtect.dispose();
     super.onClose();
   }
 

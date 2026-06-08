@@ -2,6 +2,8 @@
 
 Este documento descreve a arquitetura do projeto e como ele está estruturado.
 
+**Veja também**: [Visão Geral](../overview.md) | [Guia de Pacotes](../packages-guide.md) | [Glossário](../glossary.md)
+
 ## Visão Geral
 
 O projeto segue o padrão **Clean Architecture** e está organizado para garantir alta modularidade, separação de responsabilidades e facilidade de manutenção.
@@ -43,7 +45,7 @@ A Clean Architecture propõe a separação do código em camadas, onde cada cama
 
 - Internacionalização centralizada em `lib/translations/`.
 - Rotas e middlewares definidos em `lib/app/app.dart`.
-- Gerenciamento de estado flexível, podendo variar por módulo (bloc, cubit, provider, etc).
+- Gerenciamento de estado com GetX (GetxController, LifecycleController, Rx/Obx).
 - Regras de lint customizadas em `analysis_options.yaml`.
 
 ## Exemplos
@@ -55,6 +57,8 @@ A Clean Architecture propõe a separação do código em camadas, onde cada cama
 ---
 
 Para mais detalhes, consulte o README.md ou os exemplos de pacotes em `/packages`.
+
+## Diagrama de Arquitetura em Camadas
 
 Este diagrama ilustra a arquitetura em camadas do projeto Flutter monorepo, incluindo os pacotes da pasta /packages e suas dependências principais.
 
@@ -74,6 +78,7 @@ graph TD
   admin[admin]
   analytics[analytics]
   appsflyer[appsflyer]
+  app_purchase[app_purchase]
   webapp[web_app]
   webview[web_view]
   user_account[user_account]
@@ -103,6 +108,7 @@ graph TD
   %% Design system and DI
   design_system --> core
   design_system --> dependency
+  design_system --> domain
 
   %% Internal package interactions (some are interdependent)
   clean_code_data --> core
@@ -150,6 +156,8 @@ graph TD
   splash --> dependency
   user_account --> core
   user_account --> dependency
+  app_purchase --> core
+  app_purchase --> dependency
   webapp --> core
   webapp --> dependency
   webview --> core
@@ -160,5 +168,149 @@ graph TD
 
   %% Optional: show all nodes on a single diagram for clarity
   classDef package fill:#f9f,stroke:#333,stroke-width:1px;
-  class admin,analytics,appsflyer,webapp,webview,user_account,splash,settings,security,faq,feature_flag,firebase_initialize,force_update,home,login,onboarding,notifications,push_notifications,push_messaging,deeplink,crashlytics,core,dependency,design_system,data,infra package;
+  class admin,analytics,appsflyer,app_purchase,webapp,webview,user_account,splash,settings,security,faq,feature_flag,firebase_initialize,force_update,home,login,onboarding,notifications,push_notifications,push_messaging,deeplink,crashlytics,core,dependency,design_system,data,infra package;
+```
+
+## Diagrama de Sequência — Fluxo de Login
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Page as LoginPage
+    participant Controller as LoginController
+    participant UseCase as LoginUseCase
+    participant Repo as UserRepository
+    participant DS as UserDataSource
+    participant API as External API
+
+    User->>Page: Digita credenciais
+    Page->>Controller: login(username, password)
+    Controller->>Controller: isLoading = true
+    Controller->>UseCase: call(username, password)
+    UseCase->>Repo: login(username, password)
+    Repo->>DS: login(username, password)
+    DS->>API: POST /auth/login
+    API-->>DS: { token, user }
+    DS-->>Repo: Map<String, dynamic>
+    Repo-->>Repo: UserModel.fromMap()
+    Repo-->>UseCase: UserEntity
+    UseCase-->>Controller: Success(UserEntity)
+    Controller->>Controller: isLoading = false
+    Controller-->>Page: Navegar para Home
+    Page-->>User: Home Screen
+```
+
+## Diagrama de Sequência — Fluxo de Notificações
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Page as NotificationsPage
+    participant Controller as NotificationsController
+    participant UseCase as ListUserNotificationsUseCase
+    participant Repo as NotificationRepository
+    participant DS as NotificationDataSource
+    participant API as External API
+
+    User->>Page: Abre lista de notificações
+    Page->>Controller: loadNotifications(page: 1)
+    Controller->>Controller: isLoading = true
+    Controller->>UseCase: call(page: 1)
+    UseCase->>Repo: list(page: 1)
+    Repo->>DS: list(page: 1)
+    DS->>API: GET /notifications?page=1
+    API-->>DS: { data: [...], total: 50 }
+    DS-->>Repo: List<Map>
+    Repo-->>Repo: List<NotificationModel>.fromMap()
+    Repo-->>UseCase: List<NotificationEntity>
+    UseCase-->>Controller: Success(List<NotificationEntity>)
+    Controller->>Controller: isLoading = false
+    Controller-->>Page: Renderizar lista
+    Page-->>User: Lista de notificações
+```
+
+## Diagrama de Estado — Ciclo de Vida do Controller
+
+```mermaid
+stateDiagram-v2
+    [*] --> onInit: AppBinding.put()
+    onInit --> onReady: Widget build()
+    onReady --> onActive: Usuário interage
+    onActive --> onReady: Reconstrução
+    onReady --> onClose: Widget descartado
+    onClose --> [*]
+```
+
+## Diagrama de Fluxo — Clean Architecture
+
+```mermaid
+flowchart LR
+    subgraph Presentation
+        UI[Page/Widget]
+        CTRL[Controller]
+    end
+
+    subgraph Domain
+        UC[Use Case]
+        ENT[Entity]
+    end
+
+    subgraph Data
+        REPO[Repository]
+        MOD[Model]
+    end
+
+    subgraph Infra
+        DS[Data Source]
+        API[External API]
+    end
+
+    UI -->|user action| CTRL
+    CTRL -->|invoke| UC
+    UC -->|call| REPO
+    REPO -->|fetch| DS
+    DS -->|HTTP| API
+    API -->|JSON| DS
+    DS -->|Map| REPO
+    REPO -->|fromMap| MOD
+    MOD -->|extends| ENT
+    ENT -->|result| UC
+    UC -->|Result| CTRL
+    CTRL -->|Rx state| UI
+```
+
+## Diagrama de Componentes — Design System
+
+```mermaid
+flowchart TD
+    subgraph Atoms
+        TextWidget
+        AppIcon
+        FlatButton
+        PrimaryButton
+        SecondaryButton
+        TextFieldWidget
+    end
+
+    subgraph Molecules
+        AppBarWidget
+        DialogWidget
+        BottomSheetWidget
+        ScaffoldWidget
+    end
+
+    subgraph Organisms
+        NavigatorRouterWidget
+        BottomNavigatorWidget
+        ScrollViewWidget
+    end
+
+    TextWidget --> AppBarWidget
+    AppIcon --> AppBarWidget
+    FlatButton --> DialogWidget
+    PrimaryButton --> ScaffoldWidget
+    TextFieldWidget --> BottomSheetWidget
+    AppBarWidget --> NavigatorRouterWidget
+    DialogWidget --> NavigatorRouterWidget
+    ScaffoldWidget --> NavigatorRouterWidget
 ```

@@ -1,12 +1,11 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AppPermissionsServiceMock extends Mock implements AppPermissionsService {
   final Map<Permission, PermissionStatus> _status;
 
-  AppPermissionsServiceMock({
-    required Map<Permission, PermissionStatus> status,
-  }) : _status = status;
+  AppPermissionsServiceMock({required this._status});
 
   @override
   Future<PermissionStatus> checkPermission(Permission permission) async {

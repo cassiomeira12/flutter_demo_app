@@ -1,8 +1,11 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'dart:developer' as developer;
+
 import 'package:cached_network_image_platform_interface/cached_network_image_platform_interface.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class ImageWidget extends StatelessWidget {
   final String imageUrl;
@@ -25,6 +28,7 @@ class ImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('ImageWidget $imageUrl', name: 'Rebuild');
     if (imageUrl.isEmpty) return fallback;
     return CachedNetworkImage(
       imageUrl: imageUrl,

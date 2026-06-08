@@ -1,3 +1,5 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -6,23 +8,19 @@ class AppInstallationServiceImpl
         CreateServiceMixin<InstallationEntity>,
         ListServiceMixin<InstallationEntity>
     implements AppInstallationService {
-  final AppInstallationDataSource _dataSource;
+  final AppInstallationDataSource _appInstallationDataSource;
   final AppInfoService _appInfoService;
   final DeviceInfoService _deviceInfoService;
   final FirebaseInitializeService _firebaseInitializeService;
   final PushMessagingService _pushMessagingService;
 
   AppInstallationServiceImpl({
-    required AppInstallationDataSource appInstallationDataSource,
-    required AppInfoService appInfoService,
-    required DeviceInfoService deviceInfoService,
-    required FirebaseInitializeService firebaseInitializeService,
-    required PushMessagingService pushMessagingService,
-  }) : _dataSource = appInstallationDataSource,
-       _appInfoService = appInfoService,
-       _deviceInfoService = deviceInfoService,
-       _firebaseInitializeService = firebaseInitializeService,
-       _pushMessagingService = pushMessagingService;
+    required this._appInstallationDataSource,
+    required this._appInfoService,
+    required this._deviceInfoService,
+    required this._firebaseInitializeService,
+    required this._pushMessagingService,
+  });
 
   @override
   Future<InstallationEntity> getInstallation() async {
@@ -86,7 +84,7 @@ class AppInstallationServiceImpl
   Future<InstallationEntity> upload(InstallationEntity installation) async {
     return mixinCreate(
       data: installation.toMap(),
-      create: _dataSource.create,
+      create: _appInstallationDataSource.create,
       fromMap: InstallationModel.fromMap,
     );
   }
@@ -94,7 +92,7 @@ class AppInstallationServiceImpl
   @override
   Future<List<InstallationEntity>> list(String userId) {
     return mixinList(
-      list: () => _dataSource.list(userId),
+      list: () => _appInstallationDataSource.list(userId),
       fromMap: InstallationModel.fromMap,
     );
   }

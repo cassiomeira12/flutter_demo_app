@@ -1,11 +1,12 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
 
 class SharedPreferencesStore extends CoreStorage {
   final LocalStorageUseCase _localStorage;
 
-  SharedPreferencesStore({required LocalStorageUseCase localStorageUseCase})
-    : _localStorage = localStorageUseCase;
+  SharedPreferencesStore({
+    required LocalStorageUseCase localStorageUseCase,
+  }) : _localStorage = localStorageUseCase;
 
   @override
   Future<void> init() async {}

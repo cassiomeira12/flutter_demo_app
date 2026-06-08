@@ -1,12 +1,11 @@
+import 'package:admin/src/domain/domain.dart';
 import 'package:core/core.dart';
 
 class WebVisitHistoryController
     extends ListenableBaseController<WebVisitHistoryEntity> {
   final ListWebVisitHistoryUseCase _listWebVisitHistoryUseCase;
 
-  WebVisitHistoryController({
-    required ListWebVisitHistoryUseCase listWebVisitHistoryUseCase,
-  }) : _listWebVisitHistoryUseCase = listWebVisitHistoryUseCase;
+  WebVisitHistoryController({required this._listWebVisitHistoryUseCase});
 
   @override
   Future<List<WebVisitHistoryEntity>> Function() get fetchDataFunction {

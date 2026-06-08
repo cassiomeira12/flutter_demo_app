@@ -1,11 +1,14 @@
+import 'dart:developer' as developer;
+
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:webview/src/domain/domain.dart';
-import 'package:webview/src/presentation/widgets/web_view/webview_widget_controller.dart';
+import 'package:webview/src/presentation/webview/widgets/webview_widget_controller.dart';
 
 class WebViewController extends LifecycleController {
   final String _globalKeyHash;
-  final LocalStorageUseCase _localStorageUseCase;
+  final LocalStorageUseCase _localStorage;
   final CheckInternetConnectionUseCase _checkInternetUseCase;
   final OpenWebUrlUseCase _openWebUrlUseCase;
   final ShareUseCase _shareUseCase;
@@ -13,29 +16,23 @@ class WebViewController extends LifecycleController {
   final List<ReloadExpiredUrlEntity> _reloadExpiredUrls;
 
   WebViewController({
-    required String globalKeyHash,
-    required LocalStorageUseCase localStorage,
-    required CheckInternetConnectionUseCase checkInternetUseCase,
-    required OpenWebUrlUseCase openWebUrlUseCase,
-    required ShareUseCase shareUseCase,
-    required Future<void> Function(String url) openPage,
-    required List<ReloadExpiredUrlEntity> reloadExpiredUrls,
-  }) : _globalKeyHash = globalKeyHash,
-       _localStorageUseCase = localStorage,
-       _checkInternetUseCase = checkInternetUseCase,
-       _openWebUrlUseCase = openWebUrlUseCase,
-       _shareUseCase = shareUseCase,
-       _openPage = openPage,
-       _reloadExpiredUrls = reloadExpiredUrls;
+    required this._globalKeyHash,
+    required this._localStorage,
+    required this._checkInternetUseCase,
+    required this._openWebUrlUseCase,
+    required this._shareUseCase,
+    required this._openPage,
+    required this._reloadExpiredUrls,
+  });
 
-  late String url;
+  late String initialUrl;
 
   int scrollX = 0;
   int scrollY = 0;
 
   WebViewWidgetController? _webViewController;
 
-  final RxString errorMessage = RxString('');
+  String errorMessage = '';
 
   DateTime? _previousTimeReloadedWebView;
   DateTime? _lastTimeReloadedWebView;
@@ -46,7 +43,7 @@ class WebViewController extends LifecycleController {
 
   bool get canTryReloadAgain => _timesToRetryReload > 0;
 
-  Stream<bool>? internetConnectionStream;
+  StreamSubscription<bool>? _internetConnectionSubscription;
 
   Future<bool> get hasInternet => _checkInternetUseCase.call();
 
@@ -58,6 +55,7 @@ class WebViewController extends LifecycleController {
   }
 
   bool _isPaused = false;
+  bool get isPaused => _isPaused;
   void setPaused(bool paused) {
     _isPaused = paused;
   }
@@ -122,20 +120,26 @@ class WebViewController extends LifecycleController {
   }
 
   final ValueNotifier<bool> showWebView = ValueNotifier(true);
+  final ValueNotifier<int> lastProgress = ValueNotifier(0);
 
-  ValueNotifier<int> get lastProgress {
-    return _webViewController?.lastProgress ?? ValueNotifier(0);
+  void _lastProgressListener() {
+    if (_webViewController != null) {
+      lastProgress.value = _webViewController!.lastProgress.value;
+    }
   }
 
   void setWebViewController(WebViewWidgetController? controller) {
+    _webViewController?.lastProgress.removeListener(_lastProgressListener);
     _webViewController = controller;
+    _webViewController?.lastProgress.addListener(_lastProgressListener);
   }
 
   void addLog(String log) {
     final String time = DateHelper.formatHourMinuteSeconds(DateTime.now());
-    final String loggedTimer = 'webview_widget [$time] $_globalKeyHash $log';
+    final String loggedTimer = '[$time] $_globalKeyHash $log';
+    developer.log(loggedTimer, name: 'WebViewWidget');
     CrashlyticsServiceManager.instance.log(loggedTimer);
-    _logs.add(loggedTimer.replaceAll('webview_widget ', ''));
+    _logs.add(loggedTimer.replaceAll('WebViewWidget ', ''));
   }
 
   void updateScrollPosition(int x, int y) {
@@ -149,7 +153,7 @@ class WebViewController extends LifecycleController {
 
   Future<void> saveScrollPosition() async {
     final scrollPosition = {'x': scrollX, 'y': scrollY};
-    await _localStorageUseCase.set(url, scrollPosition);
+    await _localStorage.set(initialUrl, scrollPosition);
   }
 
   Future<void> openExternalLink(Uri uri) async {
@@ -159,19 +163,17 @@ class WebViewController extends LifecycleController {
     }
     try {
       HapticFeedback.lightImpact();
-      await _openWebUrlUseCase.call(url);
-    } catch (_) {
-      //
+      await _openWebUrlUseCase.call(uri.toString());
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
     }
   }
 
   Future<void> openLink(String link) async {
     saveScrollPosition();
     pauseWebView();
-    _isPaused = true;
     HapticFeedback.lightImpact();
     await _openPage.call(link);
-    _isPaused = false;
     resumeWebView();
   }
 
@@ -189,7 +191,8 @@ class WebViewController extends LifecycleController {
   }
 
   Future<void> _reloadIfNeed() async {
-    final hasInternetConnection = await hasInternet;
+    final hasInternetConnection =
+        _webViewController?.isInternetConnected ?? await hasInternet;
     if (hasInternetConnection) {
       _resetTimesToRetry();
       if (processGone || hasError) {
@@ -197,9 +200,17 @@ class WebViewController extends LifecycleController {
       } else {
         final bool webViewContentExpired = _isWebViewContentExpired();
         if (webViewContentExpired) {
-          reloadWebView(initialUrl: webViewContentExpired);
+          reloadWebView(initialUrl: true);
         }
       }
+    }
+  }
+
+  Future<void> _checkInternetConnected() async {
+    final hasInternetConnection =
+        _webViewController?.isInternetConnected ?? await hasInternet;
+    if (!hasInternetConnection) {
+      showDialogNoInternetConnected();
     }
   }
 
@@ -239,7 +250,7 @@ class WebViewController extends LifecycleController {
     if (!canTryReloadAgain) {
       addLog('recreateWebView not executed');
       isNetworkError = true;
-      errorMessage.value =
+      errorMessage =
           'Não foi possível carregar a página, verifique sua conexão com a internet';
       setError(true);
       return;
@@ -249,8 +260,8 @@ class WebViewController extends LifecycleController {
 
     setLoading(true);
     await Future.delayed(const Duration(milliseconds: 500));
-    final scrollPosition = await _localStorageUseCase.get<Map<String, dynamic>>(
-      url,
+    final scrollPosition = await _localStorage.get<Map<String, dynamic>>(
+      initialUrl,
     );
     if (scrollPosition != null) {
       scrollX = scrollPosition['x'] ?? 0;
@@ -267,7 +278,7 @@ class WebViewController extends LifecycleController {
       final now = DateTime.now();
       final Duration differenceTime = now.difference(_lastTimeReloadedWebView!);
       for (final regex in _reloadExpiredUrls) {
-        if (regex.enable && regex.pattern.hasMatch(url)) {
+        if (regex.enable && regex.pattern.hasMatch(initialUrl)) {
           final String limiteTime = 'limit: [${regex.expiredTime}]';
           if (differenceTime.inSeconds > regex.expiredTime.inSeconds) {
             addLog(
@@ -283,39 +294,31 @@ class WebViewController extends LifecycleController {
     return false;
   }
 
-  void internetConnectionListener(bool hasInternet) {
-    addLog('internetConnectionListener connected: [$hasInternet]');
-    if (_isPaused) return;
-    if (hasInternet) {
-      final bool isSuccessStep =
-          _webViewController?.currentStep.isSuccessStep ?? false;
-      final bool isErrorStep =
-          _webViewController?.currentStep.isErrorStep ?? true;
-      if (isLoading || !isSuccessStep || isErrorStep) {
+  void onInternetConnectionChanged(bool isConnected) {
+    addLog('internetConnectionListener connected: [$isConnected]');
+    _webViewController?.updateInternetConnection(isConnected);
+    if (_isPaused || super.appInBackground) return;
+    if (isConnected) {
+      if (isLoading) {
         tryAgain();
+      } else {
+        _reloadIfNeed();
       }
+    } else {
+      showDialogNoInternetConnected();
     }
   }
 
   Future<bool> checkInternetConnection() => _checkInternetUseCase.call();
 
-  void noInternetConnectionCallback() {
+  void showDialogNoInternetConnected() {
+    if (super.appInBackground || _isPaused) return;
     addLog('noInternetConnectionCallback');
     _lastTimeReloadedWebView = _previousTimeReloadedWebView;
-    DialogWidget.show(
-      super.context,
-      title: 'Internet',
-      message: 'Você está sem conexão com a internet',
-    );
-    // Get.showSnackbar(
-    //   const GetSnackBar(
-    //     title: 'Internet',
-    //     message: 'Você está sem conexão com a internet',
-    //     backgroundColor: AppColors.statusWarning,
-    //     maxWidth: ResponsiveSizeHelper.maxWidth,
-    //     duration: Duration(seconds: 1),
-    //     snackStyle: SnackStyle.GROUNDED,
-    //   ),
+    // DialogWidget.show(
+    //   super.context,
+    //   title: 'Internet',
+    //   message: 'error_webview_no_network_message'.tr,
     // );
   }
 
@@ -329,30 +332,49 @@ class WebViewController extends LifecycleController {
     clickTagging(component: 'share_data $result');
   }
 
+  void clearLogs() {
+    _logs.clear();
+  }
+
   @override
-  void onAppResumed() {
-    _reloadIfNeed();
+  void onAppForeground() {
+    addLog('onAppForeground');
+    _webViewController?.updateAppInBackground(false);
+    if (!_isPaused) {
+      _reloadIfNeed();
+      _checkInternetConnected();
+    }
   }
 
   @override
   void onAppBackground() {
+    addLog('onAppBackground');
+    _webViewController?.updateAppInBackground(true);
+    if (!_isPaused) {
+      _webViewController?.stopLoadingTimer();
+    }
     saveScrollPosition();
   }
 
   @override
   void onReady() {
     super.onReady();
-    internetConnectionStream = _checkInternetUseCase.internetStream
-        .asBroadcastStream();
-    internetConnectionStream?.listen(internetConnectionListener);
+    _internetConnectionSubscription = _checkInternetUseCase.internetStream
+        .listen(onInternetConnectionChanged);
   }
 
   @override
   void onClose() {
     addLog('onClose controller');
-    _localStorageUseCase.delete(url);
+    _isLoading.dispose();
+    _hasError.dispose();
+    _processGone.dispose();
+    showWebView.dispose();
+    lastProgress.dispose();
+    _webViewController?.lastProgress.removeListener(_lastProgressListener);
+    _localStorage.delete(initialUrl);
+    _internetConnectionSubscription?.cancel();
     _checkInternetUseCase.dispose();
-    errorMessage.close();
     _logs.close();
     super.onClose();
   }

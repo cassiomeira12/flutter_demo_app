@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:login/src/domain/domain.dart';
 
 class SignUpController extends BaseController
@@ -14,20 +16,17 @@ class SignUpController extends BaseController
   final OpenWebUrlUseCase _openWebUrlUseCase;
 
   SignUpController({
-    required CreateUserUseCase createUserUseCase,
-    required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
-    required OpenWebUrlUseCase openWebUrlUseCase,
-  }) : _createUserUseCase = createUserUseCase,
-       _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
-       _openWebUrlUseCase = openWebUrlUseCase;
+    required this._createUserUseCase,
+    required this._updateUserLocaleUseCase,
+    required this._uploadInstallationAppUseCase,
+    required this._openWebUrlUseCase,
+  });
 
-  final privacyAndTerms = RxBool(false);
+  final privacyAndTerms = ValueNotifier<bool>(false);
 
   @override
   void onClose() {
-    privacyAndTerms.close();
+    privacyAndTerms.dispose();
     super.onClose();
   }
 

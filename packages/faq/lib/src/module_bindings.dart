@@ -15,6 +15,7 @@ class FaqModuleBindings implements ModuleBinding {
         service: AppBinding.find(),
         checkInternetUseCase: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
+        localDatabase: AppBinding.find(),
       ),
       permanent: true,
     );

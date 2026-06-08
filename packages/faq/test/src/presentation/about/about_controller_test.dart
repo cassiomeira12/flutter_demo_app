@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:faq/src/domain/domain.dart';
 import 'package:faq/src/presentation/about/about_controller.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,7 +17,7 @@ void main() {
   setUpAll(() {
     registerFallbackValue('');
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {

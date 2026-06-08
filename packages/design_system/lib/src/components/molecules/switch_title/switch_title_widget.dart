@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -23,6 +25,7 @@ class SwitchTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('SwitchTitleWidget $text', name: 'Rebuild');
     return Container(
       constraints: const BoxConstraints(
         maxWidth: ResponsiveSizeHelper.maxWidth,

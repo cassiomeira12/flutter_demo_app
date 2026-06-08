@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:security/src/presentation/security/security.dart';
 
 class SecurityPage extends AppView<SecurityController> {
@@ -16,11 +16,15 @@ class SecurityPage extends AppView<SecurityController> {
             controller: scrollController,
             child: Padding(
               padding: EdgeInsets.all(ResponsiveSizeHelper.width(0)),
-              child: Obx(() {
-                if (controller.isLoading.value) {
-                  return const CircularLoadingWidget();
-                }
-                return Column(
+              child: ValueListenableBuilder(
+                valueListenable: controller.isLoading,
+                builder: (context, value, child) {
+                  if (value) {
+                    return const CircularLoadingWidget();
+                  }
+                  return child!;
+                },
+                child: Column(
                   spacing: ResponsiveSizeHelper.spacingDefaultHeight * 2,
                   children: [
                     ColoredBox(
@@ -30,36 +34,46 @@ class SecurityPage extends AppView<SecurityController> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Obx(() {
-                              return IgnorePointer(
-                                ignoring:
-                                    !controller.hasSupportedBiometrics.value,
-                                child: SwitchTitleWidget(
-                                  key: const Key('biometrics_switch_key'),
-                                  initialValue: controller.biometric.value,
-                                  text: controller.biometric.value
-                                      ? 'biometric_enabled'.tr
-                                      : 'biometric_disabled'.tr,
-                                  textStyle: AppTextStyle.field(context),
-                                  onChanged: (enabled) {
-                                    controller.toggleBiometric(enabled).then((
-                                      enabled,
-                                    ) {
-                                      if (enabled == null) return;
-                                      if (!context.mounted) return;
+                            ValueListenableBuilder(
+                              valueListenable:
+                                  controller.hasSupportedBiometrics,
+                              builder: (context, value, child) {
+                                return IgnorePointer(
+                                  ignoring: !value,
+                                  child: child,
+                                );
+                              },
+                              child: ValueListenableBuilder(
+                                valueListenable: controller.biometric,
+                                builder: (context, value, child) {
+                                  return SwitchTitleWidget(
+                                    key: const Key('biometrics_switch_key'),
+                                    initialValue: value,
+                                    text: value
+                                        ? 'biometric_enabled'.tr
+                                        : 'biometric_disabled'.tr,
+                                    textStyle: AppTextStyle.field(context),
+                                    onChanged: (enabled) {
+                                      controller.toggleBiometric(enabled).then((
+                                        enabled,
+                                      ) {
+                                        if (enabled == null) return;
+                                        if (!context.mounted) return;
 
-                                      DialogWidget.show(
-                                        context,
-                                        title: 'biometric'.tr,
-                                        message: enabled
-                                            ? 'biometrics_success_activated'.tr
-                                            : 'biometrics_disabled'.tr,
-                                      );
-                                    });
-                                  },
-                                ),
-                              );
-                            }),
+                                        DialogWidget.show(
+                                          context,
+                                          title: 'biometric'.tr,
+                                          message: enabled
+                                              ? 'biometrics_success_activated'
+                                                    .tr
+                                              : 'biometrics_disabled'.tr,
+                                        );
+                                      });
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                             const SpacerWidget(),
                             Container(
                               constraints: const BoxConstraints(
@@ -70,27 +84,31 @@ class SecurityPage extends AppView<SecurityController> {
                                 style: AppTextStyle.label(context),
                               ),
                             ),
-                            Obx(() {
-                              return Visibility(
-                                visible:
-                                    !controller.hasSupportedBiometrics.value,
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: ResponsiveSizeHelper.height(20),
-                                  ),
-                                  constraints: const BoxConstraints(
-                                    maxWidth: ResponsiveSizeHelper.maxWidth,
-                                  ),
-                                  child: TextWidget(
-                                    'device_not_support_biometrics'.tr,
-                                    style: AppTextStyle.message(
-                                      context,
-                                      color: AppColors.statusWarning,
-                                    ),
+                            ValueListenableBuilder(
+                              valueListenable:
+                                  controller.hasSupportedBiometrics,
+                              builder: (context, value, child) {
+                                return Visibility(
+                                  visible: !value,
+                                  child: child!,
+                                );
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: ResponsiveSizeHelper.height(20),
+                                ),
+                                constraints: const BoxConstraints(
+                                  maxWidth: ResponsiveSizeHelper.maxWidth,
+                                ),
+                                child: TextWidget(
+                                  'device_not_support_biometrics'.tr,
+                                  style: AppTextStyle.message(
+                                    context,
+                                    color: AppColors.statusWarning,
                                   ),
                                 ),
-                              );
-                            }),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -102,17 +120,20 @@ class SecurityPage extends AppView<SecurityController> {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Obx(() {
-                              return SwitchTitleWidget(
-                                key: const Key('blur_protect_switch_key'),
-                                initialValue: controller.blurProtect.value,
-                                text: controller.blurProtect.value
-                                    ? 'blur_protect_enabled'.tr
-                                    : 'blur_protect_disabled'.tr,
-                                textStyle: AppTextStyle.field(context),
-                                onChanged: controller.toggleBlurProtect,
-                              );
-                            }),
+                            ValueListenableBuilder(
+                              valueListenable: controller.blurProtect,
+                              builder: (context, value, child) {
+                                return SwitchTitleWidget(
+                                  key: const Key('blur_protect_switch_key'),
+                                  initialValue: value,
+                                  text: value
+                                      ? 'blur_protect_enabled'.tr
+                                      : 'blur_protect_disabled'.tr,
+                                  textStyle: AppTextStyle.field(context),
+                                  onChanged: controller.toggleBlurProtect,
+                                );
+                              },
+                            ),
                             const SpacerWidget(),
                             Container(
                               constraints: const BoxConstraints(
@@ -128,8 +149,8 @@ class SecurityPage extends AppView<SecurityController> {
                       ),
                     ),
                   ],
-                );
-              }),
+                ),
+              ),
             ),
           );
         },

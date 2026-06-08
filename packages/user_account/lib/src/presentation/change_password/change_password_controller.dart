@@ -1,13 +1,14 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
+import 'package:user_account/src/domain/domain.dart';
 
 class ChangePasswordController extends BaseController
     with PasswordValidator, ConfirmPasswordValidator {
   final ChangePasswordUseCase _changePasswordUseCase;
 
-  ChangePasswordController({
-    required ChangePasswordUseCase changePasswordUseCase,
-  }) : _changePasswordUseCase = changePasswordUseCase;
+  ChangePasswordController({required this._changePasswordUseCase});
 
   final UserEntity _user = AppBinding.find<UserEntity>();
 

@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -12,30 +13,30 @@ class PushMessagingSettingsController extends BaseController {
   final ClipboardUseCase _clipboardUseCase;
 
   PushMessagingSettingsController({
-    required TestPushNotificationUseCase testPushNotificationUseCase,
-    required CheckPermissionUseCase checkPermissionUseCase,
-    required RequestPermissionUseCase requestPermissionUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
-    required PushMessagingService messagingService,
-    required PushNotificationsService pushNotificationsService,
-    required ClipboardUseCase clipboardUseCase,
-  }) : _testPushNotificationUseCase = testPushNotificationUseCase,
-       _checkPermissionUseCase = checkPermissionUseCase,
-       _requestPermissionUseCase = requestPermissionUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
-       _messagingService = messagingService,
-       _pushNotificationsService = pushNotificationsService,
-       _clipboardUseCase = clipboardUseCase;
+    required this._testPushNotificationUseCase,
+    required this._checkPermissionUseCase,
+    required this._requestPermissionUseCase,
+    required this._localStorageUseCase,
+    required this._uploadInstallationAppUseCase,
+    required this._messagingService,
+    required this._pushNotificationsService,
+    required this._clipboardUseCase,
+  });
 
-  RxBool notificationsEnabled = RxBool(false);
-  RxString pushToken = RxString('');
+  final notificationsEnabled = ValueNotifier<bool>(false);
+  final pushToken = ValueNotifier<String?>(null);
 
   @override
   void onReady() {
     super.onReady();
     _checkNotificationsEnabled();
+  }
+
+  @override
+  void onClose() {
+    notificationsEnabled.dispose();
+    pushToken.dispose();
+    super.onClose();
   }
 
   Future<void> _checkNotificationsEnabled() async {
@@ -53,7 +54,7 @@ class PushMessagingSettingsController extends BaseController {
       notificationsEnabled.value = permission.isGranted;
       if (permission.isGranted) {
         final String? token = await _messagingService.getToken();
-        pushToken.value = token ?? '';
+        pushToken.value = token;
       }
     } catch (_) {
       notificationsEnabled.value = false;

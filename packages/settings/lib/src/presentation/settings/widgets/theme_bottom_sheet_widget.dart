@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class ThemeBottomSheetWidget extends StatelessWidget {
   final String currentThemeData;
@@ -30,8 +30,8 @@ class ThemeBottomSheetWidget extends StatelessWidget {
               expandWidth: true,
               icon: FlutterIcon(
                 currentThemeData == themeName
-                    ? BoxIcons.bx_radio_circle_marked
-                    : BoxIcons.bx_radio_circle,
+                    ? Icons.radio_button_on
+                    : Icons.radio_button_off,
                 color: currentThemeData == themeName
                     ? theme.primaryColor
                     : theme.iconTheme.color,

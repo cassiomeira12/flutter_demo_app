@@ -1,5 +1,7 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:notifications/src/presentation/notifications/notifications.dart';
 import 'package:notifications/src/presentation/notifications/widgets/notification_widget.dart';
 

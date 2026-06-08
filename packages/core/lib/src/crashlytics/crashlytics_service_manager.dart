@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:core/src/crashlytics/crashlytics_service_faker.dart';
 import 'package:core/src/crashlytics/mixins/mixin.dart';

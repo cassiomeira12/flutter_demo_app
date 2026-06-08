@@ -1,5 +1,6 @@
 import 'package:admin/src/domain/domain.dart';
 import 'package:admin/src/presentation/users/users.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -9,12 +10,10 @@ class CreateNotificationController extends BaseController {
   final TestPushNotificationUseCase _testPushNotificationUseCase;
 
   CreateNotificationController({
-    required GetAllUsersUseCase getAllUsersUseCase,
-    required CreateNotificationUseCase createNotificationUseCase,
-    required TestPushNotificationUseCase testPushNotificationUseCase,
-  }) : _getAllUsersUseCase = getAllUsersUseCase,
-       _createNotificationUseCase = createNotificationUseCase,
-       _testPushNotificationUseCase = testPushNotificationUseCase;
+    required this._getAllUsersUseCase,
+    required this._createNotificationUseCase,
+    required this._testPushNotificationUseCase,
+  });
 
   @override
   String get pageRouteNamed => AppRouter.pushNotifications.name;

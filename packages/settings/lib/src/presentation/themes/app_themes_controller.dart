@@ -1,15 +1,16 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
+import 'package:settings/src/domain/domain.dart';
 
 class AppThemesController extends BaseController {
   final ThemeController _themeController;
   final DynamicIconUseCase _dynamicIconUseCase;
 
   AppThemesController({
-    required ThemeController themeController,
-    required DynamicIconUseCase dynamicIconUseCase,
-  }) : _themeController = themeController,
-       _dynamicIconUseCase = dynamicIconUseCase;
+    required this._themeController,
+    required this._dynamicIconUseCase,
+  });
 
   String get currentThemeData => _themeController.currentThemeData;
 
@@ -51,7 +52,8 @@ class AppThemesController extends BaseController {
     }
   }
 
-  List<DynamicIcon> iconsAvailable() => _dynamicIconUseCase.iconsAvailable();
+  List<DynamicIconEntity> iconsAvailable() =>
+      _dynamicIconUseCase.iconsAvailable();
 
   Future<Result> setIcon(String icon) {
     return _dynamicIconUseCase.changeIcon(icon).whenComplete(updateCurrentIcon);

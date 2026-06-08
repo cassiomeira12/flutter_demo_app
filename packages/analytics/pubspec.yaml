@@ -6,8 +6,8 @@ publish_to: "none"
 resolution: workspace
 
 environment:
-  sdk: ^3.10.1
-  flutter: ">=3.38.3"
+  sdk: ^3.12.0
+  flutter: ">=3.44.0"
 
 dependencies:
   flutter:
@@ -17,6 +17,11 @@ dependencies:
     path: ../core
   dependency:
     path: ../dependency
+  design_system:
+    path: ../design_system
+
+  clean_code_infra:
+    path: ../clean_code_infra
 
   # firebase_analytics: 12.0.4
 

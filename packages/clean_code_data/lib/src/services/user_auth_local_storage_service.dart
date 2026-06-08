@@ -1,11 +1,12 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 class UserAuthLocalStorageServiceImpl implements UserAuthStorageService {
   final LocalStorageUseCase _localStorageUseCase;
 
-  UserAuthLocalStorageServiceImpl({
-    required LocalStorageUseCase localStorageUseCase,
-  }) : _localStorageUseCase = localStorageUseCase;
+  UserAuthLocalStorageServiceImpl({required this._localStorageUseCase});
 
   @override
   Future<void> saveCredentials({
@@ -49,7 +50,9 @@ class UserAuthLocalStorageServiceImpl implements UserAuthStorageService {
   }
 
   @override
-  Future<void> saveUserData(String data) async {
+  Future<void> saveUserData(UserEntity user) async {
+    final userJson = user.toMap();
+    final data = jsonEncode(userJson);
     await _localStorageUseCase.set<String>(USER_DATA, data);
   }
 
@@ -59,7 +62,10 @@ class UserAuthLocalStorageServiceImpl implements UserAuthStorageService {
   }
 
   @override
-  Future<String?> getUserData() async {
-    return await _localStorageUseCase.get<String>(USER_DATA);
+  Future<UserEntity?> getUserData() async {
+    final String? data = await _localStorageUseCase.get<String>(USER_DATA);
+    if (data == null) return null;
+    final userJson = jsonDecode(data);
+    return UserModel.fromMap(userJson);
   }
 }

@@ -9,6 +9,8 @@ class AppRouterPage extends GetPage {
   @override
   final bool canPop;
 
+  static const pageTransition = Duration(milliseconds: 400);
+
   AppRouterPage({
     this.nestedKey,
     this.navigator = false,
@@ -21,7 +23,7 @@ class AppRouterPage extends GetPage {
     super.middlewares,
     super.children,
     super.transition = kIsWeb ? Transition.noTransition : Transition.cupertino,
-    super.transitionDuration = const Duration(milliseconds: 400),
+    super.transitionDuration = pageTransition,
   }) : super(popGesture: canPop);
 
   AppRouterPage copyWith({

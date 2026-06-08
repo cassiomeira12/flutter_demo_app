@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:login/src/domain/domain.dart';
 
@@ -6,29 +7,27 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
   final UserAuthStorageUseCase _authStorageUseCase;
   final UserService _userService;
   final EncryptUserPasswordUseCase _encryptUserPasswordUseCase;
-  final EncryptServerPublicKeyUseCase _encryptServerUseCase;
+  final EncryptServerPublicKeyUseCase _encryptServerPublicKeyUseCase;
 
   CreateUserUseCaseImpl({
-    required SignupService signupService,
-    required UserAuthStorageUseCase authStorageUseCase,
-    required UserService userService,
-    required EncryptUserPasswordUseCase encryptUserPasswordUseCase,
-    required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
-  }) : _singUpService = signupService,
-       _authStorageUseCase = authStorageUseCase,
-       _userService = userService,
-       _encryptUserPasswordUseCase = encryptUserPasswordUseCase,
-       _encryptServerUseCase = encryptServerPublicKeyUseCase;
+    required this._singUpService,
+    required this._authStorageUseCase,
+    required this._userService,
+    required this._encryptUserPasswordUseCase,
+    required this._encryptServerPublicKeyUseCase,
+  });
 
   @override
-  Future<UserModel> call({
+  Future<UserEntity> call({
     required String name,
     required String email,
     required String username,
     required String password,
   }) async {
     try {
-      final encryptedPassword = await _encryptServerUseCase.call(password);
+      final encryptedPassword = await _encryptServerPublicKeyUseCase.call(
+        password,
+      );
 
       final Map<String, dynamic> data = {
         'name': name,
@@ -48,11 +47,11 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
       await _encryptUserPasswordUseCase.encrypt(password: password);
 
       await _authStorageUseCase.saveSessionToken(sessionToken);
-      await _authStorageUseCase.saveUserData(user.toMap());
+      await _authStorageUseCase.saveUserData(user);
 
       await _userService.getUserData();
 
-      return user as UserModel;
+      return user;
     } catch (error) {
       await SessionHelper.clear();
       rethrow;

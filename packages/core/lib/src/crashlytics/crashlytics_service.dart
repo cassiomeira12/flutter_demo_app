@@ -1,5 +1,6 @@
-import 'dart:developer';
+import 'dart:developer' as developer;
 
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -56,10 +57,6 @@ abstract class CrashlyticsService {
 
   void simulateCrash();
 
-  static WidgetsBinding ensureInitialized() {
-    return SentryWidgetsFlutterBinding.ensureInitialized();
-  }
-
   static Widget wrapperWidget(Widget child) {
     return SentryWidget(child: child);
   }
@@ -80,7 +77,7 @@ abstract class CrashlyticsService {
       details.stack ?? StackTrace.current,
       msg: 'Flutter Error',
     );
-    debugger();
+    developer.debugger();
   }
 
   static bool catchException(Object error, StackTrace stackTrace) {
@@ -91,7 +88,7 @@ abstract class CrashlyticsService {
     } else {
       Log.fatalException(error, stackTrace, msg: 'Unexpected Error');
     }
-    debugger();
+    developer.debugger();
     return true;
   }
 }

@@ -1,11 +1,13 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/app/app.dart';
 import 'package:flutter_demo_app/translations/translation.dart';
 
 void main() {
   CrashlyticsService.zonedGuarded(() async {
-    CrashlyticsService.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
 
     FlutterError.onError = CrashlyticsService.catchFlutterError;
     PlatformDispatcher.instance.onError = CrashlyticsService.catchException;

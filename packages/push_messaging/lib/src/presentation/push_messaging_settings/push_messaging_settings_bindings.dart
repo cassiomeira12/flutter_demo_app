@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:push_messaging/src/presentation/push_messaging_settings/push_messaging_settings.dart';
@@ -6,7 +7,9 @@ class PushMessagingSettingsBindings extends Bindings {
   @override
   void dependencies() {
     AppBinding.put<TestPushNotificationUseCase>(
-      TestPushNotificationUseCaseImpl(notificationService: AppBinding.find()),
+      TestPushNotificationUseCaseImpl(
+        notificationService: AppBinding.find(),
+      ),
     );
 
     AppBinding.put<PushMessagingSettingsController>(

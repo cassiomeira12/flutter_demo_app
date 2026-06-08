@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class NavigatorRouterWidget extends StatefulWidget {
   final int initialIndex;
@@ -33,7 +34,7 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
     List.generate(widget.pages.length, (_) {
       _nestedNavigatorList.add(const SizedBox.shrink());
     });
-    indexChangeStream = widget.selectedIndex.listen(_updateNavigationIndex);
+    indexChangeStream = widget.selectedIndex.listen(_onNavigationIndexChanged);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       BaseController.navigatorIndex.value = widget.initialIndex;
     });
@@ -55,7 +56,7 @@ class _NavigatorRouterWidgetState extends State<NavigatorRouterWidget> {
     });
   }
 
-  void _updateNavigationIndex(int? index) {
+  void _onNavigationIndexChanged(int? index) {
     if (index != null) {
       if (_nestedNavigatorList[index] is SizedBox) {
         _nestedNavigatorList[index] = _nestedNavigator(

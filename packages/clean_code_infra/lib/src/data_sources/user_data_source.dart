@@ -1,11 +1,12 @@
 import 'package:clean_code_data/clean_code_data.dart';
+import 'package:core/core.dart';
 
 class UserDataSourceImpl
     with ReadDtaSourceMixin, DeleteDataSourceMixin, UpdateDataSourceMixin
     implements UserDataSource {
   final HttpClient _http;
 
-  UserDataSourceImpl({required HttpClient http}) : _http = http;
+  UserDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> getUserData() async {

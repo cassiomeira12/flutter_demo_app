@@ -2,6 +2,8 @@
 
 Camada de domínio seguindo os princípios de **Clean Architecture**. Define as regras de negócio puras, entidades, contratos de repositórios, serviços e casos de uso (use cases) da aplicação.
 
+**Veja também**: [Entities](entities.md) | [Models](../data/models.md) | [Use Cases](use-cases.md) | [Repositories](../data/repositories.md) | [Glossário](../glossary.md)
+
 ## Instalação
 
 No `pubspec.yaml` do app principal ou pacote que consumirá o domínio:
@@ -37,10 +39,6 @@ Entidades puras que representam as regras de negócio da aplicação.
 | `DeviceInfoEntity` | Informações do dispositivo (brand, model, OS, locale). Estende `ParserToJson` |
 | `AppInfoEntity` | Informações do app (name, package, version, build). Estende `ParserToJson`. Métodos `formattedName`, `versionOnly` |
 | `IpAddressLocationEntity` | Dados de geolocalização por IP. Método factory `emptyIpAddress()` |
-| `WebVisitHistoryEntity` | Histórico de visitas web com dados de localização. Estende `BaseEntity`. Método `countryComplete` |
-| `Result<T>` | Classe abstrata para resultados (Success/Error). Usa `BaseException` |
-| `Success<T>` | Implementação de sucesso para `Result<T>` com valor opcional |
-| `Error<T>` | Implementação de erro para `Result<T>` com `BaseException` |
 | `ShareResultEntity` | Resultado de compartilhamento com raw e status |
 | `AppEnvironmentEntity` | Configurações de ambiente do app (appName, androidPackageName, appleStoreAppId, permissions) |
 | `SecurityEnvironmentEntity` | Configurações de segurança (encryptKey, serverRSAPublicKeyBase64) |
@@ -95,8 +93,15 @@ Interfaces abstratas que definem contratos para serviços da aplicação.
 | `IpAddressLocationService` | Método: `getIpAddress({ip})` retorna `IpAddressLocationEntity` |
 | `OpenUrlService` | Métodos: `openUrl`, `openApp` |
 | `UserAuthStorageService` | Métodos para salvar/recuperar credenciais e session token |
-| `WebVisitHistoryService` | Implementa `ListService<WebVisitHistoryEntity>` |
 | `CacheStorageService` | Métodos: `load`, `save` |
+| `ClipboardService` | Operações com área de transferência |
+| `FileStorageService` | Armazenamento de arquivos |
+| `LocalStorageService` | Armazenamento local chave-valor |
+| `OtpCodeService` | Geração e validação de código OTP |
+| `RsaEncryptService` | Criptografia RSA |
+| `SecureStorageService` | Armazenamento seguro chave-valor |
+| `SecurityEncryptService` | Criptografia/descriptografia de dados |
+| `ShareService` | Compartilhamento de conteúdo |
 
 ---
 
@@ -121,10 +126,9 @@ Interfaces abstratas que definem contratos para casos de uso específicos da apl
 |----------|-----------|
 | `LoginUseCase` | `call({username, password})` → `UserEntity` |
 | `LogoutUseCase` | `call()` → `void` |
-| `GetUserDataUseCase` | `call()` → `UserEntity` |
+| `GetUserLocalDataUseCase` | `call()` → `UserEntity` (dados locais) |
+| `GetUserRemoteDataUseCase` | `call()` → `UserEntity` (dados remotos) |
 | `UpdateUserDataUseCase` | Atualizar dados do usuário |
-| `ChangePasswordUseCase` | Alterar senha do usuário |
-| `DeleteUserUseCase` | Deletar conta do usuário |
 | `UserAuthStorageUseCase` | Armazenamento de credenciais de auth |
 | `EncryptUserPasswordUseCase` | Criptografar/descriptografar senha do usuário |
 | `GetOtpCodeUseCase` | Obter código OTP |
@@ -133,10 +137,8 @@ Interfaces abstratas que definem contratos para casos de uso específicos da apl
 
 | Use Case | Descrição |
 |----------|-----------|
-| `ListUserNotificationsUseCase` | `call(page)` → `List<NotificationEntity>` |
 | `CountUnreadNotificationsUseCase` | Contar notificações não lidas |
 | `CreateNotificationUseCase` | Criar nova notificação |
-| `ReadNotificationUseCase` | Marcar notificação como lida |
 | `TestPushNotificationUseCase` | Testar push notification |
 
 #### **Dispositivo e Sistema**
@@ -150,11 +152,8 @@ Interfaces abstratas que definem contratos para casos de uso específicos da apl
 | `UpdateLocaleUseCase` | Atualizar locale da aplicação |
 | `UpdateUserLocaleUseCase` | Atualizar locale do usuário |
 | `ChangeNativeLocaleUseCase` | Mudar locale nativo do dispositivo |
-| `GetLastLocationUseCase` | Obter última localização conhecida |
 | `GetIpAddressLocationUseCase` | Obter geolocalização via IP |
 | `CheckInternetConnectionUseCase` | Verificar conexão com internet |
-| `AppReviewUseCase` | Solicitar review do app |
-| `DynamicIconUseCase` | Alterar ícone dinâmico do app |
 
 #### **Armazenamento e Segurança**
 
@@ -167,15 +166,16 @@ Interfaces abstratas que definem contratos para casos de uso específicos da apl
 | `SecurityEncryptUseCase` | Criptografia/descriptografia (senha/dados) |
 | `RsaEncryptUseCase` | Criptografia RSA |
 | `EncryptServerPublicKeyUseCase` | Criptografar chave pública do servidor |
+| `IsolateUseCase` | Execução de tarefas em isolate separado |
+| `PerformanceMetricUseCase` | Coleta de métricas de performance |
 
-#### **Instalação e Histórico**
+#### **Instalação**
 
 | Use Case | Descrição |
 |----------|-----------|
 | `GetInstallationAppUseCase` | Obter dados da instalação |
 | `UploadInstallationAppUseCase` | Upload de nova instalação |
 | `ListUserInstallationsUseCase` | Listar instalações do usuário |
-| `ListWebVisitHistoryUseCase` | Listar histórico de visitas web |
 
 #### **Permissões e Compartilhamento**
 
@@ -229,24 +229,22 @@ try {
 }
 ```
 
-### Exemplo 2: Buscar Dados do Usuário
+### Exemplo 2: Buscar Dados do Usuário (Local)
 
 ```dart
-final getUserDataUseCase = AppBinding.find<GetUserDataUseCase>();
+final getUserDataUseCase = AppBinding.find<GetUserLocalDataUseCase>();
 
 final user = await getUserDataUseCase.call();
 print('Usuário: ${user.name}, Email: ${user.email}');
 ```
 
-### Exemplo 3: Listar Notificações
+### Exemplo 3: Contar Notificações Não Lidas
 
 ```dart
-final listNotificationsUseCase = AppBinding.find<ListUserNotificationsUseCase>();
+final countUnreadUseCase = AppBinding.find<CountUnreadNotificationsUseCase>();
 
-final notifications = await listNotificationsUseCase.call(page: 1);
-for (final notification in notifications) {
-  print('${notification.title}: ${notification.body}');
-}
+final count = await countUnreadUseCase.call();
+print('Notificações não lidas: $count');
 ```
 
 ### Exemplo 4: Atualizar Dados do Usuário
@@ -295,16 +293,19 @@ final result = await shareUseCase.call(
 print('Compartilhado: ${result.status}');
 ```
 
-### Exemplo 8: Usar Result Pattern
+### Exemplo 8: Armazenamento Seguro
 
 ```dart
-final result = await someUseCase.call();
+final secureStorageUseCase = AppBinding.find<SecureStorageUseCase>();
 
-if (result is Success<UserEntity>) {
-  print('Sucesso: ${result.value.name}');
-} else if (result is Error<UserEntity>) {
-  print('Erro: ${result.exception.message}');
-}
+// Salvar
+await secureStorageUseCase.set('token', 'abc123');
+
+// Recuperar
+final token = await secureStorageUseCase.get('token');
+
+// Deletar
+await secureStorageUseCase.delete('token');
 ```
 
 ### Exemplo 9: Armazenamento Local
@@ -354,8 +355,6 @@ packages/clean_code_domain/
 │       │   ├── device_info_entity.dart
 │       │   ├── app_info_entity.dart
 │       │   ├── ip_address_location_entity.dart
-│       │   ├── web_visit_history_entity.dart
-│       │   ├── result.dart
 │       │   ├── share_result_entity.dart
 │       │   ├── app_environment_entity.dart
 │       │   ├── security_environment_entity.dart
@@ -374,13 +373,13 @@ packages/clean_code_domain/
 │       │   ├── logout_service.dart
 │       │   ├── notification_service.dart
 │       │   ├── app_info_service.dart
-│       │   └── ... (demais serviços)
+│       │   └── ... (23 serviços no total)
 │       └── use_cases/                   # Contratos de casos de uso
 │           ├── base_use_case.dart
 │           ├── login_use_case.dart
 │           ├── logout_use_case.dart
-│           ├── get_user_data_use_case.dart
-│           └── ... (demais use cases)
+│           ├── get_user_local_data_use_case.dart
+│           └── ... (38 use cases no total)
 └── test/                                # Testes
 ```
 
@@ -392,7 +391,7 @@ packages/clean_code_domain/
 |------|--------|---------|
 | Entities | Sufixo `Entity` | `UserEntity`, `NotificationEntity` |
 | Services | Sufixo `Service` | `UserService`, `LoginService` |
-| Use Cases | Sufixo `UseCase` | `LoginUseCase`, `GetUserDataUseCase` |
+| Use Cases | Sufixo `UseCase` | `LoginUseCase`, `GetUserLocalDataUseCase` |
 | Repositories | Sufixo `Repository` | `BaseRepository` |
 | DTOs | Sufixo `Dto` | `TestPushNotificationDto` |
 | Enums | Sufixo `Enum` | `UserPermissionsEnum` |
@@ -408,7 +407,6 @@ packages/clean_code_domain/
 | `BaseEntity` | Entities com DB | Adiciona `objectId`, `createdAt`, `updatedAt` |
 | `BaseUseCaseParam` | DTOs | Parâmetros de use cases |
 | `BaseCrudService<T>` | Serviços CRUD | Implementa interfaces de CRUD |
-| `Result<T>` | Success/Error | Padrão monad para resultados |
 
 ---
 
@@ -468,13 +466,11 @@ As entidades são lidas via `String.fromEnvironment()`:
 
 1. **Regras de Negócio**: Este pacote contém apenas abstrações e regras de negócio puras, sem dependências externas de frameworks ou bibliotecas de UI.
 
-2. **Result Pattern**: O padrão `Result<T>` (Success/Error) é usado para tratamento funcional de erros sem exceções.
+2. **Entidades com ParserToJson**: Entidades que estendem `ParserToJson` podem ser serializadas para Map/JSON para comunicação entre camadas.
 
-3. **Entidades com ParserToJson**: Entidades que estendem `ParserToJson` podem ser serializadas para Map/JSON para comunicação entre camadas.
+3. **Entidades com BaseEntity**: A classe abstrata `BaseEntity` estende `ParserToJson` e adiciona campos `objectId`, `createdAt`, `updatedAt` para entidades que requerem persistência.
 
-4. **Entidades com BaseEntity**: Entidades que estendem `BaseEntity` são preparadas para persistência em banco de dados local.
-
-5. **Use Cases**: Seguem o padrão de chamada `.call()` e podem ser síncronos ou assíncronos.
+4. **Use Cases**: Seguem o padrão de chamada `.call()` e podem ser síncronos ou assíncronos.
 
 6. **Injeção de Dependências**: Use sempre `AppBinding.find<T>()` para obter as instâncias registradas via `DomainModuleBindings`.
 

@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -6,10 +7,9 @@ class UnauthenticatedInterceptor extends Interceptor with AnalyticsMixin {
   final LocalStorageUseCase _localStorageUseCase;
 
   UnauthenticatedInterceptor({
-    required AppSecurityManager appSecurityManager,
-    required LocalStorageUseCase localStorageUseCase,
-  }) : _appSecurityManager = appSecurityManager,
-       _localStorageUseCase = localStorageUseCase;
+    required this._appSecurityManager,
+    required this._localStorageUseCase,
+  });
 
   static bool ALREADY_LOGOUT = false;
 

@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/presentation.dart';
 
 class DeleteAccountConfirmationController extends BaseController {
@@ -10,30 +12,25 @@ class DeleteAccountConfirmationController extends BaseController {
   final UserEntity _userEntity;
 
   DeleteAccountConfirmationController({
-    required DeleteUserUseCase deleteUserUseCase,
-    required UserAuthStorageUseCase userAuthStorageUseCase,
-    required DeleteAccountStore deleteAccountStore,
-    required AppSecurityManager appSecurityManager,
-    required UserEntity userEntity,
-  }) : _deleteUserUseCase = deleteUserUseCase,
-       _userAuthStorageUseCase = userAuthStorageUseCase,
-       _deleteAccountStore = deleteAccountStore,
-       _appSecurityManager = appSecurityManager,
-       _userEntity = userEntity;
+    required this._deleteUserUseCase,
+    required this._userAuthStorageUseCase,
+    required this._deleteAccountStore,
+    required this._appSecurityManager,
+    required this._userEntity,
+  });
 
   UserEntity get user => _userEntity;
 
-  final RxBool _isLoading = RxBool(false);
-  bool get isLoading => _isLoading.value;
+  final isLoading = ValueNotifier<bool>(false);
 
   @override
   void onClose() {
-    _isLoading.close();
+    isLoading.dispose();
     super.onClose();
   }
 
   Future<void> deleteAccount() async {
-    _isLoading.value = true;
+    isLoading.value = true;
     try {
       clickTagging(component: 'settings_logout_key');
 
@@ -48,7 +45,7 @@ class DeleteAccountConfirmationController extends BaseController {
     } on BaseException {
       rethrow;
     } finally {
-      _isLoading.value = false;
+      isLoading.value = false;
     }
   }
 

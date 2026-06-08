@@ -1,14 +1,15 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
+import 'package:faq/src/domain/domain.dart';
 
 class AboutController extends BaseController {
   final OpenWebUrlUseCase _openWebUrlUseCase;
   final AppReviewUseCase _appReviewUseCase;
 
   AboutController({
-    required OpenWebUrlUseCase openWebUrlUseCase,
-    required AppReviewUseCase appReviewUseCase,
-  }) : _openWebUrlUseCase = openWebUrlUseCase,
-       _appReviewUseCase = appReviewUseCase;
+    required this._openWebUrlUseCase,
+    required this._appReviewUseCase,
+  });
 
   bool get showOpenWebSiteButton {
     const String webAppUrl = String.fromEnvironment('web_app_url');

@@ -1,3 +1,100 @@
+# Master v2.0.0 [08-06-2026]
+
+- fix: release-version makefile function
+- feat: add interactive branch selection to recreate-branch
+- feat: allow release commits in commit-msg hook
+- chore: remove unused flutter_contacts dependency
+- fix: use dynamic build mode path instead of hardcoded release
+- fix: improve push token null handling and switch reactivity
+- chore: add build artifact files to gitignore
+- feat: integrate app_purchase module with routes and translations
+- refactor: improve makefile with POSIX compliance and DRY build config
+- refactor: restructure webview lifecycle and navigation logic
+- docs: add release homologation process guide
+- refactor: migrate from RxBool to ValueNotifier across packages
+- refactor: replace setState with ValueNotifier in widgets
+- chore: break-change update dependencies and Gradle to 8.14
+- fix: break-change adapt to flutter_local_notifications v20 API
+- chore: add build-flag enableImpeller
+- chore: update makefile targets and build configuration
+- docs: reorganize and restructure project documentation
+- chore: add pre-commit hook to enforce dart analyze and dart fix
+- docs: update agent documentation references to docs/ directory
+- refactor: rename ErrorCallbacksExtension and remove unused code
+- refactor: centralize internet connection lifecycle management
+- chore: add install-hooks and release-version targets
+- chore: add commit-msg hook and git message command
+- docs: add and update project documentation
+- refactor: add stash only files ready to commit option
+- refactor: update stash-pop to delete or keep stash on stack
+- feat: add stash and stash-pop makefile functions
+- feat: add new diagrams and git skills
+- refactor: upgrade flutter 3.44.0 o packages and change analysis_options
+- refactor: dart fix flutter 3.44.0
+- refactor: remove growth_book libs
+- refactor: remove icons_plus lib and use native flutter icons
+- refactor: update makefile clean-build and rebase functions
+- refactor: remove disable Impeller
+- refactor: update dart analysis options
+- upgrade to flutter 3.44.0
+- refactor: update variable name
+- fix: integration test selectedIndex closed error
+- fix: unit tests, dependency injection
+- refactor: add override on purchase use case
+- refactor: add local database from DI
+- refactor: remove UserModel parser
+- refactor: migrate usecases from data to domain on UserAccount module
+- refactor: migrate usecases from data to domain on Settings module
+- refactor: migrate usecases from data to domain on Security module
+- refactor: migrate usecases from data to domain on Notifications module
+- refactor: migrate usecases from data to domain on Faq module
+- refactor: migrate usecases from data to domain on AppPurchase module
+- refactor: migrate usecases from data to domain on Admin module
+- refactor: update usecases on domain module
+- refactor: update domain services interfaces
+- refactor: migrate Result from domain to core module
+- refactor: delete usecases implementation from clean_code_data
+- refactor: add environment entities on infra bindings
+- refactor: webvisithistory
+- refactor: import from correctly package
+- refactor: add imports from design_system, clean_code_data and clean_code_domain
+- remove usecases from data
+- remove clean_code_* export from core
+- remove default model on opencode commands
+- fix: webview load_callbacks_mixin_test
+- feat: init SDD integration speckit development
+- refactor: update webview and add darkmode
+- refactor: update webview headless
+- refactor: remove asBroadcastStream and update onStreamListeners
+- fix: home controller unit test
+- refactor: webview module
+- fix: internet subscription on HomeController
+- fix: intro bugfix
+- refactor: not show tracking log on integration test
+- feat: app purchase module
+- fix: update logs
+- feat: add widget rebuild log
+- fix: update intro controller test
+- refactor: update crashlytics ensureInitialized
+- refactor: add logs on change status
+- fix: use getx bindings
+- refactor: update home controller
+- fix: intro total pageLength
+- fix: update makefile
+- refactor: update app navigator
+- refactor: update app bindings
+- refactor: update flutter libs
+- refactor: add program on Flutter App launch.json
+- refactor: update flutter AI agent
+- test: add new unit tests
+- fix: choice-env make file function
+- refactor: update unit tests
+- refactor: disable param useHistory on Talker Logger
+- feat: add reset and testMode functions
+- fix: replace bindings getx
+- fix: makefile rebase function
+- fix: makefile logs function
+
 # Master v1.4.0 [09-05-2026]
 
 - fix: find envs

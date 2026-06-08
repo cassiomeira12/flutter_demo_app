@@ -6,7 +6,6 @@ import java.io.File
 
 plugins {
     id("com.android.application")
-    id("kotlin-android")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -51,10 +50,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     sourceSets {
         getByName("main") {
             java.srcDirs("src/main/java")
@@ -74,7 +69,7 @@ android {
         ndk {
             abiFilters += listOf("armeabi-v7a", "arm64-v8a", "x86_64")
         }
-        
+
         manifestPlaceholders["appIcon"] = dartEnvironmentVariables["app_icon_android"] as String
         manifestPlaceholders["appName"] = dartEnvironmentVariables["app_name"] as String
         manifestPlaceholders["enableImpeller"] = dartEnvironmentVariables["enable_impeller"] ?: "true"
@@ -128,6 +123,12 @@ android {
                 debugSymbolLevel = "FULL"
             }
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 

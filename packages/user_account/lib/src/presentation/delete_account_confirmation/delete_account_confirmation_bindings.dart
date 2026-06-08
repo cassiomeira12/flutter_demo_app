@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/delete_account_confirmation/delete_account_confirmation.dart';
 
 class DeleteAccountConfirmationBindings extends Bindings {

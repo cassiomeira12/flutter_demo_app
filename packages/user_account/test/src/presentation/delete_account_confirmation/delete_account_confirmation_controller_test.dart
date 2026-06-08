@@ -1,6 +1,8 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/delete_account/delete_account.dart';
 import 'package:user_account/src/presentation/delete_account_confirmation/delete_account_confirmation_controller.dart';
 
@@ -19,7 +21,6 @@ class MockRxnString extends Mock implements RxnString {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  Get.testMode = true;
 
   setUpAll(() {
     registerFallbackValue(FakeRxnString());
@@ -39,11 +40,12 @@ void main() {
       sessionToken: 'test-token',
       pushTopics: <String>[],
     );
-    Get.put<UserEntity>(mockUser);
+    AppBinding.put<UserEntity>(mockUser);
+    AppBinding.testMode(true);
   });
 
   tearDown(() {
-    Get.reset();
+    AppBinding.reset();
   });
 
   group('DeleteAccountConfirmationController', () {
@@ -70,7 +72,7 @@ void main() {
 
     group('isLoading', () {
       test('deve retornar false inicialmente', () {
-        expect(subject.isLoading, isFalse);
+        expect(subject.isLoading.value, isFalse);
       });
     });
 
@@ -124,13 +126,13 @@ void main() {
         when(() => mockAppSecurityManager.init()).thenAnswer((_) async {});
 
         // act
-        final isLoadingBefore = subject.isLoading;
+        final isLoadingBefore = subject.isLoading.value;
         try {
           await subject.deleteAccount();
         } catch (_) {
           // Ignora erro de navegação
         }
-        final isLoadingAfter = subject.isLoading;
+        final isLoadingAfter = subject.isLoading.value;
 
         // assert
         expect(isLoadingBefore, isFalse);

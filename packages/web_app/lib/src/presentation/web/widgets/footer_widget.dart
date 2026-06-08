@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:web_app/src/presentation/web/web.dart';
 
 class FooterWidget extends AppView<WebController> {

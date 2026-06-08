@@ -1,3 +1,4 @@
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:user_account/src/presentation/delete_account/delete_account_controller.dart';
@@ -11,7 +12,7 @@ class MockRxnString extends Mock implements RxnString {}
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  Get.testMode = true;
+  AppBinding.testMode(true);
 
   setUpAll(() {
     registerFallbackValue(FakeRxnString());

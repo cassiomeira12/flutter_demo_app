@@ -6,10 +6,9 @@ class MainListener {
   final List<NativeListener> _listeners;
 
   MainListener({
-    required MethodChannel methodChannel,
-    required List<NativeListener> listeners,
-  }) : _methodChannel = methodChannel,
-       _listeners = listeners {
+    required this._methodChannel,
+    required this._listeners,
+  }) {
     _initListeners();
   }
 

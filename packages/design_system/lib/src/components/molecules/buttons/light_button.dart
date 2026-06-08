@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -19,7 +21,7 @@ class LightButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textColor = theme.textTheme.bodyMedium?.color;
-
+    developer.log('LightButton $text', name: 'Rebuild');
     return Container(
       height: size.height,
       constraints: const BoxConstraints(
@@ -29,8 +31,8 @@ class LightButton extends StatelessWidget {
         onPressed: onPressed == null
             ? null
             : () {
-                onPressed!.call();
                 HapticFeedback.lightImpact();
+                onPressed?.call();
               },
         style: ButtonStyle(
           overlayColor: WidgetStateProperty.all(

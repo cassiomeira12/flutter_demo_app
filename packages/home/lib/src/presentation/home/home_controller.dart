@@ -1,15 +1,16 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class HomeController extends LifecycleController {
   final CheckInternetConnectionUseCase _checkInternetUseCase;
 
-  HomeController({required CheckInternetConnectionUseCase checkInternetUseCase})
-    : _checkInternetUseCase = checkInternetUseCase;
+  HomeController({required this._checkInternetUseCase});
 
   RxnInt selectedIndex = BaseController.navigatorIndex;
 
-  Stream<bool>? _internetConnectionStream;
+  StreamSubscription<bool>? _internetConnectionSubscription;
 
   void changeTab(int index, String? key) {
     if (selectedIndex.value == index) return;
@@ -20,7 +21,7 @@ class HomeController extends LifecycleController {
     );
   }
 
-  void internetConnectionListener(bool isConnected) {
+  void onInternetConnectionChanged(bool isConnected) {
     if (!isConnected) {
       // Get.showSnackbar(
       //   const GetSnackBar(
@@ -39,9 +40,8 @@ class HomeController extends LifecycleController {
   void onReady() {
     super.onReady();
     refreshUnCountNotifications();
-    _internetConnectionStream = _checkInternetUseCase.internetStream
-        .asBroadcastStream();
-    _internetConnectionStream?.listen(internetConnectionListener);
+    _internetConnectionSubscription = _checkInternetUseCase.internetStream
+        .listen(onInternetConnectionChanged);
   }
 
   @override
@@ -64,16 +64,17 @@ class HomeController extends LifecycleController {
 
   @override
   void onAppResumed() {
-    _checkInternetUseCase.resumeStream();
+    _internetConnectionSubscription?.resume();
   }
 
   @override
   void onAppBackground() {
-    _checkInternetUseCase.pauseStream();
+    _internetConnectionSubscription?.pause();
   }
 
   @override
   void onClose() {
+    _internetConnectionSubscription?.cancel();
     _checkInternetUseCase.dispose();
     super.onClose();
   }

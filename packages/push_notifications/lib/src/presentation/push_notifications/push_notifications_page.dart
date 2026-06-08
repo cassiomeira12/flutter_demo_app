@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:push_notifications/src/presentation/push_notifications/push_notifications.dart';
 
 class PushNotificationsPage extends AppView<PushNotificationsController> {

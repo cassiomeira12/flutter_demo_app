@@ -1,3 +1,4 @@
+import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:user_account/src/presentation/delete_account_finish/delete_account_finish_controller.dart';
@@ -7,7 +8,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {

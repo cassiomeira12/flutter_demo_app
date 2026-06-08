@@ -1,35 +1,39 @@
 abstract class AppBaseBinding {
-  bool hasInstance<T>({String? tag});
+  bool hasInstance<T extends Object>({String? tag});
 
-  T find<T>({String? tag});
+  T find<T extends Object>({String? tag});
 
-  T put<T>(
+  T put<T extends Object>(
     T dependency, {
     String? tag,
     bool permanent = false,
   });
 
-  void create<T>(
+  void create<T extends Object>(
     T Function() builder, {
     String? tag,
     bool permanent = false,
   });
 
-  void lazyPut<T>(
+  void lazyPut<T extends Object>(
     T Function() builder, {
     String? tag,
     bool fenix = true,
   });
 
-  Future<T> putAsync<T>(
+  Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
     bool permanent = false,
   });
 
-  Future<bool> delete<T>({String? tag, bool force = false});
+  Future<bool> delete<T extends Object>({String? tag, bool force = false});
 
-  Future<void> replace<T>(T dependency, {String? tag});
+  Future<void> replace<T extends Object>(T dependency, {String? tag});
 
   Future<void> deleteAll({bool force = false});
+
+  void reset();
+
+  void testMode(bool isTest);
 }

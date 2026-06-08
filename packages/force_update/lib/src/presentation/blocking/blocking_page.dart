@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:force_update/src/presentation/blocking/blocking.dart';
 
 class BlockingPage extends AppView<BlockingController> {
@@ -36,16 +36,17 @@ class BlockingPage extends AppView<BlockingController> {
                 style: AppTextStyle.subtitle(context),
               ),
               const SpacerWidget(height: 2),
-              Obx(() {
-                return Visibility(
-                  visible: controller.pushSubscribed.value,
-                  child: TextWidget(
-                    'blocking_push_notification'.tr,
-                    textAlign: TextAlign.center,
-                    style: AppTextStyle.subtitle(context),
-                  ),
-                );
-              }),
+              ValueListenableBuilder(
+                valueListenable: controller.pushSubscribed,
+                builder: (context, value, child) {
+                  return Visibility(visible: value, child: child!);
+                },
+                child: TextWidget(
+                  'blocking_push_notification'.tr,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyle.subtitle(context),
+                ),
+              ),
               const SpacerWidget(height: 2),
             ],
           ),

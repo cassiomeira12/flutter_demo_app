@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:force_update/src/presentation/update/update.dart';
 
 class ForceUpdatePage extends AppView<UpdateController> {

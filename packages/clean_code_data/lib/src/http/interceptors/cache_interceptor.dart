@@ -1,3 +1,5 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -9,15 +11,12 @@ class CacheInterceptor extends Interceptor {
 
   CacheInterceptor({
     required List<EndpointsEnum> cacheEndpoints,
-    required CacheStorageUseCase cacheStorageUseCase,
-    required SecurityEncryptUseCase securityEncryptUseCase,
-    required SecurityEnvironmentEntity securityEnv,
+    required this._cacheStorageUseCase,
+    required this._securityEncryptUseCase,
+    required this._securityEnv,
   }) : _cacheEndpoints = cacheEndpoints.map((item) {
          return item.endpointWithoutParams;
-       }).toList(),
-       _cacheStorageUseCase = cacheStorageUseCase,
-       _securityEncryptUseCase = securityEncryptUseCase,
-       _securityEnv = securityEnv;
+       }).toList();
 
   @override
   Future<void> onResponse(

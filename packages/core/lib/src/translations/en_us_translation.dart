@@ -284,6 +284,9 @@ class EnUsTranslation extends Translations {
         'feedback_sent_success_title': 'Feedback sent',
         'feedback_sent_success_message':
             'Your feedback has been successfully sent.',
+        // InApp Purchase
+        'user_already_has_subscription_purchased':
+            'You already have a {purchase} subscription.',
       },
     };
   }

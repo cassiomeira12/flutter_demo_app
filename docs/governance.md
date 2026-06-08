@@ -1,7 +1,7 @@
 # Governança de Documentação
 
 Objetivo
-- Garantir qualidade, consistência e atualização contínua da documentação do OpenCode.
+- Garantir qualidade, consistência e atualização contínua da documentação do Flutter Demo App.
 
 Papéis e Responsáveis
 - Arquiteto de Software: arquitetura e padrões de alto nível.
@@ -16,14 +16,18 @@ Processo de Atualização
 - Cadência de revisão sugerida: trimestral para arquitetura; semestral para glossário.
 
 Cadência de Publicação
-- Releases grandes: atualização de overview, glossary e architecture-diagrams.
+- Releases grandes: atualização de [overview](overview.md), [glossary](glossary.md) e [architecture-diagrams](architecture/architecture-diagrams.md).
 - Após mudança relevante de API/contratos: atualizar docs de API.
 
 Governança de Conteúdo
 - Owners de área mantêm a visão geral atualizada.
-- Novos termos entram no glossary.md com definição clara.
+- Novos termos entram no [glossary.md](glossary.md) com definição clara.
 - Diagramas (Mermaid/PlantUML) incluídos quando ajudam a entender dependências.
 
 Qualidade esperada
 - Cada novo módulo ou contrato introduz pelo menos uma página de docs associada.
 - Checklists de PR de docs: propósito, público-alvo, referências, exemplos de código, e diagramas quando aplicável.
+
+---
+
+**Ver também**: [Diretrizes de Código](guidelines/README.md) | [Glossário](glossary.md)

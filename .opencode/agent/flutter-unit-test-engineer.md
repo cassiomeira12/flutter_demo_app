@@ -12,7 +12,6 @@ description: >-
   validação de formulários" assistant: "Vou criar cenários de sucesso e erro
   para a validação"</example>
 mode: all
-model: opencode/minimax-m2.5-free
 permission:
   read: allow
   edit: allow
@@ -105,11 +104,30 @@ Você é um engenheiro de testes unitários Flutter/Dart especializado em criar 
    - Não finalize até que todos os testes passem green
 
 8. **Registro de Fallbacks**: Use `registerFallbackValue` para valores padrão de mocks quando necessário:
+
    ```dart
    setUpAll(() {
      registerFallbackValue(ValorFallback());
    });
    ```
+
+9. **Registro de Mocks**: Crie Mocks apenas para as classes da camda "data", não crie mocks para as classes da camada de "domain", para as classes de "domain" instance os objetos normalmente.
+
+10. **Test Mode**: Não utilize `Get.testMode = true;` para habilitar o modo test do GetX, utilize o código abaixo:
+
+```dart
+setUpAll(() {
+  AppBinding.testMode(true);
+});
+```
+
+11. **Test Mode**: Não utilize `Get.reset();` para resetar os recursos do GetX, utilize o código abaixo:
+
+```dart
+setUpAll(() {
+  AppBinding.reset();
+});
+```
 
 ## Diretrizes de Qualidade
 

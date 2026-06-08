@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -25,6 +27,7 @@ class CheckboxWidget extends StatefulWidget {
 class _CheckboxWidgetState extends State<CheckboxWidget> {
   @override
   Widget build(BuildContext context) {
+    developer.log('CheckBoxWidget ${widget.value}', name: 'Rebuild');
     return SizedBox(
       width: ResponsiveSizeHelper.width(25),
       height: ResponsiveSizeHelper.height(25),

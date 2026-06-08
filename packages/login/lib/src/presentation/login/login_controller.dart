@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class LoginController extends BaseController
     with EmailValidator, PasswordValidator {
@@ -13,26 +15,19 @@ class LoginController extends BaseController
   final FeatureFlagLifecycleController _featureFlagLifecycleController;
 
   LoginController({
-    required AppEnvironmentEntity appEnv,
-    required LoginUseCase loginUseCase,
-    required LocalStorageUseCase localStorageUseCase,
-    required UserAuthStorageUseCase authStorageUseCase,
-    required UpdateUserLocaleUseCase updateUserLocaleUseCase,
-    required UploadInstallationAppUseCase uploadInstallationAppUseCase,
-    required AppInfoEntity appInfoEntity,
-    required FeatureFlagLifecycleController featureFlagLifecycleController,
-  }) : _appEnv = appEnv,
-       _loginUseCase = loginUseCase,
-       _localStorageUseCase = localStorageUseCase,
-       _authStorageUseCase = authStorageUseCase,
-       _updateUserLocaleUseCase = updateUserLocaleUseCase,
-       _uploadInstallationAppUseCase = uploadInstallationAppUseCase,
-       _appInfoEntity = appInfoEntity,
-       _featureFlagLifecycleController = featureFlagLifecycleController;
+    required this._appEnv,
+    required this._loginUseCase,
+    required this._localStorageUseCase,
+    required this._authStorageUseCase,
+    required this._updateUserLocaleUseCase,
+    required this._uploadInstallationAppUseCase,
+    required this._appInfoEntity,
+    required this._featureFlagLifecycleController,
+  });
 
   final userNameTextController = TextEditingController();
   final passwordTextController = TextEditingController();
-  final rememberMeInitial = RxBool(false);
+  final rememberMeInitial = ValueNotifier<bool>(false);
 
   AppInfoEntity get appInfo => _appInfoEntity;
 
@@ -52,6 +47,7 @@ class LoginController extends BaseController
 
   @override
   void onClose() {
+    rememberMeInitial.dispose();
     _featureFlagLifecycleController.uploadDeviceTraits();
     super.onClose();
   }

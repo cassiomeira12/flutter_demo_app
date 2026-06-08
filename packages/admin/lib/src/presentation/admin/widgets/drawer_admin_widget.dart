@@ -1,6 +1,8 @@
 import 'package:admin/src/presentation/presentation.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class DrawerAdminWidget extends AppView<AdminController> {
   const DrawerAdminWidget({super.key});

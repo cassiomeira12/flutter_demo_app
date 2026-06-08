@@ -4,6 +4,8 @@
 
 As entidades no projeto `clean_code_domain` representam objetos de domínio imutáveis e seguem um padrão consistente. Todas as entidades possuem o sufixo `Entity` em seus nomes.
 
+**Veja também**: [Models](../data/models.md) | [Use Cases](use-cases.md) | [Glossário](../glossary.md)
+
 ## Regras Gerais
 
 1. **Nomenclatura**: Sempre usar o sufixo `Entity` (ex: `UserEntity`, `AppInfoEntity`)
@@ -12,7 +14,7 @@ As entidades no projeto `clean_code_domain` representam objetos de domínio imut
 4. **Campos obrigatórios**: Usar `required` para campos não-nulos
 5. **Campos opcionais**: Usar tipo nullable (`Type?`) para campos que podem ser nulos
 6. **ParserToJson**: Entidades que precisam de serialização devem estender `ParserToJson`
-7. **BaseEntity**: Entidades persistidas em banco de dados devem estender `BaseEntity`
+7. **BaseEntity**: A classe abstrata `BaseEntity` estende `ParserToJson` e adiciona campos `objectId`, `createdAt`, `updatedAt` para entidades que requerem persistência.
 
 ---
 
@@ -385,177 +387,6 @@ class AppEnvironmentEntity {
 
 ---
 
-## Cenário 9: Entity com BaseEntity (Persistência)
-
-Entidades que representam dados persistidos em banco de dados. Devem estender `BaseEntity`.
-
-### BaseEntity (classe abstrata)
-
-```dart
-import 'package:clean_code_domain/src/parsers/parser_to_json.dart';
-
-abstract class BaseEntity extends ParserToJson {
-  final String objectId;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  BaseEntity({
-    required this.objectId,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  BaseEntity copyWith({
-    String? objectId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  });
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'objectId': objectId,
-      'createdAt': createdAt?.toString(),
-      'updatedAt': updatedAt?.toString(),
-    };
-  }
-}
-```
-
-### Entity Concreta estendendo BaseEntity
-
-```dart
-import 'package:clean_code_domain/clean_code_domain.dart';
-
-class WebVisitHistoryEntity extends BaseEntity {
-  final String website;
-  final String ip;
-  final String? userAgent;
-  final String? country;
-  final String? countryCode;
-  final String? countryFlag;
-  final String? region;
-  final String? regionName;
-  final String? city;
-  final String? zip;
-  final double? lat;
-  final double? lon;
-  final String? timezone;
-  final String? isp;
-  final String? org;
-  final String? ispOrg;
-
-  WebVisitHistoryEntity({
-    required this.website,
-    required this.ip,
-    required this.userAgent,
-    required this.country,
-    required this.countryCode,
-    required this.countryFlag,
-    required this.region,
-    required this.regionName,
-    required this.city,
-    required this.zip,
-    required this.lat,
-    required this.lon,
-    required this.timezone,
-    required this.isp,
-    required this.org,
-    required this.ispOrg,
-    required super.objectId,
-    required super.createdAt,
-    required super.updatedAt,
-  });
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      'website': website,
-      'ip': ip,
-      'userAgent': userAgent,
-      'country': country,
-      'countryCode': countryCode,
-      'countryFlag': countryFlag,
-      'region': region,
-      'regionName': regionName,
-      'city': city,
-      'zip': zip,
-      'lat': lat,
-      'lon': lon,
-      'timezone': timezone,
-      'isp': isp,
-      'org': org,
-      'ispOrg': ispOrg,
-      ...super.toMap(),
-    };
-  }
-
-  String get countryComplete {
-    if (city == null ||
-        region == null ||
-        country == null ||
-        countryCode == null) {
-      return '';
-    }
-    return '$city-$region, $country ($countryCode)';
-  }
-
-  @override
-  WebVisitHistoryEntity copyWith({
-    String? website,
-    String? ip,
-    String? userAgent,
-    String? country,
-    String? countryCode,
-    String? countryFlag,
-    String? region,
-    String? regionName,
-    String? city,
-    String? zip,
-    double? lat,
-    double? lon,
-    String? timezone,
-    String? isp,
-    String? org,
-    String? ispOrg,
-    String? objectId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-  }) {
-    return WebVisitHistoryEntity(
-      website: website ?? this.website,
-      ip: ip ?? this.ip,
-      userAgent: userAgent ?? this.userAgent,
-      country: country ?? this.country,
-      countryCode: countryCode ?? this.countryCode,
-      countryFlag: countryFlag ?? this.countryFlag,
-      region: region ?? this.region,
-      regionName: regionName ?? this.regionName,
-      city: city ?? this.city,
-      zip: zip ?? this.zip,
-      lat: lat ?? this.lat,
-      lon: lon ?? this.lon,
-      timezone: timezone ?? this.timezone,
-      isp: isp ?? this.isp,
-      org: org ?? this.org,
-      ispOrg: ispOrg ?? this.ispOrg,
-      objectId: objectId ?? this.objectId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
-}
-```
-
-**Pontos importantes**:
-
-- Usar `super.objectId`, `super.createdAt`, `super.updatedAt` no construtor
-- No `toMap()`, usar spread operator `...super.toMap()` para incluir campos da base
-- O `copyWith()` deve incluir todos os campos próprios e os campos da `BaseEntity`
-- Não implementar `toString()` - `ParserToJson` já fornece implementação automática
-
----
-
 ## Cenário 10: Entity com Custom toString
 
 Entidades que sobrescrevem `toString()` com formato personalizado (casos excepcionais).
@@ -606,8 +437,6 @@ ParserToJson (abstract)
         │     ├── objectId, createdAt, updatedAt
         │     ├── toMap()
         │     └── copyWith() (abstract)
-        │           │
-        │           └── WebVisitHistoryEntity
         │
         ├── AppInfoEntity
         ├── DeviceInfoEntity

@@ -1,15 +1,16 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:notifications/src/domain/domain.dart';
 
 class NotificationsController extends LifecycleController {
-  final ListUserNotificationsUseCase _listUserNotificationsUseCase;
+  final ListUserNotificationsUseCase _listUserNotifications;
   final ReadNotificationUseCase _readNotificationUseCase;
 
   NotificationsController({
-    required ListUserNotificationsUseCase listUserNotifications,
-    required ReadNotificationUseCase readNotificationUseCase,
-  }) : _listUserNotificationsUseCase = listUserNotifications,
-       _readNotificationUseCase = readNotificationUseCase;
+    required this._listUserNotifications,
+    required this._readNotificationUseCase,
+  });
 
   RxList<NotificationEntity> notifications = RxList.empty();
   RxBool isLoading = RxBool(true);
@@ -25,7 +26,7 @@ class NotificationsController extends LifecycleController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-      notifications.value = await _listUserNotificationsUseCase.call(0);
+      notifications.value = await _listUserNotifications.call(0);
     } on BaseException catch (error) {
       errorMessage.value = error.message.tr;
     } catch (error, stackTrace) {

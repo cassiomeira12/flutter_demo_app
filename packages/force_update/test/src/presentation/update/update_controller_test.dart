@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -19,7 +20,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeLocale());
     registerFallbackValue(RemoteFlagsEnum.downloadAndroidStore);
   });
@@ -59,7 +60,6 @@ void main() {
 
         // act
         updateController.onReady();
-        await Future.delayed(const Duration(milliseconds: 100));
 
         // assert
         expect(updateController.currentVersion.value, '1.0.0');

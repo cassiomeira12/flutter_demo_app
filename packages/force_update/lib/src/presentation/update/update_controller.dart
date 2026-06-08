@@ -1,5 +1,6 @@
 // ignore_for_file: no_default_cases
 
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -9,12 +10,10 @@ class UpdateController extends BaseController {
   final OpenWebUrlUseCase _openWebUrlUseCase;
 
   UpdateController({
-    required AppInfoEntity appInfoEntity,
-    required GetDeviceLocaleUseCase currentDeviceLocaleUseCase,
-    required OpenWebUrlUseCase openWebUrlUseCase,
-  }) : _appInfoEntity = appInfoEntity,
-       _currentDeviceLocaleUseCase = currentDeviceLocaleUseCase,
-       _openWebUrlUseCase = openWebUrlUseCase;
+    required this._appInfoEntity,
+    required this._currentDeviceLocaleUseCase,
+    required this._openWebUrlUseCase,
+  });
 
   RxString currentVersion = RxString('');
 

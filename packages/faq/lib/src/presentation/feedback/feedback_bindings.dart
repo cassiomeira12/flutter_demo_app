@@ -1,6 +1,5 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:faq/src/data/data.dart';
 import 'package:faq/src/domain/domain.dart';
 import 'package:faq/src/presentation/feedback/feedback.dart';
 

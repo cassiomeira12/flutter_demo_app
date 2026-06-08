@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class PasswordValidationBottomSheet extends StatelessWidget
     with PasswordValidator {
@@ -8,10 +10,9 @@ class PasswordValidationBottomSheet extends StatelessWidget
 
   PasswordValidationBottomSheet({
     super.key,
-    required UserEntity user,
-    required LoginUseCase loginUseCase,
-  }) : _user = user,
-       _loginUseCase = loginUseCase;
+    required this._user,
+    required this._loginUseCase,
+  });
 
   final _formKey = GlobalKey<FormState>();
   final passwordTextController = TextEditingController();

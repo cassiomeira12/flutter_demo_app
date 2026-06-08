@@ -1,5 +1,6 @@
 import 'package:admin/src/data/data.dart';
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 
 class UsersServiceImpl
     with ListServiceMixin<UserEntity>

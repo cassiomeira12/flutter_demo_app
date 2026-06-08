@@ -1,3 +1,5 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -11,22 +13,24 @@ class HttpClientImpl implements HttpClient {
   final defaultSendTimeout = const Duration(seconds: 30);
 
   HttpClientImpl({
-    required ServerEnvironmentEntity serverEnv,
+    required this._serverEnv,
     Duration? connectTimeout,
     Duration? receiveTimeout,
     Duration? sendTimeout,
     List<Interceptor>? interceptors,
     Dio? dio,
-  }) : _serverEnv = serverEnv {
+  }) {
     final isInjected = dio != null;
-    _dio = dio ??
+    _dio =
+        dio ??
         Dio(
           BaseOptions(
             baseUrl: _serverEnv.serverUrl,
             connectTimeout: connectTimeout ?? defaultConnectTimeout,
             receiveTimeout: receiveTimeout ?? defaultReceiveTimeout,
-            sendTimeout:
-                Platform.isWeb ? null : sendTimeout ?? defaultSendTimeout,
+            sendTimeout: Platform.isWeb
+                ? null
+                : sendTimeout ?? defaultSendTimeout,
           ),
         );
 

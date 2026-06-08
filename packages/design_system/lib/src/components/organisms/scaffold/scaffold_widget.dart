@@ -1,5 +1,8 @@
+import 'dart:developer' as developer;
+
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
 
 class ScaffoldWidget extends StatefulWidget {
@@ -90,6 +93,10 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
   @override
   Widget build(BuildContext context) {
     widget.controller?.setPageContext(context);
+    developer.log(
+      'ScaffoldWidget ${'${widget.controller.runtimeType}'.replaceAll('Controller', 'Page')}',
+      name: 'Rebuild',
+    );
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
         return Obx(() {

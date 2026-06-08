@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:user_account/src/presentation/delete_account_finished/delete_account_finished.dart';
 
 class DeleteAccountFinishedPage
@@ -25,7 +25,7 @@ class DeleteAccountFinishedPage
               spacing: ResponsiveSizeHelper.spacingDefaultHeight,
               children: [
                 const FlutterIcon(
-                  Bootstrap.check_circle_fill,
+                  Icons.check_circle,
                   size: IconSize.large,
                   color: AppColors.statusSuccess,
                 ),

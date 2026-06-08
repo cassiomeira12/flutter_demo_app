@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -23,6 +25,7 @@ class FlatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('FlatButton $text', name: 'Rebuild');
     return Container(
       height: size.height,
       constraints: const BoxConstraints(
@@ -32,8 +35,8 @@ class FlatButton extends StatelessWidget {
         onPressed: onPressed == null
             ? null
             : () {
-                onPressed!.call();
                 HapticFeedback.lightImpact();
+                onPressed?.call();
               },
         style: ButtonStyle(
           backgroundColor: WidgetStateProperty.all<Color>(

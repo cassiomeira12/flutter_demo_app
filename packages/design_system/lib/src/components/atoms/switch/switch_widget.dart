@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -21,6 +23,7 @@ class SwitchWidget extends StatefulWidget {
 class _SwitchWidgetState extends State<SwitchWidget> {
   @override
   Widget build(BuildContext context) {
+    developer.log('SwitchWidget ${widget.value}', name: 'Rebuild');
     return FittedBox(
       fit: BoxFit.fitWidth,
       child: CupertinoSwitch(

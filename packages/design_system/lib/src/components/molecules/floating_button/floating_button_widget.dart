@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ class FloatingButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('FloatingButtonWidget', name: 'Rebuild');
     return FloatingActionButton(
       heroTag: GlobalKey(),
       child: icon,

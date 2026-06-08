@@ -1,5 +1,7 @@
 // ignore_for_file: must_be_immutable
 
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -113,7 +115,7 @@ class TextFieldWidget extends StatefulWidget {
 class _TextFieldWidgetState extends State<TextFieldWidget> {
   bool _showObscureText = false;
   late FocusNode _focusNode;
-  Timer? _debounce;
+  Timer? _multipleIgnoreCallsTimer;
   final int _delayTime = 1000;
 
   String textSearched = '';
@@ -148,9 +150,11 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
   }
 
   void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    if (_multipleIgnoreCallsTimer?.isActive ?? false) {
+      _multipleIgnoreCallsTimer?.cancel();
+    }
     if (_focusNode.hasFocus) {
-      _debounce = Timer(Duration(milliseconds: _delayTime), () {
+      _multipleIgnoreCallsTimer = Timer(Duration(milliseconds: _delayTime), () {
         if (_controller.text != textSearched) {
           textSearched = _controller.text;
           widget.onSearch?.call(_controller.text);
@@ -170,6 +174,7 @@ class _TextFieldWidgetState extends State<TextFieldWidget> {
     final hintColor =
         widget.hintColor ?? theme.inputDecorationTheme.hintStyle?.color;
     final iconColor = theme.inputDecorationTheme.suffixIconColor;
+    developer.log('TextFieldWidget ${widget.label}', name: 'Rebuild');
     return Container(
       constraints: const BoxConstraints(
         maxWidth: ResponsiveSizeHelper.maxWidth,

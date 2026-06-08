@@ -1,7 +1,7 @@
-# OpenCode — Visão Geral do Projeto
+# Flutter Demo App — Visão Geral do Projeto
 
 Propósito
-- Fornecer uma fonte única de verdade sobre a arquitetura, padrões, contratos entre domínios e instruções de contribuição do OpenCode.
+- Fornecer uma fonte única de verdade sobre a arquitetura, padrões, contratos entre domínios e instruções de contribuição do Flutter Demo App.
 
 Público-alvo
 - Engenheiros novos e existentes
@@ -23,7 +23,10 @@ Conteúdo Principal
 - Referências rápidas para templates de documentação e exemplos de entidades/modelos.
 
 Referências
-- links para templates em docs/patterns e guia de contribuição
+- [Guia de Pacotes](packages-guide.md) — Estrutura do monorepo
+- [Arquitetura](architecture/architecture-diagrams.md) — Diagramas e estrutura
+- [Entidades](domain/entities.md) — Entity, Model, Use Case, Service, Controller, Binding
+- [Governança](governance.md) — Papéis e processo de atualização
 
 Histórico/Versão
-- 1.0 — Data — Autor
+- 1.0 — 2024-01-01 — Versão inicial

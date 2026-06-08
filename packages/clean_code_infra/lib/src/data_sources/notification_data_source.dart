@@ -1,11 +1,12 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 
 class NotificationDataSourceImpl
     with CreateDataSourceMixin, ListDataSourceMixin
     implements NotificationDataSource {
   final HttpClient _http;
 
-  NotificationDataSourceImpl({required HttpClient http}) : _http = http;
+  NotificationDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> create(Map<String, dynamic> data) async {

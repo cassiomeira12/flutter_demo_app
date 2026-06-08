@@ -1,5 +1,8 @@
+import 'dart:developer' as developer;
+
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final BaseController? controller;
@@ -34,6 +37,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('AppBarWidget $title', name: 'Rebuild');
     final theme = Theme.of(context);
     return SizedBox(
       height: ResponsiveSizeHelper.appBarHeight,

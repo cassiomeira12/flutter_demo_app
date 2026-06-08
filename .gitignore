@@ -18,9 +18,10 @@ migrate_working_dir/
 *.iws
 .idea/
 .env.*
-.platform_selected
-.env_selected
+.*_selected
 .test_file_path
+.build_app_path
+.build_chosen_app
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

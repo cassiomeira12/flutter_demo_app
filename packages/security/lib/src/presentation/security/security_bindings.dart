@@ -7,12 +7,19 @@ import 'package:security/src/presentation/security/security.dart';
 class SecurityBindings extends Bindings {
   @override
   void dependencies() {
-    AppBinding.put<LocalAuthService>(LocalAuthServiceImpl());
+    AppBinding.put<LocalAuthService>(
+      LocalAuthServiceImpl(),
+    );
+
     AppBinding.put<CheckBiometricsUseCase>(
-      CheckBiometricsUseCaseImpl(localAuthService: AppBinding.find()),
+      CheckBiometricsUseCase(
+        localAuthService: AppBinding.find(),
+      ),
     );
     AppBinding.put<AuthenticateBiometricUseCase>(
-      AuthenticateBiometricUseCaseImpl(localAuthService: AppBinding.find()),
+      AuthenticateBiometricUseCase(
+        localAuthService: AppBinding.find(),
+      ),
     );
 
     AppBinding.put<SecurityController>(

@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AdminController extends BaseController {
   // final IGetUserDataUseCase _getUserDataUseCase;
@@ -12,14 +14,11 @@ class AdminController extends BaseController {
   AdminController({
     //required IGetUserDataUseCase getUserDataUseCase,
     //required IOpenWebUrlUseCase openWebUrlUseCase,
-    required LogoutUseCase logoutUseCase,
+    required this._logoutUseCase,
     // required LocalStorageUseCase localStorageUseCase,
     // required PushMessagingService pushMessagingService,
-    required AppSecurityManager appSecurityManager,
-  }) : _logoutUseCase = logoutUseCase,
-       //  _localStorageUseCase = localStorageUseCase,
-       //  _pushMessagingService = pushMessagingService,
-       _appSecurityManager = appSecurityManager;
+    required this._appSecurityManager,
+  });
 
   final UserEntity user = AppBinding.find<UserEntity>();
 

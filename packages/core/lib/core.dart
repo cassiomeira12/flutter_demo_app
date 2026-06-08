@@ -1,8 +1,3 @@
-export 'package:clean_code_data/clean_code_data.dart';
-export 'package:clean_code_domain/clean_code_domain.dart';
-export 'package:clean_code_infra/clean_code_infra.dart';
-export 'package:design_system/design_system.dart';
-
 export 'src/analytics/analytics.dart';
 export 'src/appsflyer/appsflyer.dart';
 export 'src/base/base.dart';

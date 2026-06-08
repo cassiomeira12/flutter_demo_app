@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:user_account/src/presentation/user/user.dart';
 
 class UserPage extends AppView<UserController> {
@@ -39,7 +39,7 @@ class UserPage extends AppView<UserController> {
                     prefixIcon: SizedBox(
                       width: ResponsiveSizeHelper.width(35),
                       child: FlutterIcon(
-                        BoxIcons.bx_user,
+                        Icons.person,
                         color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                     ),
@@ -57,7 +57,7 @@ class UserPage extends AppView<UserController> {
                     prefixIcon: SizedBox(
                       width: ResponsiveSizeHelper.width(35),
                       child: FlutterIcon(
-                        BoxIcons.bx_mail_send,
+                        Icons.email,
                         color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                     ),
@@ -84,7 +84,7 @@ class UserPage extends AppView<UserController> {
                     key: const Key('change_password_button_key'),
                     text: 'change_password'.tr,
                     expandWidth: true,
-                    icon: const FlutterIcon(BoxIcons.bx_key),
+                    icon: const FlutterIcon(Icons.key),
                     onPressed: controller.changePassword,
                   ),
                   const SpacerWidget(height: 2),

@@ -1,3 +1,5 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -19,8 +21,8 @@ class DataModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.put<OnClickedNotificationCallback>(
-      OnClickedNotificationCallbackBase(),
+    AppBinding.put<AppsFlyerService>(
+      AppsFlyerServiceFaker(),
       permanent: true,
     );
 
@@ -29,9 +31,26 @@ class DataModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.put<AppsFlyerService>(
-      AppsFlyerServiceFaker(),
+    AppBinding.put<OnClickedNotificationCallback>(
+      OnClickedNotificationCallbackBase(),
       permanent: true,
+    );
+
+    AppBinding.put<InternetConnectionService>(
+      InternetConnectionServiceImpl(),
+      permanent: true,
+    );
+
+    AppBinding.lazyPut<UserService>(
+      () => UserServiceImpl(
+        userDataSource: AppBinding.find(),
+      ),
+    );
+
+    AppBinding.lazyPut<LocalStorageService>(
+      () => LocalStorageServiceImpl(
+        localStorage: AppBinding.find(),
+      ),
     );
 
     AppBinding.lazyPut<NotificationService>(
@@ -39,20 +58,18 @@ class DataModuleBindings implements ModuleBinding {
         notificationDataSource: AppBinding.find(),
       ),
     );
-    AppBinding.lazyPut<CountUnreadNotificationsUseCase>(
-      () => CountUnreadNotificationsUseCaseImpl(
-        notificationService: AppBinding.find(),
-      ),
+
+    AppBinding.lazyPut<ClipboardService>(
+      () => ClipboardServiceImpl(),
     );
 
-    AppBinding.lazyPut<LocalStorageUseCase>(
-      () => LocalStorageUseCaseImpl(
-        localStorage: AppBinding.find(),
-      ),
+    AppBinding.lazyPut<RsaEncryptService>(
+      () => RsaEncryptServiceImpl(),
     );
 
-    AppBinding.lazyPut<FileStorageUseCase>(() => FileStorageUseCaseImpl());
-    AppBinding.lazyPut<SecureStorageUseCase>(() => SecureStorageUseCaseImpl());
+    AppBinding.lazyPut<FileStorageService>(
+      () => FileStorageServiceImpl(),
+    );
 
     AppBinding.lazyPut<CacheStorageService>(() {
       if (Platform.isWeb) {
@@ -60,115 +77,56 @@ class DataModuleBindings implements ModuleBinding {
           localStorageUseCase: AppBinding.find(),
         );
       }
-      return CacheFileStorageServiceImpl(fileStorageUseCase: AppBinding.find());
+      return CacheFileStorageServiceImpl(
+        fileStorageUseCase: AppBinding.find(),
+      );
     });
-    AppBinding.lazyPut<CacheStorageUseCase>(
-      () => CacheStorageUseCaseImpl(cacheStorageService: AppBinding.find()),
+
+    AppBinding.lazyPut<DeviceInfoService>(
+      () => DeviceInfoServiceImpl(),
     );
 
-    AppBinding.lazyPut<DeviceInfoService>(() => DeviceInfoServiceImpl());
-    AppBinding.lazyPut<GetDeviceInfoUseCase>(
-      () => GetDeviceInfoUseCaseImpl(deviceInfoService: AppBinding.find()),
+    AppBinding.lazyPut<AppInfoService>(
+      () => AppInfoServiceImpl(),
     );
 
-    AppBinding.lazyPut<AppInfoService>(() => AppInfoServiceImpl());
-    AppBinding.lazyPut<GetAppInfoUseCase>(
-      () => GetAppInfoUseCaseImpl(appInfoService: AppBinding.find()),
+    AppBinding.lazyPut<SecurityEncryptService>(
+      () => SecurityEncryptServiceImpl(),
     );
 
-    AppBinding.lazyPut<ClipboardUseCase>(() => ClipboardUseCaseImpl());
-
-    AppBinding.lazyPut<RsaEncryptUseCase>(() => RsaEncryptUseCaseImpl());
-
-    AppBinding.lazyPut<EncryptServerPublicKeyUseCase>(
-      () => EncryptServerPublicKeyUseCaseImpl(
-        securityEnv: AppBinding.find(),
-        rsaEncrypterUseCase: AppBinding.find(),
-      ),
+    AppBinding.lazyPut<SecureStorageService>(
+      () => SecureStorageServiceImpl(),
     );
 
-    AppBinding.lazyPut<SecurityEncryptUseCase>(
-      () => SecurityEncryptUseCaseImpl(),
+    AppBinding.lazyPut<OtpCodeService>(
+      () => OtpCodeServiceImpl(),
     );
 
-    AppBinding.lazyPut<EncryptUserPasswordUseCase>(
-      () => EncryptUserPasswordUseCaseImpl(
-        securityEnv: AppBinding.find(),
-        getAppInfoUseCase: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-        securityEncryptUseCase: AppBinding.find(),
-      ),
+    AppBinding.lazyPut<ShareService>(
+      () => ShareServiceImpl(),
     );
 
     AppBinding.lazyPut<UserAuthStorageService>(() {
       if (Platform.isAndroid) {
-        return UserAuthSecureStorageImpl(storageUseCase: AppBinding.find());
+        return UserAuthSecureStorageImpl(
+          secureStorageUsecase: AppBinding.find(),
+          encryptUserPasswordUseCase: AppBinding.find(),
+          securityEncrypterUseCase: AppBinding.find(),
+        );
       }
       return UserAuthLocalStorageServiceImpl(
         localStorageUseCase: AppBinding.find(),
       );
     });
 
-    AppBinding.lazyPut<UserAuthStorageUseCase>(
-      () => UserAuthStorageUseCaseImpl(
-        userAuthStorageService: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        securityEncrypterUseCase: AppBinding.find(),
-      ),
-    );
-
-    await AppBinding.putAsync<SessionEntity>(() async {
-      final userAuthStorage = AppBinding.find<UserAuthStorageUseCase>();
-      final String? token = await userAuthStorage.getSessionToken();
-      return SessionEntity(token: token);
-    }, permanent: true);
-
-    AppBinding.put<UserService>(
-      UserServiceImpl(userDataSource: AppBinding.find()),
-      permanent: true,
-    );
-
-    AppBinding.lazyPut<ChangePasswordUseCase>(
-      () => ChangePasswordUseCaseImpl(
-        userService: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        userAuthStorageUseCase: AppBinding.find(),
-        encryptServerPublicKeyUseCase: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.lazyPut<GetOtpCodeUseCase>(() => GetOtpCodeUseCaseImpl());
-
     AppBinding.lazyPut<AppLocaleService>(
-      () => AppLocaleServiceImpl(localStorageUseCase: AppBinding.find()),
-    );
-    AppBinding.lazyPut<ChangeNativeLocaleUseCase>(
-      () => ChangeNativeLocaleUseCaseImpl(
-        changeLocaleNativeMethod: AppBinding.find(),
-      ),
-    );
-    AppBinding.lazyPut<UpdateLocaleUseCase>(
-      () => UpdateLocaleUseCaseImpl(
-        appLocaleService: AppBinding.find(),
-        changeNativeLocaleUseCase: AppBinding.find(),
-      ),
-    );
-    AppBinding.lazyPut<GetCurrentLocaleUseCase>(
-      () => GetCurrentLocaleUseCaseImpl(appLocaleService: AppBinding.find()),
-    );
-    AppBinding.lazyPut<GetDeviceLocaleUseCase>(
-      () => GetDeviceLocaleUseCaseImpl(
-        getCurrentLocaleUseCase: AppBinding.find(),
-        getDeviceInfoUseCase: AppBinding.find(),
+      () => AppLocaleServiceImpl(
+        localStorageUseCase: AppBinding.find(),
       ),
     );
 
-    AppBinding.lazyPut<OpenUrlService>(() => OpenUrlServiceImpl());
-    AppBinding.lazyPut<OpenWebUrlUseCase>(
-      () => OpenWebUrlUseCaseImpl(openUrlService: AppBinding.find()),
-    );
-    AppBinding.lazyPut<OpenAppUseCase>(
-      () => OpenAppUseCaseImpl(openUrlService: AppBinding.find()),
+    AppBinding.lazyPut<OpenUrlService>(
+      () => OpenUrlServiceImpl(),
     );
 
     AppBinding.lazyPut<IpAddressLocationService>(
@@ -176,21 +134,6 @@ class DataModuleBindings implements ModuleBinding {
         ipAddressLocationDataSource: AppBinding.find(),
       ),
     );
-    AppBinding.lazyPut<GetIpAddressLocationUseCase>(
-      () => GetIpAddressLocationUseCaseImpl(
-        ipAddressLocationService: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.putAsync<IpAddressLocationEntity>(() async {
-      try {
-        final ip = await AppBinding.find<GetIpAddressLocationUseCase>().call();
-        CrashlyticsServiceManager.instance.setIpAddress(ip);
-        return ip;
-      } catch (_) {
-        return IpAddressLocationEntity.emptyIpAddress();
-      }
-    }, permanent: true);
 
     AppBinding.lazyPut<AppInstallationService>(
       () => AppInstallationServiceImpl(
@@ -201,39 +144,9 @@ class DataModuleBindings implements ModuleBinding {
         pushMessagingService: AppBinding.find(),
       ),
     );
-    AppBinding.lazyPut<GetInstallationAppUseCase>(
-      () => GetInstallationAppUseCaseImpl(
-        appInstallationService: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.put<UploadInstallationAppUseCase>(
-      UploadInstallationAppUseCaseImpl(
-        appInstallationService: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-      ),
-      permanent: true,
-    );
-
-    AppBinding.put<ListUserInstallationsUseCase>(
-      ListUserInstallationsUseCaseImpl(
-        appInstallationService: AppBinding.find(),
-      ),
-      permanent: true,
-    );
 
     AppBinding.lazyPut<AppPermissionsService>(
       () => AppPermissionsServiceImpl(),
-    );
-    AppBinding.lazyPut<RequestPermissionUseCase>(
-      () => RequestPermissionUseCaseImpl(
-        appPermissionService: AppBinding.find(),
-      ),
-    );
-    AppBinding.lazyPut<CheckPermissionUseCase>(
-      () => CheckPermissionUseCaseImpl(
-        appPermissionService: AppBinding.find(),
-      ),
     );
 
     AppBinding.lazyPut<LoginService>(
@@ -242,69 +155,11 @@ class DataModuleBindings implements ModuleBinding {
         encryptServerPublicKeyUseCase: AppBinding.find(),
       ),
     );
-    AppBinding.lazyPut<LoginUseCase>(
-      () => LoginUseCaseImpl(
-        loginService: AppBinding.find(),
-        authStorageUseCase: AppBinding.find(),
-        userService: AppBinding.find(),
-        encryptUserPasswordUseCase: AppBinding.find(),
-        deviceInfoEntity: AppBinding.find(),
-        localStorageUseCase: AppBinding.find(),
-        securityEncrypterUseCase: AppBinding.find(),
-      ),
-    );
 
     AppBinding.lazyPut<LogoutService>(
-      () => LogoutServiceImpl(logoutDataSource: AppBinding.find()),
-    );
-    AppBinding.lazyPut<LogoutUseCase>(
-      () => LogoutUseCaseImpl(logoutService: AppBinding.find()),
-    );
-
-    AppBinding.lazyPut<GetUserDataUseCase>(
-      () => GetUserLocalDataUseCaseImpl(
-        authStorageUseCase: AppBinding.find(),
-        sessionEntity: AppBinding.find(),
+      () => LogoutServiceImpl(
+        logoutDataSource: AppBinding.find(),
       ),
     );
-    AppBinding.put<UpdateUserDataUseCase>(
-      UpdateUserDataUseCaseImpl(userService: AppBinding.find()),
-      permanent: true,
-    );
-
-    AppBinding.lazyPut<UpdateUserLocaleUseCase>(
-      () => UpdateUserLocaleUseCaseImpl(
-        getDeviceLocaleUseCase: AppBinding.find(),
-        authStorageUseCase: AppBinding.find(),
-        updateLocaleUseCase: AppBinding.find(),
-        updateUserDataUseCase: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.lazyPut<WebVisitHistoryService>(
-      () => WebVisitHistoryServiceImpl(
-        webVisitHistoryDataSource: AppBinding.find(),
-      ),
-    );
-    AppBinding.lazyPut<ListWebVisitHistoryUseCase>(
-      () => ListWebVisitHistoryUseCaseImpl(
-        webVisitHistoryService: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.lazyPut<InternetConnectionService>(
-      () => InternetConnectionServiceImpl(),
-    );
-    AppBinding.create<CheckInternetConnectionUseCase>(
-      () => CheckInternetConnectionUseCaseImpl(
-        internetConnectionService: AppBinding.find(),
-      ),
-    );
-
-    AppBinding.lazyPut<ShareUseCase>(() => ShareUseCaseImpl());
-
-    AppBinding.lazyPut<DynamicIconUseCase>(() => DynamicIconUseCaseImpl());
-
-    AppBinding.lazyPut<AppReviewUseCase>(() => AppReviewUseCaseImpl());
   }
 }

@@ -290,6 +290,9 @@ class PtBrTranslation extends Translations {
         'send': 'Enviar',
         'feedback_sent_success_title': 'Feedback enviado',
         'feedback_sent_success_message': 'Seu feedback foi enviado com sucesso',
+        // InApp Purchase
+        'user_already_has_subscription_purchased':
+            'Você já tem uma assinatura de {purchase}',
       },
     };
   }

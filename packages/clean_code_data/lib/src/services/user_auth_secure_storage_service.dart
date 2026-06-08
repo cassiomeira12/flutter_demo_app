@@ -1,11 +1,18 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class UserAuthSecureStorageImpl implements UserAuthStorageService {
-  final SecureStorageUseCase _secureStorageUseCase;
+  final SecureStorageUseCase _secureStorageUsecase;
+  final EncryptUserPasswordUseCase _encryptUserPasswordUseCase;
+  final SecurityEncryptUseCase _securityEncrypterUseCase;
 
-  UserAuthSecureStorageImpl({required SecureStorageUseCase storageUseCase})
-    : _secureStorageUseCase = storageUseCase;
+  UserAuthSecureStorageImpl({
+    required this._secureStorageUsecase,
+    required this._encryptUserPasswordUseCase,
+    required this._securityEncrypterUseCase,
+  });
 
   @override
   Future<void> saveCredentials({
@@ -13,12 +20,12 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     String? password,
   }) async {
     try {
-      await _secureStorageUseCase.set<String>(USERNAME, username);
+      await _secureStorageUsecase.set<String>(USERNAME, username);
       if (password == null) {
-        await _secureStorageUseCase.delete(PASSWORD);
+        await _secureStorageUsecase.delete(PASSWORD);
         return;
       }
-      await _secureStorageUseCase.set<String>(PASSWORD, password);
+      await _secureStorageUsecase.set<String>(PASSWORD, password);
     } on MissingPluginException {
       return;
     }
@@ -29,14 +36,14 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
     String? username;
     String? password;
     try {
-      username = await _secureStorageUseCase.get<String>(USERNAME);
+      username = await _secureStorageUsecase.get<String>(USERNAME);
     } on MissingPluginException {
       //
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }
     try {
-      password = await _secureStorageUseCase.get<String>(PASSWORD);
+      password = await _secureStorageUsecase.get<String>(PASSWORD);
     } on MissingPluginException {
       //
     } catch (error, stackTrace) {
@@ -48,8 +55,8 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   @override
   Future<void> clearCredentials() async {
     try {
-      await _secureStorageUseCase.delete(USERNAME);
-      await _secureStorageUseCase.delete(PASSWORD);
+      await _secureStorageUsecase.delete(USERNAME);
+      await _secureStorageUsecase.delete(PASSWORD);
     } on MissingPluginException {
       return;
     }
@@ -58,7 +65,7 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   @override
   Future<void> saveSessionToken(String token) async {
     try {
-      await _secureStorageUseCase.set(SESSION_TOKEN, token);
+      await _secureStorageUsecase.set(SESSION_TOKEN, token);
     } on MissingPluginException {
       return;
     }
@@ -67,7 +74,7 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   @override
   Future<void> clearSessionToken() async {
     try {
-      await _secureStorageUseCase.delete(SESSION_TOKEN);
+      await _secureStorageUsecase.delete(SESSION_TOKEN);
     } on MissingPluginException {
       return;
     }
@@ -76,7 +83,7 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   @override
   Future<String?> getSessionToken() async {
     try {
-      return await _secureStorageUseCase.get<String>(SESSION_TOKEN);
+      return await _secureStorageUsecase.get<String>(SESSION_TOKEN);
     } on MissingPluginException {
       return null;
     } catch (error, stackTrace) {
@@ -86,9 +93,16 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   }
 
   @override
-  Future<void> saveUserData(String data) async {
+  Future<void> saveUserData(UserEntity user) async {
+    final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
+    final String json = jsonEncode(user.toMap());
+    final String jsonEncrypted = await _securityEncrypterUseCase.encrypt(
+      password: passwordKey!,
+      data: json,
+    );
+
     try {
-      await _secureStorageUseCase.set<String>(USER_DATA, data);
+      await _secureStorageUsecase.set<String>(USER_DATA, jsonEncrypted);
     } on MissingPluginException {
       return;
     }
@@ -97,16 +111,36 @@ class UserAuthSecureStorageImpl implements UserAuthStorageService {
   @override
   Future<void> clearUserData() async {
     try {
-      await _secureStorageUseCase.delete(USER_DATA);
+      await _secureStorageUsecase.delete(USER_DATA);
     } on MissingPluginException {
       return;
     }
   }
 
   @override
-  Future<String?> getUserData() async {
+  Future<UserEntity?> getUserData() async {
     try {
-      return await _secureStorageUseCase.get<String>(USER_DATA);
+      final String? jsonEncrypted = await _secureStorageUsecase.get<String>(
+        USER_DATA,
+      );
+      if (jsonEncrypted == null) return null;
+
+      try {
+        final String? passwordKey = await _encryptUserPasswordUseCase.decrypt();
+        if (passwordKey == null) return null;
+
+        final String json = await _securityEncrypterUseCase.decrypt(
+          password: passwordKey,
+          data: jsonEncrypted,
+        );
+
+        final Map<String, dynamic> data = jsonDecode(json);
+
+        return UserModel.fromMap(data);
+      } catch (error, stackTrace) {
+        Log.error(error, stackTrace);
+        throw InvalidTokenException();
+      }
     } on MissingPluginException {
       return null;
     } catch (error, stackTrace) {

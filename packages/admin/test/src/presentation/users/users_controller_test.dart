@@ -1,5 +1,6 @@
 import 'package:admin/src/domain/domain.dart';
 import 'package:admin/src/presentation/users/users.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,7 +36,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
   });
 
   setUp(() {
@@ -156,7 +157,6 @@ void main() {
       test('deve definir isLoading como true durante execucao', () async {
         // arrange
         when(() => mockGetAllUsersUseCase.call(any())).thenAnswer((_) async {
-          await Future.delayed(const Duration(milliseconds: 100));
           return <UserEntity>[];
         });
 

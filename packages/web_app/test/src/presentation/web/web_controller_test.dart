@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -5,7 +6,8 @@ import 'package:web_app/src/presentation/web/web_controller.dart';
 
 class MockOpenWebUrlUseCase extends Mock implements OpenWebUrlUseCase {}
 
-class MockGetDeviceLocaleUseCase extends Mock implements GetDeviceLocaleUseCase {}
+class MockGetDeviceLocaleUseCase extends Mock
+    implements GetDeviceLocaleUseCase {}
 
 class FakeLocale extends Fake implements Locale {}
 
@@ -20,7 +22,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeLocale());
   });
 
@@ -92,32 +94,44 @@ void main() {
         expect(controller.showEmail, isFalse);
       });
 
-      test('deve retornar showInstagramButton como true quando URL nao vazia', () {
-        expect(webController.showInstagramButton, isTrue);
-      });
+      test(
+        'deve retornar showInstagramButton como true quando URL nao vazia',
+        () {
+          expect(webController.showInstagramButton, isTrue);
+        },
+      );
 
-      test('deve retornar showFacebookButton como true quando URL nao vazia', () {
-        expect(webController.showFacebookButton, isTrue);
-      });
+      test(
+        'deve retornar showFacebookButton como true quando URL nao vazia',
+        () {
+          expect(webController.showFacebookButton, isTrue);
+        },
+      );
 
-      test('deve retornar showWhatsAppButton como true quando URL nao vazia', () {
-        expect(webController.showWhatsAppButton, isTrue);
-      });
+      test(
+        'deve retornar showWhatsAppButton como true quando URL nao vazia',
+        () {
+          expect(webController.showWhatsAppButton, isTrue);
+        },
+      );
     });
 
     group('privacyPolicy', () {
       group('Sucesso', () {
         test('deve abrir URL de privacy policy com sucesso', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenAnswer((_) async {});
 
           // act
           webController.privacyPolicy();
 
           // assert
           verify(
-            () => mockOpenWebUrlUseCase.call('https://test.example.com/privacy-policy'),
+            () => mockOpenWebUrlUseCase.call(
+              'https://test.example.com/privacy-policy',
+            ),
           ).called(1);
         });
       });
@@ -125,8 +139,9 @@ void main() {
       group('Erro', () {
         test('deve lanar excecao quando OpenWebUrlUseCase falhar', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'url_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'url_open_error'));
 
           // act & assert
           expect(
@@ -141,15 +156,18 @@ void main() {
       group('Sucesso', () {
         test('deve abrir URL de termos e condicoes com sucesso', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenAnswer((_) async {});
 
           // act
           webController.termsConditions();
 
           // assert
           verify(
-            () => mockOpenWebUrlUseCase.call('https://test.example.com/terms-conditions'),
+            () => mockOpenWebUrlUseCase.call(
+              'https://test.example.com/terms-conditions',
+            ),
           ).called(1);
         });
       });
@@ -157,8 +175,9 @@ void main() {
       group('Erro', () {
         test('deve lanar excecao quando abertura de URL falhar', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(Exception('open_url_failed'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(Exception('open_url_failed'));
 
           // act & assert
           expect(
@@ -179,8 +198,9 @@ void main() {
       group('Sucesso', () {
         test('deve abrir URL do Instagram com sucesso', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenAnswer((_) async {});
 
           // act
           webController.openInstagram();
@@ -195,8 +215,9 @@ void main() {
       group('Erro', () {
         test('deve lanar excecao quando abertura de URL falhar', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'instagram_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'instagram_open_error'));
 
           // act & assert
           expect(
@@ -211,8 +232,9 @@ void main() {
       group('Sucesso', () {
         test('deve abrir URL do Facebook com sucesso', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenAnswer((_) async {});
 
           // act
           webController.openFacebook();
@@ -227,8 +249,9 @@ void main() {
       group('Erro', () {
         test('deve lanar excecao quando abertura de URL falhar', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'facebook_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'facebook_open_error'));
 
           // act & assert
           expect(
@@ -243,8 +266,9 @@ void main() {
       group('Sucesso', () {
         test('deve abrir URL do WhatsApp com sucesso', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenAnswer((_) async {});
 
           // act
           webController.openWhatsApp();
@@ -259,8 +283,9 @@ void main() {
       group('Erro', () {
         test('deve lanar excecao quando abertura de URL falhar', () {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'whatsapp_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'whatsapp_open_error'));
 
           // act & assert
           expect(
@@ -273,36 +298,49 @@ void main() {
 
     group('downloadAndroidApp', () {
       group('Sucesso', () {
-        test('deve abrir URL do servidor quando flag desabilitada (default)', () async {
-          // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+        test(
+          'deve abrir URL do servidor quando flag desabilitada (default)',
+          () async {
+            // arrange
+            when(
+              () => mockOpenWebUrlUseCase.call(any()),
+            ).thenAnswer((_) async {});
 
-          // act
-          await webController.downloadAndroidApp();
+            // act
+            await webController.downloadAndroidApp();
 
-          // assert
-          verify(
-            () => mockOpenWebUrlUseCase.call('https://test.example.com/download_android_app'),
-          ).called(1);
-        });
+            // assert
+            verify(
+              () => mockOpenWebUrlUseCase.call(
+                'https://test.example.com/download_android_app',
+              ),
+            ).called(1);
+          },
+        );
 
-        test('deve abrir URL da Google Play Store quando locale disponivel', () async {
-          // arrange
-          when(() => mockGetDeviceLocaleUseCase.call())
-              .thenAnswer((_) async => const Locale('en', 'US'));
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+        test(
+          'deve abrir URL da Google Play Store quando locale disponivel',
+          () async {
+            // arrange
+            when(
+              () => mockGetDeviceLocaleUseCase.call(),
+            ).thenAnswer((_) async => const Locale('en', 'US'));
+            when(
+              () => mockOpenWebUrlUseCase.call(any()),
+            ).thenAnswer((_) async {});
 
-          // act
-          await webController.downloadAndroidApp();
+            // act
+            await webController.downloadAndroidApp();
 
-          // assert - flag is disabled by default (faker returns isEnabled: false)
-          // so it will call server URL
-          verify(
-            () => mockOpenWebUrlUseCase.call('https://test.example.com/download_android_app'),
-          ).called(1);
-        });
+            // assert - flag is disabled by default (faker returns isEnabled: false)
+            // so it will call server URL
+            verify(
+              () => mockOpenWebUrlUseCase.call(
+                'https://test.example.com/download_android_app',
+              ),
+            ).called(1);
+          },
+        );
       });
 
       group('Erro', () {
@@ -310,8 +348,9 @@ void main() {
         // Com o faker (flag desabilitada por padrao), este caminho nao e executado
         test('deve lanar excecao quando OpenWebUrlUseCase falhar', () async {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'url_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'url_open_error'));
 
           // act & assert
           expect(
@@ -324,26 +363,33 @@ void main() {
 
     group('downloadAppleApp', () {
       group('Sucesso', () {
-        test('deve abrir URL do servidor quando flag desabilitada (default)', () async {
-          // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenAnswer((_) async {});
+        test(
+          'deve abrir URL do servidor quando flag desabilitada (default)',
+          () async {
+            // arrange
+            when(
+              () => mockOpenWebUrlUseCase.call(any()),
+            ).thenAnswer((_) async {});
 
-          // act
-          await webController.downloadAppleApp();
+            // act
+            await webController.downloadAppleApp();
 
-          // assert
-          verify(
-            () => mockOpenWebUrlUseCase.call('https://test.example.com/download_ios_app'),
-          ).called(1);
-        });
+            // assert
+            verify(
+              () => mockOpenWebUrlUseCase.call(
+                'https://test.example.com/download_ios_app',
+              ),
+            ).called(1);
+          },
+        );
       });
 
       group('Erro', () {
         test('deve lanar excecao quando OpenWebUrlUseCase falhar', () async {
           // arrange
-          when(() => mockOpenWebUrlUseCase.call(any()))
-              .thenThrow(BaseException(message: 'url_open_error'));
+          when(
+            () => mockOpenWebUrlUseCase.call(any()),
+          ).thenThrow(BaseException(message: 'url_open_error'));
 
           // act & assert
           expect(

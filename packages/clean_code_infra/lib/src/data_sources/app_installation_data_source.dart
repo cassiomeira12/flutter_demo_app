@@ -5,7 +5,7 @@ class AppInstallationDataSourceImpl
     implements AppInstallationDataSource {
   final HttpClient _http;
 
-  AppInstallationDataSourceImpl({required HttpClient http}) : _http = http;
+  AppInstallationDataSourceImpl({required this._http});
 
   @override
   Future<Map<String, dynamic>> create(Map<String, dynamic> data) {

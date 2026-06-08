@@ -1,6 +1,10 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:core/src/security/app_security_manager_impl.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class CoreModuleBindings implements ModuleBinding {
   @override
@@ -21,9 +25,9 @@ class CoreModuleBindings implements ModuleBinding {
       ),
     );
 
-    await DomainModuleBindings().injectDependencies();
     await InfraModuleBindings().injectDependencies();
     await DataModuleBindings().injectDependencies();
+    await DomainModuleBindings().injectDependencies();
 
     await AppBinding.find<GetDeviceInfoUseCase>().call().then((deviceInfo) {
       AppBinding.lazyPut<DeviceInfoEntity>(() => deviceInfo);

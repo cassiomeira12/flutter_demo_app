@@ -2,6 +2,8 @@
 
 Biblioteca de componentes Flutter reutilizáveis seguindo a metodologia **Atomic Design** (Atoms, Molecules, Organisms) com suporte a temas e responsividade.
 
+**Veja também**: [Controllers](../presentation/controllers.md) | [Arquitetura](../architecture/architecture-diagrams.md) | [Glossário](../glossary.md)
+
 ## Instalação
 
 No `pubspec.yaml` do app principal ou pacote que consumirá o design system:
@@ -339,7 +341,7 @@ packages/design_system/
 
 - `flutter/material.dart`
 - `get` (GetX para gerenciamento de estado)
-- Demais pacotes internos: `core`, `dependency`, `clean_code_domain`, `clean_code_infra`
+- Demais pacotes internos: `core`, `dependency`, `clean_code_domain`
 
 ---
 

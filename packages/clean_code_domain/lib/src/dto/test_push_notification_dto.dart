@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 
 class TestPushNotificationDto extends BaseUseCaseParam {
   final String? title;

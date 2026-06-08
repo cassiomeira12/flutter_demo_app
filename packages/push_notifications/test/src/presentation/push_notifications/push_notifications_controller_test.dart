@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -22,7 +23,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeTestPushNotificationDto());
     registerFallbackValue(FakeUserEntity());
   });
@@ -55,7 +56,7 @@ void main() {
 
   tearDown(() {
     AppBinding.delete<UserEntity>(force: true);
-    Get.reset();
+    AppBinding.reset();
   });
 
   group('PushNotificationsController', () {

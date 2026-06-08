@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -8,11 +9,9 @@ class PushNotificationsController extends BaseController {
 
   PushNotificationsController({
     // required GetAllUsersUseCase getAllUsersUseCase,
-    required CreateNotificationUseCase createNotificationUseCase,
-    required TestPushNotificationUseCase testPushNotificationUseCase,
-  }) : // _getAllUsersUseCase = getAllUsersUseCase,
-       _createNotificationUseCase = createNotificationUseCase,
-       _testPushNotificationUseCase = testPushNotificationUseCase;
+    required this._createNotificationUseCase,
+    required this._testPushNotificationUseCase,
+  });
 
   @override
   String get pageRouteNamed => AppRouter.pushNotifications.name;

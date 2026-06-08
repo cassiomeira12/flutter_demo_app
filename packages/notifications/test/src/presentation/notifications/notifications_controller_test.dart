@@ -1,6 +1,8 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:notifications/src/domain/domain.dart';
 import 'package:notifications/src/presentation/notifications/notifications_controller.dart';
 
 class MockListUserNotificationsUseCase extends Mock
@@ -20,7 +22,7 @@ void main() {
 
   setUpAll(() {
     WidgetsFlutterBinding.ensureInitialized();
-    Get.testMode = true;
+    AppBinding.testMode(true);
     registerFallbackValue(FakeNotificationEntity());
     registerFallbackValue(FakeBaseException());
   });
@@ -36,7 +38,7 @@ void main() {
   });
 
   tearDown(() {
-    Get.reset();
+    AppBinding.reset();
   });
 
   group('NotificationsController', () {

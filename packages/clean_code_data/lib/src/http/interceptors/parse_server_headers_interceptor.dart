@@ -1,12 +1,11 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class ParseServerHeadersInterceptor extends Interceptor {
   final ServerEnvironmentEntity _serverEnv;
 
-  ParseServerHeadersInterceptor({
-    required ServerEnvironmentEntity serverEnv,
-  }) : _serverEnv = serverEnv;
+  ParseServerHeadersInterceptor({required this._serverEnv});
 
   InstallationEntity? _installationEntity;
 

@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -57,6 +59,7 @@ class _KeyboardVisibilityWidgetState extends State<KeyboardVisibilityWidget>
 
   @override
   Widget build(BuildContext context) {
+    developer.log('KeyboardVisibilityWidget', name: 'Rebuild');
     return widget.child;
   }
 }

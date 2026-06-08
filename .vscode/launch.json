@@ -19,6 +19,7 @@
   "configurations": [
     {
       "name": "Flutter App",
+      "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
       "toolArgs": [
@@ -27,11 +28,12 @@
         "--web-hostname=localhost",
         "--web-port=1203",
         "--dart-define-from-file=../envs/${input:env}",
-        "--web-experimental-hot-reload"
+        "--android-skip-build-dependency-validation"
       ]
     },
     {
       "name": "Flutter Web Server",
+      "program": "lib/main.dart",
       "request": "launch",
       "type": "dart",
       "args": [
@@ -42,7 +44,7 @@
         "--web-hostname=localhost",
         "--web-port=1203",
         "--dart-define-from-file=../envs/${input:env}",
-        "--web-experimental-hot-reload"
+        "--android-skip-build-dependency-validation"
       ]
     },
     {
@@ -55,7 +57,7 @@
         "--web-hostname=localhost",
         "--web-port=1203",
         "--dart-define-from-file=../envs/${input:env}",
-        "--web-experimental-hot-reload"
+        "--android-skip-build-dependency-validation"
       ]
     },
     {

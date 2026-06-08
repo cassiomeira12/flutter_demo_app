@@ -1,3 +1,5 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
+
 abstract class UserAuthStorageService {
   Future<void> saveCredentials({required String username, String? password});
 
@@ -11,9 +13,9 @@ abstract class UserAuthStorageService {
 
   Future<String?> getSessionToken();
 
-  Future<void> saveUserData(String data);
+  Future<void> saveUserData(UserEntity user);
 
   Future<void> clearUserData();
 
-  Future<String?> getUserData();
+  Future<UserEntity?> getUserData();
 }

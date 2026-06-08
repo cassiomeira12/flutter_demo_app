@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:login/src/presentation/signup/signup.dart';
 
 class SignUpPage extends AppView<SignUpController> {
@@ -69,17 +70,20 @@ class SignUpPage extends AppView<SignUpController> {
                   ),
                   child: Row(
                     children: [
-                      Obx(() {
-                        return CheckboxWidget(
-                          key: const Key(
-                            'accept_terms_and_policy_checkbox_widget_key',
-                          ),
-                          value: controller.privacyAndTerms.value,
-                          onChanged: (value) {
-                            controller.privacyAndTerms(value);
-                          },
-                        );
-                      }),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: controller.privacyAndTerms,
+                        builder: (context, value, child) {
+                          return CheckboxWidget(
+                            key: const Key(
+                              'accept_terms_and_policy_checkbox_widget_key',
+                            ),
+                            value: value,
+                            onChanged: (newValue) {
+                              controller.privacyAndTerms.value = newValue;
+                            },
+                          );
+                        },
+                      ),
                       const SpacerWidget(),
                       Flexible(
                         child: TextRichWidget(

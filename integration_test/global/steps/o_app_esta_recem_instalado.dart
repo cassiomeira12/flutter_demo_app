@@ -1,5 +1,7 @@
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/translations/translation.dart';
 import 'package:flutter_test/flutter_test.dart';
 

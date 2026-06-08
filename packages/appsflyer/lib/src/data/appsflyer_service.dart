@@ -7,10 +7,9 @@ class AppsflyerServiceImpl implements AppsFlyerService {
   final String _appleStoreAppId;
 
   AppsflyerServiceImpl({
-    required String afDevKey,
-    required String appleStoreAppId,
-  }) : _afDevKey = afDevKey,
-       _appleStoreAppId = appleStoreAppId;
+    required this._afDevKey,
+    required this._appleStoreAppId,
+  });
 
   AppsflyerSdk? _appsflyerSdk;
 

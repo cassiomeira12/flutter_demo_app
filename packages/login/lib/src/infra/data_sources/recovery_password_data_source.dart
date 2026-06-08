@@ -1,10 +1,11 @@
-import 'package:core/core.dart';
-import 'package:login/src/data/data.dart';
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:dependency/dependency.dart';
+import 'package:login/src/data/data_sources/data_sources.dart';
 
 class RecoveryPasswordDataSourceImpl implements RecoveryPasswordDataSource {
   final HttpClient _http;
 
-  RecoveryPasswordDataSourceImpl({required HttpClient http}) : _http = http;
+  RecoveryPasswordDataSourceImpl({required this._http});
 
   @override
   Future<void> recoveryPassword(String email) async {

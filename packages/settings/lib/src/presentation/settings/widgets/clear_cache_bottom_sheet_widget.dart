@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class ClearCacheBottomSheetWidget extends StatelessWidget {
   final Future<void> Function() onClearCache;

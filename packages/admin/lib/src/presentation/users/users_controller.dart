@@ -1,5 +1,6 @@
 import 'package:admin/src/domain/domain.dart';
 import 'package:admin/src/presentation/users/users.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -8,10 +9,9 @@ class UsersController extends BaseController {
   final UsersStore _usersStore;
 
   UsersController({
-    required GetAllUsersUseCase getAllUsersUseCase,
-    required UsersStore usersStore,
-  }) : _getAllUsersUseCase = getAllUsersUseCase,
-       _usersStore = usersStore;
+    required this._getAllUsersUseCase,
+    required this._usersStore,
+  });
 
   RxList<UserEntity> users = RxList.empty();
   RxBool isLoading = RxBool(true);
@@ -24,6 +24,14 @@ class UsersController extends BaseController {
   void onReady() {
     super.onReady();
     getAllUsers();
+  }
+
+  @override
+  void onClose() {
+    users.close();
+    isLoading.close();
+    errorMessage.close();
+    super.onClose();
   }
 
   Future<void> getAllUsers() async {

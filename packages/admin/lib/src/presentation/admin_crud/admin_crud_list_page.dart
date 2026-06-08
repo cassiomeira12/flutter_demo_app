@@ -3,6 +3,7 @@
 import 'package:admin/src/presentation/admin_crud/admin_crud_details_page.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AdminCrudListController<T> extends ListenableBaseController<T> {
   final Future<List<T>> Function() _fetchDataFunction;

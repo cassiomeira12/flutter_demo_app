@@ -13,11 +13,11 @@ class AppBarSearchDelegate<T> extends SearchDelegate<T?> {
   builder;
 
   AppBarSearchDelegate({
-    required List<T> items,
+    required this._items,
     required this.filter,
     required this.emptyMessage,
     required this.builder,
-  }) : _items = items;
+  });
 
   List<T> results = <T>[];
 

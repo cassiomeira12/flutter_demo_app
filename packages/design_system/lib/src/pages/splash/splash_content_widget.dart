@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
-import 'package:flutter/material.dart';
+import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class SplashContentWidget extends StatelessWidget {
   const SplashContentWidget({super.key});

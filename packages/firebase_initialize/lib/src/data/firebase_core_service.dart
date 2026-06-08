@@ -9,14 +9,11 @@ class FirebaseCoreService implements FirebaseInitializeService {
   final String _senderId;
 
   FirebaseCoreService({
-    required String projectId,
-    required String apiKey,
-    required String appId,
-    required String senderId,
-  }) : _projectId = projectId,
-       _apiKey = apiKey,
-       _appId = appId,
-       _senderId = senderId;
+    required this._projectId,
+    required this._apiKey,
+    required this._appId,
+    required this._senderId,
+  });
 
   FirebaseApp? _app;
 

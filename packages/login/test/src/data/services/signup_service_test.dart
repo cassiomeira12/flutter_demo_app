@@ -1,3 +1,6 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,9 +13,9 @@ void main() {
   SharedPreferences.setMockInitialValues({});
 
   setUpAll(() async {
-    await DomainModuleBindings().injectDependencies();
     await InfraModuleBindings().injectDependencies();
     await DataModuleBindings().injectDependencies();
+    await DomainModuleBindings().injectDependencies();
 
     final List<Interceptor> httpInterceptors = [
       ParseServerHeadersInterceptor(serverEnv: AppBinding.find()),

@@ -29,6 +29,7 @@ abstract class Log {
   static final _talker = Talker(
     settings: TalkerSettings(
       enabled: !isUnitTest && !kReleaseMode,
+      useHistory: false,
       timeFormat: TimeFormat.yearMonthDayAndTime,
       colors: {
         TalkerKey.info: AnsiPen()..cyan(),
@@ -88,10 +89,8 @@ abstract class Log {
   }
 
   static void tracking(String msg) {
-    if (!Log.isIntegrationTest) {
-      final String message = '$_getClassNameAndPath \n\n$msg';
-      _talker.warning(message);
-    }
+    final String message = '$_getClassNameAndPath \n\n$msg';
+    _talker.warning(message);
   }
 
   static void error(

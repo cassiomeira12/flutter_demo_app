@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:faq/src/domain/domain.dart';
 
 class UserFeedbackRepositoryImpl extends BaseRepositoryImpl<UserFeedbackEntity>
@@ -8,5 +8,6 @@ class UserFeedbackRepositoryImpl extends BaseRepositoryImpl<UserFeedbackEntity>
     required UserFeedbackService super.service,
     required super.checkInternetUseCase,
     required super.localStorageUseCase,
+    required super.localDatabase,
   });
 }

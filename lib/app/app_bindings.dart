@@ -1,5 +1,6 @@
 import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
+import 'package:app_purchase/app_purchase.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
@@ -47,5 +48,6 @@ class AppBindings extends Bindings {
     UserAccountModuleBindings().injectDependencies();
     SecurityModuleBindings().injectDependencies();
     WebViewModuleBindings().injectDependencies();
+    AppPurchaseModuleBindings().injectDependencies();
   }
 }

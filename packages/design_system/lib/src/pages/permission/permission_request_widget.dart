@@ -1,5 +1,7 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class PermissionRequestWidget extends StatefulWidget {
   final Permission permission;
@@ -72,13 +74,13 @@ class _PermissionRequestWidgetState extends State<PermissionRequestWidget> {
   IconData get permissionIcon {
     switch (widget.permission) {
       case Permission.location:
-        return FontAwesome.location_pin_lock_solid;
+        return Icons.location_on;
       case Permission.notification:
-        return FontAwesome.bell;
+        return Icons.notifications;
       case Permission.camera:
-        return FontAwesome.camera_solid;
+        return Icons.camera_alt;
       default:
-        return FontAwesome.lock_solid;
+        return Icons.lock;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
@@ -28,16 +29,7 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
     Map<String, dynamic>? parameters,
     CrashlyticsLogLevel level = CrashlyticsLogLevel.debug,
     CrashlyticsLogType type = CrashlyticsLogType.user,
-  }) {
-    if (!Log.isIntegrationTest) {
-      Log.info(
-        'Event: $event \n'
-        'Parameters: ${jsonEncode(parameters)} \n'
-        'level: $level \n'
-        'type: $type',
-      );
-    }
-  }
+  }) {}
 
   @override
   Future<void> setUserId(String? userId) async {}
@@ -77,7 +69,7 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
         'name: $name \n'
         'description: $description \n'
         'startAt: $startTimestamp';
-    Log.tracking(msg);
+    if (!Log.isIntegrationTest) Log.info(msg);
     return FakeTrackOperation(
       name: name,
       description: description,
@@ -99,12 +91,10 @@ class FakeTrackOperation implements TrackOperation {
 
   FakeTrackOperation({
     required String name,
-    required String? description,
-    required DateTime startTimestamp,
+    required this._description,
+    required this._startTimestamp,
     this.isChild = false,
-  }) : _parentName = name,
-       _description = description,
-       _startTimestamp = startTimestamp;
+  }) : _parentName = name;
 
   @override
   TrackOperation startChild({
@@ -119,7 +109,7 @@ class FakeTrackOperation implements TrackOperation {
         'name: $name \n'
         'description: $description \n'
         'startAt: $startTimestamp';
-    Log.tracking(msg);
+    if (!Log.isIntegrationTest) Log.info(msg);
     return FakeTrackOperation(
       name: name,
       description: null,
@@ -139,13 +129,24 @@ class FakeTrackOperation implements TrackOperation {
     if (finished) return;
     finished = true;
     final endTime = endTimestamp ?? DateTime.timestamp();
-    final seconds = endTime.difference(_startTimestamp).inMilliseconds / 1000;
-    final String msg =
-        '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
-        '${isChild ? 'parent:' : 'name:'} $_parentName \n'
-        'description: $_description \n'
-        'endAt: $endTime \n'
-        'duration: ${seconds.toStringAsFixed(3)} seconds';
-    Log.tracking(msg);
+    final milliseconds = endTime.difference(_startTimestamp).inMilliseconds;
+    final timeFormatted = milliseconds / 1000;
+    if (milliseconds >= 200) {
+      final String msg =
+          '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
+          '${isChild ? 'parent:' : 'name:'} $_parentName \n'
+          'description: $_description \n'
+          'endAt: $endTime \n'
+          'duration: ${timeFormatted.toStringAsFixed(3)} seconds';
+      if (!Log.isIntegrationTest) Log.tracking(msg);
+    } else {
+      final String msg =
+          '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
+          '${isChild ? 'parent:' : 'name:'} $_parentName \n'
+          'description: $_description \n'
+          'endAt: $endTime \n'
+          'duration: ${timeFormatted.toStringAsFixed(3)} seconds';
+      if (!Log.isIntegrationTest) Log.success(msg, throwsCrashlytics: false);
+    }
   }
 }

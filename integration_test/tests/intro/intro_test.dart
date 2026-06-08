@@ -212,5 +212,28 @@ void main() {
         await oAplicativoNaoEstaNaRota(tester, '/intro');
       },
     );
+    testWidgets(
+      '''Validar que ao retornar para tela de permissão o dialog não é exibido antes da transição de página''',
+      (tester) async {
+        await bddSetUp(tester);
+        await oAplicativoSimulaAPlataform(tester, 'android');
+        await oAplicativoPossuiAsPersmissoes(tester, 'location');
+        await oAplicativoEInicializado(tester);
+        await oAplicativoEstaNaRota(tester, '/intro');
+        await aTelaDeIntroDefaultEValidada(tester);
+        await oUsuarioClicaNoComponenteDaKey(tester, 'next_intro_button_key');
+        await oUsuarioVerAMensagem(tester, 'Localização');
+        await oUsuarioNaoVerAMensagem(tester, 'Permission.location');
+        await oUsuarioClicaNoComponenteDaKey(tester, 'back_intro_button_key');
+        await aTelaDeIntroDefaultEValidada(tester);
+        await oUsuarioClicaNoComponenteDaKey(tester, 'next_intro_button_key');
+        await oUsuarioVerAMensagem(tester, 'Localização');
+        await oUsuarioNaoVerAMensagem(tester, 'Permission.location');
+        await oUsuarioClicaNoComponenteDaKey(tester, 'finish_intro_button_key');
+        await oUsuarioVerAMensagem(tester, 'Permission.location');
+        await oUsuarioVerAMensagem(tester, 'Permitir');
+        await oUsuarioVerAMensagem(tester, 'Agora não');
+      },
+    );
   });
 }

@@ -1,5 +1,9 @@
+import 'package:clean_code_data/clean_code_data.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
+import 'package:clean_code_infra/clean_code_infra.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:login/src/data/data.dart';
 import 'package:login/src/domain/domain.dart';
@@ -48,14 +52,15 @@ void main() {
     registerFallbackValue(UpdateUserLocaleUseCaseMock());
     registerFallbackValue(UploadInstallationAppUseCaseMock());
 
+    await InfraModuleBindings().injectDependencies();
+    await DataModuleBindings().injectDependencies();
+
     AppBinding.put<UpdateUserLocaleUseCase>(UpdateUserLocaleUseCaseMock());
     AppBinding.put<UploadInstallationAppUseCase>(
       UploadInstallationAppUseCaseMock(),
     );
 
     await DomainModuleBindings().injectDependencies();
-    await InfraModuleBindings().injectDependencies();
-    await DataModuleBindings().injectDependencies();
   });
 
   tearDownAll(() {

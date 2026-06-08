@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -19,6 +21,7 @@ class TextWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('TextWidget $text', name: 'Rebuild');
     return Container(
       constraints: const BoxConstraints(
         maxWidth: ResponsiveSizeHelper.maxWidth,

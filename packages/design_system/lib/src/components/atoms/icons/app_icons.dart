@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:dependency/dependency.dart';
 import 'package:design_system/design_system.dart';
 
@@ -10,6 +12,7 @@ class AppIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    developer.log('AppIcon ${icon.value}', name: 'Rebuild');
     if (icon.value.contains('.svg')) {
       return SvgPicture.asset(
         icon.value,
@@ -43,4 +46,8 @@ class AppIcons {
   static AppIcons updateAvailable = const AppIcons(AppAssets.updateAvailable);
 
   static AppIcons bell = const AppIcons(AppAssets.bell);
+
+  static AppIcons facebook = const AppIcons(AppAssets.facebook);
+  static AppIcons instagram = const AppIcons(AppAssets.instagram);
+  static AppIcons whatsapp = const AppIcons(AppAssets.whatsapp);
 }

@@ -1,12 +1,12 @@
+import 'package:clean_code_data/clean_code_data.dart';
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 import 'package:push_messaging/src/data/data.dart';
 
 class PushTopicsDataSourceImpl implements PushTopicsDataSource {
   final HttpClient _http;
 
-  PushTopicsDataSourceImpl({
-    required HttpClient http,
-  }) : _http = http;
+  PushTopicsDataSourceImpl({required this._http});
 
   @override
   Future<void> subscribeTopic(List<String> topics) async {

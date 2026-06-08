@@ -2,6 +2,7 @@ import 'package:admin/src/presentation/admin/widgets/widgets.dart';
 import 'package:admin/src/presentation/presentation.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 
 class AdminPage extends AppView<AdminController> {
   const AdminPage({super.key});
