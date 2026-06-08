@@ -1,3 +1,11 @@
+# Work-point v1.1.1 [08-06-2026]
+
+- refactor: migrate constructors to use this.field shorthand
+- fix: copyWith respective params
+- refactor: change var valor to value
+- refactor: update imports
+- refactor: migrate usecases from data to domain
+
 # Work Point v1.1.0 [08-05-2026]
 
 - refactor: add intro app description
@@ -46,12 +54,8 @@
 
 # Work Point v1.0.3 [16-02-2026]
 
-- feat: update push messaging package
-- feat: update push notifications package
-- fix: feature flag package
+- feat: firebase web and windows settings
 
 # Work Point v1.0.1 [07-01-2026]
 
-- fix: restore default parse server files
-
-# Work Point v1.0.0 [07-01-2026]
+- feat: firebase ios and macos settings

@@ -39,7 +39,7 @@ class CheckDayPointModel extends CheckDayPointEntity {
             .map((item) {
               return CheckHourPointModel.fromMap(item);
             })
-            .where((item) => item.valor != null)
+            .where((item) => item.value != null)
             .toList(),
         hasInconsistency: map['hasInconsistency'] ?? false,
         info: map['info'],

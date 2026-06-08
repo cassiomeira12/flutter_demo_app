@@ -1,4 +1,4 @@
-import 'package:core/core.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class CheckDayPointEntity extends BaseEntity {
@@ -58,8 +58,8 @@ class CheckDayPointEntity extends BaseEntity {
   }) {
     return CheckDayPointEntity(
       day: day ?? this.day,
-      month: day ?? this.month,
-      year: day ?? this.year,
+      month: month ?? this.month,
+      year: year ?? this.year,
       today: today ?? this.today,
       isWeekend: isWeekend ?? this.isWeekend,
       isAllowance: isAllowance ?? this.isAllowance,

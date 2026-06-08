@@ -1,5 +1,6 @@
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/presentation/check_point/check_point_controller.dart';
 
 class CheckPointPage extends AppView<CheckPointController> {
@@ -217,7 +218,7 @@ class CheckPointPage extends AppView<CheckPointController> {
                           style: AppTextStyle.subtitle(context),
                         ),
                         TextWidget(
-                          hourPoint.valor ?? '--:--',
+                          hourPoint.value ?? '--:--',
                           style: AppTextStyle.subtitle(context),
                         ),
                         SecondaryButton(
@@ -255,7 +256,7 @@ class CheckPointPage extends AppView<CheckPointController> {
                               message: 'delete_check_point_selected'.tr
                                   .replaceAll(
                                     '{checkHourPoint}',
-                                    hourPoint.valor ?? '--:--',
+                                    hourPoint.value ?? '--:--',
                                   ),
                               okButton: 'continue'.tr,
                             );

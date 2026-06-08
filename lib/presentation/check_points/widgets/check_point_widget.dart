@@ -1,5 +1,5 @@
-import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
+import 'package:design_system/design_system.dart';
 import 'package:flutter_demo_app/domain/domain.dart';
 
 class CheckPointWidget extends StatelessWidget {
@@ -89,7 +89,7 @@ class CheckPointWidget extends StatelessWidget {
                       child: TextWidget(
                         index >= checkDayPoint.points.length
                             ? '--:--'
-                            : checkDayPoint.points[index].valor ?? '--:--',
+                            : checkDayPoint.points[index].value ?? '--:--',
                         style: todayTextStyle,
                       ),
                     );
