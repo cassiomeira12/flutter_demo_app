@@ -5,10 +5,34 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+class HttpClientMock extends Mock implements HttpClient {}
+
+class HttpRequestFake extends Fake implements HttpRequest {}
+
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  final Map<String, dynamic> fakeLocationData = <String, dynamic>{
+    'country': 'United States',
+    'countryCode': 'US',
+    'region': 'VA',
+    'regionName': 'Virginia',
+    'city': 'Ashburn',
+    'zip': '20149',
+    'lat': 39.03,
+    'lon': -77.5,
+    'timezone': 'America/New_York',
+    'isp': 'Google LLC',
+    'org': 'Google Public DNS',
+    'as': 'AS15169 Google LLC',
+    'query': '8.8.4.4',
+  };
 
   setUpAll(() async {
+    registerFallbackValue(HttpRequestFake());
+
+    AppBinding.put<HttpClient>(HttpClientMock());
+
     await InfraModuleBindings().injectDependencies();
     await DataModuleBindings().injectDependencies();
     await DomainModuleBindings().injectDependencies();
@@ -18,53 +42,84 @@ void main() {
     AppBinding.deleteAll();
   });
 
-  test('auto ip address location success', () async {
-    final IpAddressLocationDataSource ipAddressLocation = AppBinding.find();
+  group('Sucesso', () {
+    test(
+      'deve retornar dados de localização sem informar IP',
+      () async {
+        final http = AppBinding.find<HttpClient>();
+        final dataSource = AppBinding.find<IpAddressLocationDataSource>();
 
-    final Map<String, dynamic> data = await ipAddressLocation.getIpAddress();
+        when(
+          () => http.request<Map<String, dynamic>>(
+            any(),
+            method: HttpMethod.POST,
+            useDefaultBaseUrl: any(named: 'useDefaultBaseUrl'),
+            useDefaultInterceptors: any(named: 'useDefaultInterceptors'),
+          ),
+        ).thenAnswer(
+          (_) async => HttpResponse<Map<String, dynamic>>(
+            statusCode: 200,
+            data: <String, dynamic>{
+              'result': fakeLocationData,
+            },
+          ),
+        );
 
-    expect(data, isNotNull);
-    expect(data, isNotEmpty);
+        final result = await dataSource.getIpAddress();
 
-    expect(data['country'], isNotNull);
-    expect(data['countryCode'], isNotNull);
-    expect(data['region'], isNotNull);
-    expect(data['regionName'], isNotNull);
-    expect(data['city'], isNotNull);
-    expect(data['zip'], isNotNull);
-    expect(data['lat'], isNotNull);
-    expect(data['lon'], isNotNull);
-    expect(data['timezone'], isNotNull);
-    expect(data['isp'], isNotNull);
-    expect(data['org'], isNotNull);
-    expect(data['as'], isNotNull);
-    expect(data['query'], isNotNull);
-  });
-
-  test('fixed ip address location success', () async {
-    final IpAddressLocationDataSource ipAddressLocation = AppBinding.find();
-
-    const String ip = '8.8.4.4';
-
-    final Map<String, dynamic> data = await ipAddressLocation.getIpAddress(
-      ip: ip,
+        expect(result, fakeLocationData);
+      },
     );
 
-    expect(data, isNotNull);
-    expect(data, isNotEmpty);
+    test(
+      'deve retornar dados de localização informando IP fixo',
+      () async {
+        final http = AppBinding.find<HttpClient>();
+        final dataSource = AppBinding.find<IpAddressLocationDataSource>();
 
-    expect(data['country'], 'United States');
-    expect(data['countryCode'], 'US');
-    expect(data['region'], 'VA');
-    expect(data['regionName'], 'Virginia');
-    expect(data['city'], 'Ashburn');
-    expect(data['zip'], '20149');
-    expect(data['lat'], 39.03);
-    expect(data['lon'], -77.5);
-    expect(data['timezone'], 'America/New_York');
-    expect(data['isp'], 'Google LLC');
-    expect(data['org'], 'Google Public DNS');
-    expect(data['as'], 'AS15169 Google LLC');
-    expect(data['query'], ip);
+        when(
+          () => http.request<Map<String, dynamic>>(
+            any(),
+            method: HttpMethod.POST,
+            useDefaultBaseUrl: any(named: 'useDefaultBaseUrl'),
+            useDefaultInterceptors: any(named: 'useDefaultInterceptors'),
+          ),
+        ).thenAnswer(
+          (_) async => HttpResponse<Map<String, dynamic>>(
+            statusCode: 200,
+            data: <String, dynamic>{
+              'result': fakeLocationData,
+            },
+          ),
+        );
+
+        const String ip = '8.8.4.4';
+        final result = await dataSource.getIpAddress(ip: ip);
+
+        expect(result, fakeLocationData);
+        expect(result['query'], ip);
+      },
+    );
+  });
+
+  group('Erro', () {
+    test('deve lançar exceção quando a requisição HTTP falhar', () async {
+      final http = AppBinding.find<HttpClient>();
+      final dataSource = AppBinding.find<IpAddressLocationDataSource>();
+
+      when(
+        () => http.request<Map<String, dynamic>>(
+          any(),
+          method: HttpMethod.POST,
+          useDefaultBaseUrl: any(named: 'useDefaultBaseUrl'),
+          useDefaultInterceptors: any(named: 'useDefaultInterceptors'),
+        ),
+      ).thenThrow(Exception('Erro na requisição'));
+
+      expect(
+        () async => dataSource.getIpAddress(),
+        throwsA(isA<Exception>()),
+      );
+    });
   });
 }

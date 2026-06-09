@@ -100,5 +100,17 @@ class CoreModuleBindings implements ModuleBinding {
 
     final httpClient = AppBinding.find<HttpClient>();
     httpClient.addAllInterceptors(httpInterceptors);
+
+    AppBinding.putAsync<IpAddressLocationEntity>(() async {
+      try {
+        final getIpAddressLocationUseCase =
+            AppBinding.find<GetIpAddressLocationUseCase>();
+        final ipAddress = await getIpAddressLocationUseCase.call(null);
+        CrashlyticsServiceManager.instance.setIpAddress(ipAddress);
+        return ipAddress;
+      } catch (_) {
+        return IpAddressLocationEntity.emptyIpAddress();
+      }
+    }, permanent: true);
   }
 }

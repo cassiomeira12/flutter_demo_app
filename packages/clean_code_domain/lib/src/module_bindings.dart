@@ -172,18 +172,6 @@ class DomainModuleBindings implements ModuleBinding {
       ),
     );
 
-    AppBinding.putAsync<IpAddressLocationEntity>(() async {
-      try {
-        final getIpAddressLocationUseCase =
-            AppBinding.find<GetIpAddressLocationUseCase>();
-        final ip = await getIpAddressLocationUseCase.call(null);
-        CrashlyticsServiceManager.instance.setIpAddress(ip);
-        return ip;
-      } catch (_) {
-        return IpAddressLocationEntity.emptyIpAddress();
-      }
-    }, permanent: true);
-
     AppBinding.lazyPut<RequestPermissionUseCase>(
       () => RequestPermissionUseCaseImpl(
         appPermissionService: AppBinding.find(),

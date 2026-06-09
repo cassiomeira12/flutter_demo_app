@@ -1,5 +1,5 @@
 enum EndpointsEnum {
-  ipLocation('http://ip-api.com/json'),
+  ipLocation('/parse/functions/ip-address'),
   uploadInstallations('/parse/functions/installation'),
   listUserInstallations('/parse/functions/list-user-installations'),
   login('/parse/functions/login'),
