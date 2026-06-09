@@ -693,7 +693,7 @@ build-web:
 	$(MAKE) clean; \
 	$(MAKE) analyze || exit 1; \
 	$(MAKE) test || exit 1; \
-	flutter build web $$ARGS --wasm --base-href $${BASE_HREF} --build-name=$(BUILD_NAME) --build-number=$$BUILD_NUMBER || exit 1; \
+	flutter build web $$ARGS --base-href $${BASE_HREF} --build-name=$(BUILD_NAME) --build-number=$$BUILD_NUMBER || exit 1; \
 	if [ -d "build/web" ]; then \
 		cp -r build/web releases/$$ENV_APP_NAME/$$BUILD_FOLDER/; \
 		DEFAULT_PATH=$$(pwd); \
