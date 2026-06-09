@@ -696,7 +696,9 @@ build-web:
 	flutter build web $$ARGS --wasm --base-href $${BASE_HREF} --build-name=$(BUILD_NAME) --build-number=$$BUILD_NUMBER || exit 1; \
 	if [ -d "build/web" ]; then \
 		cp -r build/web releases/$$ENV_APP_NAME/$$BUILD_FOLDER/; \
+		DEFAULT_PATH=$$(pwd); \
 		cd releases/$$ENV_APP_NAME/$$BUILD_FOLDER && zip -r web.zip web; \
+		cd "$${DEFAULT_PATH}"; \
 	fi; \
 	open "releases/$$ENV_APP_NAME/$$BUILD_FOLDER"
 
