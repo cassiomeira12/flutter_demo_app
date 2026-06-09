@@ -15,6 +15,9 @@ case "$commit_msg" in
   release:*)
     exit 0
     ;;
+  master:*)
+    exit 0
+    ;;
 esac
 
 # Get current branch
