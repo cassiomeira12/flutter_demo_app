@@ -67,7 +67,8 @@ class LoginPage extends AppView<LoginController> {
                             child: LightButton(
                               key: const Key('recovery_password_button_key'),
                               text: 'recovery_password_button'.tr,
-                              onPressed: controller.recoveryPassword,
+                              // Disabled on WorkPointUOL
+                              // onPressed: controller.recoveryPassword,
                             ),
                           ),
                         ],
@@ -113,7 +114,8 @@ class LoginPage extends AppView<LoginController> {
                       key: const Key('signup_button_key'),
                       text: 'create_new_account'.tr,
                       expandWidth: true,
-                      onPressed: controller.signUp,
+                      // Disabled on WorkPointUOL
+                      // onPressed: controller.signUp,
                     ),
                     const SpacerWidget(),
                   ],
