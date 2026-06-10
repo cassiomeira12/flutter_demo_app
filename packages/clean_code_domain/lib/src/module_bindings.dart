@@ -4,29 +4,33 @@ import 'package:core/core.dart';
 class DomainModuleBindings implements ModuleBinding {
   @override
   Future<void> injectDependencies() async {
-    AppBinding.lazyPut<ListUserInstallationsUseCase>(
-      () => ListUserInstallationsUseCaseImpl(
+    AppBinding.put<ListUserInstallationsUseCase>(
+      ListUserInstallationsUseCaseImpl(
         appInstallationService: AppBinding.find(),
       ),
+      permanent: true,
     );
 
-    AppBinding.lazyPut<LocalStorageUseCase>(
-      () => LocalStorageUseCaseImpl(
+    AppBinding.put<LocalStorageUseCase>(
+      LocalStorageUseCaseImpl(
         localStorageService: AppBinding.find(),
       ),
+      permanent: true,
     );
 
-    AppBinding.lazyPut<UploadInstallationAppUseCase>(
-      () => UploadInstallationAppUseCaseImpl(
+    AppBinding.put<UploadInstallationAppUseCase>(
+      UploadInstallationAppUseCaseImpl(
         appInstallationService: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
       ),
+      permanent: true,
     );
 
-    AppBinding.lazyPut<UpdateUserDataUseCase>(
-      () => UpdateUserDataUseCaseImpl(
+    AppBinding.put<UpdateUserDataUseCase>(
+      UpdateUserDataUseCaseImpl(
         userService: AppBinding.find(),
       ),
+      permanent: true,
     );
 
     AppBinding.lazyPut<CountUnreadNotificationsUseCase>(

@@ -41,10 +41,11 @@ class DataModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.lazyPut<UserService>(
-      () => UserServiceImpl(
+    AppBinding.put<UserService>(
+      UserServiceImpl(
         userDataSource: AppBinding.find(),
       ),
+      permanent: true,
     );
 
     AppBinding.lazyPut<LocalStorageService>(
