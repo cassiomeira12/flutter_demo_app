@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+
     <application
         android:name="${applicationName}"
         android:label="${appName}"
@@ -42,6 +44,11 @@
                 <category android:name="android.intent.category.BROWSABLE"/>
                 <data android:scheme="@string/app_links_scheme"/>
                 <data android:host="@string/app_links_host"/>
+            </intent-filter>
+            <!-- Push Notifications -->
+            <intent-filter>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
         <meta-data
@@ -102,6 +109,15 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity-alias>
+        <meta-data
+            android:name="google_analytics_automatic_screen_reporting_enabled"
+            android:value="false"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/${ic_stat_notification}"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="${default_notification_channel_id}"/>
     </application>
     <queries>
         <intent>

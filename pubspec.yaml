@@ -2,7 +2,7 @@ name: flutter_demo_app
 description: "A new Flutter project."
 publish_to: "none"
 
-version: 2.0.0-dev
+version: 1.0.5-dev
 
 environment:
   sdk: ^3.12.0
@@ -62,8 +62,8 @@ dependencies:
 
   # appsflyer:
   #   path: packages/appsflyer
-  # firebase_initialize:
-  #   path: packages/firebase_initialize
+  firebase_initialize:
+    path: packages/firebase_initialize
   app_purchase:
     path: packages/app_purchase
   analytics:
@@ -76,10 +76,10 @@ dependencies:
     path: packages/feature_flag
   notifications:
     path: packages/notifications
-  # push_notifications:
-  #   path: packages/push_notifications
-  # push_messaging:
-  #   path: packages/push_messaging
+  push_notifications:
+    path: packages/push_notifications
+  push_messaging:
+    path: packages/push_messaging
 
   splash:
     path: packages/splash
