@@ -835,8 +835,8 @@ install-android:
 		adb -s $${CHOICE_SELECTED} install -r releases/$${PROJECT}/$${VERSION}/$${PLATFORM}/$${APP}; \
 		echo ""; \
 		echo "App installed ✅"; \
-		echo "\u2022 file: $${APP}"; \
-		echo "\u2022 device: $$(adb -s $$CHOICE_SELECTED shell getprop ro.product.model 2>/dev/null | tr -d '\r')"; \
+		echo "file: $${APP}"; \
+		echo "device: $$(adb -s $$CHOICE_SELECTED shell getprop ro.product.model 2>/dev/null | tr -d '\r')"; \
 		echo ""; \
 	fi; \
 	rm -rf .project_selected .version_selected .platform_selected .app_selected
@@ -874,6 +874,10 @@ install-ios:
 	else \
 		CHOICE_SELECTED=$$(echo $${iOSDevices} | cut -d ' ' -f $$ios_device_choice); \
 		xcrun devicectl device install app --device $${CHOICE_SELECTED} releases/$${PROJECT}/$${VERSION}/$${PLATFORM}/$${APP}; \
+		echo ""; \
+		echo "App installed ✅"; \
+		echo "file: $$APP"; \
+		echo "device: $$CHOICE_SELECTED"; \
 		echo ""; \
 	fi; \
 	rm -rf .project_selected .version_selected .platform_selected .app_selected
@@ -914,7 +918,6 @@ upload-firebase:
 		--release-notes-file release-notes.txt \
 		--groups "l-dev-pd-apps"; \
 	rm -rf .build_app_path .build_chosen_app release-notes.txt
-
 
 .PHONY: release-version
 release-version:
