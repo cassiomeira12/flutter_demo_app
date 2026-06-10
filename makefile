@@ -919,6 +919,116 @@ upload-firebase:
 		--groups "l-dev-pd-apps"; \
 	rm -rf .build_app_path .build_chosen_app release-notes.txt
 
+.PHONY: generate-module
+generate-module:
+	@echo ""; \
+	read -p "Enter the module name (e.g. home): " module_name; \
+	echo ""; \
+	read -p "Enter the relative path (e.g. lib/presentation): " module_path; \
+	echo ""; \
+	if [ -z "$$module_name" ] || [ -z "$$module_path" ]; then \
+		echo "Error: Module name and path cannot be empty."; \
+		exit 1; \
+	fi; \
+	name_lower=$$(echo "$$module_name" | tr '[:upper:]' '[:lower:]' | sed 's/[ -]/_/g'); \
+	name_pascal=$$(echo "$$name_lower" | awk -F'_' '{for(i=1;i<=NF;i++) $$i=toupper(substr($$i,1,1)) substr($$i,2)}1' OFS=''); \
+	target_dir="$$module_path/$$name_lower"; \
+	echo "Creating module [$$name_pascal] in $$target_dir/"; \
+	mkdir -p "$$target_dir"; \
+	\
+	echo "  • $$name_lower.dart"; \
+	printf '%s\n' \
+		"export '$${name_lower}_bindings.dart';" \
+		"export '$${name_lower}_controller.dart';" \
+		"export '$${name_lower}_module.dart';" \
+		"export '$${name_lower}_page.dart';" \
+		> "$$target_dir/$$name_lower.dart"; \
+	\
+	echo "  • $$name_lower""_bindings.dart"; \
+	printf '%s\n' \
+		"import 'package:core/core.dart';" \
+		"import 'package:dependency/dependency.dart';" \
+		"" \
+		"import '$$name_lower.dart';" \
+		"" \
+		"class $${name_pascal}Bindings extends Bindings {" \
+		"  @override" \
+		"  void dependencies() {" \
+		"    AppBinding.put<$${name_pascal}Controller>(" \
+		"      $${name_pascal}Controller()," \
+		"    );" \
+		"  }" \
+		"}" \
+		> "$$target_dir/$$name_lower""_bindings.dart"; \
+	\
+	echo "  • $$name_lower""_controller.dart"; \
+	printf '%s\n' \
+		"import 'package:core/core.dart';" \
+		"" \
+		"class $${name_pascal}Controller extends BaseController {}" \
+		> "$$target_dir/$$name_lower""_controller.dart"; \
+	\
+	echo "  • $$name_lower""_page.dart"; \
+	printf '%s\n' \
+		"import 'package:dependency/dependency.dart';" \
+		"import 'package:design_system/design_system.dart';" \
+		"" \
+		"import '$$name_lower.dart';" \
+		"" \
+		"class $${name_pascal}Page extends AppView<$${name_pascal}Controller> {" \
+		"  const $${name_pascal}Page({super.key});" \
+		"" \
+		"  @override" \
+		"  Widget build(BuildContext context) {" \
+		"    return ScaffoldWidget(" \
+		"      controller: controller," \
+		"      title: '$$name_pascal'," \
+		"      body: Center(" \
+		"        child: TextWidget(" \
+		"          '$$name_pascal'," \
+		"          style: AppTextStyle.title(context)," \
+		"        )," \
+		"      )," \
+		"    );" \
+		"  }" \
+		"}" \
+		> "$$target_dir/$$name_lower""_page.dart"; \
+	\
+	echo "  • $$name_lower""_module.dart"; \
+	printf '%s\n' \
+		"import 'package:core/core.dart';" \
+		"" \
+		"import '$$name_lower.dart';" \
+		"" \
+		"class $${name_pascal}ModuleRoutes implements ModuleRoutes {" \
+		"  @override" \
+		"  List<AppRouterPage> get pages => [" \
+		"    AppRouterPage(" \
+		"      name: AppRouter.$$name_lower.name," \
+		"      page: $${name_pascal}Page.new," \
+		"      binding: $${name_pascal}Bindings()," \
+		"    )," \
+		"  ];" \
+		"}" \
+		"" \
+		> "$$target_dir/$$name_lower""_module.dart"; \
+	\
+	echo ""; \
+	echo "Module [$$name_pascal] created successfully in $$target_dir/"; \
+	echo ""; \
+	echo "Next steps:"; \
+	echo "  1. Add route to packages/core/lib/src/router/app_router.dart:"; \
+	echo "     $$name_lower('/$$name_lower'),"; \
+	echo "  2. Import in lib/app/app_module.dart:"; \
+	echo "     import 'package:flutter_demo_app/$$module_path/$$name_lower/$$name_lower.dart';"; \
+	echo "     ...$${name_pascal}ModuleRoutes().pages,"; \
+	echo "  3. Import in lib/app/app_bindings.dart:"; \
+	echo "     import 'package:flutter_demo_app/$$module_path/$$name_lower/$$name_lower.dart';"; \
+	echo "     $${name_pascal}ModuleBindings().injectDependencies();"; \
+	echo "  4. Export in $$module_path/presentation.dart:"; \
+	echo "     export '$$name_lower/$$name_lower.dart';"; \
+	echo "";
+
 .PHONY: release-version
 release-version:
 	@echo ""; \
