@@ -325,7 +325,6 @@ recreate-branch:
 	git branch $$CHOICE_SELECTED; \
 	git checkout $$CHOICE_SELECTED; \
 	git push --set-upstream origin $$CHOICE_SELECTED; \
-	git checkout $$currentBranch;
 
 .PHONY: tag
 tag:
