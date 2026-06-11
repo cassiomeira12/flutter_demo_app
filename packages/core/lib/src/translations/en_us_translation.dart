@@ -287,6 +287,10 @@ class EnUsTranslation extends Translations {
         // InApp Purchase
         'user_already_has_subscription_purchased':
             'You already have a {purchase} subscription.',
+        // About Page
+        'review_the_app': 'Review the App',
+        'your_device_has_no_support_to_review':
+            'Your device does not support reviews.',
       },
     };
   }

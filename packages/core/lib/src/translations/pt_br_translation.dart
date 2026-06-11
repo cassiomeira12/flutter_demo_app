@@ -293,6 +293,10 @@ class PtBrTranslation extends Translations {
         // InApp Purchase
         'user_already_has_subscription_purchased':
             'Você já tem uma assinatura de {purchase}',
+        // About Page
+        'review_the_app': 'Avalie o aplicativo',
+        'your_device_has_no_support_to_review':
+            'Seu dispositivo não possui suporte para avaliações',
       },
     };
   }

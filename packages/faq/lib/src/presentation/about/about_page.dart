@@ -22,7 +22,7 @@ class AboutPage extends AppView<AboutController> {
                 children: [
                   SecondaryButton(
                     key: const Key('about_app_review_key'),
-                    text: 'Avalie o aplicativo'.tr,
+                    text: 'review_the_app'.tr,
                     expandWidth: true,
                     icon: const FlutterIcon(Icons.feedback_outlined),
                     onPressed: () async {
