@@ -64,11 +64,20 @@ class FeatureFlagLifecycleController extends LifecycleController {
   }
 
   @override
-  void onReady() {}
+  void onClose() {
+    _updateAppSubscription?.cancel();
+    _updateAppRequiredSubscription?.cancel();
+    _blockingAppSubscription?.cancel();
+
+    _updateAppStream.close();
+    _updateAppRequiredStream.close();
+    _blockingAppStream.close();
+    super.onClose();
+  }
 
   @override
   void onAppForeground() {
-    // updateFeatureFlags(reload: true);
+    updateFeatureFlags(reload: true);
   }
 
   @override
