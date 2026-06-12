@@ -27,10 +27,6 @@ class AppBindings extends Bindings {
   Future<void> dependencies() async {
     await CoreModuleBindings().injectDependencies();
 
-    await AppBinding.replace<OnClickedNotificationCallback>(
-      WorkPointOnClickedNotificationCallback(),
-    );
-
     await FirebaseInitializeModuleBindings().injectDependencies();
 
     if (!kDebugMode) {
@@ -44,7 +40,9 @@ class AppBindings extends Bindings {
 
     /// Replace inside custom App Bindings
     // -----------------------------------
-    // Bindings to putReplace or lazyReplace
+    AppBinding.putReplace<OnClickedNotificationCallback>(
+      WorkPointOnClickedNotificationCallback(),
+    );
     // -----------------------------------
 
     // await AppsFlyerModuleBindings().injectDependencies();
