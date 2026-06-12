@@ -11,7 +11,7 @@ void main() {
   setUpAll(() async {
     await InfraModuleBindings().injectDependencies();
 
-    await AppBinding.replace<LoginDataSource>(
+    AppBinding.putReplace<LoginDataSource>(
       WorkPointLoginDataSource(
         http: AppBinding.find(),
       ),
