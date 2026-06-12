@@ -41,7 +41,7 @@ void main() {
         password: '123456',
       );
 
-      AppBinding.replace<SessionEntity>(
+      AppBinding.putReplace<SessionEntity>(
         SessionEntity(token: result.sessionToken),
       );
 
@@ -53,8 +53,8 @@ void main() {
 
       await service.logout();
 
-      await AppBinding.replace<SessionEntity>(SessionEntity());
-      await AppBinding.delete<UserEntity>(force: true);
+      AppBinding.putReplace<SessionEntity>(SessionEntity());
+      AppBinding.delete<UserEntity>(force: true);
 
       expect(AppBinding.find<SessionEntity>().isAuthenticated, false);
       expect(AppBinding.find<SessionEntity>().token, isNull);

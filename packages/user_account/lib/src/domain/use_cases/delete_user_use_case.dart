@@ -19,7 +19,7 @@ class DeleteUserUseCaseImpl implements DeleteUserUseCase {
     await _authStorageUseCase.clearSessionToken();
     await _authStorageUseCase.clearUserData();
 
-    await AppBinding.delete<SessionEntity>();
-    await AppBinding.delete<UserEntity>();
+    AppBinding.delete<SessionEntity>();
+    AppBinding.delete<UserEntity>();
   }
 }

@@ -22,6 +22,12 @@ class GetItBinding implements AppBaseBinding {
   }
 
   @override
+  Future<void> putReplace<T extends Object>(T dependency, {String? tag}) async {
+    await GetIt.instance.unregister<T>(instanceName: tag);
+    GetIt.instance.registerSingleton<T>(dependency, instanceName: tag);
+  }
+
+  @override
   void create<T extends Object>(
     T Function() builder, {
     String? tag,
@@ -45,6 +51,12 @@ class GetItBinding implements AppBaseBinding {
   }
 
   @override
+  void lazyReplace<T extends Object>(
+    T Function() builder, {
+    String? tag,
+  }) {}
+
+  @override
   Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
@@ -66,12 +78,6 @@ class GetItBinding implements AppBaseBinding {
   }) async {
     await GetIt.instance.unregister<T>(instanceName: tag);
     return true;
-  }
-
-  @override
-  Future<void> replace<T extends Object>(T dependency, {String? tag}) async {
-    await GetIt.instance.unregister<T>(instanceName: tag);
-    GetIt.instance.registerSingleton<T>(dependency, instanceName: tag);
   }
 
   @override

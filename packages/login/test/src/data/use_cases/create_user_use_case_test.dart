@@ -102,8 +102,8 @@ void main() {
       final userService = AppBinding.find<UserService>();
       await userService.deleteUser(deleteAccountReason);
 
-      await AppBinding.replace<SessionEntity>(SessionEntity());
-      await AppBinding.delete<UserEntity>(force: true);
+      AppBinding.putReplace<SessionEntity>(SessionEntity());
+      AppBinding.delete<UserEntity>(force: true);
 
       expect(AppBinding.find<SessionEntity>().isAuthenticated, false);
       expect(AppBinding.find<SessionEntity>().token, isNull);

@@ -56,8 +56,8 @@ class RefreshTokenInterceptor extends Interceptor {
     required SessionEntity session,
     required UserModel user,
   }) async {
-    await AppBinding.replace<SessionEntity>(session);
-    await AppBinding.replace<UserEntity>(user);
+    AppBinding.putReplace<SessionEntity>(session);
+    AppBinding.putReplace<UserEntity>(user);
 
     await _userAuthStorageUseCase.saveSessionToken(session.token!);
     await _userAuthStorageUseCase.saveUserData(user);

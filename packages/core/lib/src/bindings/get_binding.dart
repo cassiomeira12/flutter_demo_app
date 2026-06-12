@@ -22,6 +22,14 @@ class GetBinding implements AppBaseBinding {
   }
 
   @override
+  void putReplace<T extends Object>(T dependency, {String? tag}) {
+    final info = GetInstance().getInstanceInfo<T>(tag: tag);
+    final permanent = info.isPermanent ?? false;
+    delete<T>(tag: tag, force: permanent);
+    put<T>(dependency, tag: tag, permanent: permanent);
+  }
+
+  @override
   void create<T extends Object>(
     T Function() builder, {
     String? tag,
@@ -40,6 +48,16 @@ class GetBinding implements AppBaseBinding {
   }
 
   @override
+  void lazyReplace<T extends Object>(
+    T Function() builder, {
+    String? tag,
+  }) {
+    delete<T>(tag: tag, force: true);
+    GetInstance().markAsDirty<T>(tag: tag);
+    lazyPut(builder, tag: tag);
+  }
+
+  @override
   Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
@@ -49,16 +67,8 @@ class GetBinding implements AppBaseBinding {
   }
 
   @override
-  Future<bool> delete<T extends Object>({String? tag, bool force = false}) {
-    return Get.delete<T>(tag: tag, force: force);
-  }
-
-  @override
-  Future<void> replace<T extends Object>(T dependency, {String? tag}) async {
-    final info = GetInstance().getInstanceInfo<T>(tag: tag);
-    final permanent = info.isPermanent ?? false;
-    await delete<T>(tag: tag, force: permanent);
-    put<T>(dependency, tag: tag, permanent: permanent);
+  void delete<T extends Object>({String? tag, bool force = false}) {
+    Get.delete<T>(tag: tag, force: force);
   }
 
   @override

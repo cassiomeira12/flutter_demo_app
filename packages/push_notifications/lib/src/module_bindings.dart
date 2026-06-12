@@ -4,19 +4,19 @@ import 'package:push_notifications/src/data/data.dart';
 class PushNotificationsModuleBindings implements ModuleBinding {
   @override
   Future<void> injectDependencies() async {
-    await AppBinding.replace<OnReceivedNotificationCallback>(
+    AppBinding.putReplace<OnReceivedNotificationCallback>(
       LocalPushOnReceivedNotificationCallback(),
     );
 
     if (Platform.isWeb) {
-      return await AppBinding.replace<PushNotificationsService>(
+      return AppBinding.putReplace<PushNotificationsService>(
         WebPushNotification(
           requestPermissionUseCase: AppBinding.find(),
         ),
       );
     }
 
-    await AppBinding.replace<PushNotificationsService>(
+    AppBinding.putReplace<PushNotificationsService>(
       LocalPushNotifications(
         appName: const String.fromEnvironment('app_name'),
         androidNotificationChannel: const String.fromEnvironment(

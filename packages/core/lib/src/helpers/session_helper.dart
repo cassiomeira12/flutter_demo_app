@@ -9,8 +9,8 @@ abstract class SessionHelper {
       await authStorageUseCase.clearSessionToken();
       await authStorageUseCase.clearUserData();
 
-      await AppBinding.replace<SessionEntity>(SessionEntity());
-      await AppBinding.delete<UserEntity>(force: true);
+      AppBinding.putReplace<SessionEntity>(SessionEntity());
+      AppBinding.delete<UserEntity>(force: true);
     } catch (error, stackTrace) {
       Log.error(error, stackTrace);
     }

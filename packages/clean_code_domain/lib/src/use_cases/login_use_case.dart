@@ -41,7 +41,7 @@ class LoginUseCaseImpl implements LoginUseCase {
     final String sessionToken = user.sessionToken!;
     final session = SessionEntity(token: sessionToken);
 
-    await AppBinding.replace<SessionEntity>(session);
+    AppBinding.putReplace<SessionEntity>(session);
     AppBinding.put<UserEntity>(user, permanent: true);
 
     try {

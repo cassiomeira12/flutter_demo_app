@@ -18,7 +18,7 @@ class PushMessagingModuleBindings implements ModuleBinding {
       ),
     );
 
-    await AppBinding.replace<PushMessagingService>(
+    AppBinding.putReplace<PushMessagingService>(
       FirebasePushMessaging(
         checkPermissionUseCase: AppBinding.find(),
         requestPermissionUseCase: AppBinding.find(),

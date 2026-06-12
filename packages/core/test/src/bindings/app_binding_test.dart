@@ -258,10 +258,8 @@ void main() {
       AppBinding.put(TestDependency('to delete'));
 
       // act
-      final result = await AppBinding.delete<TestDependency>();
+      AppBinding.delete<TestDependency>();
 
-      // assert
-      expect(result, true);
       expect(AppBinding.hasInstance<TestDependency>(), false);
     });
 
@@ -270,29 +268,25 @@ void main() {
       AppBinding.put(TestDependency('to delete'), tag: 'deleteTag');
 
       // act
-      final result = await AppBinding.delete<TestDependency>(tag: 'deleteTag');
+      AppBinding.delete<TestDependency>(tag: 'deleteTag');
 
       // assert
-      expect(result, true);
       expect(AppBinding.hasInstance<TestDependency>(tag: 'deleteTag'), false);
     });
 
     test('deve retornar false quando dependência não existe', () async {
       // act
-      final result = await AppBinding.delete<TestDependency>();
-
-      // assert
-      expect(result, false);
+      AppBinding.delete<TestDependency>();
     });
   });
 
-  group('AppBinding.replace - Sucesso', () {
+  group('AppBinding.putReplace - Sucesso', () {
     test('deve substituir a dependência existente', () async {
       // arrange
       AppBinding.put(TestDependency('old'));
 
       // act
-      await AppBinding.replace(TestDependency('new'));
+      AppBinding.putReplace(TestDependency('new'));
 
       // assert
       final result = AppBinding.find<TestDependency>();
@@ -304,7 +298,7 @@ void main() {
       AppBinding.put(TestDependency('old'), tag: 'replaceTag');
 
       // act
-      await AppBinding.replace(TestDependency('new'), tag: 'replaceTag');
+      AppBinding.putReplace(TestDependency('new'), tag: 'replaceTag');
 
       // assert
       final result = AppBinding.find<TestDependency>(tag: 'replaceTag');
@@ -319,7 +313,7 @@ void main() {
       AppBinding.put(TestDependency('dep2'), tag: 'tag2');
 
       // act
-      await AppBinding.deleteAll();
+      AppBinding.deleteAll();
 
       // assert
       expect(AppBinding.hasInstance<TestDependency>(), false);
@@ -331,7 +325,7 @@ void main() {
       AppBinding.put(TestDependency('dep2'));
 
       // act
-      await AppBinding.deleteAll(force: true);
+      AppBinding.deleteAll(force: true);
 
       // assert
       expect(AppBinding.hasInstance<TestDependency>(), false);
@@ -346,7 +340,7 @@ void main() {
         AppBinding.put(TestDependency('first'));
 
         // act - GetX put não sobrescreve, precisa usar replace
-        await AppBinding.replace(TestDependency('second'));
+        AppBinding.putReplace(TestDependency('second'));
 
         // assert
         final result = AppBinding.find<TestDependency>();

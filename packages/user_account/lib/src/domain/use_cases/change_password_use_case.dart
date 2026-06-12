@@ -44,8 +44,8 @@ class ChangePasswordUseCaseImpl implements ChangePasswordUseCase {
     final String sessionToken = user.sessionToken!;
     final session = SessionEntity(token: sessionToken);
 
-    await AppBinding.replace<SessionEntity>(session);
-    await AppBinding.replace<UserEntity>(user);
+    AppBinding.putReplace<SessionEntity>(session);
+    AppBinding.putReplace<UserEntity>(user);
 
     final Map<String, String?> oldCredentials = await _userAuthStorageUseCase
         .getCredentials();

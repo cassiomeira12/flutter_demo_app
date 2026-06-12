@@ -9,6 +9,11 @@ abstract class AppBaseBinding {
     bool permanent = false,
   });
 
+  void putReplace<T extends Object>(
+    T dependency, {
+    String? tag,
+  });
+
   void create<T extends Object>(
     T Function() builder, {
     String? tag,
@@ -21,15 +26,21 @@ abstract class AppBaseBinding {
     bool fenix = true,
   });
 
+  void lazyReplace<T extends Object>(
+    T Function() builder, {
+    String? tag,
+  });
+
   Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
     bool permanent = false,
   });
 
-  Future<bool> delete<T extends Object>({String? tag, bool force = false});
-
-  Future<void> replace<T extends Object>(T dependency, {String? tag});
+  void delete<T extends Object>({
+    String? tag,
+    bool force = false,
+  });
 
   Future<void> deleteAll({bool force = false});
 

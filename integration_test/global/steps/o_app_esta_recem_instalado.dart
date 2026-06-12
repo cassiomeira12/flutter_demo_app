@@ -14,10 +14,10 @@ Future<void> oAppEstaRecemInstalado(WidgetTester tester) async {
   BaseController.SPLASH_ALREADY_EXECUTED = false;
   SharedPreferences.setMockInitialValues({});
 
-  await AppBinding.deleteAll(force: true);
+  AppBinding.deleteAll(force: true);
 
   if (AppBinding.hasInstance<LocalStorage>()) {
-    await AppBinding.delete<LocalStorage>();
+    AppBinding.delete<LocalStorage>();
   }
 
   AppBinding.put<LocalStorage>(LocalStorageMock(), permanent: true);

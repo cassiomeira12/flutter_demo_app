@@ -85,7 +85,7 @@ void main() {
       expect(result.sessionToken, isNotNull);
 
       AppBinding.put<UserEntity>(result);
-      await AppBinding.replace<SessionEntity>(
+      AppBinding.putReplace<SessionEntity>(
         SessionEntity(token: result.sessionToken),
       );
     });
@@ -113,8 +113,8 @@ void main() {
       final userService = AppBinding.find<UserService>();
       await userService.deleteUser(deleteAccountReason);
 
-      await AppBinding.replace<SessionEntity>(SessionEntity());
-      await AppBinding.delete<UserEntity>(force: true);
+      AppBinding.putReplace<SessionEntity>(SessionEntity());
+      AppBinding.delete<UserEntity>(force: true);
 
       expect(AppBinding.find<SessionEntity>().isAuthenticated, false);
       expect(AppBinding.find<SessionEntity>().token, isNull);

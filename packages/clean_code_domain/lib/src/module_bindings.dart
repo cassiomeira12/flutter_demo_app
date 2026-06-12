@@ -4,13 +4,6 @@ import 'package:core/core.dart';
 class DomainModuleBindings implements ModuleBinding {
   @override
   Future<void> injectDependencies() async {
-    AppBinding.put<ListUserInstallationsUseCase>(
-      ListUserInstallationsUseCaseImpl(
-        appInstallationService: AppBinding.find(),
-      ),
-      permanent: true,
-    );
-
     AppBinding.put<LocalStorageUseCase>(
       LocalStorageUseCaseImpl(
         localStorageService: AppBinding.find(),
@@ -18,12 +11,17 @@ class DomainModuleBindings implements ModuleBinding {
       permanent: true,
     );
 
-    AppBinding.put<UploadInstallationAppUseCase>(
-      UploadInstallationAppUseCaseImpl(
+    AppBinding.lazyPut<ListUserInstallationsUseCase>(
+      () => ListUserInstallationsUseCaseImpl(
+        appInstallationService: AppBinding.find(),
+      ),
+    );
+
+    AppBinding.lazyPut<UploadInstallationAppUseCase>(
+      () => UploadInstallationAppUseCaseImpl(
         appInstallationService: AppBinding.find(),
         localStorageUseCase: AppBinding.find(),
       ),
-      permanent: true,
     );
 
     AppBinding.put<UpdateUserDataUseCase>(

@@ -15,7 +15,7 @@ class UpdateUserDataUseCaseImpl implements UpdateUserDataUseCase {
   Future<UserEntity> call(UserEntity user) async {
     final userUpdated = await _service.update(user.id, data: user.toMap());
 
-    await AppBinding.replace<UserEntity>(userUpdated);
+    AppBinding.putReplace<UserEntity>(userUpdated);
 
     return userUpdated;
   }

@@ -21,6 +21,13 @@ extension AppBinding on AppBaseBinding {
     return _binding.put<T>(dependency, tag: tag, permanent: permanent);
   }
 
+  static void putReplace<T extends Object>(
+    T dependency, {
+    String? tag,
+  }) {
+    return _binding.putReplace<T>(dependency, tag: tag);
+  }
+
   static void create<T extends Object>(
     T Function() builder, {
     String? tag,
@@ -37,6 +44,13 @@ extension AppBinding on AppBaseBinding {
     return _binding.lazyPut<T>(builder, tag: tag, fenix: fenix);
   }
 
+  static void lazyReplace<T extends Object>(
+    T Function() builder, {
+    String? tag,
+  }) {
+    return _binding.lazyReplace<T>(builder, tag: tag);
+  }
+
   static Future<T> putAsync<T extends Object>(
     Future<T> Function() builder, {
     String? tag,
@@ -45,15 +59,11 @@ extension AppBinding on AppBaseBinding {
     return _binding.putAsync<T>(builder, tag: tag, permanent: permanent);
   }
 
-  static Future<bool> delete<T extends Object>({
+  static void delete<T extends Object>({
     String? tag,
     bool force = false,
   }) {
     return _binding.delete<T>(tag: tag, force: force);
-  }
-
-  static Future<void> replace<T extends Object>(T dependency, {String? tag}) {
-    return _binding.replace<T>(dependency, tag: tag);
   }
 
   static Future<void> deleteAll({bool force = false}) {

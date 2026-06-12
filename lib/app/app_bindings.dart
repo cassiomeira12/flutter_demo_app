@@ -28,8 +28,16 @@ class AppBindings extends Bindings {
     if (!kDebugMode) {
       await CrashlyticsModuleBindings().injectDependencies();
       await AnalyticsModuleBindings().injectDependencies();
+    }
+
+    if (!Log.isIntegrationTest) {
       await FeatureFlagModuleBindings().injectDependencies();
     }
+
+    /// Replace inside custom App Bindings
+    // -----------------------------------
+    // Bindings to putReplace or lazyReplace
+    // -----------------------------------
 
     // await AppsFlyerModuleBindings().injectDependencies();
     // await PushNotificationsModuleBindings().injectDependencies();
