@@ -69,7 +69,9 @@ class CrashlyticsServiceFaker implements CrashlyticsService {
         'name: $name \n'
         'description: $description \n'
         'startAt: $startTimestamp';
-    if (!Log.isIntegrationTest) Log.info(msg);
+    if (Log.showPerformanceTrackLogs) {
+      Log.info(msg);
+    }
     return FakeTrackOperation(
       name: name,
       description: description,
@@ -109,7 +111,9 @@ class FakeTrackOperation implements TrackOperation {
         'name: $name \n'
         'description: $description \n'
         'startAt: $startTimestamp';
-    if (!Log.isIntegrationTest) Log.info(msg);
+    if (Log.showPerformanceTrackLogs) {
+      Log.info(msg);
+    }
     return FakeTrackOperation(
       name: name,
       description: null,
@@ -138,7 +142,9 @@ class FakeTrackOperation implements TrackOperation {
           'description: $_description \n'
           'endAt: $endTime \n'
           'duration: ${timeFormatted.toStringAsFixed(3)} seconds';
-      if (!Log.isIntegrationTest) Log.tracking(msg);
+      if (Log.showPerformanceTrackLogs) {
+        Log.tracking(msg);
+      }
     } else {
       final String msg =
           '[Finish] ${isChild ? 'Child ' : ''}Tracking Operation \n'
@@ -146,7 +152,9 @@ class FakeTrackOperation implements TrackOperation {
           'description: $_description \n'
           'endAt: $endTime \n'
           'duration: ${timeFormatted.toStringAsFixed(3)} seconds';
-      if (!Log.isIntegrationTest) Log.success(msg, throwsCrashlytics: false);
+      if (Log.showPerformanceTrackLogs) {
+        Log.success(msg, throwsCrashlytics: false);
+      }
     }
   }
 }

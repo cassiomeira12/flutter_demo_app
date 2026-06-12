@@ -20,7 +20,7 @@ class HiveLocalDatabase<T>
         _dbName = databaseName;
         await Hive.initFlutter();
         _hiveBox = await Hive.openBox<String>(databaseName);
-        if (!Log.isIntegrationTest) {
+        if (Log.showDatabaseLogs) {
           Log.success(
             'Local Database [$databaseName] init successful',
             throwsCrashlytics: false,
@@ -35,7 +35,7 @@ class HiveLocalDatabase<T>
   @override
   Future<void> close() async {
     try {
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].close');
       }
       return await _hiveBox.close();
@@ -47,7 +47,7 @@ class HiveLocalDatabase<T>
   @override
   Future<int> add(T value) async {
     try {
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].add \n$value');
       }
       return await _hiveBox.add(encodeValue<T>(value));
@@ -59,7 +59,7 @@ class HiveLocalDatabase<T>
   @override
   Future<void> addByKey(String key, T value) async {
     try {
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].addByKey [$key] \n$value');
       }
       return await _hiveBox.put(key, encodeValue<T>(value));
@@ -73,7 +73,7 @@ class HiveLocalDatabase<T>
     try {
       final String? value = _hiveBox.get(key);
       if (value == null) {
-        if (!Log.isIntegrationTest) {
+        if (Log.showDatabaseLogs) {
           Log.warning(
             '[$_dbName].get [$key] not found',
             throwsCrashlytics: false,
@@ -81,7 +81,7 @@ class HiveLocalDatabase<T>
         }
         return null;
       }
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.success('[$_dbName].get [$key]', throwsCrashlytics: false);
       }
       return decodeValue<T>(value);
@@ -93,7 +93,7 @@ class HiveLocalDatabase<T>
   @override
   Future<void> update(dynamic key, T value) async {
     try {
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].update [$key] \n$value');
       }
       return await _hiveBox.put(key, encodeValue<T>(value));
@@ -106,7 +106,7 @@ class HiveLocalDatabase<T>
   Future<void> delete(dynamic key) async {
     try {
       if (_hiveBox.get(key) == null) {
-        if (!Log.isIntegrationTest) {
+        if (Log.showDatabaseLogs) {
           Log.warning(
             '[$_dbName].delete [$key] not found',
             throwsCrashlytics: false,
@@ -114,7 +114,7 @@ class HiveLocalDatabase<T>
         }
         throw NotFoundException();
       } else {
-        if (!Log.isIntegrationTest) {
+        if (Log.showDatabaseLogs) {
           Log.success('[$_dbName].delete [$key]', throwsCrashlytics: false);
         }
         return await _hiveBox.delete(key);
@@ -129,12 +129,12 @@ class HiveLocalDatabase<T>
     try {
       if (keys == null) {
         await _hiveBox.clear();
-        if (!Log.isIntegrationTest) {
+        if (Log.showDatabaseLogs) {
           Log.info('[$_dbName].deleteAll');
         }
         return;
       }
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].deleteAll keys $keys');
       }
       return await _hiveBox.deleteAll(keys);
@@ -149,7 +149,7 @@ class HiveLocalDatabase<T>
       final values = _hiveBox.toMap().map<dynamic, T>((key, value) {
         return MapEntry(key, decodeValue<T>(value));
       });
-      if (!Log.isIntegrationTest) {
+      if (Log.showDatabaseLogs) {
         Log.info('[$_dbName].values [${values.length}] length');
       }
       return values;

@@ -26,6 +26,9 @@ abstract class Log {
     }
   }
 
+  static bool get showPerformanceTrackLogs => false;
+  static bool get showDatabaseLogs => false;
+
   static final _talker = Talker(
     settings: TalkerSettings(
       enabled: !isUnitTest && !kReleaseMode,
