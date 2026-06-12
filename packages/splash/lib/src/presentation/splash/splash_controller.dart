@@ -51,12 +51,6 @@ class SplashController extends BaseController {
     );
   }
 
-  @override
-  void onClose() {
-    _updateFeatureFlags();
-    super.onClose();
-  }
-
   Future<void> _initializeAppServices(TrackOperation splashTrack) async {
     await PerformanceMetricUseCase.call(
       name: 'splash-firebase-initialize-track',
@@ -113,14 +107,7 @@ class SplashController extends BaseController {
       }
     }
 
-    if (Platform.isWeb || Platform.isMobile) {
-      _initPushNotification();
-    } else {
-      Log.warning(
-        'Push Notification not work on [${Platform.currentPlatform.name}]',
-        throwsCrashlytics: false,
-      );
-    }
+    _initPushNotification();
 
     final UserEntity? user = await PerformanceMetricUseCase.call<UserEntity?>(
       name: 'splash-get-user-authenticated',
@@ -140,8 +127,6 @@ class SplashController extends BaseController {
       return AppNavigator.backAllAndToNamed(AppRouter.web);
     }
 
-    _updateUserInstallation();
-
     if (user != null) {
       await _appSecurityManager.checkIfNeedBlockApp();
     }
@@ -150,42 +135,51 @@ class SplashController extends BaseController {
   }
 
   Future<void> _initPushNotification() async {
-    late PermissionStatus permission;
+    if (Platform.isWeb || Platform.isMobile) {
+      late PermissionStatus permission;
 
-    try {
-      permission = await _checkPermissionUseCase.call(Permission.notification);
-    } catch (_) {
-      permission = PermissionStatus.denied;
-    }
-
-    if (!permission.isGranted && Platform.isWeb) {
-      permission = await _pushNotificationsService.requestPermission();
-    }
-
-    Log.info('Push Notification Permissions: [$permission]');
-
-    if (permission.isGranted) {
       try {
-        await _pushMessagingService.init();
-        final String? token = await _pushMessagingService.getToken();
-        Log.success(
-          'Firebase Push Messaging TOKEN [$token]',
-          throwsCrashlytics: false,
+        permission = await _checkPermissionUseCase.call(
+          Permission.notification,
         );
       } catch (error, stackTrace) {
         Log.error(error, stackTrace);
+        permission = PermissionStatus.denied;
       }
 
-      try {
-        await _pushNotificationsService.init();
-      } catch (error, stackTrace) {
-        Log.error(error, stackTrace);
+      if (!permission.isGranted && Platform.isWeb) {
+        permission = await _pushNotificationsService.requestPermission();
       }
+
+      Log.info('Push Notification Permissions: [$permission]');
+
+      if (permission.isGranted) {
+        try {
+          await _pushMessagingService.init();
+          final String? token = await _pushMessagingService.getToken();
+          Log.success(
+            'Firebase Push Messaging TOKEN [$token]',
+            throwsCrashlytics: false,
+          );
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+
+        try {
+          await _pushNotificationsService.init();
+        } catch (error, stackTrace) {
+          Log.error(error, stackTrace);
+        }
+      }
+    } else {
+      Log.warning(
+        'Push Notification not work on [${Platform.currentPlatform.name}]',
+        throwsCrashlytics: false,
+      );
     }
 
-    if (Platform.isWeb) {
-      _updateUserInstallation();
-    }
+    await _updateUserInstallation();
+    await _updateFeatureFlags();
   }
 
   Future<void> _checkUpdatedApp() async {
@@ -196,13 +190,10 @@ class SplashController extends BaseController {
     );
 
     if (currentVersionApp == null) {
-      _localStorageUseCase.set<String>(CURRENT_APP_VERSION, versionName);
-      return;
-    }
-
-    if (versionName != currentVersionApp) {
+      await _localStorageUseCase.set<String>(CURRENT_APP_VERSION, versionName);
+    } else if (versionName != currentVersionApp) {
       try {
-        await _onUpdatedAppCallback(currentVersionApp);
+        await _onUpdatedAppCallback(versionName);
       } catch (error, stackTrace) {
         Log.error(error, stackTrace);
       }
@@ -303,9 +294,8 @@ class SplashController extends BaseController {
       if (stackTrace.toString().contains('InstallationModel.fromMap')) {
         await _localStorageUseCase.delete(APP_INSTALLATION);
         if (tryAgain) {
-          _updateUserInstallation(tryAgain: false);
+          return _updateUserInstallation(tryAgain: false);
         }
-        return;
       }
       Log.error(error, stackTrace);
     }
