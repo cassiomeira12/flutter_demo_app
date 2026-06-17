@@ -6,6 +6,7 @@ export 'installation_entity.dart';
 export 'ip_address_location_entity.dart';
 export 'notification_entity.dart';
 export 'push_notification_entity.dart';
+export 'rsa_encrypt_key.dart';
 export 'security_environment_entity.dart';
 export 'server_environment_entity.dart';
 export 'session_entity.dart';

@@ -64,8 +64,12 @@ class DataModuleBindings implements ModuleBinding {
       () => ClipboardServiceImpl(),
     );
 
-    AppBinding.lazyPut<RsaEncryptService>(
-      () => RsaEncryptServiceImpl(),
+    AppBinding.lazyPut<AsymmetricEncryptionService>(
+      () => RsaAsymmetricEncryptionServiceImpl(),
+    );
+
+    AppBinding.lazyPut<SymmetricEncryptionService>(
+      () => Salsa20SymmetricEncryptionServiceImpl(),
     );
 
     AppBinding.lazyPut<FileStorageService>(
@@ -89,10 +93,6 @@ class DataModuleBindings implements ModuleBinding {
 
     AppBinding.lazyPut<AppInfoService>(
       () => AppInfoServiceImpl(),
-    );
-
-    AppBinding.lazyPut<SecurityEncryptService>(
-      () => SecurityEncryptServiceImpl(),
     );
 
     AppBinding.lazyPut<SecureStorageService>(

@@ -2,7 +2,7 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:dependency/dependency.dart';
 
 abstract class EncryptServerPublicKeyUseCase
-    extends BaseUseCaseAsyncParam<String, String> {}
+    extends BaseUseCaseSyncParam<String, String> {}
 
 class EncryptServerPublicKeyUseCaseImpl
     implements EncryptServerPublicKeyUseCase {
@@ -15,10 +15,10 @@ class EncryptServerPublicKeyUseCaseImpl
   });
 
   @override
-  Future<String> call(String data) async {
+  String call(String data) {
     final String key = _securityEnv.serverRSAPublicKeyBase64;
     if (key.isEmpty) return data;
     final String publicKey = utf8.decode(base64.decode(key));
-    return await _rsaEncrypterUseCase.encrypt(publicKey: publicKey, data: data);
+    return _rsaEncrypterUseCase.encrypt(publicKey: publicKey, data: data);
   }
 }

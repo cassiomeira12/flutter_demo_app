@@ -75,7 +75,7 @@ class DomainModuleBindings implements ModuleBinding {
 
     AppBinding.lazyPut<RsaEncryptUseCase>(
       () => RsaEncryptUseCaseImpl(
-        rsaEncryptService: AppBinding.find(),
+        asymmetricEncryptionService: AppBinding.find(),
       ),
     );
 
@@ -88,7 +88,7 @@ class DomainModuleBindings implements ModuleBinding {
 
     AppBinding.lazyPut<SecurityEncryptUseCase>(
       () => SecurityEncryptUseCaseImpl(
-        securityEncryptService: AppBinding.find(),
+        symmetricEncryptionService: AppBinding.find(),
       ),
     );
 

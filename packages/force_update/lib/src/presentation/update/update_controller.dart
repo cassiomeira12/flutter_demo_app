@@ -64,6 +64,7 @@ class UpdateController extends BaseController {
         default:
           url = const String.fromEnvironment('web_app_url');
       }
+      url += '?t=${DateTime.timestamp().millisecond}';
     }
 
     _openWebUrlUseCase.call(url);

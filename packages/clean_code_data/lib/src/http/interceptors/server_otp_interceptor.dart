@@ -19,7 +19,7 @@ class ServerOtpInterceptor extends Interceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    final String? encryptedCode = await _generateEncryptedHashTokenCode();
+    final String? encryptedCode = _generateEncryptedHashTokenCode();
 
     if (encryptedCode != null) {
       options.headers.addAll({'Hash-Token-Code': encryptedCode});
@@ -60,10 +60,10 @@ class ServerOtpInterceptor extends Interceptor {
     return super.onError(err, handler);
   }
 
-  Future<String?> _generateEncryptedHashTokenCode() async {
+  String? _generateEncryptedHashTokenCode() {
     try {
       final code = _getOtpCodeUseCase.call(_securityEnv.secretOTP);
-      final String encryptedCode = await _encryptServerPublicKeyUseCase.call(
+      final String encryptedCode = _encryptServerPublicKeyUseCase.call(
         code,
       );
 
@@ -88,7 +88,7 @@ class ServerOtpInterceptor extends Interceptor {
       ...err.requestOptions.headers,
     };
 
-    final String? encryptedCode = await _generateEncryptedHashTokenCode();
+    final String? encryptedCode = _generateEncryptedHashTokenCode();
 
     if (encryptedCode != null) {
       headers['Hash-Token-Code'] = encryptedCode;

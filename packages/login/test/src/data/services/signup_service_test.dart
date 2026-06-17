@@ -48,7 +48,7 @@ void main() {
 
     const email = 'teste@email.com';
     final password = faker.internet.password(length: 6);
-    final encryptedPassword = await encrypt.call(password);
+    final encryptedPassword = encrypt.call(password);
 
     try {
       await service.create({
@@ -72,7 +72,7 @@ void main() {
 
       final email = faker.internet.email();
       final password = faker.internet.password(length: 6);
-      final encryptedPassword = await encrypt.call(password);
+      final encryptedPassword = encrypt.call(password);
 
       final result = await service.create({
         'name': faker.person.name(),

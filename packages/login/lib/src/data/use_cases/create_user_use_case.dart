@@ -25,9 +25,7 @@ class CreateUserUseCaseImpl implements CreateUserUseCase {
     required String password,
   }) async {
     try {
-      final encryptedPassword = await _encryptServerPublicKeyUseCase.call(
-        password,
-      );
+      final encryptedPassword = _encryptServerPublicKeyUseCase.call(password);
 
       final Map<String, dynamic> data = {
         'name': name,

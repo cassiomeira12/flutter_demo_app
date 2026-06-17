@@ -1,39 +1,49 @@
 import 'package:clean_code_domain/clean_code_domain.dart';
-import 'package:dependency/dependency.dart';
+import 'package:core/core.dart';
 
 abstract class RsaEncryptUseCase extends UseCase {
-  Future<void> generateKeys();
+  RsaEncryptKey generateKeys();
 
-  Future<String> encrypt({required String publicKey, required String data});
+  String encrypt({required String publicKey, required String data});
 
-  Future<String> decrypt({required String privateKey, required String data});
+  String decrypt({required String privateKey, required String data});
 }
 
 class RsaEncryptUseCaseImpl implements RsaEncryptUseCase {
-  final RsaEncryptService _service;
+  final AsymmetricEncryptionService _asymmetricEncryptionService;
 
-  RsaEncryptUseCaseImpl({
-    required RsaEncryptService rsaEncryptService,
-  }) : _service = rsaEncryptService;
+  RsaEncryptUseCaseImpl({required this._asymmetricEncryptionService});
 
   @override
-  Future<void> generateKeys() {
-    return _service.generateKeys();
-  }
+  RsaEncryptKey generateKeys() => _asymmetricEncryptionService.generateKeys();
 
   @override
-  Future<String> encrypt({
+  String encrypt({
     required String publicKey,
     required String data,
   }) {
-    return _service.encrypt(publicKey: publicKey, data: data);
+    final result = _asymmetricEncryptionService.encrypt(
+      publicKey: publicKey,
+      data: data,
+    );
+    if (result is Error<String>) {
+      throw result.error;
+    }
+    return (result as Success<String>).value!;
   }
 
   @override
-  Future<String> decrypt({
+  String decrypt({
     required String privateKey,
     required String data,
-  }) async {
-    return _service.decrypt(privateKey: privateKey, data: data);
+  }) {
+    final result = _asymmetricEncryptionService.decrypt(
+      privateKey: privateKey,
+      encryptedData: data,
+    );
+    if (result is Error<String>) {
+      throw result.error;
+    }
+    return (result as Success<String>).value!;
   }
 }

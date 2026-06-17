@@ -32,7 +32,7 @@ class FakeEncryptServerPublicKeyUseCase
   String? lastInput;
 
   @override
-  Future<String> call(String data) async {
+  String call(String data) {
     lastInput = data;
     if (mockError != null) {
       throw mockError!;

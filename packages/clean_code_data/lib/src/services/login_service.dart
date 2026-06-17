@@ -18,7 +18,7 @@ class LoginServiceImpl implements LoginService {
     required String password,
   }) async {
     try {
-      final encryptedPassword = await _encryptServerUseCase.call(password);
+      final encryptedPassword = _encryptServerUseCase.call(password);
 
       final Map<String, dynamic> result = await _dataSource.login(
         username: username,
