@@ -4,14 +4,12 @@ abstract class GetInstallationAppUseCase
     extends BaseUseCaseAsync<InstallationEntity> {}
 
 class GetInstallationAppUseCaseImpl implements GetInstallationAppUseCase {
-  final AppInstallationService _service;
+  final AppInstallationService _appInstallationService;
 
-  GetInstallationAppUseCaseImpl({
-    required AppInstallationService appInstallationService,
-  }) : _service = appInstallationService;
+  GetInstallationAppUseCaseImpl({required this._appInstallationService});
 
   @override
   Future<InstallationEntity> call() {
-    return _service.getInstallation();
+    return _appInstallationService.getInstallation();
   }
 }

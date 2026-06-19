@@ -9,19 +9,17 @@ abstract class AppReviewUseCase extends UseCase {
 }
 
 class AppReviewUseCaseImpl implements AppReviewUseCase {
-  final AppReviewService _service;
+  final AppReviewService _appReviewService;
 
-  AppReviewUseCaseImpl({
-    required AppReviewService appReviewService,
-  }) : _service = appReviewService;
+  AppReviewUseCaseImpl({required this._appReviewService});
 
   @override
   Future<bool> isAvailable() {
-    return _service.isAvailable();
+    return _appReviewService.isAvailable();
   }
 
   @override
   Future<void> requestReview() {
-    return _service.requestReview();
+    return _appReviewService.requestReview();
   }
 }

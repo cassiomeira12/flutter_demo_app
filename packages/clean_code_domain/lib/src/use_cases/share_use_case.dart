@@ -12,11 +12,9 @@ abstract class ShareUseCase extends UseCase {
 }
 
 class ShareUseCaseImpl implements ShareUseCase {
-  final ShareService _service;
+  final ShareService _shareService;
 
-  ShareUseCaseImpl({
-    required ShareService shareService,
-  }) : _service = shareService;
+  ShareUseCaseImpl({required this._shareService});
 
   @override
   Future<ShareResultEntity> call({
@@ -26,7 +24,7 @@ class ShareUseCaseImpl implements ShareUseCase {
     Uri? uri,
     List<File>? files,
   }) {
-    return _service.share(
+    return _shareService.share(
       title: title,
       subject: subject,
       text: text,

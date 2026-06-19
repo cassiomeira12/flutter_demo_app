@@ -6,19 +6,17 @@ abstract class CacheStorageUseCase extends UseCase {
 }
 
 class CacheStorageUseCaseImpl implements CacheStorageUseCase {
-  final CacheStorageService _service;
+  final CacheStorageService _cacheStorageService;
 
-  CacheStorageUseCaseImpl({
-    required CacheStorageService cacheStorageService,
-  }) : _service = cacheStorageService;
+  CacheStorageUseCaseImpl({required this._cacheStorageService});
 
   @override
   Future<String?> load(String key) {
-    return _service.load(key);
+    return _cacheStorageService.load(key);
   }
 
   @override
   Future<void> save(String key, String data) {
-    return _service.save(key, data);
+    return _cacheStorageService.save(key, data);
   }
 }

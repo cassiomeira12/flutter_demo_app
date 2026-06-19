@@ -10,11 +10,9 @@ abstract class CreateNotificationUseCase extends UseCase {
 }
 
 class CreateNotificationUseCaseImpl implements CreateNotificationUseCase {
-  final NotificationService _service;
+  final NotificationService _notificationService;
 
-  CreateNotificationUseCaseImpl({
-    required NotificationService notificationService,
-  }) : _service = notificationService;
+  CreateNotificationUseCaseImpl({required this._notificationService});
 
   @override
   Future<void> call({
@@ -30,6 +28,6 @@ class CreateNotificationUseCaseImpl implements CreateNotificationUseCase {
       'imageUrl': imageUrl,
     };
 
-    return _service.create(data);
+    return _notificationService.create(data);
   }
 }

@@ -6,17 +6,17 @@ import 'package:dependency/dependency.dart';
 
 class AvailablePurchaseProductServiceImpl
     implements AvailablePurchaseProductService {
-  final AvailablePurchaseProductDataSource _dataSource;
+  final AvailablePurchaseProductDataSource _availablePurchaseProductDataSource;
 
   AvailablePurchaseProductServiceImpl({
-    required AvailablePurchaseProductDataSource
-    availablePurchaseProductDataSource,
-  }) : _dataSource = availablePurchaseProductDataSource;
+    required this._availablePurchaseProductDataSource,
+  });
 
   @override
   Future<List<AvailablePurchaseEntity>> list() async {
     try {
-      final List<Map<String, dynamic>> result = await _dataSource.list();
+      final List<Map<String, dynamic>> result =
+          await _availablePurchaseProductDataSource.list();
       final List<AvailablePurchaseModel> listData = [];
 
       for (final json in result) {

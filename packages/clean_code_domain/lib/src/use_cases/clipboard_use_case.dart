@@ -8,11 +8,9 @@ abstract class ClipboardUseCase extends UseCase {
 }
 
 class ClipboardUseCaseImpl implements ClipboardUseCase {
-  final ClipboardService _service;
+  final ClipboardService _clipboardService;
 
-  ClipboardUseCaseImpl({
-    required ClipboardService clipboardService,
-  }) : _service = clipboardService;
+  ClipboardUseCaseImpl({required this._clipboardService});
 
   @override
   Future<void> copy(
@@ -20,7 +18,7 @@ class ClipboardUseCaseImpl implements ClipboardUseCase {
     bool autoClear = false,
     int secondsToClear = 20,
   }) async {
-    return _service.copy(
+    return _clipboardService.copy(
       text,
       autoClear: autoClear,
       secondsToClear: secondsToClear,
@@ -29,6 +27,6 @@ class ClipboardUseCaseImpl implements ClipboardUseCase {
 
   @override
   Future<String> paste() {
-    return _service.paste();
+    return _clipboardService.paste();
   }
 }

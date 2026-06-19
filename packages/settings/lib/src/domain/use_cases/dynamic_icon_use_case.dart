@@ -15,34 +15,32 @@ abstract class DynamicIconUseCase extends UseCase {
 }
 
 class DynamicIconUseCaseImpl implements DynamicIconUseCase {
-  final DynamicIconService _service;
+  final DynamicIconService _dynamicIconService;
 
-  DynamicIconUseCaseImpl({
-    required DynamicIconService dynamicIconService,
-  }) : _service = dynamicIconService;
+  DynamicIconUseCaseImpl({required this._dynamicIconService});
 
   @override
   Future<Result<bool>> supportsAlternateIcons() {
-    return _service.supportsAlternateIcons();
+    return _dynamicIconService.supportsAlternateIcons();
   }
 
   @override
   Future<Result<String>> currentIcon() {
-    return _service.currentIcon();
+    return _dynamicIconService.currentIcon();
   }
 
   @override
   Future<Result<void>> changeIcon(String icon) {
-    return _service.changeIcon(icon);
+    return _dynamicIconService.changeIcon(icon);
   }
 
   @override
   Future<Result<void>> setDefaultIcon() {
-    return _service.setDefaultIcon();
+    return _dynamicIconService.setDefaultIcon();
   }
 
   @override
   List<DynamicIconEntity> iconsAvailable() {
-    return _service.iconsAvailable();
+    return _dynamicIconService.iconsAvailable();
   }
 }

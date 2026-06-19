@@ -4,14 +4,12 @@ import 'package:dependency/dependency.dart';
 abstract class GetCurrentLocaleUseCase extends BaseUseCaseAsync<Locale?> {}
 
 class GetCurrentLocaleUseCaseImpl implements GetCurrentLocaleUseCase {
-  final AppLocaleService _service;
+  final AppLocaleService _appLocaleService;
 
-  GetCurrentLocaleUseCaseImpl({
-    required AppLocaleService appLocaleService,
-  }) : _service = appLocaleService;
+  GetCurrentLocaleUseCaseImpl({required this._appLocaleService});
 
   @override
   Future<Locale?> call() {
-    return _service.getCurrentLocale();
+    return _appLocaleService.getCurrentLocale();
   }
 }

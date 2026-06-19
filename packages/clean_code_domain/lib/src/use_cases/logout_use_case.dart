@@ -3,14 +3,12 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 abstract class LogoutUseCase extends BaseUseCaseAsync<void> {}
 
 class LogoutUseCaseImpl implements LogoutUseCase {
-  final LogoutService _service;
+  final LogoutService _logoutService;
 
-  LogoutUseCaseImpl({
-    required LogoutService logoutService,
-  }) : _service = logoutService;
+  LogoutUseCaseImpl({required this._logoutService});
 
   @override
-  Future<void> call() async {
-    await _service.logout();
+  Future<void> call() {
+    return _logoutService.logout();
   }
 }

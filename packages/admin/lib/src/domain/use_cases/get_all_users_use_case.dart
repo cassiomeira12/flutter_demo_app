@@ -5,14 +5,12 @@ abstract class GetAllUsersUseCase
     extends BaseUseCaseAsyncParam<List<UserEntity>, int> {}
 
 class GetAllUsersUseCaseImpl implements GetAllUsersUseCase {
-  final UsersService _service;
+  final UsersService _userService;
 
-  GetAllUsersUseCaseImpl({
-    required UsersService userService,
-  }) : _service = userService;
+  GetAllUsersUseCaseImpl({required this._userService});
 
   @override
   Future<List<UserEntity>> call(int page) {
-    return _service.list();
+    return _userService.list();
   }
 }

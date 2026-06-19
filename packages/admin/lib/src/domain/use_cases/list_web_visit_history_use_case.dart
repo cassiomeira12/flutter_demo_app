@@ -5,14 +5,12 @@ abstract class ListWebVisitHistoryUseCase
     extends BaseUseCaseAsync<List<WebVisitHistoryEntity>> {}
 
 class ListWebVisitHistoryUseCaseImpl implements ListWebVisitHistoryUseCase {
-  final WebVisitHistoryService _service;
+  final WebVisitHistoryService _webVisitHistoryService;
 
-  ListWebVisitHistoryUseCaseImpl({
-    required WebVisitHistoryService webVisitHistoryService,
-  }) : _service = webVisitHistoryService;
+  ListWebVisitHistoryUseCaseImpl({required this._webVisitHistoryService});
 
   @override
   Future<List<WebVisitHistoryEntity>> call() {
-    return _service.list();
+    return _webVisitHistoryService.list();
   }
 }

@@ -4,14 +4,12 @@ abstract class ReadNotificationUseCase
     extends BaseUseCaseAsyncParam<void, NotificationEntity> {}
 
 class ReadNotificationUseCaseImpl implements ReadNotificationUseCase {
-  final NotificationService _service;
+  final NotificationService _notificationService;
 
-  ReadNotificationUseCaseImpl({
-    required NotificationService notificationService,
-  }) : _service = notificationService;
+  ReadNotificationUseCaseImpl({required this._notificationService});
 
   @override
   Future<void> call(NotificationEntity notification) {
-    return _service.readNotifications(notification);
+    return _notificationService.readNotifications(notification);
   }
 }

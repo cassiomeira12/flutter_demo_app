@@ -5,14 +5,12 @@ abstract class BuyPurchaseProductUseCase
     extends BaseUseCaseAsyncParam<void, PurchaseProductEntity> {}
 
 class BuyPurchaseProductUseCaseImpl implements BuyPurchaseProductUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  BuyPurchaseProductUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  BuyPurchaseProductUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<void> call(PurchaseProductEntity product) {
-    return _service.buyProduct(product);
+    return _appPurchaseService.buyProduct(product);
   }
 }

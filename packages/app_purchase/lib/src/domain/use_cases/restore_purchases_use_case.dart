@@ -4,14 +4,12 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 abstract class RestorePurchasesUseCase extends BaseUseCaseAsync<void> {}
 
 class RestorePurchasesUseCaseImpl implements RestorePurchasesUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  RestorePurchasesUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  RestorePurchasesUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<void> call() {
-    return _service.restorePurchases();
+    return _appPurchaseService.restorePurchases();
   }
 }

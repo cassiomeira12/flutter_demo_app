@@ -5,14 +5,12 @@ abstract class TestPushNotificationUseCase
     extends BaseUseCaseAsyncParam<Result<void>, TestPushNotificationDto?> {}
 
 class TestPushNotificationUseCaseImpl implements TestPushNotificationUseCase {
-  final NotificationService _service;
+  final NotificationService _notificationService;
 
-  TestPushNotificationUseCaseImpl({
-    required NotificationService notificationService,
-  }) : _service = notificationService;
+  TestPushNotificationUseCaseImpl({required this._notificationService});
 
   @override
   Future<Result<void>> call(TestPushNotificationDto? param) {
-    return _service.testPush(param);
+    return _notificationService.testPush(param);
   }
 }

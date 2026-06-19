@@ -9,16 +9,14 @@ abstract class ListPurchaseProductsUseCase
         > {}
 
 class ListPurchaseProductsUseCaseImpl implements ListPurchaseProductsUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  ListPurchaseProductsUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  ListPurchaseProductsUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<List<PurchaseEntity>> call(
     List<AvailablePurchaseEntity> products,
   ) {
-    return _service.queryProductDetails(products);
+    return _appPurchaseService.queryProductDetails(products);
   }
 }

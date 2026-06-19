@@ -3,15 +3,16 @@ import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 
 class AppLocaleServiceImpl implements AppLocaleService {
-  final LocalStorageUseCase _localStorage;
+  final LocalStorageUseCase _localStorageUseCase;
 
-  AppLocaleServiceImpl({required LocalStorageUseCase localStorageUseCase})
-    : _localStorage = localStorageUseCase;
+  AppLocaleServiceImpl({required this._localStorageUseCase});
 
   @override
   Future<Locale?> getCurrentLocale() async {
     try {
-      final String? locale = await _localStorage.get<String>(CURRENT_LOCALE);
+      final String? locale = await _localStorageUseCase.get<String>(
+        CURRENT_LOCALE,
+      );
       if (locale != null) {
         final List<String> split = locale.split('_');
         final String languageCode = split.first;
@@ -30,6 +31,6 @@ class AppLocaleServiceImpl implements AppLocaleService {
 
   @override
   Future<void> setLocale(Locale locale) async {
-    await _localStorage.set<String>(CURRENT_LOCALE, locale.toString());
+    await _localStorageUseCase.set<String>(CURRENT_LOCALE, locale.toString());
   }
 }

@@ -5,14 +5,12 @@ abstract class SendUserFeedbackUseCase
     extends BaseUseCaseAsyncParam<void, UserFeedbackEntity> {}
 
 class SendUserFeedbackUseCaseImpl implements SendUserFeedbackUseCase {
-  final UserFeedbackRepository _repository;
+  final UserFeedbackRepository _userFeedbackRepository;
 
-  SendUserFeedbackUseCaseImpl({
-    required UserFeedbackRepository userFeedbackRepository,
-  }) : _repository = userFeedbackRepository;
+  SendUserFeedbackUseCaseImpl({required this._userFeedbackRepository});
 
   @override
   Future<void> call(UserFeedbackEntity param) {
-    return _repository.create(param.toMap());
+    return _userFeedbackRepository.create(param.toMap());
   }
 }

@@ -4,14 +4,12 @@ abstract class GetIpAddressLocationUseCase
     extends BaseUseCaseAsyncParam<IpAddressLocationEntity, String?> {}
 
 class GetIpAddressLocationUseCaseImpl implements GetIpAddressLocationUseCase {
-  final IpAddressLocationService _service;
+  final IpAddressLocationService _ipAddressLocationService;
 
-  GetIpAddressLocationUseCaseImpl({
-    required IpAddressLocationService ipAddressLocationService,
-  }) : _service = ipAddressLocationService;
+  GetIpAddressLocationUseCaseImpl({required this._ipAddressLocationService});
 
   @override
   Future<IpAddressLocationEntity> call(String? ip) {
-    return _service.getIpAddress(ip: ip);
+    return _ipAddressLocationService.getIpAddress(ip: ip);
   }
 }

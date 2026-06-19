@@ -12,29 +12,27 @@ abstract class SecureStorageUseCase extends UseCase {
 }
 
 class SecureStorageUseCaseImpl implements SecureStorageUseCase {
-  final SecureStorageService _service;
+  final SecureStorageService _secureStorageService;
 
-  SecureStorageUseCaseImpl({
-    required SecureStorageService secureStorageService,
-  }) : _service = secureStorageService;
+  SecureStorageUseCaseImpl({required this._secureStorageService});
 
   @override
   Future<T?> get<T>(String key) {
-    return _service.get<T>(key);
+    return _secureStorageService.get<T>(key);
   }
 
   @override
   Future<bool> set<T>(String key, T value) {
-    return _service.set<T>(key, value);
+    return _secureStorageService.set<T>(key, value);
   }
 
   @override
   Future<bool> delete(String key) {
-    return _service.delete(key);
+    return _secureStorageService.delete(key);
   }
 
   @override
   Future<void> clearAll() {
-    return _service.clearAll();
+    return _secureStorageService.clearAll();
   }
 }

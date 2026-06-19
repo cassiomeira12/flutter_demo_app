@@ -3,15 +3,14 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class UserServiceImpl implements UserService {
-  final UserDataSource _dataSource;
+  final UserDataSource _userDataSource;
 
-  UserServiceImpl({required UserDataSource userDataSource})
-    : _dataSource = userDataSource;
+  UserServiceImpl({required this._userDataSource});
 
   @override
   Future<UserModel> getUserData() async {
     try {
-      final Map<String, dynamic> result = await _dataSource.getUserData();
+      final Map<String, dynamic> result = await _userDataSource.getUserData();
       return UserModel.fromMap(result);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
@@ -27,7 +26,7 @@ class UserServiceImpl implements UserService {
   @override
   Future<void> deleteUser(String reason) async {
     try {
-      await _dataSource.deleteUser(reason: reason);
+      await _userDataSource.deleteUser(reason: reason);
     } on HttpException catch (error, stackTrace) {
       throw ExceptionHelper.call(error, stackTrace: stackTrace);
     } on BaseException catch (error) {
@@ -50,7 +49,10 @@ class UserServiceImpl implements UserService {
           'name': data['name'],
           'locale': data['locale'],
         };
-        await _dataSource.updateUserData(objectId: objectId, data: updateData);
+        await _userDataSource.updateUserData(
+          objectId: objectId,
+          data: updateData,
+        );
       } catch (error, stackTrace) {
         Log.error(error, stackTrace);
       }
@@ -73,7 +75,7 @@ class UserServiceImpl implements UserService {
     required String newPassword,
   }) async {
     try {
-      final result = await _dataSource.changePassword(
+      final result = await _userDataSource.changePassword(
         username: username,
         currentPassword: currentPassword,
         newPassword: newPassword,

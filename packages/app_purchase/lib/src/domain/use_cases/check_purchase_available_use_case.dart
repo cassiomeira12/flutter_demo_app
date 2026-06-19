@@ -5,14 +5,12 @@ abstract class CheckPurchaseAvailableUseCase extends BaseUseCaseAsync<void> {}
 
 class CheckPurchaseAvailableUseCaseImpl
     implements CheckPurchaseAvailableUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  CheckPurchaseAvailableUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  CheckPurchaseAvailableUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<bool> call() {
-    return _service.isServiceAvailable();
+    return _appPurchaseService.isServiceAvailable();
   }
 }

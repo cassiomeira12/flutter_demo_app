@@ -5,14 +5,12 @@ abstract class CountUnreadNotificationsUseCase
 
 class CountUnreadNotificationsUseCaseImpl
     implements CountUnreadNotificationsUseCase {
-  final NotificationService _service;
+  final NotificationService _notificationService;
 
-  CountUnreadNotificationsUseCaseImpl({
-    required NotificationService notificationService,
-  }) : _service = notificationService;
+  CountUnreadNotificationsUseCaseImpl({required this._notificationService});
 
   @override
   Future<int> call(UserEntity user) {
-    return _service.countUnread(user);
+    return _notificationService.countUnread(user);
   }
 }

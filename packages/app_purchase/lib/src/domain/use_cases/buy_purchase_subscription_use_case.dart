@@ -6,14 +6,12 @@ abstract class BuyPurchaseSubscriptionUseCase
 
 class BuyPurchaseSubscriptionUseCaseImpl
     implements BuyPurchaseSubscriptionUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  BuyPurchaseSubscriptionUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  BuyPurchaseSubscriptionUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<void> call(PurchaseSubscriptionEntity subcription) {
-    return _service.buySubscription(subcription);
+    return _appPurchaseService.buySubscription(subcription);
   }
 }

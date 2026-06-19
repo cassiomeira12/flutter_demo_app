@@ -3,14 +3,13 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 
 class LoginServiceImpl implements LoginService {
-  final LoginDataSource _dataSource;
-  final EncryptServerPublicKeyUseCase _encryptServerUseCase;
+  final LoginDataSource _loginDataSource;
+  final EncryptServerPublicKeyUseCase _encryptServerPublicKeyUseCase;
 
   LoginServiceImpl({
-    required LoginDataSource loginDataSource,
-    required EncryptServerPublicKeyUseCase encryptServerPublicKeyUseCase,
-  }) : _dataSource = loginDataSource,
-       _encryptServerUseCase = encryptServerPublicKeyUseCase;
+    required this._loginDataSource,
+    required this._encryptServerPublicKeyUseCase,
+  });
 
   @override
   Future<UserModel> login({
@@ -18,9 +17,9 @@ class LoginServiceImpl implements LoginService {
     required String password,
   }) async {
     try {
-      final encryptedPassword = _encryptServerUseCase.call(password);
+      final encryptedPassword = _encryptServerPublicKeyUseCase.call(password);
 
-      final Map<String, dynamic> result = await _dataSource.login(
+      final Map<String, dynamic> result = await _loginDataSource.login(
         username: username,
         password: encryptedPassword,
       );

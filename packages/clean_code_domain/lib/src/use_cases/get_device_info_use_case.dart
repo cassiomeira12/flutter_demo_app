@@ -4,14 +4,12 @@ abstract class GetDeviceInfoUseCase
     extends BaseUseCaseAsync<DeviceInfoEntity> {}
 
 class GetDeviceInfoUseCaseImpl implements GetDeviceInfoUseCase {
-  final DeviceInfoService _service;
+  final DeviceInfoService _deviceInfoService;
 
-  GetDeviceInfoUseCaseImpl({
-    required DeviceInfoService deviceInfoService,
-  }) : _service = deviceInfoService;
+  GetDeviceInfoUseCaseImpl({required this._deviceInfoService});
 
   @override
   Future<DeviceInfoEntity> call() {
-    return _service.getDeviceInfo();
+    return _deviceInfoService.getDeviceInfo();
   }
 }

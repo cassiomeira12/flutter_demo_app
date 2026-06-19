@@ -13,34 +13,32 @@ abstract class LocalStorageUseCase extends UseCase {
 }
 
 class LocalStorageUseCaseImpl implements LocalStorageUseCase {
-  final LocalStorageService _service;
+  final LocalStorageService _localStorageService;
 
-  LocalStorageUseCaseImpl({
-    required LocalStorageService localStorageService,
-  }) : _service = localStorageService;
+  LocalStorageUseCaseImpl({required this._localStorageService});
 
   @override
   Future<void> clearAll() {
-    return _service.clearAll();
+    return _localStorageService.clearAll();
   }
 
   @override
   Future<bool> delete(String key) {
-    return _service.delete(key);
+    return _localStorageService.delete(key);
   }
 
   @override
   Future<T?> get<T>(String key) {
-    return _service.get<T>(key);
+    return _localStorageService.get<T>(key);
   }
 
   @override
   Future<bool> set<T>(String key, T value) {
-    return _service.set<T>(key, value);
+    return _localStorageService.set<T>(key, value);
   }
 
   @override
   Future<List<String>> getKeys() {
-    return _service.getKeys();
+    return _localStorageService.getKeys();
   }
 }

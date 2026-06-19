@@ -6,16 +6,15 @@ import 'package:login/src/domain/domain.dart';
 class SignupServiceImpl
     with CreateServiceMixin<UserEntity>
     implements SignupService {
-  final SignupDataSource _dataSource;
+  final SignupDataSource _signUpDataSource;
 
-  SignupServiceImpl({required SignupDataSource signUpDataSource})
-    : _dataSource = signUpDataSource;
+  SignupServiceImpl({required this._signUpDataSource});
 
   @override
   Future<UserEntity> create(Map<String, dynamic> data) {
     return mixinCreate(
       data: data,
-      create: _dataSource.create,
+      create: _signUpDataSource.create,
       fromMap: UserModel.fromMap,
     );
   }

@@ -5,14 +5,12 @@ abstract class CheckPermissionUseCase
     extends BaseUseCaseAsyncParam<PermissionStatus, Permission> {}
 
 class CheckPermissionUseCaseImpl implements CheckPermissionUseCase {
-  final AppPermissionsService _service;
+  final AppPermissionsService _appPermissionService;
 
-  CheckPermissionUseCaseImpl({
-    required AppPermissionsService appPermissionService,
-  }) : _service = appPermissionService;
+  CheckPermissionUseCaseImpl({required this._appPermissionService});
 
   @override
   Future<PermissionStatus> call(Permission permission) {
-    return _service.checkPermission(permission);
+    return _appPermissionService.checkPermission(permission);
   }
 }

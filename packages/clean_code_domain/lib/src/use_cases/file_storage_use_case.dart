@@ -23,27 +23,28 @@ abstract class FileStorageUseCase extends UseCase {
 }
 
 class FileStorageUseCaseImpl implements FileStorageUseCase {
-  final FileStorageService _service;
+  final FileStorageService _fileStorageService;
 
-  FileStorageUseCaseImpl({
-    required FileStorageService fileStorageService,
-  }) : _service = fileStorageService;
+  FileStorageUseCaseImpl({required this._fileStorageService});
 
   @override
-  Future<Directory> get temporaryDirectory => _service.temporaryDirectory;
+  Future<Directory> get temporaryDirectory =>
+      _fileStorageService.temporaryDirectory;
   @override
-  Future<Directory> get cacheDirectory => _service.cacheDirectory;
+  Future<Directory> get cacheDirectory => _fileStorageService.cacheDirectory;
   @override
-  Future<Directory> get documentsDirectory => _service.documentsDirectory;
+  Future<Directory> get documentsDirectory =>
+      _fileStorageService.documentsDirectory;
   @override
-  Future<Directory?> get downloadsDirectory => _service.downloadsDirectory;
+  Future<Directory?> get downloadsDirectory =>
+      _fileStorageService.downloadsDirectory;
 
   @override
   String joinFilePath({
     required String fileName,
     required Directory directory,
   }) {
-    return _service.joinFilePath(
+    return _fileStorageService.joinFilePath(
       fileName: fileName,
       directory: directory,
     );
@@ -51,9 +52,7 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
 
   @override
   Future<File?> readFile({required String path}) {
-    return _service.readFile(
-      path: path,
-    );
+    return _fileStorageService.readFile(path: path);
   }
 
   @override
@@ -61,7 +60,7 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
     required String path,
     required List<int> bytes,
   }) {
-    return _service.writeFileBytes(
+    return _fileStorageService.writeFileBytes(
       path: path,
       bytes: bytes,
     );
@@ -72,7 +71,7 @@ class FileStorageUseCaseImpl implements FileStorageUseCase {
     required String path,
     required String contents,
   }) {
-    return _service.writeFileStrings(
+    return _fileStorageService.writeFileStrings(
       path: path,
       contents: contents,
     );

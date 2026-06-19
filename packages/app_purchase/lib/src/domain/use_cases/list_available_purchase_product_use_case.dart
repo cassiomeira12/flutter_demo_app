@@ -6,14 +6,14 @@ abstract class ListAvailablePurchaseProductUseCase
 
 class ListAvailablePurchaseProductUseCaseImpl
     implements ListAvailablePurchaseProductUseCase {
-  final AvailablePurchaseProductService _service;
+  final AvailablePurchaseProductService _availablePurchaseProductService;
 
   ListAvailablePurchaseProductUseCaseImpl({
-    required AvailablePurchaseProductService availablePurchaseProductService,
-  }) : _service = availablePurchaseProductService;
+    required this._availablePurchaseProductService,
+  });
 
   @override
   Future<List<AvailablePurchaseEntity>> call() {
-    return _service.list();
+    return _availablePurchaseProductService.list();
   }
 }

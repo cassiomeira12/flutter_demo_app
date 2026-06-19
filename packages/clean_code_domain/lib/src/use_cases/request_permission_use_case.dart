@@ -9,17 +9,18 @@ abstract class RequestPermissionUseCase extends UseCase {
 }
 
 class RequestPermissionUseCaseImpl implements RequestPermissionUseCase {
-  final AppPermissionsService _service;
+  final AppPermissionsService _appPermissionService;
 
-  RequestPermissionUseCaseImpl({
-    required AppPermissionsService appPermissionService,
-  }) : _service = appPermissionService;
+  RequestPermissionUseCaseImpl({required this._appPermissionService});
 
   @override
   Future<PermissionStatus> call(
     Permission permission, {
     bool openSettings = false,
   }) {
-    return _service.requestPermission(permission, openSettings: openSettings);
+    return _appPermissionService.requestPermission(
+      permission,
+      openSettings: openSettings,
+    );
   }
 }

@@ -4,14 +4,12 @@ abstract class ListUserInstallationsUseCase
     extends BaseUseCaseAsyncParam<List<InstallationEntity>, String> {}
 
 class ListUserInstallationsUseCaseImpl implements ListUserInstallationsUseCase {
-  final AppInstallationService _service;
+  final AppInstallationService _appInstallationService;
 
-  ListUserInstallationsUseCaseImpl({
-    required AppInstallationService appInstallationService,
-  }) : _service = appInstallationService;
+  ListUserInstallationsUseCaseImpl({required this._appInstallationService});
 
   @override
   Future<List<InstallationEntity>> call(String userId) {
-    return _service.list(userId);
+    return _appInstallationService.list(userId);
   }
 }

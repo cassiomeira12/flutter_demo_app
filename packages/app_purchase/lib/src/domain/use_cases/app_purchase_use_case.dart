@@ -12,28 +12,26 @@ abstract class AppPurchaseUseCase extends UseCase {
 }
 
 class AppPurchaseUseCaseImpl implements AppPurchaseUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  AppPurchaseUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  AppPurchaseUseCaseImpl({required this._appPurchaseService});
 
   @override
   Stream<List<PurchaseDetailsEntity>> get userPurchases =>
-      _service.userPurchases;
+      _appPurchaseService.userPurchases;
 
   @override
   Future<void> init({required String userIdentifierId}) {
-    return _service.init(userIdentifierId: userIdentifierId);
+    return _appPurchaseService.init(userIdentifierId: userIdentifierId);
   }
 
   @override
   void close() {
-    return _service.close();
+    return _appPurchaseService.close();
   }
 
   @override
   Future<bool> isServiceAvailable() {
-    return _service.isServiceAvailable();
+    return _appPurchaseService.isServiceAvailable();
   }
 }

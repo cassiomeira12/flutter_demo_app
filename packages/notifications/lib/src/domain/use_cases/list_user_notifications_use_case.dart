@@ -4,14 +4,12 @@ abstract class ListUserNotificationsUseCase
     extends BaseUseCaseAsyncParam<List<NotificationEntity>, int> {}
 
 class ListUserNotificationsUseCaseImpl implements ListUserNotificationsUseCase {
-  final NotificationService _service;
+  final NotificationService _notificationService;
 
-  ListUserNotificationsUseCaseImpl({
-    required NotificationService notificationService,
-  }) : _service = notificationService;
+  ListUserNotificationsUseCaseImpl({required this._notificationService});
 
   @override
   Future<List<NotificationEntity>> call(int page) {
-    return _service.list();
+    return _notificationService.list();
   }
 }

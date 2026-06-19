@@ -10,18 +10,16 @@ abstract class UpdatePurchaseSubscriptionUseCase extends UseCase {
 
 class UpdatePurchaseSubscriptionUseCaseImpl
     implements UpdatePurchaseSubscriptionUseCase {
-  final AppPurchaseService _service;
+  final AppPurchaseService _appPurchaseService;
 
-  UpdatePurchaseSubscriptionUseCaseImpl({
-    required AppPurchaseService appPurchaseService,
-  }) : _service = appPurchaseService;
+  UpdatePurchaseSubscriptionUseCaseImpl({required this._appPurchaseService});
 
   @override
   Future<void> call({
     required PurchaseDetailsEntity oldSubscription,
     required PurchaseSubscriptionEntity newSubscription,
   }) {
-    return _service.updateSubscription(
+    return _appPurchaseService.updateSubscription(
       oldSubscription: oldSubscription,
       newSubscription: newSubscription,
     );

@@ -5,15 +5,13 @@ abstract class UpdateUserDataUseCase
     extends BaseUseCaseAsyncParam<UserEntity, UserEntity> {}
 
 class UpdateUserDataUseCaseImpl implements UpdateUserDataUseCase {
-  final UserService _service;
+  final UserService _userService;
 
-  UpdateUserDataUseCaseImpl({
-    required UserService userService,
-  }) : _service = userService;
+  UpdateUserDataUseCaseImpl({required this._userService});
 
   @override
   Future<UserEntity> call(UserEntity user) async {
-    final userUpdated = await _service.update(user.id, data: user.toMap());
+    final userUpdated = await _userService.update(user.id, data: user.toMap());
 
     AppBinding.putReplace<UserEntity>(userUpdated);
 
