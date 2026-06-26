@@ -1,11 +1,13 @@
 import 'package:admin/admin.dart';
 import 'package:analytics/analytics.dart';
 import 'package:app_purchase/app_purchase.dart';
+import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:crashlytics/crashlytics.dart';
 import 'package:deeplink/deeplink.dart';
 import 'package:dependency/dependency.dart';
 import 'package:feature_flag/feature_flag.dart';
+import 'package:flutter_demo_app/domain/domain.dart';
 import 'package:force_update/force_update.dart';
 import 'package:home/home.dart';
 import 'package:login/login.dart';
@@ -36,7 +38,28 @@ class AppBindings extends Bindings {
 
     /// Replace inside custom App Bindings
     // -----------------------------------
-    // Bindings to putReplace or lazyReplace
+    AppBinding.lazyReplace<ChangePasswordUseCase>(
+      () => FortressChangePasswordUseCaseImpl(
+        userService: AppBinding.find(),
+        encryptUserPasswordUseCase: AppBinding.find(),
+        userAuthStorageUseCase: AppBinding.find(),
+        encryptServerPublicKeyUseCase: AppBinding.find(),
+        credentialRepository: AppBinding.find(),
+      ),
+    );
+    AppBinding.lazyReplace<DeleteUserUseCase>(
+      () => FortressDeleteUserUseCaseImpl(
+        userService: AppBinding.find(),
+        authStorageUseCase: AppBinding.find(),
+        credentialRepository: AppBinding.find(),
+      ),
+    );
+    AppBinding.lazyReplace<LogoutUseCase>(
+      () => FortreesLogoutUseCaseImpl(
+        logoutService: AppBinding.find(),
+        credentialRepository: AppBinding.find(),
+      ),
+    );
     // -----------------------------------
 
     // await AppsFlyerModuleBindings().injectDependencies();

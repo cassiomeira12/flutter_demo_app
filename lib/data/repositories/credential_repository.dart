@@ -22,8 +22,13 @@ class CredentialRepositoryImpl extends BaseRepositoryImpl<CredentialEntity>
   String? _encrypterKeyPassword;
 
   @override
-  Future<void> initLocalDatabase() async {
+  Future<void> refreshEncrypterKeyPassword() async {
     _encrypterKeyPassword = await _encryptUserPasswordUseCase.decrypt();
+  }
+
+  @override
+  Future<void> initLocalDatabase() async {
+    await refreshEncrypterKeyPassword();
     return super.initLocalDatabase();
   }
 
