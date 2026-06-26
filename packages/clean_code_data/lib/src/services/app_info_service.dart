@@ -17,13 +17,14 @@ class AppInfoServiceImpl implements AppInfoService {
                 .trim()
                 .toLowerCase()
           : package.packageName;
+      final version = package.version.toString().split('+').first;
 
       return AppInfoEntity(
         appName: package.appName,
         packageName: packageName,
         buildSignature: package.buildSignature,
         installerStore: package.installerStore,
-        version: package.version.toString().split('+').first,
+        version: version.split('-').first,
         build: package.buildNumber,
       );
     } on MissingPluginException {

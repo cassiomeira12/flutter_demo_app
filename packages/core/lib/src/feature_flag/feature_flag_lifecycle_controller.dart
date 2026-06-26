@@ -100,7 +100,7 @@ class FeatureFlagLifecycleController extends LifecycleController {
         localeName: _deviceInfo.localeName,
         platform: _deviceInfo.platform,
         packageName: _appInfoEntity.packageName,
-        version: _appInfoEntity.versionOnly,
+        version: _appInfoEntity.version,
         build: _appInfoEntity.build,
         isWeb: kIsWeb,
         environment: kReleaseMode

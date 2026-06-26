@@ -17,9 +17,7 @@ class AppInfoEntity extends ParserToJson {
     required this.build,
   });
 
-  String get formattedName => '$version ($build)';
-
-  String get versionOnly => version.split('-').first;
+  String get formattedName => version + (build.isEmpty ? '' : ' ($build)');
 
   @override
   Map<String, dynamic> toMap() {
