@@ -1,4 +1,5 @@
 import 'package:core/core.dart';
+import 'package:dependency/dependency.dart';
 
 abstract class SymmetricEncryptionService {
   Result<String> encrypt({
@@ -10,4 +11,17 @@ abstract class SymmetricEncryptionService {
     required String password,
     required String encryptedData,
   });
+
+  static List<int> generateSecureKey() {
+    Uint8List nextBytes(int bytes) {
+      final random = Random.secure();
+      final buffer = Uint8List(bytes);
+      for (var i = 0; i < bytes; i++) {
+        buffer[i] = random.nextInt(0xFF + 1);
+      }
+      return buffer;
+    }
+
+    return nextBytes(32);
+  }
 }

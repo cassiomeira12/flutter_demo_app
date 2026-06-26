@@ -8,7 +8,7 @@ class PushMessagingServiceFaker implements PushMessagingService {
 
   @override
   Future<String?> getToken() async {
-    Log.info('getToken');
+    Log.info('getToken null');
     return null;
   }
 

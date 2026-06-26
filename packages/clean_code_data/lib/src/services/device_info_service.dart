@@ -49,14 +49,21 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     Map<String, dynamic> deviceInfoData, {
     required String localeName,
   }) async {
+    String? androidDeviceId;
+    try {
+      androidDeviceId = await const AndroidId().getId();
+    } catch (error, stackTrace) {
+      Log.error(error, stackTrace);
+    }
+    final osVersion = deviceInfoData['version'] ?? {};
     return DeviceInfoEntity(
       platform: 'android',
-      brand: deviceInfoData['brand'] as String,
-      isPhysicalDevice: deviceInfoData['isPhysicalDevice'] as bool,
-      model: deviceInfoData['model'] as String,
-      osVersion: 'Android ${deviceInfoData['version']['release']}',
+      brand: deviceInfoData['brand'] ?? 'unknown',
+      isPhysicalDevice: deviceInfoData['isPhysicalDevice'] ?? false,
+      model: deviceInfoData['model'] ?? 'unknown',
+      osVersion: 'Android ${osVersion['release'] ?? 'unknown version'}',
       localeName: localeName,
-      deviceId: await const AndroidId().getId(),
+      deviceId: androidDeviceId,
     );
   }
 
@@ -67,8 +74,9 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
     return DeviceInfoEntity(
       platform: 'ios',
       brand: 'Apple',
-      isPhysicalDevice: deviceInfoData['isPhysicalDevice'] as bool,
-      model: deviceInfoData['modelName'] ?? deviceInfoData['model'] as String,
+      isPhysicalDevice: deviceInfoData['isPhysicalDevice'] ?? false,
+      model:
+          deviceInfoData['modelName'] ?? deviceInfoData['model'] ?? 'unknown',
       osVersion: 'iOS ${deviceInfoData['systemVersion']}',
       localeName: localeName,
       deviceId: deviceInfoData['identifierForVendor'],
@@ -83,7 +91,8 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
       platform: 'macos',
       brand: 'Apple',
       isPhysicalDevice: true,
-      model: deviceInfoData['modelName'] ?? deviceInfoData['model'] as String,
+      model:
+          deviceInfoData['modelName'] ?? deviceInfoData['model'] ?? 'unknown',
       osVersion: 'MacOS ${deviceInfoData['osRelease']}',
       localeName: localeName,
       deviceId: deviceInfoData['systemGUID'],
@@ -101,8 +110,8 @@ class DeviceInfoServiceImpl implements DeviceInfoService {
       platform: 'web',
       brand: 'Browser ${browserName?.capitalizeFirst}',
       isPhysicalDevice: false,
-      model: deviceInfoData['appVersion'] as String,
-      osVersion: deviceInfoData['vendor'] as String,
+      model: deviceInfoData['appVersion'] ?? 'unknown',
+      osVersion: deviceInfoData['vendor'] ?? 'unknown',
       localeName: (deviceInfoData['language'] as String?)?.replaceAll('-', '_'),
       deviceId: deviceId,
     );
