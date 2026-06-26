@@ -28,6 +28,7 @@ Future<void> oAplicativoPossuiAsPersmissoes(
       ),
       appleStoreAppId: const String.fromEnvironment('apple_store_app_id'),
       permissions: permission,
+      webBaseHREF: const String.fromEnvironment('baseHREF'),
     ),
     permanent: true,
   );

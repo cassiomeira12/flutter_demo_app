@@ -17,6 +17,7 @@ class InfraModuleBindings implements ModuleBinding {
         ),
         appleStoreAppId: const String.fromEnvironment('apple_store_app_id'),
         permissions: const String.fromEnvironment('permissions'),
+        webBaseHREF: const String.fromEnvironment('baseHREF'),
       ),
       permanent: true,
     );

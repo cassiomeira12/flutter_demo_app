@@ -35,6 +35,7 @@ void main() {
       androidPackageName: 'com.test.app',
       appleStoreAppId: '123456789',
       permissions: 'camera,storage',
+      webBaseHREF: '/',
     );
 
     serverEnv = ServerEnvironmentEntity(
