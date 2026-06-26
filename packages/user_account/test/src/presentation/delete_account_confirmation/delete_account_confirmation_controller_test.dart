@@ -2,7 +2,6 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/delete_account/delete_account.dart';
 import 'package:user_account/src/presentation/delete_account_confirmation/delete_account_confirmation_controller.dart';
 

@@ -1,7 +1,6 @@
 import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
-import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/presentation.dart';
 
 class DeleteAccountConfirmationController extends BaseController {

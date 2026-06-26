@@ -113,6 +113,9 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
           _values.value[index].value = await decrypt(resultEncrypted);
         }
         removeIds.add(entry.key);
+      } on NotFoundException {
+        removeIds.add(entry.key);
+        await delete(entry.key);
       } on BaseException catch (error) {
         if (error.throwReport) {
           Log.baseException(error);
@@ -138,6 +141,8 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
     for (final item in deleteOffline) {
       try {
         await _service.delete(item);
+        removeIds.add(item);
+      } on NotFoundException {
         removeIds.add(item);
       } on BaseException catch (error) {
         if (error.throwReport) {
@@ -239,6 +244,7 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
   Future<T> update(
     String objectId, {
     required Map<String, dynamic> data,
+    bool syncForward = true,
   }) async {
     final T encryptedData = await encrypt(_service.parseMap(data));
     final updatedData = {
@@ -255,7 +261,9 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
     if (sort != null) {
       _values.value.sort((a, b) => sort!(a.value, b.value));
     }
-    if (_lastNetworkStatus) _uploadUpdatedOfflineData();
+    if (syncForward && _lastNetworkStatus) {
+      _uploadUpdatedOfflineData();
+    }
     return resultDecrypted;
   }
 
@@ -300,6 +308,32 @@ class BaseRepositoryImpl<T extends BaseEntity> implements BaseRepository<T> {
         rethrow;
       }
     }
+  }
+
+  @override
+  Future<void> forceRemoteSyncData() async {
+    Log.debug('$runtimeType force remote sync data');
+    try {
+      await Future.wait([
+        _uploadCreatedOfflineData(),
+        _uploadUpdatedOfflineData(),
+        _uploadDeletedOfflineData(),
+      ]);
+      final hasDataToSync = await _hasDataToSync();
+      if (hasDataToSync) {
+        throw BaseException(message: 'has data to sync');
+      }
+    } on BaseException catch (_) {
+      rethrow;
+    } catch (error, stackTrace) {
+      throw BaseException(error: error, stackTrace: stackTrace);
+    }
+  }
+
+  Future<bool> _hasDataToSync() async {
+    final offlineValues = await _localDatabase.offlineValues();
+    final offlineDeletedValues = await _localDatabase.offlineDeletedValues();
+    return offlineValues.isNotEmpty && offlineDeletedValues.isNotEmpty;
   }
 
   Future<void> _listAllLocalData() async {

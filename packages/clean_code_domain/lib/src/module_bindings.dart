@@ -24,11 +24,10 @@ class DomainModuleBindings implements ModuleBinding {
       ),
     );
 
-    AppBinding.put<UpdateUserDataUseCase>(
-      UpdateUserDataUseCaseImpl(
+    AppBinding.lazyPut<UpdateUserDataUseCase>(
+      () => UpdateUserDataUseCaseImpl(
         userService: AppBinding.find(),
       ),
-      permanent: true,
     );
 
     AppBinding.lazyPut<CountUnreadNotificationsUseCase>(
@@ -225,6 +224,22 @@ class DomainModuleBindings implements ModuleBinding {
         authStorageUseCase: AppBinding.find(),
         updateLocaleUseCase: AppBinding.find(),
         updateUserDataUseCase: AppBinding.find(),
+      ),
+    );
+
+    AppBinding.lazyPut<ChangePasswordUseCase>(
+      () => ChangePasswordUseCaseImpl(
+        userService: AppBinding.find(),
+        encryptUserPasswordUseCase: AppBinding.find(),
+        userAuthStorageUseCase: AppBinding.find(),
+        encryptServerPublicKeyUseCase: AppBinding.find(),
+      ),
+    );
+
+    AppBinding.lazyPut<DeleteUserUseCase>(
+      () => DeleteUserUseCaseImpl(
+        userService: AppBinding.find(),
+        authStorageUseCase: AppBinding.find(),
       ),
     );
 

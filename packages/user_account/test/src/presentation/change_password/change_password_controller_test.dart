@@ -2,7 +2,6 @@ import 'package:clean_code_domain/clean_code_domain.dart';
 import 'package:core/core.dart';
 import 'package:dependency/dependency.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:user_account/src/domain/domain.dart';
 import 'package:user_account/src/presentation/change_password/change_password_controller.dart';
 
 class MockChangePasswordUseCase extends Mock implements ChangePasswordUseCase {}

@@ -20,6 +20,7 @@ abstract class BaseRepository<T> {
   Future<T> update(
     String objectId, {
     required Map<String, dynamic> data,
+    bool syncForward = true,
   });
 
   Future<void> delete(String objectId);
@@ -27,4 +28,6 @@ abstract class BaseRepository<T> {
   Future<void> deleteLocalDatabase();
 
   Future<void> fetch();
+
+  Future<void> forceRemoteSyncData();
 }

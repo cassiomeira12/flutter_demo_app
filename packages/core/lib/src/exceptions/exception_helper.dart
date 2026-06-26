@@ -21,6 +21,9 @@ abstract class ExceptionHelper {
       case -1:
         throw NoInternetException();
       case 101:
+        if (errorMessage == 'Object not found.') {
+          throw NotFoundException();
+        }
         throw AuthUserException();
       case 141:
       case 142:
